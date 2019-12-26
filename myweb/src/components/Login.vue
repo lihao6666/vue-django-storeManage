@@ -42,7 +42,13 @@ export default {
   },
   methods: {
     handleSubmit () {
-      this.$router.push('/')
+      if (this.loginData.checkName) {
+        this.$message.success('登录成功')
+        localStorage.setItem('ms_username', this.loginData.checkName)
+        this.$router.push('/')
+      } else {
+        this.$message.error('请输入账号和密码')
+      }
     }
   }
 }

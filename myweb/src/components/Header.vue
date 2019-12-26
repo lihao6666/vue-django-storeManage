@@ -34,7 +34,7 @@ export default {
     return {
       collapse: false,
       fullscreen: false,
-      name: 'linxin',
+      name: 'Mars456',
       message: 2
     }
   },
