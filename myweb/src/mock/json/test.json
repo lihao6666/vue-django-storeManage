@@ -1,0 +1,61 @@
+{
+  "list": [
+    {
+      "req_pur_iden": "1",
+      "req_pur_orga": "合肥工业大学",
+      "req_pur_type": "物品",
+      "req_pur_from": "软件学院",
+      "req_pur_date": "2019-01-01 12:00:00",
+      "req_pur_remarks": "很多东西",
+      "req_pur_status": "已审批",
+      "req_pur_creator": "yq",
+      "req_pur_createDate": "2019-01-01 12:00:00",
+      "req_pur_closer": "",
+      "req_pur_closeDate": "",
+      "req_pur_closeReason": ""
+    },
+    {
+      "req_pur_iden": "1",
+      "req_pur_orga": "合肥工业大学",
+      "req_pur_type": "物品",
+      "req_pur_from": "软件学院",
+      "req_pur_date": "2019-01-01 12:00:00",
+      "req_pur_remarks": "很多东西",
+      "req_pur_status": "已审批",
+      "req_pur_creator": "yq",
+      "req_pur_createDate": "2019-01-01 12:00:00",
+      "req_pur_closer": "",
+      "req_pur_closeDate": "",
+      "req_pur_closeReason": ""
+    },
+    {
+      "req_pur_iden": "1",
+      "req_pur_orga": "合肥工业大学",
+      "req_pur_type": "物品",
+      "req_pur_from": "软件学院",
+      "req_pur_date": "2019-01-01 12:00:00",
+      "req_pur_remarks": "很多东西",
+      "req_pur_status": "已审批",
+      "req_pur_creator": "yq",
+      "req_pur_createDate": "2019-01-01 12:00:00",
+      "req_pur_closer": "",
+      "req_pur_closeDate": "",
+      "req_pur_closeReason": ""
+    },
+    {
+      "req_pur_iden": "1",
+      "req_pur_orga": "合肥工业大学",
+      "req_pur_type": "物品",
+      "req_pur_from": "软件学院",
+      "req_pur_date": "2019-01-01 12:00:00",
+      "req_pur_remarks": "很多东西",
+      "req_pur_status": "已审批",
+      "req_pur_creator": "yq",
+      "req_pur_createDate": "2019-01-01 12:00:00",
+      "req_pur_closer": "",
+      "req_pur_closeDate": "",
+      "req_pur_closeReason": ""
+    }
+  ],
+  "pageTotal": 4
+}

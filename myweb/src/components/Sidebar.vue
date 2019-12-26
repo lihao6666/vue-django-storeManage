@@ -150,8 +150,14 @@ export default {
               ]
             },
             {
-              index: 'storecheck',
-              title: '库存查询'
+              index: '4-1',
+              title: '库存查询',
+              subs: [
+                {
+                  index: 'storecheck',
+                  title: '现存量查询'
+                }
+              ]
             }
           ]
         },
