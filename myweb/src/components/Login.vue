@@ -1,23 +1,22 @@
 <template>
   <div>
-  <el-form :model="loginData" :rules="loginRules" ref="loginData" label-position="left" label-width="0px" class="login-container">
-    <h3 class="title">系统登录</h3>
-    <el-form-item prop="checkName" style="margin-bottom:28px;">
-      <el-input type="text" v-model="loginData.checkName" auto-complete="off" placeholder="账号" clearable >
-        <template slot="prepend"><i class="el-icon-user" aria-hidden="true"></i></template>
-      </el-input>
-    </el-form-item>
-    <el-form-item prop="checkPass" style="margin-bottom:28px;">
-      <el-input type="password" v-model="loginData.checkPass" auto-complete="off" placeholder="密码" @keyup.enter.native="handleSubmit" clearable>
-        <template slot="prepend"><i class="el-icon-key" aria-hidden="true"></i></template>
-      </el-input>
-    </el-form-item>
-    <!--<el-checkbox v-model="checked" checked class="remember">记住密码</el-checkbox>-->
-    <el-form-item style="width:100%;">
-      <el-button type="primary" style="width:100%;" @click.native.prevent="handleSubmit" :loading="isLogin" >登录</el-button>
-    </el-form-item>
-  </el-form>
-    <div style="text-align: center; margin:10px 0px; font-size: 12px;">2019 © 艺朝艺夕仓储管理系统-V1.0</div>
+    <el-form :model="loginData" :rules="loginRules" ref="loginData" label-position="left" label-width="0px" class="login-container">
+      <h3 class="title">系统登录</h3>
+      <el-form-item prop="checkName">
+        <el-input type="text" v-model="loginData.checkName" auto-complete="off" placeholder="账号" clearable >
+          <template slot="prepend"><i class="el-icon-user" aria-hidden="true"></i></template>
+        </el-input>
+      </el-form-item>
+      <el-form-item prop="checkPass">
+        <el-input type="password" v-model="loginData.checkPass" auto-complete="off" placeholder="密码" @keyup.enter.native="handleSubmit" clearable>
+          <template slot="prepend"><i class="el-icon-key" aria-hidden="true"></i></template>
+        </el-input>
+      </el-form-item>
+      <el-form-item>
+        <el-button type="primary" class="primary" @click.native.prevent="handleSubmit" :loading="isLogin" >登录</el-button>
+      </el-form-item>
+    </el-form>
+    <div class="littlename">2019 © 艺朝艺夕仓储管理系统-V1.0</div>
   </div>
 </template>
 
@@ -32,26 +31,18 @@ export default {
       },
       loginRules: {
         checkName: [
-          { required: true, message: '请输入账号', trigger: 'blur' },
+          { required: true, message: '请输入账号', trigger: 'blur' }
         ],
         checkPass: [
-          { required: true, message: '请输入密码', trigger: 'blur' },
+          { required: true, message: '请输入密码', trigger: 'blur' }
         ]
       },
       checked: true
     }
   },
   methods: {
-    handleReset (formName) {
-      this.$refs[formName].resetFields()
-    },
     handleSubmit () {
-    }
-  },
-  mounted () {
-    let existLg = localStorage.getItem('loginName')
-    if (existLg) {
-      this.loginData.checkName = existLg
+      this.$router.push('/')
     }
   }
 }
@@ -59,7 +50,6 @@ export default {
 
 <style scoped>
   .login-container {
-    /*box-shadow: 0 0px 8px 0 rgba(0, 0, 0, 0.06), 0 1px 0px 0 rgba(0, 0, 0, 0.02);*/
     -webkit-border-radius: 5px;
     border-radius: 5px;
     -moz-border-radius: 5px;
@@ -76,8 +66,12 @@ export default {
     text-align: center;
     color: #505458;
   }
-  .remember {
-    margin: 0px 0px 28px 0px;
+  .littlename {
+    text-align: center;
+    margin:10px 0px;
+    font-size: 12px;
+  }
+  .primary {
+    width: 100%;
   }
 </style>
-
