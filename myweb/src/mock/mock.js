@@ -1,3 +1,4 @@
 const Mock = require('mockjs')
 
-Mock.mock('/test', 'post', require('./json/test'))
+Mock.mock('/req_pur_check', 'post', require('./json/req_pur_check'))
+Mock.mock('/req_pur_prd', 'post', require('./json/req_pur_prd'))

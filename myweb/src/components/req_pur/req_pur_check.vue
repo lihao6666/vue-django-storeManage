@@ -9,20 +9,18 @@
     </div>
     <div class="container">
       <div class="handle-box">
-          <el-input placeholder="请输入内容" v-model="req_pur.value" class="input-with-select">
-            <el-select v-model="req_pur.select" slot="prepend" placeholder="请选择" class="input-select">
-              <el-option label="请购单号" value="req_pur_iden"></el-option>
-              <el-option label="库存组织" value="req_pur_orga"></el-option>
-              <el-option label="需求类型" value="req_pur_type"></el-option>
-              <el-option label="申请部门" value="req_pur_from"></el-option>
-              <el-option label="创建人" value="req_pur_creator"></el-option>
-            </el-select>
-            <el-button slot="append" icon="el-icon-search" @click="find"></el-button>
-          </el-input>
-        <el-button type="primary" icon="el-icon-plus" class="button_plus">新增</el-button>
+        <el-input
+          placeholder="关键字搜索"
+          prefix-icon="el-icon-search"
+          class="input_search"
+          @input="find"
+          clearable
+          v-model="search">
+        </el-input>
+        <el-button type="primary" icon="el-icon-plus" class="button_plus" @click="add">新增</el-button>
       </div>
       <el-table
-        :data="tableData"
+        :data="tableDataNew"
         class="table"
         ref="multipleTable"
         header-cell-class-name="table-header"
@@ -95,6 +93,7 @@
               type="text"
               icon="el-icon-postcard"
               class="green"
+              @click="handleMore(scope.$index, scope.row)"
               v-if="scope.row.req_pur_status==='已审批' || scope.row.req_pur_status==='已关闭'"
             >详情
             </el-button>
@@ -102,12 +101,14 @@
               type="text"
               icon="el-icon-document-delete"
               class="block"
+              @click="handleClose(scope.$index, scope.row)"
               v-if="scope.row.req_pur_status==='已审批'"
             >关闭
             </el-button>
           </template>
         </el-table-column>
       </el-table>
+      <!-- 分页 -->
       <div class="pagination">
         <el-pagination
           @current-change="handlePageChange"
@@ -119,27 +120,24 @@
         </el-pagination>
       </div>
     </div>
-
+    <!-- 新增弹出框 -->
+    <el-dialog title="新增" :visible.sync="addVisible" width="90%">
+      <Reqadd :editform="addform" :ifchange="true"></Reqadd>
+    </el-dialog>
     <!-- 编辑弹出框 -->
-    <el-dialog title="编辑" :visible.sync="editVisible" width="30%">
-      <el-form ref="form" :model="form" label-width="70px">
-        <el-form-item label="用户名">
-          <el-input v-model="form.name"></el-input>
-        </el-form-item>
-        <el-form-item label="地址">
-          <el-input v-model="form.address"></el-input>
-        </el-form-item>
-      </el-form>
-      <span slot="footer" class="dialog-footer">
-                <el-button @click="editVisible = false">取 消</el-button>
-                <el-button type="primary" @click="saveEdit">确 定</el-button>
-            </span>
+    <el-dialog title="编辑" :visible.sync="editVisible" width="90%">
+      <Reqadd :editform="editform" :ifchange="true"></Reqadd>
+    </el-dialog>
+    <!-- 详情弹出框 -->
+    <el-dialog title="详情" :visible.sync="moreVisible" width="90%">
+      <Reqadd :editform="moreform" :ifchange="false"></Reqadd>
     </el-dialog>
   </div>
 </template>
 
 <script>
 import axios from 'axios'
+import Reqadd from './req_pur_add'
 
 export default {
   name: 'test',
@@ -153,20 +151,31 @@ export default {
         select: '',
         value: ''
       },
+      search: '',
       tableData: [],
+      tableDataNew: [],
       req_pur_orgaSet: [],
       req_pur_typeSet: [],
       req_pur_fromSet: [],
       req_pur_statusSet: [],
       req_pur_creatorSet: [],
-      multipleSelection: [],
-      delList: [],
       editVisible: false,
+      editform: {},
+      moreVisible: false,
+      moreform: {},
       pageTotal: 0,
-      form: {},
-      idx: -1,
-      id: -1
+      addVisible: false,
+      addform: {
+        req_pur_orga: '',
+        req_pur_from: '',
+        req_pur_type: '',
+        req_pur_remarks: '',
+        req_pur_date: ''
+      }
     }
+  },
+  components: {
+    Reqadd
   },
   created () {
     this.getData()
@@ -174,8 +183,9 @@ export default {
   methods: {
     getData () {
       let _this = this
-      axios.post('/test').then(function (res) {
+      axios.post('/req_pur_check', this.req_pur).then(function (res) {
         _this.tableData = res.data.list
+        _this.tableDataNew = _this.tableData
         let orgaset = new Set()
         let typeset = new Set()
         let statusset = new Set()
@@ -225,6 +235,14 @@ export default {
     },
     // 表格每行的class样式
     tableRowClassName ({row, rowIndex}) {
+      // if (!(!this.search ||
+      //   row.req_pur_iden.toLowerCase().includes(this.search.toLowerCase()) ||
+      //   row.req_pur_orga.toLowerCase().includes(this.search.toLowerCase()) ||
+      //   row.req_pur_type.toLowerCase().includes(this.search.toLowerCase()) ||
+      //   row.req_pur_from.toLowerCase().includes(this.search.toLowerCase()) ||
+      //   row.req_pur_creator.toLowerCase().includes(this.search.toLowerCase()))) {
+      //   return 'tableRowDisplay'
+      // }
       this.pageTotal = rowIndex + 1
       if (rowIndex >= (this.query.pageIndex - 1) * this.query.pageSize && rowIndex < this.query.pageIndex * this.query.pageSize) {
         return ''
@@ -239,7 +257,19 @@ export default {
       }
       return false
     },
+    // 查询
     find () {
+      this.pageTotal = 0
+      this.tableDataNew = this.tableData.filter(data => !this.search ||
+        data.req_pur_iden.toLowerCase().includes(this.search.toLowerCase()) ||
+        data.req_pur_orga.toLowerCase().includes(this.search.toLowerCase()) ||
+        data.req_pur_type.toLowerCase().includes(this.search.toLowerCase()) ||
+        data.req_pur_from.toLowerCase().includes(this.search.toLowerCase()) ||
+        data.req_pur_creator.toLowerCase().includes(this.search.toLowerCase()))
+    },
+    // 新增
+    add () {
+      this.addVisible = true
     },
     // 删除操作
     handleDelete (index, row) {
@@ -248,23 +278,54 @@ export default {
         type: 'warning'
       })
         .then(() => {
-          this.$message.success('删除成功');
-          this.tableData.splice(index, 1);
+          this.$message.success('删除成功')
+          this.tableData.splice(index, 1)
         })
         .catch(() => {
-        });
+          this.$message({
+            type: 'info',
+            message: '取消删除'
+          })
+        })
     },
     // 编辑操作
     handleEdit (index, row) {
-      this.idx = index;
-      this.form = row;
-      this.editVisible = true;
+      this.editform = row
+      this.editVisible = true
+    },
+    // 详情操作
+    handleMore (index, row) {
+      this.moreform = row
+      this.moreVisible = true
+    },
+    // 关闭操作
+    handleClose (index, row) {
+      this.$prompt('请输入关闭原因', '关闭', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消'
+      }).then(({ value }) => {
+        this.$confirm('确定要关闭吗？', '提示', {
+          type: 'warning'
+        }).then(() => {
+          this.$message.success('关闭成功')
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '取消关闭'
+          })
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '取消关闭'
+        })
+      })
     },
     // 保存编辑
     saveEdit () {
-      this.editVisible = false;
-      this.$message.success(`修改第 ${this.idx + 1} 行成功`);
-      this.$set(this.tableData, this.idx, this.form);
+      this.editVisible = false
+      this.$message.success(`修改第 ${this.idx + 1} 行成功`)
+      this.$set(this.tableData, this.idx, this.form)
     },
     // 分页导航
     handlePageChange (val) {
@@ -314,11 +375,8 @@ export default {
     color: grey;
   }
 
-  .input-with-select {
+  .input_search {
     width: 50%;
-  }
-  .input-select {
-    width: 130px;
   }
   .button_plus {
     float: right;
