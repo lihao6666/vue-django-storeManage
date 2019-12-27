@@ -7,7 +7,7 @@ export default new Router({
   routes: [
     {
       path: '/',
-      redirect: '/test'
+      redirect: '/requisition'
     },
     {
       path: '/',
@@ -15,9 +15,9 @@ export default new Router({
       meta: {title: 'home'},
       children: [
         {
-          path: '/test',
-          component: () => import(/* webpackChunkName: "donate" */ '../components/test.vue'),
-          meta: {title: 'test'}
+          path: '/requisition',
+          component: () => import(/* webpackChunkName: "donate" */ '../components/req_pur/req_pur_check.vue'),
+          meta: {title: '请购'}
         }
       ]
     },
