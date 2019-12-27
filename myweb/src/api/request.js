@@ -1,4 +1,5 @@
 import axios from 'axios'
+import  x from '../../public/requisition'
 export const HOST = {
   MAIN: '', // 主服务的 host
   EXAMPLE: '' // 样例服务的 host
