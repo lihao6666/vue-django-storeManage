@@ -17,9 +17,9 @@
           clearable
           v-model="search">
         </el-input>
-        <el-button type="primary" class="button_save">保 存</el-button>
-        <el-button type="primary" class="button_save">提 交</el-button>
-        <el-button type="primary" icon="el-icon-plus" class="button_save" @click="add">新增</el-button>
+        <el-button type="primary" class="button_save" v-if="ifchange">保 存</el-button>
+        <el-button type="primary" class="button_save" v-if="ifchange">提 交</el-button>
+        <el-button type="primary" icon="el-icon-plus" class="button_save" @click="add" v-if="ifchange">新增</el-button>
       </div>
       <el-table
         :data="tableDataNew"
@@ -51,6 +51,7 @@
           <template slot-scope="scope">
             <el-input
               placeholder="1"
+              :disabled="!ifchange"
               v-model="scope.row.prd_num"
               @input="scope.row.prd_num = inputnum(scope.row.prd_num)"
               @change="scope.row.prd_num = changenum(scope.row.prd_num)"

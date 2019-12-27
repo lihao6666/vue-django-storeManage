@@ -3,17 +3,17 @@
     <div class="container">
       <el-form ref="form" :inline="true" :model="formadd" label-width="70px" size="mini">
         <el-form-item label="库存组织">
-          <el-select v-model="formadd.req_pur_orga" placeholder="请选择">
-            <el-option v-for="item in form_req_pur_orga" v-bind:key="item" :label="item" :value="item"></el-option>
+          <el-select v-model="formadd.req_pur_orga" placeholder="请选择" :disabled="!ifchange">
+            <el-option  v-for="item in form_req_pur_orga" v-bind:key="item" :label="item" :value="item"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="申请部门">
-          <el-select v-model="formadd.req_pur_from" placeholder="请选择">
+          <el-select v-model="formadd.req_pur_from" placeholder="请选择" :disabled="!ifchange">
             <el-option v-for="item in form_req_pur_from" v-bind:key="item" :label="item" :value="item"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="需求类型">
-          <el-select v-model="formadd.req_pur_type" placeholder="请选择">
+          <el-select v-model="formadd.req_pur_type" placeholder="请选择" :disabled="!ifchange">
             <el-option v-for="item in form_req_pur_type" v-bind:key="item" :label="item" :value="item"></el-option>
           </el-select>
         </el-form-item>
@@ -24,18 +24,18 @@
               type="datetime"
               placeholder="选择日期时间"
               align="right"
-              :picker-options="pickerOptions">
+              :picker-options="pickerOptions" :disabled="!ifchange">
             </el-date-picker>
           </el-col>
         </el-form-item>
         <el-form-item label="备注">
-          <el-input type="textarea" v-model="formadd.req_pur_remarks" rows="3" class="form_item_from"
+          <el-input type="textarea" v-model="formadd.req_pur_remarks" rows="3" class="form_item_from" :disabled="!ifchange"
                     placeholder="请输入200字以内的描述" maxlength="200" show-word-limit clearable></el-input>
         </el-form-item>
-        <el-button type="primary" class="form_item_save">保 存</el-button>
+        <el-button type="primary" class="form_item_save" v-if="ifchange">保 存</el-button>
       </el-form>
     </div>
-    <Reqprd :formadd="formadd" :ifchange="true"></Reqprd>
+    <Reqprd :formadd="formadd" :ifchange="ifchange"></Reqprd>
   </div>
 </template>
 
@@ -43,6 +43,7 @@
 import Reqprd from './req_pur_prd'
 export default {
   name: 'req_pur_add',
+  props: ['editform', 'ifchange'],
   components: {
     Reqprd
   },
@@ -71,11 +72,11 @@ export default {
         }]
       },
       formadd: {
-        req_pur_orga: '',
-        req_pur_from: '',
-        req_pur_type: '',
-        req_pur_remarks: '',
-        req_pur_date: ''
+        req_pur_orga: this.editform.req_pur_orga,
+        req_pur_from: this.editform.req_pur_from,
+        req_pur_type: this.editform.req_pur_type,
+        req_pur_remarks: this.editform.req_pur_remarks,
+        req_pur_date: this.editform.req_pur_date
       },
       form_req_pur_orga: [
         '礼品',

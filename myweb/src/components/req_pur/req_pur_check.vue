@@ -122,23 +122,15 @@
     </div>
     <!-- 新增弹出框 -->
     <el-dialog title="新增" :visible.sync="addVisible" width="90%">
-      <Reqadd></Reqadd>
+      <Reqadd :editform="addform" :ifchange="true"></Reqadd>
     </el-dialog>
-
     <!-- 编辑弹出框 -->
-    <el-dialog title="编辑" :visible.sync="editVisible" width="30%">
-      <el-form ref="form" :model="form" label-width="70px">
-        <el-form-item label="用户名">
-          <el-input v-model="form.name"></el-input>
-        </el-form-item>
-        <el-form-item label="地址">
-          <el-input v-model="form.address"></el-input>
-        </el-form-item>
-      </el-form>
-      <span slot="footer" class="dialog-footer">
-                <el-button @click="editVisible = false">取 消</el-button>
-                <el-button type="primary" @click="saveEdit">确 定</el-button>
-            </span>
+    <el-dialog title="编辑" :visible.sync="editVisible" width="90%">
+      <Reqadd :editform="editform" :ifchange="true"></Reqadd>
+    </el-dialog>
+    <!-- 详情弹出框 -->
+    <el-dialog title="详情" :visible.sync="moreVisible" width="90%">
+      <Reqadd :editform="moreform" :ifchange="false"></Reqadd>
     </el-dialog>
   </div>
 </template>
@@ -168,11 +160,18 @@ export default {
       req_pur_statusSet: [],
       req_pur_creatorSet: [],
       editVisible: false,
+      editform: {},
+      moreVisible: false,
+      moreform: {},
       pageTotal: 0,
       addVisible: false,
-      form: {},
-      idx: -1,
-      id: -1
+      addform: {
+        req_pur_orga: '',
+        req_pur_from: '',
+        req_pur_type: '',
+        req_pur_remarks: '',
+        req_pur_date: ''
+      }
     }
   },
   components: {
@@ -291,12 +290,15 @@ export default {
     },
     // 编辑操作
     handleEdit (index, row) {
-      this.idx = index
-      this.form = row
+      this.editform = row
       this.editVisible = true
     },
+    // 详情操作
     handleMore (index, row) {
+      this.moreform = row
+      this.moreVisible = true
     },
+    // 关闭操作
     handleClose (index, row) {
       this.$prompt('请输入关闭原因', '关闭', {
         confirmButtonText: '确定',
