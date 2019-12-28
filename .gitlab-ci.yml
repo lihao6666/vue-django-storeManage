@@ -1,13 +1,6 @@
 stages:
   - test1
-  - test2
     
 test_all:
   stage: test1
   script: 
-  - echo "test1 finished"
-
-test_part:
-  stage: test2
-  script: 
-  - echo "test2 finished"
