@@ -3,3 +3,5 @@ stages:
     
 test_all:
   stage: test1
+  script: 
+    - echo "test1 finished"
