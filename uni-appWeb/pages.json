@@ -1,0 +1,55 @@
+{
+	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
+		{
+			"path": "pages/index/index",
+			"style": {
+				"navigationBarTitleText": "艺朝艺夕仓库",
+                "disableScroll":true
+			}
+		}
+	    ,{
+            "path" : "pages/qinggou/qinggou",
+            "style" : {
+				"navigationBarTitleText": "请购",
+				"disableScroll":true
+			}
+        }
+        ,{
+            "path" : "pages/user/user",
+            "style" : {
+            	"navigationBarTitleText": "我的",
+            	"disableScroll":true
+            }
+        }
+    ],
+	"globalStyle": {
+		"navigationBarTextStyle": "white",
+		"navigationBarTitleText": "uni-app",
+		"navigationBarBackgroundColor": "#50B7EA",
+		"backgroundColor": "#50B7EA"
+	},
+		"tabBar": {
+		"color": "#cdcdcd",
+		"selectedColor": "#50B7EA",
+		"borderStyle": "white",
+		"list": [{
+				"pagePath": "pages/index/index",
+				"text": "首页",
+				"iconPath": "static/tab-index.png",
+				"selectedIconPath": "static/tab-index-current.png"
+			},
+			{
+				"pagePath": "pages/qinggou/qinggou",
+				"text": "请购",
+				"iconPath": "static/tab-cate.png",
+				"selectedIconPath": "static/tab-cate-current.png"
+			},
+			{
+				"pagePath": "pages/user/user",
+				"text": "我的",
+				"iconPath": "static/tab-my.png",
+				"selectedIconPath": "static/tab-my-current.png"
+			}
+		]
+	}
+}
