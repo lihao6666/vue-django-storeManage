@@ -4,4 +4,4 @@ stages:
 test_all:
   stage: test1
   script: 
-    - sudo echo "test1 finished"
+    - echo "test1 finished"
