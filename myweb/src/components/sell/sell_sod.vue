@@ -33,34 +33,98 @@
           <template slot-scope="props">
             <el-form label-position="left" inline class="demo-table-expand">
               <el-form-item label="备注">
-                <el-input type="textarea" v-model="props.row.prd_remarks" rows="3" :disabled="!ifchange"
+                <el-input type="textarea" v-model="props.row.sod_remarks" rows="3" :disabled="!ifchange"
                     placeholder="请输入200字以内的描述" maxlength="200" show-word-limit clearable></el-input>
               </el-form-item>
             </el-form>
           </template>
         </el-table-column>
-        <el-table-column prop="prd_iden" sortable label="物料编码" align="center"></el-table-column>
-        <el-table-column prop="prd_name" sortable label="物料名称" :filters="prd_nameSet"
+        <el-table-column prop="sod_iden" sortable label="物料编码" align="center"></el-table-column>
+        <el-table-column prop="sod_name" sortable label="物料名称" :filters="sod_nameSet"
       :filter-method="filter" align="center"></el-table-column>
-        <el-table-column prop="prd_specification" sortable label="规格" :filters="prd_specificationSet"
+        <el-table-column prop="sod_specification" sortable label="规格" :filters="sod_specificationSet"
       :filter-method="filter" align="center"></el-table-column>
-        <el-table-column prop="prd_model" sortable label="型号" :filters="prd_modelSet"
+        <el-table-column prop="sod_model" sortable label="型号" :filters="sod_modelSet"
       :filter-method="filter" align="center"></el-table-column>
-        <el-table-column prop="prd_meterage" sortable label="单位" :filters="prd_meterageSet"
+        <el-table-column prop="sod_meterage" sortable label="单位" :filters="sod_meterageSet"
       :filter-method="filter" align="center"></el-table-column>
-        <el-table-column prop="prd_num" sortable label="请购数量" align="center">
+        <el-table-column prop="sod_num" sortable label="请购数量" align="center">
           <template slot-scope="scope">
             <el-input
+              v-if="formadd.so_type=='退换货'"
+              prefix-icon="el-icon-minus"
               placeholder="1"
               :disabled="!ifchange"
-              v-model="scope.row.prd_num"
-              @input="scope.row.prd_num = inputnum(scope.row.prd_num)"
-              @change="scope.row.prd_num = changenum(scope.row.prd_num)"
+              v-model="scope.row.sod_num"
+              @input="scope.row.sod_num = inputnum(scope.row.sod_num)"
+              @change="scope.row.sod_num = changenum(scope.row.sod_num)">
+            </el-input>
+            <el-input
+              v-else
+              placeholder="1"
+              :disabled="!ifchange"
+              v-model="scope.row.sod_num"
+              @input="scope.row.sod_num = inputnum(scope.row.sod_num)"
+              @change="scope.row.sod_num = changenum(scope.row.sod_num)">
+            </el-input>
+          </template>
+        </el-table-column>
+        <el-table-column prop="sod_taxRate" sortable label="税率" align="center">
+          <template slot-scope="scope">
+            <el-input
+              placeholder="13"
+              :disabled="!ifchange"
+              v-model="scope.row.sod_taxRate"
+              @input="scope.row.sod_taxRate = inputsod_taxRate(scope.row.sod_taxRate)"
+              @change="scope.row.sod_taxRate = changesod_taxRate(scope.row.sod_taxRate)"
               clearable>
             </el-input>
           </template>
         </el-table-column>
-        <el-table-column prop="prd_present_num" sortable label="现存量" align="center"></el-table-column>
+        <el-table-column prop="sod_tax_unitPrice" sortable label="含税单价" align="center">
+          <template slot-scope="scope">
+            <el-input
+              placeholder="0"
+              :disabled="!ifchange"
+              v-model="scope.row.sod_tax_unitPrice"
+              @input="scope.row.sod_tax_unitPrice = inputsod_tax_unitPrice(scope.row.sod_tax_unitPrice)"
+              @change="scope.row.sod_tax_unitPrice = changesod_tax_unitPrice(scope.row.sod_tax_unitPrice)"
+              clearable>
+            </el-input>
+          </template>
+        </el-table-column>
+        <el-table-column prop="sod_tax_unitPrice/(1+sod_taxRate/100)" sortable label="无税单价" align="center">
+          <template slot-scope="scope">
+            <el-tag
+              :type="'success'"
+            >{{(scope.row.sod_tax_unitPrice/(1+scope.row.sod_taxRate/100)).toFixed(2)}}
+            </el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column prop="sod_tax_unitPrice*sod_num*" sortable label="含税金额" align="center">
+          <template slot-scope="scope">
+            <el-tag
+              :type="'success'"
+            >{{(scope.row.sod_tax_unitPrice*scope.row.sod_num).toFixed(2)}}
+            </el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column prop="sod_tax_unitPrice*sod_num/(1+sod_taxRate/100)" sortable label="无税金额" align="center">
+          <template slot-scope="scope">
+            <el-tag
+              :type="'success'"
+            >{{(scope.row.sod_tax_unitPrice*scope.row.sod_num/(1+scope.row.sod_taxRate/100)).toFixed(2)}}
+            </el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column prop="sod_tax_unitPrice*sod_num*sod_taxRate/100/(1+sod_taxRate/100)" sortable label="税额" align="center">
+          <template slot-scope="scope">
+            <el-tag
+              :type="'success'"
+            >{{(scope.row.sod_tax_unitPrice*scope.row.sod_num*scope.row.sod_taxRate/100/(1+scope.row.sod_taxRate/100)).toFixed(2)}}
+            </el-tag>
+          </template>
+        </el-table-column>
         <el-table-column label="操作" align="center" v-if="ifchange">
           <template slot-scope="scope">
             <el-button
@@ -95,7 +159,7 @@
 import axios from 'axios'
 
 export default {
-  name: 'req_pur_prd',
+  name: 'sell_sod',
   props: ['formadd', 'ifchange'],
   data () {
     return {
@@ -106,10 +170,10 @@ export default {
       search: '',
       tableData: [],
       tableDataNew: [],
-      prd_nameSet: [],
-      prd_specificationSet: [],
-      prd_modelSet: [],
-      prd_meterageSet: [],
+      sod_nameSet: [],
+      sod_specificationSet: [],
+      sod_modelSet: [],
+      sod_meterageSet: [],
       addVisible: false,
       pageTotal: 0
     }
@@ -120,7 +184,7 @@ export default {
   methods: {
     getData () {
       let _this = this
-      axios.post('/req_pur_prd', this.formadd).then(function (res) {
+      axios.post('/so_sod', this.formadd).then(function (res) {
         _this.tableData = res.data.list
         _this.tableDataNew = _this.tableData
         let nameset = new Set()
@@ -128,31 +192,31 @@ export default {
         let modelset = new Set()
         let meterageset = new Set()
         for (let i in _this.tableData) {
-          nameset.add(_this.tableData[i]['prd_name'])
-          specificationset.add(_this.tableData[i]['prd_specification'])
-          modelset.add(_this.tableData[i]['prd_model'])
-          meterageset.add(_this.tableData[i]['prd_meterage'])
+          nameset.add(_this.tableData[i]['sod_name'])
+          specificationset.add(_this.tableData[i]['sod_specification'])
+          modelset.add(_this.tableData[i]['sod_model'])
+          meterageset.add(_this.tableData[i]['sod_meterage'])
         }
         for (let i of nameset) {
-          _this.prd_nameSet.push({
+          _this.sod_nameSet.push({
             text: i,
             value: i
           })
         }
         for (let i of meterageset) {
-          _this.prd_meterageSet.push({
+          _this.sod_meterageSet.push({
             text: i,
             value: i
           })
         }
         for (let i of specificationset) {
-          _this.prd_specificationSet.push({
+          _this.sod_specificationSet.push({
             text: i,
             value: i
           })
         }
         for (let i of modelset) {
-          _this.prd_modelSet.push({
+          _this.sod_modelSet.push({
             text: i,
             value: i
           })
@@ -182,11 +246,11 @@ export default {
     find () {
       this.pageTotal = 0
       this.tableDataNew = this.tableData.filter(data => !this.search ||
-        data.prd_iden.toLowerCase().includes(this.search.toLowerCase()) ||
-        data.prd_name.toLowerCase().includes(this.search.toLowerCase()) ||
-        data.prd_specification.toLowerCase().includes(this.search.toLowerCase()) ||
-        data.prd_model.toLowerCase().includes(this.search.toLowerCase()) ||
-        data.prd_meterage.toLowerCase().includes(this.search.toLowerCase()))
+        data.sod_iden.toLowerCase().includes(this.search.toLowerCase()) ||
+        data.sod_name.toLowerCase().includes(this.search.toLowerCase()) ||
+        data.sod_specification.toLowerCase().includes(this.search.toLowerCase()) ||
+        data.sod_model.toLowerCase().includes(this.search.toLowerCase()) ||
+        data.sod_meterage.toLowerCase().includes(this.search.toLowerCase()))
     },
     // 新增
     add () {
@@ -203,6 +267,38 @@ export default {
     changenum (num) {
       if (num < 1) {
         num = 1
+      }
+      if (num === '') {
+        num = 1
+      }
+      return num
+    },
+    inputsod_taxRate (num) {
+      num = num.replace(/[^\d]/g, '')
+      if (!num) {
+        num = ''
+      }
+      return num
+    },
+    changesod_taxRate (num) {
+      if (num > 16) {
+        num = 16
+      }
+      if (num === '') {
+        num = 13
+      }
+      return num
+    },
+    inputsod_tax_unitPrice (num) {
+      num = num.replace(/[^\d]/g, '')
+      if (!num) {
+        num = ''
+      }
+      return num
+    },
+    changesod_tax_unitPrice (num) {
+      if (num === '') {
+        num = 0
       }
       return num
     },
