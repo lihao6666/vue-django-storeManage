@@ -3,4 +3,3 @@ stages:
     
 test_all:
   stage: test1
-  script: 
