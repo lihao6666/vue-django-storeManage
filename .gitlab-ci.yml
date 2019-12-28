@@ -1,7 +1,7 @@
 stages:
-  - test1
+  - test
     
 test_all:
-  stage: test1
+  stage: test
   script: 
-    - echo "test1 finished"
+    - ci/test.sh
