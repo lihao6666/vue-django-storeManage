@@ -1,10 +1,4 @@
 {
   "navigationBarTitleText": "我的",
-  "disableScroll": true,
-  "usingComponents": {
-    "refresh": "/components/refresh",
-    "nav-tab": "/components/navTab",
-    "click-circle": "/components/clickCircle",
-    "tab-bar4": "/components/tabBar4"
-  }
+  "usingComponents": {}
 }

@@ -41,9 +41,9 @@
 const util = require('../../util/util.js');
 import refresh from '../../components/refresh.vue';
 import navTab from '../../components/navTab.vue';
-import tabBar4 from '../../components/tabBar4.vue';
+
 export default {
-	components: {refresh,navTab,tabBar4},
+	components: {refresh,navTab},
 	data() {
 		return {
 			currentPage:'index',
@@ -146,7 +146,7 @@ export default {
 		width: 90%;
 		height: 200upx;
 		background-color: white;
-		margin: 0 auto 30upx auto;
+		margin: 0 auto 30upx;
 		background: #FFFFFF;
 		box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.10);
 		border-radius: 5px;
