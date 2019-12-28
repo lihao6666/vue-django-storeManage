@@ -1,0 +1,9 @@
+{
+  "navigationBarTitleText": "艺朝艺夕仓库",
+  "disableScroll": true,
+  "usingComponents": {
+    "refresh": "/components/refresh",
+    "nav-tab": "/components/navTab",
+    "tab-bar4": "/components/tabBar4"
+  }
+}
