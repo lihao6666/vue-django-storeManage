@@ -1,7 +1,7 @@
 {
   "list": [
     {
-      "req_pur_iden": "1",
+      "req_pur_iden": "1000",
       "req_pur_orga": "合肥工业大学",
       "req_pur_type": "物品",
       "req_pur_from": "软件学院",
@@ -15,32 +15,32 @@
       "req_pur_closeReason": ""
     },
     {
-      "req_pur_iden": "1",
-      "req_pur_orga": "合肥工业大学",
-      "req_pur_type": "物品",
-      "req_pur_from": "软件学院",
-      "req_pur_date": "2019-01-01 12:00:00",
-      "req_pur_remarks": "很多东西扫地机杀掉了卡简历库的境外旅客就是领导进来撒是肯定骄傲三十六就看撒的",
-      "req_pur_status": "草稿",
-      "req_pur_creator": "yq",
-      "req_pur_createDate": "2019-01-01 12:00:00",
-      "req_pur_closer": "",
-      "req_pur_closeDate": "",
-      "req_pur_closeReason": ""
-    },
-    {
-      "req_pur_iden": "1",
-      "req_pur_orga": "合肥工业大学",
-      "req_pur_type": "物品",
-      "req_pur_from": "软件学院",
-      "req_pur_date": "2019-01-01 12:00:00",
+      "req_pur_iden": "1001",
+      "req_pur_orga": "北京大学",
+      "req_pur_type": "电脑",
+      "req_pur_from": "计算机学院",
+      "req_pur_date": "2019-01-10 12:00:00",
       "req_pur_remarks": "很多东西扫地机杀掉了卡简历库的境外旅客就是领导进来撒是肯定骄傲三十六就看撒的",
       "req_pur_status": "已审批",
-      "req_pur_creator": "yq",
-      "req_pur_createDate": "2019-01-01 12:00:00",
+      "req_pur_creator": "zep",
+      "req_pur_createDate": "2019-01-10 12:00:00",
       "req_pur_closer": "",
       "req_pur_closeDate": "",
       "req_pur_closeReason": ""
+    },
+    {
+      "req_pur_iden": "1002",
+      "req_pur_orga": "清华大学",
+      "req_pur_type": "教材",
+      "req_pur_from": "数学学院",
+      "req_pur_date": "2019-02-01 12:00:00",
+      "req_pur_remarks": "很多东西扫地机杀掉了卡简历库的境外旅客就是领导进来撒是肯定骄傲三十六就看撒的",
+      "req_pur_status": "已关闭",
+      "req_pur_creator": "lh",
+      "req_pur_createDate": "2019-02-01 12:00:00",
+      "req_pur_closer": "yq",
+      "req_pur_closeDate": "2019-02-10 12:00:00",
+      "req_pur_closeReason": "自动关闭"
     },
     {
       "req_pur_iden": "1",
