@@ -76,8 +76,7 @@
               :disabled="!ifchange"
               v-model="scope.row.sod_taxRate"
               @input="scope.row.sod_taxRate = inputsod_taxRate(scope.row.sod_taxRate)"
-              @change="scope.row.sod_taxRate = changesod_taxRate(scope.row.sod_taxRate)"
-              clearable>
+              @change="scope.row.sod_taxRate = changesod_taxRate(scope.row.sod_taxRate)">
             </el-input>
           </template>
         </el-table-column>
@@ -88,8 +87,7 @@
               :disabled="!ifchange"
               v-model="scope.row.sod_tax_unitPrice"
               @input="scope.row.sod_tax_unitPrice = inputsod_tax_unitPrice(scope.row.sod_tax_unitPrice)"
-              @change="scope.row.sod_tax_unitPrice = changesod_tax_unitPrice(scope.row.sod_tax_unitPrice)"
-              clearable>
+              @change="scope.row.sod_tax_unitPrice = changesod_tax_unitPrice(scope.row.sod_tax_unitPrice)">
             </el-input>
           </template>
         </el-table-column>
@@ -259,8 +257,8 @@ export default {
     // 修改数量
     inputnum (num) {
       num = num.replace(/[^\d]/g, '')
-      if (!num) {
-        num = ''
+      if (num.substr(0, 1) === '0' && num.length === 2) {
+        num = num.substr(1, num.length)
       }
       return num
     },
@@ -275,24 +273,33 @@ export default {
     },
     inputsod_taxRate (num) {
       num = num.replace(/[^\d]/g, '')
-      if (!num) {
-        num = ''
+      if (num > 16) {
+        num = 16
+      }
+      if (num.substr(0, 1) === '0' && num.length === 2) {
+        num = num.substr(1, num.length)
       }
       return num
     },
     changesod_taxRate (num) {
-      if (num > 16) {
-        num = 16
-      }
       if (num === '') {
         num = 13
       }
       return num
     },
     inputsod_tax_unitPrice (num) {
-      num = num.replace(/[^\d]/g, '')
-      if (!num) {
+      if (num !== '' && num.substr(0, 1) === '.') {
         num = ''
+      }
+      num = num.replace(/^0*(0\.|[1-9])/, '$1') // 粘贴不生效
+      num = num.replace(/[^\d.]/g, '') // 清除“数字”和“.”以外的字符
+      num = num.replace(/\.{2,}/g, '.') // 只保留第一个. 清除多余的
+      num = num.replace('.', '$#$').replace(/\./g, '').replace('$#$', '.')
+      num = num.replace(/^()*(\d+)\.(\d\d).*$/, '$1$2.$3')// 只能输入两个小数
+      if (num.indexOf('.') < 0 && num !== '') { // 以上已经过滤，此处控制的是如果没有小数点，首位不能为类似于 01、02的金额
+        if (num.substr(0, 1) === '0' && num.length === 2) {
+          num = num.substr(1, num.length)
+        }
       }
       return num
     },
@@ -300,6 +307,7 @@ export default {
       if (num === '') {
         num = 0
       }
+      num = Number(num).toFixed(2)
       return num
     },
     // 删除操作

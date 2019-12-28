@@ -195,8 +195,8 @@ export default {
     // 修改数量
     inputnum (num) {
       num = num.replace(/[^\d]/g, '')
-      if (!num) {
-        num = ''
+      if (num.substr(0, 1) === '0' && num.length === 2) {
+        num = num.substr(1, num.length)
       }
       return num
     },
