@@ -23,6 +23,21 @@ export default new Router({
           path: '/sell',
           component: () => import(/* webpackChunkName: "销售订单" */ '../components/sell/sell_check.vue'),
           meta: {title: '销售订单'}
+        },
+        {
+          path: '/organizationmanage',
+          component: () => import(/* webpackChunkName: "donate" */ '../components/OrganizationManage.vue'),
+          meta: {title: '库存组织管理'}
+        },
+        {
+          path: '/rolemanage',
+          component: () => import(/* webpackChunkName: "donate" */ '../components/RoleManage.vue'),
+          meta: {title: '角色管理'}
+        },
+        {
+          path: '/usermanage',
+          component: () => import(/* webpackChunkName: "donate" */ '../components/UserManage.vue'),
+          meta: {title: '用户管理'}
         }
       ]
     },
