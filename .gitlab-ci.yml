@@ -1,10 +1,9 @@
 stages:
   - test
 
-include:
-  - ci/test.sh
-
 test_all:
   stage: test
+  include:
+    - ci/test.sh
   script: 
     - bash test.sh
