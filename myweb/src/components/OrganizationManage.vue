@@ -131,7 +131,7 @@
 </template>
 
 <script>
-import axios from 'axios'
+import {postAPI} from '../api/api'
 export default {
   name: 'test',
   data () {
@@ -161,7 +161,7 @@ export default {
   methods: {
     getData () {
       let _this = this
-      axios.post('/test2').then(function (res) {
+      postAPI('/test2').then(function (res) {
         _this.tableData = res.data.list
         let orgaset = new Set()
         let creatorset = new Set()
@@ -223,7 +223,7 @@ export default {
     },
     // 启用
     handleStart (row) {
-      axios.post('/test2', {data: row, status: '启用'}).then(function (res) {
+      postAPI('/test2', {data: row, status: '启用'}).then(function (res) {
         console.log(res)
       }).catch(function (err) {
         console.log(err)
@@ -239,7 +239,7 @@ export default {
     saveEdit () {
       this.editVisible = false
       this.$message.success(`修改成功`)
-      axios.post('/test2', {data: this.editform, dpm_name: this.dpm_name}).then(function (res) {
+      postAPI('/test2', {data: this.editform, dpm_name: this.dpm_name}).then(function (res) {
         console.log(res)
       }).catch(function (err) {
         console.log(err)
@@ -249,7 +249,7 @@ export default {
     saveAlter () {
       this.alterVisible = false
       this.$message.success(`新增成功`)
-      axios.post('/test2', {data: this.form}).then(function (res) {
+      postAPI('/test2', {data: this.form}).then(function (res) {
         console.log(res)
       }).catch(function (err) {
         console.log(err)
