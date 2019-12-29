@@ -29,10 +29,10 @@
           </el-col>
         </el-form-item>
         <el-form-item label="备注">
-          <el-input type="textarea" v-model="formadd.req_pur_remarks" rows="3" class="form_item_from" :disabled="!ifchange"
+          <el-input type="textarea" v-model="formadd.req_pur_remarks" rows="3" class="form-item-from" :disabled="!ifchange"
                     placeholder="请输入200字以内的描述" maxlength="200" show-word-limit clearable></el-input>
         </el-form-item>
-        <el-button type="primary" class="form_item_save" v-if="ifchange">保 存</el-button>
+        <el-button type="primary" class="form-item-save" v-if="ifchange">保 存</el-button>
       </el-form>
     </div>
     <Reqprd :formadd="formadd" :ifchange="ifchange"></Reqprd>
@@ -108,10 +108,10 @@ export default {
 </script>
 
 <style scoped>
-  .form_item_from {
+  .form-item-from {
     width: 200%;
   }
-  .form_item_save {
+  .form-item-save {
     float: right;
     margin-top: 20px;
   }

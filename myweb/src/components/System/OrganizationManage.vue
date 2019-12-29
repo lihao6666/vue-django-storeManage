@@ -132,6 +132,7 @@
 
 <script>
 import axios from 'axios'
+import {postAPI} from '../../api/api'
 export default {
   name: 'test',
   data () {
@@ -161,7 +162,7 @@ export default {
   methods: {
     getData () {
       let _this = this
-      axios.post('/test2').then(function (res) {
+      postAPI('/test2').then(function (res) {
         _this.tableData = res.data.list
         let orgaset = new Set()
         let creatorset = new Set()
