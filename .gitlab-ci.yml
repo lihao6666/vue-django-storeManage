@@ -1,7 +1,10 @@
 stages:
   - test
-    
+
+include:
+  - ci/test.sh
+
 test_all:
   stage: test
   script: 
-    - echo "test successful!"
+    - bash test.sh
