@@ -12,14 +12,14 @@
         <el-input
           placeholder="关键字搜索"
           prefix-icon="el-icon-search"
-          class="input_search"
+          class="input-search"
           @input="find"
           clearable
           v-model="search">
         </el-input>
-        <el-button type="primary" class="button_save" v-if="ifchange">保 存</el-button>
-        <el-button type="primary" class="button_save" v-if="ifchange">提 交</el-button>
-        <el-button type="primary" icon="el-icon-plus" class="button_save" @click="add" v-if="ifchange">新增</el-button>
+        <el-button type="primary" class="button-save" v-if="ifchange">保 存</el-button>
+        <el-button type="primary" class="button-save" v-if="ifchange">提 交</el-button>
+        <el-button type="primary" icon="el-icon-plus" class="button-save" @click="add" v-if="ifchange">新增</el-button>
       </div>
       <el-table
         :data="tableDataNew"
@@ -75,8 +75,8 @@
               placeholder="13"
               :disabled="!ifchange"
               v-model="scope.row.sod_taxRate"
-              @input="scope.row.sod_taxRate = inputsod_taxRate(scope.row.sod_taxRate)"
-              @change="scope.row.sod_taxRate = changesod_taxRate(scope.row.sod_taxRate)">
+              @input="scope.row.sod_taxRate = inputsodTaxRate(scope.row.sod_taxRate)"
+              @change="scope.row.sod_taxRate = changesodTaxRate(scope.row.sod_taxRate)">
             </el-input>
           </template>
         </el-table-column>
@@ -86,8 +86,8 @@
               placeholder="0"
               :disabled="!ifchange"
               v-model="scope.row.sod_tax_unitPrice"
-              @input="scope.row.sod_tax_unitPrice = inputsod_tax_unitPrice(scope.row.sod_tax_unitPrice)"
-              @change="scope.row.sod_tax_unitPrice = changesod_tax_unitPrice(scope.row.sod_tax_unitPrice)">
+              @input="scope.row.sod_tax_unitPrice = inputsodTaxUnitPrice(scope.row.sod_tax_unitPrice)"
+              @change="scope.row.sod_tax_unitPrice = changesodTaxUnitPrice(scope.row.sod_tax_unitPrice)">
             </el-input>
           </template>
         </el-table-column>
@@ -139,10 +139,12 @@
       <div class="pagination">
         <el-pagination
           @current-change="handlePageChange"
+          @size-change="handleSizeChange"
+          :page-sizes="[5, 10, 20, 50, 100, 200, 500]"
           :current-page="query.pageIndex"
           :page-size="query.pageSize"
           background
-          layout="total, prev, pager, next, jumper"
+          layout="total, sizes, prev, pager, next, jumper"
           :total="pageTotal">
         </el-pagination>
       </div>
@@ -154,7 +156,7 @@
 </template>
 
 <script>
-import axios from 'axios'
+import {postAPI} from '../../api/api'
 
 export default {
   name: 'sell_sod',
@@ -182,7 +184,7 @@ export default {
   methods: {
     getData () {
       let _this = this
-      axios.post('/so_sod', this.formadd).then(function (res) {
+      postAPI('/so_sod', this.formadd).then(function (res) {
         _this.tableData = res.data.list
         _this.tableDataNew = _this.tableData
         let nameset = new Set()
@@ -271,7 +273,7 @@ export default {
       }
       return num
     },
-    inputsod_taxRate (num) {
+    inputsodTaxRate (num) {
       num = num.replace(/[^\d]/g, '')
       if (num > 16) {
         num = 16
@@ -281,13 +283,13 @@ export default {
       }
       return num
     },
-    changesod_taxRate (num) {
+    changesodTaxRate (num) {
       if (num === '') {
         num = 13
       }
       return num
     },
-    inputsod_tax_unitPrice (num) {
+    inputsodTaxUnitPrice (num) {
       if (num !== '' && num.substr(0, 1) === '.') {
         num = ''
       }
@@ -303,7 +305,7 @@ export default {
       }
       return num
     },
-    changesod_tax_unitPrice (num) {
+    changesodTaxUnitPrice (num) {
       if (num === '') {
         num = 0
       }
@@ -330,6 +332,9 @@ export default {
     // 分页导航
     handlePageChange (val) {
       this.query.pageIndex = val
+    },
+    handleSizeChange (val) {
+      this.query.pageSize = val
     }
   }
 }
@@ -366,10 +371,10 @@ export default {
   .red {
     color: #ff0000;
   }
-  .input_search {
+  .input-search {
     width: 50%;
   }
-  .button_save {
+  .button-save {
     float: right;
     margin-left: 30px;
   }

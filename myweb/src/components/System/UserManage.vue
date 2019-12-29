@@ -235,8 +235,8 @@
 </template>
 
 <script>
-import axios from 'axios'
 import moment from 'moment'
+import {postAPI} from '../../api/api'
 export default {
   name: 'test',
   data () {
@@ -270,7 +270,7 @@ export default {
   methods: {
     getData () {
       let _this = this
-      axios.post('/test2').then(function (res) {
+      postAPI('/test2').then(function (res) {
         _this.tableData = res.data.list
         let areaset = new Set()
         let creatorset = new Set()

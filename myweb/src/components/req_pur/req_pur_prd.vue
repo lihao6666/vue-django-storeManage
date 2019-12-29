@@ -12,14 +12,14 @@
         <el-input
           placeholder="关键字搜索"
           prefix-icon="el-icon-search"
-          class="input_search"
+          class="input-search"
           @input="find"
           clearable
           v-model="search">
         </el-input>
-        <el-button type="primary" class="button_save" v-if="ifchange">保 存</el-button>
-        <el-button type="primary" class="button_save" v-if="ifchange">提 交</el-button>
-        <el-button type="primary" icon="el-icon-plus" class="button_save" @click="add" v-if="ifchange">新增</el-button>
+        <el-button type="primary" class="button-save" v-if="ifchange">保 存</el-button>
+        <el-button type="primary" class="button-save" v-if="ifchange">提 交</el-button>
+        <el-button type="primary" icon="el-icon-plus" class="button-save" @click="add" v-if="ifchange">新增</el-button>
       </div>
       <el-table
         :data="tableDataNew"
@@ -77,10 +77,12 @@
       <div class="pagination">
         <el-pagination
           @current-change="handlePageChange"
+          @size-change="handleSizeChange"
+          :page-sizes="[5, 10, 20, 50, 100, 200, 500]"
           :current-page="query.pageIndex"
           :page-size="query.pageSize"
           background
-          layout="total, prev, pager, next, jumper"
+          layout="total, sizes, prev, pager, next, jumper"
           :total="pageTotal">
         </el-pagination>
       </div>
@@ -92,7 +94,7 @@
 </template>
 
 <script>
-import axios from 'axios'
+import {postAPI} from '../../api/api'
 
 export default {
   name: 'req_pur_prd',
@@ -120,7 +122,7 @@ export default {
   methods: {
     getData () {
       let _this = this
-      axios.post('/req_pur_prd', this.formadd).then(function (res) {
+      postAPI('/req_pur_prd', this.formadd).then(function (res) {
         _this.tableData = res.data.list
         _this.tableDataNew = _this.tableData
         let nameset = new Set()
@@ -226,6 +228,9 @@ export default {
     // 分页导航
     handlePageChange (val) {
       this.query.pageIndex = val
+    },
+    handleSizeChange (val) {
+      this.query.pageSize = val
     }
   }
 }
@@ -262,10 +267,10 @@ export default {
   .red {
     color: #ff0000;
   }
-  .input_search {
+  .input-search {
     width: 50%;
   }
-  .button_save {
+  .button-save {
     float: right;
     margin-left: 30px;
   }

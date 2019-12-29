@@ -12,12 +12,12 @@
         <el-input
           placeholder="关键字搜索"
           prefix-icon="el-icon-search"
-          class="input_search"
+          class="input-search"
           @input="find"
           clearable
           v-model="search">
         </el-input>
-        <el-button type="primary" icon="el-icon-plus" class="button_plus" @click="add">新增</el-button>
+        <el-button type="primary" icon="el-icon-plus" class="button-plus" @click="add">新增</el-button>
       </div>
       <el-table
         :data="tableDataNew"
@@ -112,10 +112,12 @@
       <div class="pagination">
         <el-pagination
           @current-change="handlePageChange"
+          @size-change="handleSizeChange"
+          :page-sizes="[5, 10, 20, 50, 100, 200, 500]"
           :current-page="query.pageIndex"
           :page-size="query.pageSize"
           background
-          layout="total, prev, pager, next, jumper"
+          layout="total, sizes, prev, pager, next, jumper"
           :total="pageTotal">
         </el-pagination>
       </div>
@@ -136,8 +138,8 @@
 </template>
 
 <script>
-import axios from 'axios'
 import Reqadd from './req_pur_add'
+import { postAPI, getAPI } from '../../api/api'
 
 export default {
   name: 'req_pur_check',
@@ -179,7 +181,9 @@ export default {
   methods: {
     getData () {
       let _this = this
-      axios.post('/req_pur_check').then(function (res) {
+      console.log(postAPI('/req_pur_check'))
+      console.log(getAPI('/req_pur_check'))
+      postAPI('/req_pur_check').then(function (res) {
         _this.tableData = res.data.list
         _this.tableDataNew = _this.tableData
         let orgaset = new Set()
@@ -316,6 +320,9 @@ export default {
     // 分页导航
     handlePageChange (val) {
       this.query.pageIndex = val
+    },
+    handleSizeChange (val) {
+      this.query.pageSize = val
     }
   }
 }
@@ -361,10 +368,10 @@ export default {
     color: grey;
   }
 
-  .input_search {
+  .input-search {
     width: 50%;
   }
-  .button_plus {
+  .button-plus {
     float: right;
   }
 </style>
