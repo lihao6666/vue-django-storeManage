@@ -3,7 +3,7 @@
     <div class="crumbs">
       <el-breadcrumb separator="/">
         <el-breadcrumb-item>
-          <i class="el-icon-lx-cascades"></i> 销售订单
+          <i class="el-icon-lx-cascades"></i> 采购合同
         </el-breadcrumb-item>
       </el-breadcrumb>
     </div>
@@ -30,49 +30,39 @@
           <template slot-scope="props">
             <el-form label-position="left" inline class="demo-table-expand">
               <el-form-item label="备注">
-                <span>{{ props.row.req_pur_remarks }}</span>
-              </el-form-item>
-              <el-form-item v-if="props.row.req_pur_status==='已关闭'" label="关闭人">
-                <span>{{ props.row.req_pur_closer }}</span>
-              </el-form-item>
-              <el-form-item v-if="props.row.req_pur_status==='已关闭'" label="关闭时间">
-                <span>{{ props.row.req_pur_closeDate }}</span>
-              </el-form-item>
-              <el-form-item v-if="props.row.req_pur_status==='已关闭'" label="关闭原因">
-                <span>{{ props.row.req_pur_closeReason}}</span>
+                <span>{{ props.row.pc_remarks }}</span>
               </el-form-item>
             </el-form>
           </template>
         </el-table-column>
-        <el-table-column prop="so_iden" sortable label="销售订单号" align="center"></el-table-column>
-        <el-table-column prop="so_orga" sortable label="库存组织" :filters="so_orgaSet"
+        <el-table-column prop="pc_iden" sortable label="合同编号" align="center"></el-table-column>
+        <el-table-column prop="pc_orga" sortable label="库存组织" :filters="pc_orgaSet"
       :filter-method="filter" align="center"></el-table-column>
-        <el-table-column prop="so_type" sortable label="订单类型" :filters="so_typeSet"
+        <el-table-column prop="pc_name" sortable label="合同名称" :filters="pc_nameSet"
       :filter-method="filter" align="center"></el-table-column>
-        <el-table-column prop="so_custom" sortable label="客户" :filters="so_customSet"
+        <el-table-column prop="pc_supply" sortable label="供应商" :filters="pc_supplySet"
       :filter-method="filter" align="center"></el-table-column>
-        <el-table-column prop="so_warehouse" sortable label="发货仓库" :filters="so_warehouseSet"
-      :filter-method="filter" align="center"></el-table-column>
-        <el-table-column prop="so_date" sortable label="订单日期" align="center"></el-table-column>
-        <el-table-column prop="so_status" sortable label="状态" :filters="so_statusSet"
+        <el-table-column prop="pc_date" sortable label="签订日期" align="center"></el-table-column>
+        <el-table-column prop="pc_sum" sortable label="合同金额" align="center"></el-table-column>
+        <el-table-column prop="pc_status" sortable label="状态" :filters="pc_statusSet"
       :filter-method="filter" align="center">
           <template slot-scope="scope">
             <el-tag
-              :type="scope.row.so_status==='已审批'?'success':''"
-            >{{scope.row.so_status}}
+              :type="scope.row.pc_status==='已审批'?'success':''"
+            >{{scope.row.pc_status}}
             </el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="so_creator" sortable label="创建人" :filters="so_creatorSet"
+        <el-table-column prop="pc_creator" sortable label="创建人" :filters="pc_creatorSet"
       :filter-method="filter" align="center"></el-table-column>
-        <el-table-column prop="so_createDate" sortable label="创建日期" align="center"></el-table-column>
+        <el-table-column prop="pc_createDate" sortable label="创建日期" align="center"></el-table-column>
         <el-table-column label="操作" align="center">
           <template slot-scope="scope">
             <el-button
               type="text"
               icon="el-icon-edit"
               @click="handleEdit(scope.$index, scope.row)"
-              v-if="scope.row.so_status==='草稿'"
+              v-if="scope.row.pc_status==='草稿'"
             >编辑
             </el-button>
             <el-button
@@ -80,7 +70,7 @@
               icon="el-icon-delete"
               class="red"
               @click="handleDelete(scope.$index, scope.row)"
-              v-if="scope.row.so_status==='草稿'"
+              v-if="scope.row.pc_status==='草稿'"
             >删除
             </el-button>
             <el-button
@@ -88,7 +78,7 @@
               icon="el-icon-postcard"
               class="green"
               @click="handleMore(scope.$index, scope.row)"
-              v-if="scope.row.so_status==='已审批'"
+              v-if="scope.row.pc_status==='已审批'"
             >详情
             </el-button>
           </template>
@@ -110,25 +100,25 @@
     </div>
     <!-- 新增弹出框 -->
     <el-dialog title="新增" :visible.sync="addVisible" width="90%" :close-on-click-modal="false">
-      <Soadd ref="Soadd" :editform="addform" :ifchange="true"></Soadd>
+      <Pcadd ref="Pcadd" :editform="addform" :ifchange="true"></Pcadd>
     </el-dialog>
     <!-- 编辑弹出框 -->
     <el-dialog title="编辑" :visible.sync="editVisible" width="90%" :close-on-click-modal="false" :destroy-on-close="true" :before-close="closePcedit">
-      <Soadd ref="Soedit" :editform="editform" :ifchange="true"></Soadd>
+      <Pcadd ref="Pcedit" :editform="editform" :ifchange="true"></Pcadd>
     </el-dialog>
     <!-- 详情弹出框 -->
     <el-dialog title="详情" :visible.sync="moreVisible" width="90%" :destroy-on-close="true">
-      <Soadd ref="Somore" :editform="moreform" :ifchange="false"></Soadd>
+      <Pcadd ref="Pcmore" :editform="moreform" :ifchange="false"></Pcadd>
     </el-dialog>
   </div>
 </template>
 
 <script>
-import Soadd from './SellAdd'
-import {postAPI} from '../../api/api'
+import Pcadd from './PurConAdd'
+import { postAPI } from '../../api/api'
 
 export default {
-  name: 'sell_check',
+  name: 'pc_check',
   data () {
     return {
       query: {
@@ -138,12 +128,11 @@ export default {
       search: '',
       tableData: [],
       tableDataNew: [],
-      so_orgaSet: [],
-      so_typeSet: [],
-      so_customSet: [],
-      so_warehouseSet: [],
-      so_statusSet: [],
-      so_creatorSet: [],
+      pc_orgaSet: [],
+      pc_nameSet: [],
+      pc_supplySet: [],
+      pc_statusSet: [],
+      pc_creatorSet: [],
       editVisible: false,
       editform: {},
       moreVisible: false,
@@ -151,17 +140,17 @@ export default {
       pageTotal: 0,
       addVisible: false,
       addform: {
-        so_orga: '',
-        so_custom: '',
-        so_warehouse: '',
-        so_type: '',
-        so_remarks: '',
-        so_date: ''
+        pc_orga: '',
+        pc_supply: '',
+        pc_name: '',
+        pc_remarks: '',
+        pc_date: '',
+        pc_sum: 0
       }
     }
   },
   components: {
-    Soadd
+    Pcadd
   },
   created () {
     this.getData()
@@ -169,55 +158,47 @@ export default {
   methods: {
     getData () {
       let _this = this
-      postAPI('/so_check').then(function (res) {
+      postAPI('/pc_check').then(function (res) {
         _this.tableData = res.data.list
         _this.find()
         let orgaset = new Set()
-        let typeset = new Set()
+        let nameset = new Set()
         let statusset = new Set()
-        let customset = new Set()
-        let warehouseset = new Set()
+        let supplyset = new Set()
         let creatorset = new Set()
         for (let i in _this.tableData) {
-          orgaset.add(_this.tableData[i]['so_orga'])
-          customset.add(_this.tableData[i]['so_custom'])
-          warehouseset.add(_this.tableData[i]['so_warehouse'])
-          typeset.add(_this.tableData[i]['so_type'])
-          statusset.add(_this.tableData[i]['so_status'])
-          creatorset.add(_this.tableData[i]['so_creator'])
+          orgaset.add(_this.tableData[i]['pc_orga'])
+          supplyset.add(_this.tableData[i]['pc_supply'])
+          nameset.add(_this.tableData[i]['pc_name'])
+          statusset.add(_this.tableData[i]['pc_status'])
+          creatorset.add(_this.tableData[i]['pc_creator'])
         }
         for (let i of orgaset) {
-          _this.so_orgaSet.push({
+          _this.pc_orgaSet.push({
             text: i,
             value: i
           })
         }
-        for (let i of customset) {
-          _this.so_customSet.push({
+        for (let i of supplyset) {
+          _this.pc_supplySet.push({
             text: i,
             value: i
           })
         }
-        for (let i of warehouseset) {
-          _this.so_warehouseSet.push({
-            text: i,
-            value: i
-          })
-        }
-        for (let i of typeset) {
-          _this.so_typeSet.push({
+        for (let i of nameset) {
+          _this.pc_nameSet.push({
             text: i,
             value: i
           })
         }
         for (let i of statusset) {
-          _this.so_statusSet.push({
+          _this.pc_statusSet.push({
             text: i,
             value: i
           })
         }
         for (let i of creatorset) {
-          _this.so_creatorSet.push({
+          _this.pc_creatorSet.push({
             text: i,
             value: i
           })
@@ -247,12 +228,11 @@ export default {
     find () {
       this.pageTotal = 0
       this.tableDataNew = this.tableData.filter(data => !this.search ||
-        data.so_iden.toLowerCase().includes(this.search.toLowerCase()) ||
-        data.so_orga.toLowerCase().includes(this.search.toLowerCase()) ||
-        data.so_type.toLowerCase().includes(this.search.toLowerCase()) ||
-        data.so_custom.toLowerCase().includes(this.search.toLowerCase()) ||
-        data.so_warehouse.toLowerCase().includes(this.search.toLowerCase()) ||
-        data.so_creator.toLowerCase().includes(this.search.toLowerCase()))
+        data.pc_iden.toLowerCase().includes(this.search.toLowerCase()) ||
+        data.pc_orga.toLowerCase().includes(this.search.toLowerCase()) ||
+        data.pc_name.toLowerCase().includes(this.search.toLowerCase()) ||
+        data.pc_supply.toLowerCase().includes(this.search.toLowerCase()) ||
+        data.pc_creator.toLowerCase().includes(this.search.toLowerCase()))
     },
     // 新增
     add () {
@@ -267,6 +247,7 @@ export default {
         .then(() => {
           this.$message.success('删除成功')
           this.tableData.splice(index, 1)
+          this.find()
         })
         .catch(() => {
           this.$message({
@@ -279,15 +260,38 @@ export default {
     handleEdit (index, row) {
       this.editform = row
       let _this = this
-      this.$nextTick(() => _this.$refs.Soedit.getForm())
+      this.$nextTick(() => _this.$refs.Pcedit.getForm())
       this.editVisible = true
     },
     // 详情操作
     handleMore (index, row) {
       this.moreform = row
       let _this = this
-      this.$nextTick(() => _this.$refs.Somore.getForm())
+      this.$nextTick(() => _this.$refs.Pcmore.getForm())
       this.moreVisible = true
+    },
+    // 关闭操作
+    handleClose (index, row) {
+      this.$prompt('请输入关闭原因', '关闭', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消'
+      }).then(({ value }) => {
+        this.$confirm('确定要关闭吗？', '提示', {
+          type: 'warning'
+        }).then(() => {
+          this.$message.success('关闭成功')
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '取消关闭'
+          })
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '取消关闭'
+        })
+      })
     },
     // 分页导航
     handlePageChange (val) {
@@ -346,6 +350,10 @@ export default {
 
   .green {
     color: #00a854;
+  }
+
+  .block {
+    color: grey;
   }
 
   .input-search {
