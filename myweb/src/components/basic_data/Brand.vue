@@ -3,7 +3,7 @@
     <div class="crumbs">
       <el-breadcrumb separator="/">
         <el-breadcrumb-item>
-          <i class="el-icon-lx-cascades"></i> 组织架构管理
+          <i class="el-icon-lx-cascades"></i> 品牌管理
         </el-breadcrumb-item>
       </el-breadcrumb>
     </div>
@@ -30,18 +30,17 @@
           <template slot-scope="props">
             <el-form label-position="left" inline class="demo-table-expand">
               <el-form-item label="备注：">
-                <span>{{ props.row.dpm_remarks }}</span>
+                <span>{{ props.row.brand_description }}</span>
               </el-form-item>
             </el-form>
           </template>
         </el-table-column>
         <el-table-column type="index" width="50"></el-table-column>
-        <el-table-column prop="dpm_name" sortable label="部门名称" :filters="dpm_orgaSet"
+        <el-table-column prop="brand_name" sortable label="名称" :filters="brand_nameSet"
                          :filter-method="filter" align="center"></el-table-column>
-        <el-table-column prop="dpm_center" sortable label="是否中心" align="center"></el-table-column>
-        <el-table-column prop="dpm_creator" sortable label="创建人" :filters="dpm_creatorSet"
+        <el-table-column prop="brand_creator" sortable label="创建人" :filters="brand_creatorSet"
                          :filter-method="filter" align="center"></el-table-column>
-        <el-table-column prop="dpm_createDate" sortable label="创建日期" align="center"></el-table-column>
+        <el-table-column prop="brand_createDate" sortable label="创建日期" align="center"></el-table-column>
         <el-table-column label="操作" align="center">
           <template slot-scope="scope">
             <el-button
@@ -55,7 +54,7 @@
               icon="el-icon-unlock"
               class="red"
               @click="handleStop(scope.row)"
-              v-if="scope.row.dpm_status==='启用'"
+              v-if="scope.row.brand_status==='启用'"
             >停用
             </el-button>
             <el-button
@@ -63,7 +62,7 @@
               icon="el-icon-lock"
               class="green"
               @click="handleStart(scope.row)"
-              v-if="scope.row.dpm_status==='停用'"
+              v-if="scope.row.brand_status==='停用'"
             >启用
             </el-button>
           </template>
@@ -84,58 +83,41 @@
     </div>
 
     <!-- 新增弹出框 -->
-    <el-dialog title="新增" :visible.sync="alterVisible" width="40%" >
-        <el-form ref="form" :model="form" label-width="80px" >
-          <el-row>
-            <el-form-item label="部门名称"  align="left">
-              <el-col :span="10">
-                <el-input v-model="form.dpm_name" class="name"></el-input>
-              </el-col>
-              <el-switch
-                v-model="form.dpm_center"
-                active-color="#13ce66"
-                inactive-color="#ff4949"
-                active-text="中心"
-                inactive-text="其他"
-                active-value="1"
-                inactive-value="0">
-              </el-switch>
-            </el-form-item>
-          </el-row>
-          <el-row>
-            <el-form-item label="备注" align="left">
-              <el-input type="textarea" class="textarea" v-model="form.dpm_remarks"
-                        placeholder="请输入内容" :autosize="{ minRows: 2, maxRows: 6}" maxlength="200" show-word-limit></el-input>
-            </el-form-item>
-          </el-row>
-        </el-form>
+    <el-dialog title="新增" :visible.sync="alterVisible" width="35%" >
+      <el-form ref="form" :model="form" label-width="70px"  class="form" >
+        <el-row>
+          <el-form-item label="名称" class="inputs" align="left">
+            <el-col :span="10">
+              <el-input v-model="form.brand_name" ></el-input>
+            </el-col>
+          </el-form-item>
+        </el-row>
+        <el-row>
+          <el-form-item label="备注" align="left">
+            <el-input type="textarea" class="textarea" v-model="form.brand_description"
+                      placeholder="请输入内容" :autosize="{ minRows: 2, maxRows: 6}" maxlength="200" show-word-limit></el-input>
+          </el-form-item>
+        </el-row>
+      </el-form>
       <span slot="footer" class="dialog-footer">
                 <el-button @click="alterVisible = false">取 消</el-button>
                 <el-button type="primary" @click="saveAlter">确 定</el-button>
             </span>
     </el-dialog>
+
     <!-- 编辑弹出框 -->
-    <el-dialog title="编辑" :visible.sync="editVisible" width="40%">
-      <el-form ref="form" :model="editform" label-width="80px" >
+    <el-dialog title="编辑" :visible.sync="editVisible" width="35%">
+      <el-form ref="form" :model="editform" label-width="70px">
         <el-row>
-          <el-form-item label="部门名称"  align="left">
+          <el-form-item label="名称" class="inputs" align="left">
             <el-col :span="10">
-              <el-input v-model="editform.dpm_name" class="name"></el-input>
+              <el-input v-model="editform.brand_name" ></el-input>
             </el-col>
-            <el-switch
-              v-model="editform.dpm_center"
-              active-color="#13ce66"
-              inactive-color="#ff4949"
-              active-text="中心"
-              inactive-text="其他"
-              active-value="1"
-              inactive-value="0">
-            </el-switch>
           </el-form-item>
         </el-row>
         <el-row>
           <el-form-item label="备注" align="left">
-            <el-input type="textarea" class="textarea" v-model="editform.dpm_remarks"
+            <el-input type="textarea" class="textarea" v-model="editform.brand_description"
                       placeholder="请输入内容" :autosize="{ minRows: 2, maxRows: 6}" maxlength="200" show-word-limit></el-input>
           </el-form-item>
         </el-row>
@@ -160,17 +142,17 @@ export default {
       },
       search: '',
       form: {},
-      dpm_name: '',
-      dpm_orgaSet: [],
-      dpm_creatorSet: [],
+      brand_name: '',
+      brand_nameSet: [],
+      brand_creatorSet: [],
       editform: {
-        dpm_name: '',
-        dpm_center: '',
-        dpm_remarks: ''
+        brand_name: '',
+        brand_description: ''
       },
       tableData: [],
       tableDataNew: [],
       multipleSelection: [],
+      delList: [],
       alterVisible: false,
       editVisible: false,
       pageTotal: 0,
@@ -184,23 +166,23 @@ export default {
   methods: {
     getData () {
       let _this = this
-      postAPI('/test2').then(function (res) {
+      postAPI('/brand').then(function (res) {
         _this.tableData = res.data.list
         _this.tableDataNew = _this.tableData
-        let orgaset = new Set()
+        let nameset = new Set()
         let creatorset = new Set()
         for (let i in _this.tableData) {
-          orgaset.add(_this.tableData[i]['dpm_name'])
-          creatorset.add(_this.tableData[i]['dpm_creator'])
+          nameset.add(_this.tableData[i]['brand_name'])
+          creatorset.add(_this.tableData[i]['brand_creator'])
         }
-        for (let i of orgaset) {
-          _this.dpm_orgaSet.push({
+        for (let i of nameset) {
+          _this.brand_nameSet.push({
             text: i,
             value: i
           })
         }
         for (let i of creatorset) {
-          _this.dpm_creatorSet.push({
+          _this.brand_creatorSet.push({
             text: i,
             value: i
           })
@@ -232,7 +214,7 @@ export default {
     },
     // 禁用操作
     handleStop (row) {
-      postAPI('/test2', {data: row, status: '停用'}).then(function (res) {
+      postAPI('/brand', {data: row, brand_status: '停用'}).then(function (res) {
         console.log(res)
       }).catch(function (err) {
         console.log(err)
@@ -242,15 +224,15 @@ export default {
     find () {
       this.pageTotal = 0
       this.tableDataNew = this.tableData.filter(data => !this.search ||
-        String(data.dpm_name).toLowerCase().includes(this.search.toLowerCase()) ||
-        String(data.dpm_center).toLowerCase().includes(this.search.toLowerCase()) ||
-        String(data.dpm_createDate).toLowerCase().includes(this.search.toLowerCase()) ||
-        String(data.dpm_remarks).toLowerCase().includes(this.search.toLowerCase()) ||
-          String(data.dpm_creator).toLowerCase().includes(this.search.toLowerCase()))
+          String(data.brand_name).toLowerCase().includes(this.search.toLowerCase()) ||
+          String(data.brand_name).toLowerCase().includes(this.search.toLowerCase()) ||
+          String(data.brand_createDate).toLowerCase().includes(this.search.toLowerCase()) ||
+          String(data.brand_description).toLowerCase().includes(this.search.toLowerCase()) ||
+          String(data.brand_creator).toLowerCase().includes(this.search.toLowerCase()))
     },
     // 启用
     handleStart (row) {
-      postAPI('/test2', {data: row, status: '启用'}).then(function (res) {
+      postAPI('/brand', {data: row, brand_status: '启用'}).then(function (res) {
         console.log(res)
       }).catch(function (err) {
         console.log(err)
@@ -258,17 +240,17 @@ export default {
     },
     // 编辑操作
     handleEdit (row) {
-      this.editform.dpm_name = row.dpm_name
-      this.editform.dpm_center = row.dpm_center
-      this.editform.dpm_remarks = row.dpm_remarks
-      this.dpm_name = row.dpm_name
+      this.editform.brand_name = row.brand_name
+      this.editform.brand_name = row.brand_name
+      this.editform.brand_description = row.brand_description
+      this.brand_name = row.brand_name
       this.editVisible = true
     },
     // 保存编辑
     saveEdit () {
       this.editVisible = false
       this.$message.success(`修改成功`)
-      postAPI('/test2', {data: this.editform, dpm_name: this.dpm_name}).then(function (res) {
+      postAPI('/brand', {data: this.editform, brand_name: this.brand_name}).then(function (res) {
         console.log(res)
       }).catch(function (err) {
         console.log(err)
@@ -278,7 +260,7 @@ export default {
     saveAlter () {
       this.alterVisible = false
       this.$message.success(`新增成功`)
-      postAPI('/test2', {data: this.form, table: 'department'}).then(function (res) {
+      postAPI('/brand', {data: this.form, table: 'organization'}).then(function (res) {
         console.log(res)
       }).catch(function (err) {
         console.log(err)
@@ -318,5 +300,8 @@ export default {
   }
   .green {
     color: GREEN;
+  }
+  .inputs {
+    width: 590px;
   }
 </style>

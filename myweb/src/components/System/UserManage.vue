@@ -17,7 +17,7 @@
           clearable
           v-model="search">
         </el-input>
-        <el-button type="primary" icon="el-icon-circle-plus-outline" @click="handleAlter" class="alterbutton">新增</el-button>
+        <el-button type="primary" icon="el-icon-circle-plus-outline" @click="handleAlter" class="alter-button">新增</el-button>
       </div>
       <el-table
         :data="tableDataNew"
@@ -25,7 +25,6 @@
         ref="multipleTable"
         header-cell-class-name="table-header"
         :row-class-name="tableRowClassName"
-        @selection-change="handleSelectionChange"
       >
         <el-table-column type="index" width="50"></el-table-column>
         <el-table-column prop="user_name" sortable label="姓名" align="center"></el-table-column>
@@ -69,14 +68,16 @@
         </el-table-column>
       </el-table>
       <div class="pagination">
-        <el-pagination
-          background
-          layout="total, prev, pager, next"
-          :current-page="query.pageIndex"
-          :page-size="query.pageSize"
-          :total="pageTotal"
-          @current-change="handlePageChange"
-        ></el-pagination>
+          <el-pagination
+            @current-change="handlePageChange"
+            @size-change="handleSizeChange"
+            :page-sizes="[5, 10, 20, 50, 100, 200, 500]"
+            :current-page="query.pageIndex"
+            :page-size="query.pageSize"
+            background
+            layout="total, sizes, prev, pager, next, jumper"
+            :total="pageTotal">
+          </el-pagination>
       </div>
     </div>
 
@@ -115,41 +116,36 @@
           <el-form-item label="区域"  align="left">
             <el-select v-model="form.user_area" placeholder="请选择区域"  class="option" >
               <el-option
-                v-for="item in options"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
+                v-for="item in area_options"
+                :key="item"
+                :label="item"
+                :value="item">
               </el-option>
             </el-select>
           </el-form-item>
         </el-row>
         <el-row>
           <el-form-item label="部门"  align="left">
-            <el-select v-model="form.user_department" placeholder="请选择部门" class="option" >
+            <el-select v-model="form.user_department" multiple placeholder="请选择部门" class="option" >
               <el-option
-                v-for="item in options"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
+                v-for="item in dpm_options"
+                :key="item"
+                :label="item"
+                :value="item">
               </el-option>
             </el-select>
           </el-form-item>
         </el-row>
         <el-row>
           <el-form-item label="角色"  align="left">
-            <el-select v-model="form.user_role" placeholder="请选择角色" class="option">
+            <el-select v-model="form.user_role" multiple placeholder="请选择角色" class="option">
               <el-option
-                v-for="item in options"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
+                v-for="item in role_options"
+                :key="item"
+                :label="item"
+                :value="item">
               </el-option>
             </el-select>
-          </el-form-item>
-        </el-row>
-        <el-row>
-          <el-form-item label="创建日期"    class="option" align="left">
-              <p>{{time}}</p>
           </el-form-item>
         </el-row>
       </el-form>
@@ -193,34 +189,34 @@
           <el-form-item label="区域"  align="left">
             <el-select v-model="editform.user_area" placeholder="请选择区域"  class="option" >
               <el-option
-                v-for="item in options"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
+                v-for="item in area_options"
+                :key="item"
+                :label="item"
+                :value="item">
               </el-option>
             </el-select>
           </el-form-item>
         </el-row>
         <el-row>
           <el-form-item label="部门"  align="left">
-            <el-select v-model="editform.user_department" placeholder="请选择部门" class="option" >
+            <el-select v-model="editform.user_department" multiple placeholder="请选择部门" class="option" >
               <el-option
-                v-for="item in options"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
+                v-for="item in dpm_options"
+                :key="item"
+                :label="item"
+                :value="item">
               </el-option>
             </el-select>
           </el-form-item>
         </el-row>
         <el-row>
           <el-form-item label="角色"  align="left">
-            <el-select v-model="editform.user_role" placeholder="请选择角色" class="option">
+            <el-select v-model="editform.user_role" multiple placeholder="请选择角色">
               <el-option
-                v-for="item in options"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
+                v-for="item in role_options"
+                :key="item"
+                :label="item"
+                :value="item">
               </el-option>
             </el-select>
           </el-form-item>
@@ -246,6 +242,9 @@ export default {
         pageIndex: 1,
         pageSize: 10
       },
+      role_options: [],
+      area_options: [],
+      dpm_options: [],
       search: '',
       form: {},
       user_id: '',
@@ -278,6 +277,7 @@ export default {
   },
   methods: {
     getData () {
+      this.getlist()
       let _this = this
       postAPI('/test2').then(function (res) {
         _this.tableData = res.data.list
@@ -344,13 +344,49 @@ export default {
         String(data.user_name).toLowerCase().includes(this.search.toLowerCase()) ||
         String(data.user_id).toLowerCase().includes(this.search.toLowerCase()) ||
         String(data.user_phone_number).toLowerCase().includes(this.search.toLowerCase()) ||
+        String(data.user_area).toLowerCase().includes(this.search.toLowerCase()) ||
+        String(data.user_department).toLowerCase().includes(this.search.toLowerCase()) ||
+        String(data.user_role).toLowerCase().includes(this.search.toLowerCase()) ||
         String(data.user_mailbox).toLowerCase().includes(this.search.toLowerCase()) ||
+        String(data.user_createDate).toLowerCase().includes(this.search.toLowerCase()) ||
         String(data.user_creator).toLowerCase().includes(this.search.toLowerCase()))
     },
-    // 触发搜索按钮
-    handleSearch () {
-      this.$set(this.query, 'pageIndex', 1)
-      this.getData()
+    // 获取列表
+    getlist () {
+      let _this = this
+      postAPI('/test2').then(function (res) {
+        let alterrole = new Set()
+        for (let i in res.data.list) {
+          alterrole.add(res.data.list[i]['role'])
+        }
+        for (let j of alterrole) {
+          _this.role_options.push(j)
+        }
+      }).catch(function (err) {
+        console.log(err)
+      })
+      postAPI('/area').then(function (res) {
+        let alterarea = new Set()
+        for (let i in res.data.list) {
+          alterarea.add(res.data.list[i]['area_name'])
+        }
+        for (let j of alterarea) {
+          _this.area_options.push(j)
+        }
+      }).catch(function (err) {
+        console.log(err)
+      })
+      postAPI('/test2').then(function (res) {
+        let alterdpm = new Set()
+        for (let i in res.data.list) {
+          alterdpm.add(res.data.list[i]['dpm_name'])
+        }
+        for (let j of alterdpm) {
+          _this.dpm_options.push(j)
+        }
+      }).catch(function (err) {
+        console.log(err)
+      })
     },
     // 新增
     handleAlter () {
@@ -378,9 +414,17 @@ export default {
       this.editform.user_id = row.user_id
       this.editform.user_mailbox = row.user_mailbox
       this.editform.user_area = row.user_area
-      this.editform.user_role = row.user_role
+      let role = []
+      for (let i in row.user_role) {
+        role.push(row.user_role[i])
+      }
+      this.editform.user_role = role
       this.editform.user_phone_number = row.user_phone_number
-      this.editform.user_department = row.user_department
+      let dpm = []
+      for (let i in row.user_department) {
+        dpm.push(row.user_department[i])
+      }
+      this.editform.user_department = dpm
       this.user_id = row.user_id
       this.editVisible = true
     },
@@ -406,8 +450,10 @@ export default {
     },
     // 分页导航
     handlePageChange (val) {
-      this.$set(this.query, 'pageIndex', val)
-      this.getData()
+      this.query.pageIndex = val
+    },
+    handleSizeChange (val) {
+      this.query.pageSize = val
     }
   }
 }
@@ -421,11 +467,7 @@ export default {
   .input-search {
     width: 50%;
   }
-  .people {
-    width:200px;
-    position: relative;
-  }
-  .alterbutton{
+  .alter-button{
     position: absolute;
     right:0;
   }
@@ -440,6 +482,6 @@ export default {
     color: GREEN;
   }
   .inputs {
-    width: 600px;
+    width: 115%;
   }
 </style>

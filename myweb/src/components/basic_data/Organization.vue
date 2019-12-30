@@ -17,7 +17,7 @@
           clearable
           v-model="search">
         </el-input>
-        <el-button type="primary" icon="el-icon-circle-plus-outline" @click="handleAlter" class="alterbutton">新增</el-button>
+        <el-button type="primary" icon="el-icon-circle-plus-outline" @click="handleAlter" class="alter-button">新增</el-button>
       </div>
       <el-table
         :data="tableDataNew"
@@ -73,13 +73,15 @@
       </el-table>
       <div class="pagination">
         <el-pagination
-          background
-          layout="total, prev, pager, next"
+          @current-change="handlePageChange"
+          @size-change="handleSizeChange"
+          :page-sizes="[5, 10, 20, 50, 100, 200, 500]"
           :current-page="query.pageIndex"
           :page-size="query.pageSize"
-          :total="pageTotal"
-          @current-change="handlePageChange"
-        ></el-pagination>
+          background
+          layout="total, sizes, prev, pager, next, jumper"
+          :total="pageTotal">
+        </el-pagination>
       </div>
     </div>
 
@@ -87,16 +89,16 @@
     <el-dialog title="新增" :visible.sync="alterVisible" width="35%" >
       <el-form ref="form" :model="form" label-width="70px"  class="form" >
         <el-row>
-          <el-form-item label="编码" class="inputs"  align="left">
-            <el-col :span="10">
-              <el-input v-model="form.orga_name" ></el-input>
-            </el-col>
-          </el-form-item>
+        <el-form-item label="编码" class="inputs" align="left">
+          <el-col :span="10">
+            <el-input v-model="form.orga_iden" ></el-input>
+          </el-col>
+        </el-form-item>
         </el-row>
         <el-row>
-          <el-form-item label="名称" class="inputs" align="left">
+          <el-form-item label="名称" class="inputs"  align="left">
             <el-col :span="10">
-              <el-input v-model="form.orga_id" ></el-input>
+              <el-input v-model="form.orga_name" ></el-input>
             </el-col>
           </el-form-item>
         </el-row>
@@ -104,10 +106,10 @@
           <el-form-item label="区域"  align="left">
             <el-select v-model="form.orga_area" placeholder="请选择区域"  class="option" >
               <el-option
-                v-for="item in options"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
+                v-for="item in area_options"
+                :key="item"
+                :label="item"
+                :value="item">
               </el-option>
             </el-select>
           </el-form-item>
@@ -116,11 +118,6 @@
           <el-form-item label="备注" align="left">
             <el-input type="textarea" class="textarea" v-model="form.orga_remarks"
                       placeholder="请输入内容" :autosize="{ minRows: 2, maxRows: 6}" maxlength="200" show-word-limit></el-input>
-          </el-form-item>
-        </el-row>
-        <el-row>
-          <el-form-item label="创建日期"  style="width: 1600px; "  class="option" align="left">
-              <p>{{time}}</p>
           </el-form-item>
         </el-row>
       </el-form>
@@ -151,10 +148,10 @@
           <el-form-item label="区域"  align="left">
             <el-select v-model="editform.orga_area" placeholder="请选择区域"  class="option" >
               <el-option
-                v-for="item in options"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
+                v-for="item in area_options"
+                :key="item"
+                :label="item"
+                :value="item">
               </el-option>
             </el-select>
           </el-form-item>
@@ -180,16 +177,7 @@ export default {
   name: 'test',
   data () {
     return {
-      options: [{
-        value: '南京',
-        label: '南京'
-      }, {
-        value: '杭州',
-        label: '杭州'
-      }, {
-        value: '合肥',
-        label: '合肥'
-      }],
+      area_options: [],
       query: {
         pageIndex: 1,
         pageSize: 10
@@ -222,6 +210,7 @@ export default {
   },
   methods: {
     getData () {
+      this.getlist()
       let _this = this
       postAPI('/basic_data').then(function (res) {
         _this.tableData = res.data.list
@@ -291,12 +280,30 @@ export default {
       this.tableDataNew = this.tableData.filter(data => !this.search ||
           String(data.orga_name).toLowerCase().includes(this.search.toLowerCase()) ||
           String(data.orga_iden).toLowerCase().includes(this.search.toLowerCase()) ||
+          String(data.orga_area).toLowerCase().includes(this.search.toLowerCase()) ||
+          String(data.orga_createDate).toLowerCase().includes(this.search.toLowerCase()) ||
+          String(data.orga_remarks).toLowerCase().includes(this.search.toLowerCase()) ||
           String(data.orga_creator).toLowerCase().includes(this.search.toLowerCase()))
     },
     // 启用
     handleStart (row) {
       postAPI('/basic_data', {data: row, orga_status: '启用'}).then(function (res) {
         console.log(res)
+      }).catch(function (err) {
+        console.log(err)
+      })
+    },
+    // 获取列表
+    getlist () {
+      let _this = this
+      postAPI('/area').then(function (res) {
+        let alterarea = new Set()
+        for (let i in res.data.list) {
+          alterarea.add(res.data.list[i]['area_name'])
+        }
+        for (let j of alterarea) {
+          _this.area_options.push(j)
+        }
       }).catch(function (err) {
         console.log(err)
       })
@@ -332,8 +339,10 @@ export default {
     },
     // 分页导航
     handlePageChange (val) {
-      this.$set(this.query, 'pageIndex', val)
-      this.getData()
+      this.query.pageIndex = val
+    },
+    handleSizeChange (val) {
+      this.query.pageSize = val
     }
   }
 }
@@ -348,7 +357,7 @@ export default {
   .input-search {
     width: 50%;
   }
-  .alterbutton{
+  .alter-button{
     position: absolute;
     right:0;
   }

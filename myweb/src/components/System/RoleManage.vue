@@ -17,7 +17,7 @@
           clearable
           v-model="search">
         </el-input>
-        <el-button type="primary" icon="el-icon-circle-plus-outline" @click="handleAlter" class="alterbutton">新增</el-button>
+        <el-button type="primary" icon="el-icon-circle-plus-outline" @click="handleAlter" class="alter-button">新增</el-button>
       </div>
       <el-table
         :data="tableDataNew"
@@ -76,13 +76,15 @@
       </el-table>
       <div class="pagination">
         <el-pagination
-          background
-          layout="total, prev, pager, next"
+          @current-change="handlePageChange"
+          @size-change="handleSizeChange"
+          :page-sizes="[5, 10, 20, 50, 100, 200, 500]"
           :current-page="query.pageIndex"
           :page-size="query.pageSize"
-          :total="pageTotal"
-          @current-change="handlePageChange"
-        ></el-pagination>
+          background
+          layout="total, sizes, prev, pager, next, jumper"
+          :total="pageTotal">
+        </el-pagination>
       </div>
     </div>
 
@@ -120,7 +122,7 @@
           <el-input v-model="editform.role"></el-input>
         </el-form-item>
         <el-form-item label="角色描述" align="left">
-          <el-input type="textarea" class="textarea" v-model="editform.role_createDate"
+          <el-input type="textarea" class="textarea" v-model="editform.role_description"
                     placeholder="请输入内容" :autosize="{ minRows: 2, maxRows: 6}" maxlength="200" show-word-limit></el-input>
         </el-form-item>
       </el-form>
@@ -148,7 +150,7 @@ export default {
       search: '',
       form: {},
       editform: {
-        role_createDate: '',
+        role_description: '',
         role: ''
       },
       tableData: [],
@@ -218,6 +220,8 @@ export default {
       this.pageTotal = 0
       this.tableDataNew = this.tableData.filter(data => !this.search ||
         String(data.role).toLowerCase().includes(this.search.toLowerCase()) ||
+        String(data.role_createDate).toLowerCase().includes(this.search.toLowerCase()) ||
+        String(data.role_description).toLowerCase().includes(this.search.toLowerCase()) ||
           String(data.role_creator).toLowerCase().includes(this.search.toLowerCase()))
     },
     // 新增
@@ -242,7 +246,7 @@ export default {
     },
     // 编辑操作
     handleEdit (row) {
-      this.editform.role_createDate = row.role_createDate
+      this.editform.role_description = row.role_description
       this.editform.role = row.role
       this.editVisible = true
     },
@@ -268,8 +272,10 @@ export default {
     },
     // 分页导航
     handlePageChange (val) {
-      this.$set(this.query, 'pageIndex', val)
-      this.getData()
+      this.query.pageIndex = val
+    },
+    handleSizeChange (val) {
+      this.query.pageSize = val
     }
   }
 }
@@ -284,7 +290,7 @@ export default {
   .input-search {
     width: 50%;
   }
-  .alterbutton{
+  .alter-button{
     position: absolute;
     right:0;
   }

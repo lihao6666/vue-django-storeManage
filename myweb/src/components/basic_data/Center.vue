@@ -3,7 +3,7 @@
     <div class="crumbs">
       <el-breadcrumb separator="/">
         <el-breadcrumb-item>
-          <i class="el-icon-lx-cascades"></i> 组织架构管理
+          <i class="el-icon-lx-cascades"></i> 中心管理
         </el-breadcrumb-item>
       </el-breadcrumb>
     </div>
@@ -30,18 +30,19 @@
           <template slot-scope="props">
             <el-form label-position="left" inline class="demo-table-expand">
               <el-form-item label="备注：">
-                <span>{{ props.row.dpm_remarks }}</span>
+                <span>{{ props.row.center_remarks }}</span>
               </el-form-item>
             </el-form>
           </template>
         </el-table-column>
         <el-table-column type="index" width="50"></el-table-column>
-        <el-table-column prop="dpm_name" sortable label="部门名称" :filters="dpm_orgaSet"
+        <el-table-column prop="center_name" sortable label="名称" :filters="center_nameSet"
                          :filter-method="filter" align="center"></el-table-column>
-        <el-table-column prop="dpm_center" sortable label="是否中心" align="center"></el-table-column>
-        <el-table-column prop="dpm_creator" sortable label="创建人" :filters="dpm_creatorSet"
+        <el-table-column prop="center_area" sortable label="区域" :filters="center_areaSet"
                          :filter-method="filter" align="center"></el-table-column>
-        <el-table-column prop="dpm_createDate" sortable label="创建日期" align="center"></el-table-column>
+        <el-table-column prop="center_creator" sortable label="创建人" :filters="center_creatorSet"
+                         :filter-method="filter" align="center"></el-table-column>
+        <el-table-column prop="center_createDate" sortable label="创建日期" align="center"></el-table-column>
         <el-table-column label="操作" align="center">
           <template slot-scope="scope">
             <el-button
@@ -55,7 +56,7 @@
               icon="el-icon-unlock"
               class="red"
               @click="handleStop(scope.row)"
-              v-if="scope.row.dpm_status==='启用'"
+              v-if="scope.row.center_status==='启用'"
             >停用
             </el-button>
             <el-button
@@ -63,7 +64,7 @@
               icon="el-icon-lock"
               class="green"
               @click="handleStart(scope.row)"
-              v-if="scope.row.dpm_status==='停用'"
+              v-if="scope.row.center_status==='停用'"
             >启用
             </el-button>
           </template>
@@ -84,58 +85,65 @@
     </div>
 
     <!-- 新增弹出框 -->
-    <el-dialog title="新增" :visible.sync="alterVisible" width="40%" >
-        <el-form ref="form" :model="form" label-width="80px" >
-          <el-row>
-            <el-form-item label="部门名称"  align="left">
-              <el-col :span="10">
-                <el-input v-model="form.dpm_name" class="name"></el-input>
-              </el-col>
-              <el-switch
-                v-model="form.dpm_center"
-                active-color="#13ce66"
-                inactive-color="#ff4949"
-                active-text="中心"
-                inactive-text="其他"
-                active-value="1"
-                inactive-value="0">
-              </el-switch>
-            </el-form-item>
-          </el-row>
-          <el-row>
-            <el-form-item label="备注" align="left">
-              <el-input type="textarea" class="textarea" v-model="form.dpm_remarks"
-                        placeholder="请输入内容" :autosize="{ minRows: 2, maxRows: 6}" maxlength="200" show-word-limit></el-input>
-            </el-form-item>
-          </el-row>
-        </el-form>
+    <el-dialog title="新增" :visible.sync="alterVisible" width="35%" >
+      <el-form ref="form" :model="form" label-width="70px"  class="form" >
+        <el-row>
+          <el-form-item label="名称" class="inputs" align="left">
+            <el-col :span="10">
+              <el-input v-model="form.center_name" ></el-input>
+            </el-col>
+          </el-form-item>
+        </el-row>
+        <el-row>
+          <el-form-item label="区域"  align="left">
+            <el-select v-model="form.center_area" placeholder="请选择区域"  class="option" >
+              <el-option
+                v-for="item in area_options"
+                :key="item"
+                :label="item"
+                :value="item">
+              </el-option>
+            </el-select>
+          </el-form-item>
+        </el-row>
+        <el-row>
+          <el-form-item label="备注" align="left">
+            <el-input type="textarea" class="textarea" v-model="form.center_remarks"
+                      placeholder="请输入内容" :autosize="{ minRows: 2, maxRows: 6}" maxlength="200" show-word-limit></el-input>
+          </el-form-item>
+        </el-row>
+      </el-form>
       <span slot="footer" class="dialog-footer">
                 <el-button @click="alterVisible = false">取 消</el-button>
                 <el-button type="primary" @click="saveAlter">确 定</el-button>
             </span>
     </el-dialog>
+
     <!-- 编辑弹出框 -->
-    <el-dialog title="编辑" :visible.sync="editVisible" width="40%">
-      <el-form ref="form" :model="editform" label-width="80px" >
+    <el-dialog title="编辑" :visible.sync="editVisible" width="35%">
+      <el-form ref="form" :model="editform" label-width="70px">
         <el-row>
-          <el-form-item label="部门名称"  align="left">
+          <el-form-item label="名称" class="inputs" align="left">
             <el-col :span="10">
-              <el-input v-model="editform.dpm_name" class="name"></el-input>
+              <el-input v-model="editform.center_name" ></el-input>
             </el-col>
-            <el-switch
-              v-model="editform.dpm_center"
-              active-color="#13ce66"
-              inactive-color="#ff4949"
-              active-text="中心"
-              inactive-text="其他"
-              active-value="1"
-              inactive-value="0">
-            </el-switch>
+          </el-form-item>
+        </el-row>
+        <el-row>
+          <el-form-item label="区域"  align="left">
+            <el-select v-model="editform.center_area" placeholder="请选择区域"  class="option" >
+              <el-option
+                v-for="item in area_options"
+                :key="item"
+                :label="item"
+                :value="item">
+              </el-option>
+            </el-select>
           </el-form-item>
         </el-row>
         <el-row>
           <el-form-item label="备注" align="left">
-            <el-input type="textarea" class="textarea" v-model="editform.dpm_remarks"
+            <el-input type="textarea" class="textarea" v-model="editform.center_remarks"
                       placeholder="请输入内容" :autosize="{ minRows: 2, maxRows: 6}" maxlength="200" show-word-limit></el-input>
           </el-form-item>
         </el-row>
@@ -154,23 +162,26 @@ export default {
   name: 'test',
   data () {
     return {
+      area_options: [],
       query: {
         pageIndex: 1,
         pageSize: 10
       },
       search: '',
       form: {},
-      dpm_name: '',
-      dpm_orgaSet: [],
-      dpm_creatorSet: [],
+      center_name: '',
+      center_nameSet: [],
+      center_areaSet: [],
+      center_creatorSet: [],
       editform: {
-        dpm_name: '',
-        dpm_center: '',
-        dpm_remarks: ''
+        center_name: '',
+        center_remarks: '',
+        center_area: ''
       },
       tableData: [],
       tableDataNew: [],
       multipleSelection: [],
+      delList: [],
       alterVisible: false,
       editVisible: false,
       pageTotal: 0,
@@ -183,24 +194,33 @@ export default {
   },
   methods: {
     getData () {
+      this.getlist()
       let _this = this
-      postAPI('/test2').then(function (res) {
+      postAPI('/center').then(function (res) {
         _this.tableData = res.data.list
         _this.tableDataNew = _this.tableData
-        let orgaset = new Set()
+        let nameset = new Set()
+        let areaset = new Set()
         let creatorset = new Set()
         for (let i in _this.tableData) {
-          orgaset.add(_this.tableData[i]['dpm_name'])
-          creatorset.add(_this.tableData[i]['dpm_creator'])
+          nameset.add(_this.tableData[i]['center_name'])
+          areaset.add(_this.tableData[i]['center_area'])
+          creatorset.add(_this.tableData[i]['center_creator'])
         }
-        for (let i of orgaset) {
-          _this.dpm_orgaSet.push({
+        for (let i of nameset) {
+          _this.center_nameSet.push({
+            text: i,
+            value: i
+          })
+        }
+        for (let i of areaset) {
+          _this.center_areaSet.push({
             text: i,
             value: i
           })
         }
         for (let i of creatorset) {
-          _this.dpm_creatorSet.push({
+          _this.center_creatorSet.push({
             text: i,
             value: i
           })
@@ -232,7 +252,7 @@ export default {
     },
     // 禁用操作
     handleStop (row) {
-      postAPI('/test2', {data: row, status: '停用'}).then(function (res) {
+      postAPI('/center', {data: row, center_status: '停用'}).then(function (res) {
         console.log(res)
       }).catch(function (err) {
         console.log(err)
@@ -242,33 +262,50 @@ export default {
     find () {
       this.pageTotal = 0
       this.tableDataNew = this.tableData.filter(data => !this.search ||
-        String(data.dpm_name).toLowerCase().includes(this.search.toLowerCase()) ||
-        String(data.dpm_center).toLowerCase().includes(this.search.toLowerCase()) ||
-        String(data.dpm_createDate).toLowerCase().includes(this.search.toLowerCase()) ||
-        String(data.dpm_remarks).toLowerCase().includes(this.search.toLowerCase()) ||
-          String(data.dpm_creator).toLowerCase().includes(this.search.toLowerCase()))
+          String(data.center_name).toLowerCase().includes(this.search.toLowerCase()) ||
+          String(data.center_name).toLowerCase().includes(this.search.toLowerCase()) ||
+          String(data.center_area).toLowerCase().includes(this.search.toLowerCase()) ||
+          String(data.center_createDate).toLowerCase().includes(this.search.toLowerCase()) ||
+          String(data.center_remarks).toLowerCase().includes(this.search.toLowerCase()) ||
+          String(data.center_creator).toLowerCase().includes(this.search.toLowerCase()))
     },
     // 启用
     handleStart (row) {
-      postAPI('/test2', {data: row, status: '启用'}).then(function (res) {
+      postAPI('/center', {data: row, center_status: '启用'}).then(function (res) {
         console.log(res)
+      }).catch(function (err) {
+        console.log(err)
+      })
+    },
+    // 获取列表
+    getlist () {
+      let _this = this
+      postAPI('/area').then(function (res) {
+        let alterarea = new Set()
+        for (let i in res.data.list) {
+          alterarea.add(res.data.list[i]['area_name'])
+        }
+        for (let j of alterarea) {
+          _this.area_options.push(j)
+        }
       }).catch(function (err) {
         console.log(err)
       })
     },
     // 编辑操作
     handleEdit (row) {
-      this.editform.dpm_name = row.dpm_name
-      this.editform.dpm_center = row.dpm_center
-      this.editform.dpm_remarks = row.dpm_remarks
-      this.dpm_name = row.dpm_name
+      this.editform.center_name = row.center_name
+      this.editform.center_name = row.center_name
+      this.editform.center_area = row.center_area
+      this.editform.center_remarks = row.center_remarks
+      this.center_name = row.center_name
       this.editVisible = true
     },
     // 保存编辑
     saveEdit () {
       this.editVisible = false
       this.$message.success(`修改成功`)
-      postAPI('/test2', {data: this.editform, dpm_name: this.dpm_name}).then(function (res) {
+      postAPI('/center', {data: this.editform, center_name: this.center_name}).then(function (res) {
         console.log(res)
       }).catch(function (err) {
         console.log(err)
@@ -278,7 +315,7 @@ export default {
     saveAlter () {
       this.alterVisible = false
       this.$message.success(`新增成功`)
-      postAPI('/test2', {data: this.form, table: 'department'}).then(function (res) {
+      postAPI('/center', {data: this.form, table: 'organization'}).then(function (res) {
         console.log(res)
       }).catch(function (err) {
         console.log(err)
@@ -318,5 +355,8 @@ export default {
   }
   .green {
     color: GREEN;
+  }
+  .inputs {
+    width: 590px;
   }
 </style>

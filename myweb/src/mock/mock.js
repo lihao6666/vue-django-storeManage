@@ -10,3 +10,7 @@ Mock.mock('/so_sod_add', 'post', require('./json/so_sod_add'))
 
 Mock.mock('/test2', 'post', require('./json/test2'))
 Mock.mock('/basic_data', 'post', require('./json/basic_data'))
+Mock.mock('/area', 'post', require('./json/area'))
+Mock.mock('/center', 'post', require('./json/center'))
+Mock.mock('/brand', 'post', require('./json/brand'))
+Mock.mock('/store', 'post', require('./json/Store'))

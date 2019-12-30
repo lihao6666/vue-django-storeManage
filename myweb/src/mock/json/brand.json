@@ -1,0 +1,25 @@
+{
+  "list": [
+    {
+      "brand_name": "音乐",
+      "brand_description": "sdsadasdfs",
+      "brand_creator": "zyj",
+      "brand_createDate": "2019-12-30 22:00",
+      "brand_status": "启用"
+    },
+    {
+      "brand_name": "美术",
+      "brand_description": "15881526ss",
+      "brand_creator": "zyj",
+      "brand_createDate": "2019-12-30 22:00",
+      "brand_status": "启用"
+    },
+    {
+      "brand_name": "舞蹈",
+      "brand_description": "15881526ss",
+      "brand_creator": "zyj2",
+      "brand_createDate": "2019-12-30 22:00",
+      "brand_status": "停用"
+    }
+  ]
+}
