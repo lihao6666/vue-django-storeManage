@@ -9,12 +9,18 @@
     </div>
     <div class="container">
       <div class="handle-box">
-        <el-input v-model="query.name" placeholder="请输入内容" class="handle-input mr10"></el-input>
-        <el-button type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>
+        <el-input
+          placeholder="关键字搜索"
+          prefix-icon="el-icon-search"
+          class="input-search"
+          @input="find"
+          clearable
+          v-model="search">
+        </el-input>
         <el-button type="primary" icon="el-icon-circle-plus-outline" @click="handleAlter" class="alterbutton">新增</el-button>
       </div>
       <el-table
-        :data="tableData"
+        :data="tableDataNew"
         class="table"
         ref="multipleTable"
         :row-class-name="tableRowClassName"
@@ -131,7 +137,6 @@
 </template>
 
 <script>
-import axios from 'axios'
 import {postAPI} from '../../api/api'
 export default {
   name: 'test',
@@ -141,12 +146,14 @@ export default {
         pageIndex: 1,
         pageSize: 10
       },
+      search: '',
       form: {},
       dpm_name: '',
       dpm_orgaSet: [],
       dpm_creatorSet: [],
       editform: {},
       tableData: [],
+      tableDataNew: [],
       multipleSelection: [],
       delList: [],
       alterVisible: false,
@@ -164,6 +171,7 @@ export default {
       let _this = this
       postAPI('/test2').then(function (res) {
         _this.tableData = res.data.list
+        _this.tableDataNew = _this.tableData
         let orgaset = new Set()
         let creatorset = new Set()
         for (let i in _this.tableData) {
@@ -203,28 +211,29 @@ export default {
       }
       return false
     },
-    find () {
-    },
-    // 触发搜索按钮
-    handleSearch () {
-      this.$set(this.query, 'pageIndex', 1)
-      this.getData()
-    },
     // 新增
     handleAlter () {
       this.alterVisible = true
     },
     // 禁用操作
     handleStop (row) {
-      axios.post('/test2', {data: row, status: '停用'}).then(function (res) {
+      postAPI('/test2', {data: row, status: '停用'}).then(function (res) {
         console.log(res)
       }).catch(function (err) {
         console.log(err)
       })
     },
+    // 查询
+    find () {
+      this.pageTotal = 0
+      this.tableDataNew = this.tableData.filter(data => !this.search ||
+        String(data.dpm_name).toLowerCase().includes(this.search.toLowerCase()) ||
+        String(data.dpm_center).toLowerCase().includes(this.search.toLowerCase()) ||
+          String(data.dpm_creator).toLowerCase().includes(this.search.toLowerCase()))
+    },
     // 启用
     handleStart (row) {
-      axios.post('/test2', {data: row, status: '启用'}).then(function (res) {
+      postAPI('/test2', {data: row, status: '启用'}).then(function (res) {
         console.log(res)
       }).catch(function (err) {
         console.log(err)
@@ -240,7 +249,7 @@ export default {
     saveEdit () {
       this.editVisible = false
       this.$message.success(`修改成功`)
-      axios.post('/test2', {data: this.editform, dpm_name: this.dpm_name}).then(function (res) {
+      postAPI('/test2', {data: this.editform, dpm_name: this.dpm_name}).then(function (res) {
         console.log(res)
       }).catch(function (err) {
         console.log(err)
@@ -250,7 +259,7 @@ export default {
     saveAlter () {
       this.alterVisible = false
       this.$message.success(`新增成功`)
-      axios.post('/test2', {data: this.form}).then(function (res) {
+      postAPI('/test2', {data: this.form}).then(function (res) {
         console.log(res)
       }).catch(function (err) {
         console.log(err)
@@ -270,26 +279,15 @@ export default {
     margin-bottom: 20px;
     position: relative;
   }
-  .people {
-    width:200px;
-    position: relative;
-  }
-  .handle-select {
-    width: 120px;
-  }
 
-  .handle-input {
-    width: 300px;
-    display: inline-block;
+  .input-search {
+    width: 50%;
   }
   .alterbutton{
     position: absolute;
     right:0;
   }
-  .handle-del {
-    position: absolute;
-    right:90px;
-  }
+
   .table {
     width: 100%;
     font-size: 14px;

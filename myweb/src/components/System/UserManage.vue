@@ -9,12 +9,18 @@
     </div>
     <div class="container">
       <div class="handle-box">
-        <el-input v-model="query.name" placeholder="请输入" class="handle-input mr10"></el-input>
+        <el-input
+          placeholder="关键字搜索"
+          prefix-icon="el-icon-search"
+          class="input-search"
+          @input="find"
+          clearable
+          v-model="search">
+        </el-input>
         <el-button type="primary" icon="el-icon-circle-plus-outline" @click="handleAlter" class="alterbutton">新增</el-button>
-        <el-button type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>
       </div>
       <el-table
-        :data="tableData"
+        :data="tableDataNew"
         class="table"
         ref="multipleTable"
         header-cell-class-name="table-header"
@@ -247,10 +253,12 @@ export default {
         pageIndex: 1,
         pageSize: 10
       },
+      search: '',
       form: {},
       user_id: '',
       editform: {},
       tableData: [],
+      tableDataNew: [],
       user_roleSet: [],
       user_areaSet: [],
       user_dpmSet: [],
@@ -272,6 +280,7 @@ export default {
       let _this = this
       postAPI('/test2').then(function (res) {
         _this.tableData = res.data.list
+        _this.tableDataNew = _this.tableData
         let areaset = new Set()
         let creatorset = new Set()
         let dpmset = new Set()
@@ -327,7 +336,15 @@ export default {
       }
       return false
     },
+    // 查询
     find () {
+      this.pageTotal = 0
+      this.tableDataNew = this.tableData.filter(data => !this.search ||
+        String(data.user_name).toLowerCase().includes(this.search.toLowerCase()) ||
+        String(data.user_id).toLowerCase().includes(this.search.toLowerCase()) ||
+        String(data.user_phone_number).toLowerCase().includes(this.search.toLowerCase()) ||
+        String(data.user_mailbox).toLowerCase().includes(this.search.toLowerCase()) ||
+        String(data.user_creator).toLowerCase().includes(this.search.toLowerCase()))
     },
     // 触发搜索按钮
     handleSearch () {
@@ -340,7 +357,7 @@ export default {
     },
     // 禁用操作
     handleStop (index, row) {
-      axios.post('/test2', {data: row, status: '停用'}).then(function (res) {
+      postAPI('/test2', {data: row, status: '停用'}).then(function (res) {
         console.log(res)
       }).catch(function (err) {
         console.log(err)
@@ -348,7 +365,7 @@ export default {
     },
     // 启用
     handleStart (index, row) {
-      axios.post('/test2', {data: row, status: '启用'}).then(function (res) {
+      postAPI('/test2', {data: row, status: '启用'}).then(function (res) {
         console.log(res)
       }).catch(function (err) {
         console.log(err)
@@ -364,7 +381,7 @@ export default {
     saveEdit () {
       this.editVisible = false
       this.$message.success(`修改成功`)
-      axios.post('/test2', {data: this.editform, user_id: this.user_id}).then(function (res) {
+      postAPI('/test2', {data: this.editform, user_id: this.user_id}).then(function (res) {
         console.log(res)
       }).catch(function (err) {
         console.log(err)
@@ -374,7 +391,7 @@ export default {
     saveAlter () {
       this.alterVisible = false
       this.$message.success(`新增成功`)
-      axios.post('/test2', {data: this.form}).then(function (res) {
+      postAPI('/test2', {data: this.form}).then(function (res) {
         console.log(res)
       }).catch(function (err) {
         console.log(err)
@@ -394,25 +411,16 @@ export default {
     margin-bottom: 20px;
     position: relative;
   }
+  .input-search {
+    width: 50%;
+  }
   .people {
     width:200px;
     position: relative;
   }
-  .handle-select {
-    width: 120px;
-  }
-
-  .handle-input {
-    width: 300px;
-    display: inline-block;
-  }
   .alterbutton{
     position: absolute;
     right:0;
-  }
-  .handle-del {
-    position: absolute;
-    right:100px;
   }
   .table {
     width: 100%;
