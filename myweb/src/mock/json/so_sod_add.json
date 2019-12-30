@@ -1,0 +1,49 @@
+{
+  "list": [
+    {
+      "sod_iden": "01",
+      "sod_name": "笔",
+      "sod_specification": "2B",
+      "sod_model": "2*2",
+      "sod_meterage": "根",
+      "sod_attr": "存货",
+      "sod_present_num": "10"
+    },
+    {
+      "sod_iden": "01",
+      "sod_name": "笔",
+      "sod_specification": "2B",
+      "sod_model": "2*2",
+      "sod_meterage": "根",
+      "sod_attr": "存货",
+      "sod_present_num": "10"
+    },
+    {
+      "sod_iden": "01",
+      "sod_name": "笔",
+      "sod_specification": "2B",
+      "sod_model": "2*2",
+      "sod_meterage": "根",
+      "sod_attr": "存货",
+      "sod_present_num": "10"
+    },
+    {
+      "sod_iden": "01",
+      "sod_name": "笔",
+      "sod_specification": "2B",
+      "sod_model": "2*2",
+      "sod_meterage": "根",
+      "sod_attr": "存货",
+      "sod_present_num": "10"
+    },
+    {
+      "sod_iden": "01",
+      "sod_name": "笔",
+      "sod_specification": "2B",
+      "sod_model": "2*2",
+      "sod_meterage": "根",
+      "sod_attr": "存货",
+      "sod_present_num": "10"
+    }
+  ]
+}

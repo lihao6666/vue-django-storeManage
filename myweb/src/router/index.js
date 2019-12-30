@@ -16,12 +16,12 @@ export default new Router({
       children: [
         {
           path: '/requisition',
-          component: () => import(/* webpackChunkName: "请购" */ '../components/req_pur/req_pur_check.vue'),
+          component: () => import(/* webpackChunkName: "请购" */ '../components/req_pur/ReqPurCheck.vue'),
           meta: {title: '请购'}
         },
         {
           path: '/sell',
-          component: () => import(/* webpackChunkName: "销售订单" */ '../components/sell/sell_check.vue'),
+          component: () => import(/* webpackChunkName: "销售订单" */ '../components/sell/SellCheck.vue'),
           meta: {title: '销售订单'}
         },
         {
