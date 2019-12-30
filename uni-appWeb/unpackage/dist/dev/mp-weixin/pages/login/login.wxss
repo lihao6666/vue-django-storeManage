@@ -1,0 +1,47 @@
+
+.action-row {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+    -webkit-flex-direction: row;
+            flex-direction: row;
+    -webkit-box-pack: center;
+    -webkit-justify-content: center;
+            justify-content: center;
+}
+.action-row navigator {
+    color: #007aff;
+    padding: 0 20rpx;
+}
+.oauth-row {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+    -webkit-flex-direction: row;
+            flex-direction: row;
+    -webkit-box-pack: center;
+    -webkit-justify-content: center;
+            justify-content: center;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+}
+.oauth-image {
+    width: 100rpx;
+    height: 100rpx;
+    border: 1rpx solid #dddddd;
+    border-radius: 100rpx;
+    margin: 0 40rpx;
+    background-color: #ffffff;
+}
+.oauth-image image {
+    width: 60rpx;
+    height: 60rpx;
+    margin: 20rpx;
+}
+
