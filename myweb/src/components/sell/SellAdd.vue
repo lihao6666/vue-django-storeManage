@@ -45,7 +45,7 @@
 </template>
 
 <script>
-import Sosod from './sell_sod'
+import Sosod from './SellSod'
 export default {
   name: 'sell_add',
   props: ['editform', 'ifchange'],

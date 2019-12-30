@@ -340,7 +340,7 @@ export default {
     },
     // 禁用操作
     handleStop (index, row) {
-      axios.post('/test2', {data: row, status: '停用'}).then(function (res) {
+      postAPI('/test2', {data: row, status: '停用'}).then(function (res) {
         console.log(res)
       }).catch(function (err) {
         console.log(err)
@@ -348,7 +348,7 @@ export default {
     },
     // 启用
     handleStart (index, row) {
-      axios.post('/test2', {data: row, status: '启用'}).then(function (res) {
+      postAPI('/test2', {data: row, status: '启用'}).then(function (res) {
         console.log(res)
       }).catch(function (err) {
         console.log(err)
@@ -364,7 +364,7 @@ export default {
     saveEdit () {
       this.editVisible = false
       this.$message.success(`修改成功`)
-      axios.post('/test2', {data: this.editform, user_id: this.user_id}).then(function (res) {
+      postAPI('/test2', {data: this.editform, user_id: this.user_id}).then(function (res) {
         console.log(res)
       }).catch(function (err) {
         console.log(err)
@@ -374,7 +374,7 @@ export default {
     saveAlter () {
       this.alterVisible = false
       this.$message.success(`新增成功`)
-      axios.post('/test2', {data: this.form}).then(function (res) {
+      postAPI('/test2', {data: this.form}).then(function (res) {
         console.log(res)
       }).catch(function (err) {
         console.log(err)

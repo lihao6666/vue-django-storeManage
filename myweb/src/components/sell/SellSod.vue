@@ -9,6 +9,11 @@
     </div>
     <div class="container">
       <div class="handle-box">
+        <el-button
+          type="primary"
+          icon="el-icon-delete"
+          @click="delAllSelection"
+        >批量删除</el-button>
         <el-input
           placeholder="关键字搜索"
           prefix-icon="el-icon-search"
@@ -27,8 +32,13 @@
         ref="multipleTable"
         header-cell-class-name="table-header"
         :row-class-name="tableRowClassName"
+        @selection-change="handleSelectionChange"
         size="mini"
       >
+        <el-table-column
+          type="selection"
+          width="55">
+        </el-table-column>
         <el-table-column type="expand">
           <template slot-scope="props">
             <el-form label-position="left" inline class="demo-table-expand">
@@ -151,16 +161,21 @@
     </div>
     <!-- 新增弹出框 -->
     <el-dialog title="新增物料" :visible.sync="addVisible" width="90%" append-to-body>
+      <Sodadd @add="addPrd" :tableHas="tableData"></Sodadd>
     </el-dialog>
   </div>
 </template>
 
 <script>
 import {postAPI} from '../../api/api'
+import Sodadd from './SellSodAdd'
 
 export default {
   name: 'sell_sod',
   props: ['formadd', 'ifchange'],
+  components: {
+    Sodadd
+  },
   data () {
     return {
       query: {
@@ -170,6 +185,7 @@ export default {
       search: '',
       tableData: [],
       tableDataNew: [],
+      multipleSelection: [],
       sod_nameSet: [],
       sod_specificationSet: [],
       sod_modelSet: [],
@@ -186,7 +202,7 @@ export default {
       let _this = this
       postAPI('/so_sod', this.formadd).then(function (res) {
         _this.tableData = res.data.list
-        _this.tableDataNew = _this.tableData
+        _this.find()
         let nameset = new Set()
         let specificationset = new Set()
         let modelset = new Set()
@@ -256,6 +272,14 @@ export default {
     add () {
       this.addVisible = true
     },
+    // 新增物料
+    addPrd (val) {
+      this.tableData = this.tableData.concat(val)
+      this.find()
+      let message = '新增' + val.length + '条'
+      this.$message.success(message)
+      this.addVisible = false
+    },
     // 修改数量
     inputnum (num) {
       num = num.replace(/[^\d]/g, '')
@@ -321,6 +345,7 @@ export default {
         .then(() => {
           this.$message.success('删除成功')
           this.tableData.splice(index, 1)
+          this.find()
         })
         .catch(() => {
           this.$message({
@@ -335,6 +360,36 @@ export default {
     },
     handleSizeChange (val) {
       this.query.pageSize = val
+    },
+    // 多选操作
+    handleSelectionChange (val) {
+      this.multipleSelection = val
+    },
+    // 批量删除
+    delAllSelection () {
+      let delnum = this.multipleSelection.length
+      if (delnum === 0) {
+        return
+      }
+      this.$confirm('确定要删除' + delnum + '条吗？', '提示', {
+        type: 'warning'
+      })
+        .then(() => {
+          let pageIndexNew = Math.ceil((this.pageTotal - this.multipleSelection.length) / this.query.pageSize) // 新的页面数量
+          this.query.pageIndex = (this.query.pageIndex > pageIndexNew) ? pageIndexNew : this.query.pageIndex
+          for (let i in this.multipleSelection) {
+            let x = this.tableData.valueOf(this.multipleSelection[i])
+            this.tableData.splice(x, 1)
+          }
+          this.find()
+          this.$message.success('删除' + delnum + '条成功')
+        })
+        .catch(() => {
+          this.$message({
+            type: 'info',
+            message: '取消删除'
+          })
+        })
     }
   }
 }
@@ -372,7 +427,8 @@ export default {
     color: #ff0000;
   }
   .input-search {
-    width: 50%;
+    margin-left: 20px;
+    width: 40%;
   }
   .button-save {
     float: right;

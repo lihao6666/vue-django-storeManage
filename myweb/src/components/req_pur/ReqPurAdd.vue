@@ -40,7 +40,7 @@
 </template>
 
 <script>
-import Reqprd from './req_pur_prd'
+import Reqprd from './ReqPurPrd'
 export default {
   name: 'req_pur_add',
   props: ['editform', 'ifchange'],
