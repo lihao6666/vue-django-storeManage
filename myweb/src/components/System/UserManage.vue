@@ -81,38 +81,38 @@
     </div>
 
     <!-- 新增弹出框 -->
-    <el-dialog title="新增" :visible.sync="alterVisible" width="40%" >
+    <el-dialog title="新增" :visible.sync="alterVisible" width="30%" >
       <el-form ref="form" :model="form" label-width="80px"  class="form" >
         <el-row>
-          <el-form-item label="姓名" style="width: 600px; " align="left">
+          <el-form-item label="姓名" class="inputs" align="left">
             <el-col :span="10">
               <el-input v-model="form.user_name" ></el-input>
             </el-col>
           </el-form-item>
         </el-row>
         <el-row>
-          <el-form-item label="工号" style="width: 600px; " align="left">
+          <el-form-item label="工号" class="inputs" align="left">
             <el-col :span="10">
               <el-input v-model="form.user_id" ></el-input>
             </el-col>
           </el-form-item>
         </el-row>
         <el-row>
-          <el-form-item label="手机号" style="width: 600px; " align="left">
+          <el-form-item label="手机号" class="inputs" align="left">
             <el-col :span="10">
               <el-input v-model="form.user_phone_number" ></el-input>
             </el-col>
           </el-form-item>
         </el-row>
         <el-row>
-          <el-form-item label="邮箱" style="width: 600px; " align="left">
+          <el-form-item label="邮箱" class="inputs" align="left">
             <el-col :span="10">
               <el-input v-model="form.user_mailbox"></el-input>
             </el-col>
           </el-form-item>
         </el-row>
         <el-row>
-          <el-form-item label="区域" style="width: 600px; " align="left">
+          <el-form-item label="区域"  align="left">
             <el-select v-model="form.user_area" placeholder="请选择区域"  class="option" >
               <el-option
                 v-for="item in options"
@@ -124,7 +124,7 @@
           </el-form-item>
         </el-row>
         <el-row>
-          <el-form-item label="部门" style="width: 600px; " align="left">
+          <el-form-item label="部门"  align="left">
             <el-select v-model="form.user_department" placeholder="请选择部门" class="option" >
               <el-option
                 v-for="item in options"
@@ -136,7 +136,7 @@
           </el-form-item>
         </el-row>
         <el-row>
-          <el-form-item label="角色" style="width: 600px; " align="left">
+          <el-form-item label="角色"  align="left">
             <el-select v-model="form.user_role" placeholder="请选择角色" class="option">
               <el-option
                 v-for="item in options"
@@ -148,14 +148,8 @@
           </el-form-item>
         </el-row>
         <el-row>
-          <el-form-item label="创建人"  style="width: 1600px; "  class="option" align="left">
-            <el-col :span="2" class="people" >
-              <slot>{{manager}}</slot>
-            </el-col>
-            <el-col class="line" :span="1" >创建日期</el-col>
-            <el-col :span="1.5"  >
+          <el-form-item label="创建日期"    class="option" align="left">
               <p>{{time}}</p>
-            </el-col>
           </el-form-item>
         </el-row>
       </el-form>
@@ -168,35 +162,35 @@
     <el-dialog title="编辑" :visible.sync="editVisible" width="30%">
       <el-form ref="form" :model="editform" label-width="80px"  class="form" >
         <el-row>
-          <el-form-item label="姓名" style="width: 600px; " align="left">
+          <el-form-item label="姓名" class="inputs" align="left">
             <el-col :span="10">
               <el-input v-model="editform.user_name" ></el-input>
             </el-col>
           </el-form-item>
         </el-row>
         <el-row>
-          <el-form-item label="工号" style="width: 600px; " align="left">
+          <el-form-item label="工号" class="inputs" align="left">
             <el-col :span="10">
               <el-input v-model="editform.user_id" ></el-input>
             </el-col>
           </el-form-item>
         </el-row>
         <el-row>
-          <el-form-item label="手机号" style="width: 600px; " align="left">
+          <el-form-item label="手机号" class="inputs" align="left">
             <el-col :span="10">
               <el-input v-model="editform.user_phone_number" ></el-input>
             </el-col>
           </el-form-item>
         </el-row>
         <el-row>
-          <el-form-item label="邮箱" style="width: 600px; " align="left">
+          <el-form-item label="邮箱" class="inputs" align="left">
             <el-col :span="10">
               <el-input v-model="editform.user_mailbox"></el-input>
             </el-col>
           </el-form-item>
         </el-row>
         <el-row>
-          <el-form-item label="区域" style="width: 600px; " align="left">
+          <el-form-item label="区域"  align="left">
             <el-select v-model="editform.user_area" placeholder="请选择区域"  class="option" >
               <el-option
                 v-for="item in options"
@@ -208,7 +202,7 @@
           </el-form-item>
         </el-row>
         <el-row>
-          <el-form-item label="部门" style="width: 600px; " align="left">
+          <el-form-item label="部门"  align="left">
             <el-select v-model="editform.user_department" placeholder="请选择部门" class="option" >
               <el-option
                 v-for="item in options"
@@ -220,7 +214,7 @@
           </el-form-item>
         </el-row>
         <el-row>
-          <el-form-item label="角色" style="width: 600px; " align="left">
+          <el-form-item label="角色"  align="left">
             <el-select v-model="editform.user_role" placeholder="请选择角色" class="option">
               <el-option
                 v-for="item in options"
@@ -247,7 +241,6 @@ export default {
   name: 'test',
   data () {
     return {
-      manager: 'XXX',
       time: moment(new Date()).format('YYYY-MM-DD hh:mm:ss'),
       query: {
         pageIndex: 1,
@@ -256,7 +249,15 @@ export default {
       search: '',
       form: {},
       user_id: '',
-      editform: {},
+      editform: {
+        user_name: '',
+        user_id: '',
+        user_mailbox: '',
+        user_area: '',
+        user_phone_number: '',
+        user_department: '',
+        user_role: ''
+      },
       tableData: [],
       tableDataNew: [],
       user_roleSet: [],
@@ -373,7 +374,13 @@ export default {
     },
     // 编辑操作
     handleEdit (row) {
-      this.editform = row
+      this.editform.user_name = row.user_name
+      this.editform.user_id = row.user_id
+      this.editform.user_mailbox = row.user_mailbox
+      this.editform.user_area = row.user_area
+      this.editform.user_role = row.user_role
+      this.editform.user_phone_number = row.user_phone_number
+      this.editform.user_department = row.user_department
       this.user_id = row.user_id
       this.editVisible = true
     },
@@ -391,7 +398,7 @@ export default {
     saveAlter () {
       this.alterVisible = false
       this.$message.success(`新增成功`)
-      postAPI('/test2', {data: this.form}).then(function (res) {
+      postAPI('/test2', {data: this.form, table: 'users'}).then(function (res) {
         console.log(res)
       }).catch(function (err) {
         console.log(err)
@@ -432,7 +439,7 @@ export default {
   .green {
     color: GREEN;
   }
-  .mr10 {
-    margin-right: 10px;
+  .inputs {
+    width: 600px;
   }
 </style>

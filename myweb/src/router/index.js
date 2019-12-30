@@ -27,7 +27,7 @@ export default new Router({
         {
           path: '/organizationmanage',
           component: () => import(/* webpackChunkName: "donate" */ '../components/System/OrganizationManage.vue'),
-          meta: {title: '库存组织管理'}
+          meta: {title: '组织架构管理'}
         },
         {
           path: '/rolemanage',
@@ -38,6 +38,11 @@ export default new Router({
           path: '/usermanage',
           component: () => import(/* webpackChunkName: "donate" */ '../components/System/UserManage.vue'),
           meta: {title: '用户管理'}
+        },
+        {
+          path: '/organization',
+          component: () => import(/* webpackChunkName: "donate" */ '../components/basic_data/Organization.vue'),
+          meta: {title: '库存组织管理'}
         }
       ]
     },
