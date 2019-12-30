@@ -9,12 +9,18 @@
     </div>
     <div class="container">
       <div class="handle-box">
-        <el-input v-model="query.name" placeholder="请输入内容" class="handle-input mr10"></el-input>
-        <el-button type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>
+        <el-input
+          placeholder="关键字搜索"
+          prefix-icon="el-icon-search"
+          class="input-search"
+          @input="find"
+          clearable
+          v-model="search">
+        </el-input>
         <el-button type="primary" icon="el-icon-circle-plus-outline" @click="handleAlter" class="alterbutton">新增</el-button>
       </div>
       <el-table
-        :data="tableData"
+        :data="tableDataNew"
         class="table"
         ref="multipleTable"
         :row-class-name="tableRowClassName"
@@ -146,9 +152,11 @@ export default {
         pageIndex: 1,
         pageSize: 10
       },
+      search: '',
       form: {},
       editform: {},
       tableData: [],
+      tableDataNew: [],
       role: '',
       multipleSelection: [],
       role_creatorSet: [],
@@ -169,6 +177,7 @@ export default {
       let _this = this
       postAPI('/test2').then(function (res) {
         _this.tableData = res.data.list
+        _this.tableDataNew = _this.tableData
         let roleset = new Set()
         let creatorset = new Set()
         for (let i in _this.tableData) {
@@ -208,12 +217,12 @@ export default {
       }
       return false
     },
+    // 查询
     find () {
-    },
-    // 触发搜索按钮
-    handleSearch () {
-      this.$set(this.query, 'pageIndex', 1)
-      this.getData()
+      this.pageTotal = 0
+      this.tableDataNew = this.tableData.filter(data => !this.search ||
+        String(data.role).toLowerCase().includes(this.search.toLowerCase()) ||
+          String(data.role_creator).toLowerCase().includes(this.search.toLowerCase()))
     },
     // 新增
     handleAlter () {
@@ -221,7 +230,7 @@ export default {
     },
     // 禁用操作
     handleStop (row) {
-      axios.post('/test2', {data: row, status: '停用'}).then(function (res) {
+      postAPI('/test2', {data: row, status: '停用'}).then(function (res) {
         console.log(res)
       }).catch(function (err) {
         console.log(err)
@@ -229,7 +238,7 @@ export default {
     },
     // 启用
     handleStart (row) {
-      axios.post('/test2', {data: row, status: '启用'}).then(function (res) {
+      postAPI('/test2', {data: row, status: '启用'}).then(function (res) {
         console.log(res)
       }).catch(function (err) {
         console.log(err)
@@ -245,7 +254,7 @@ export default {
     saveEdit () {
       this.editVisible = false
       this.$message.success(`修改成功`)
-      axios.post('/test2', {data: this.editform, role: this.role}).then(function (res) {
+      postAPI('/test2', {data: this.editform, role: this.role}).then(function (res) {
         console.log(res)
       }).catch(function (err) {
         console.log(err)
@@ -265,6 +274,9 @@ export default {
 </script>
 
 <style scoped>
+  .input-search {
+    width: 50%;
+  }
   .handle-box {
     margin-bottom: 20px;
     position: relative;
@@ -273,21 +285,9 @@ export default {
     width:200px;
     position: relative;
   }
-  .handle-select {
-    width: 120px;
-  }
-
-  .handle-input {
-    width: 300px;
-    display: inline-block;
-  }
   .alterbutton{
     position: absolute;
     right:0;
-  }
-  .handle-del {
-    position: absolute;
-    right:90px;
   }
   .table {
     width: 100%;
