@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
 	<view class="tabBar">
 		<view
 		 v-for="(item,index) in tabBar" 
@@ -120,3 +120,4 @@
 		}
 	}
 </style>
+ -->

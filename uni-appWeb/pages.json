@@ -42,7 +42,7 @@
             }
         }
     ],
-    "tabBar": {
+    "tabBar": {//下方导航栏
         "color": "#7a7e83",
         "selectedColor": "#0faeff",
         "backgroundColor": "#ffffff",
