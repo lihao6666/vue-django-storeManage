@@ -23,9 +23,7 @@
           clearable
           v-model="search">
         </el-input>
-        <el-button type="primary" class="button-save" v-if="ifchange">保 存</el-button>
-        <el-button type="primary" class="button-save" v-if="ifchange">提 交</el-button>
-        <el-button type="primary" icon="el-icon-plus" class="button-save" @click="add" v-if="ifchange">新增</el-button>
+        <el-button type="primary" icon="el-icon-plus" class="button-save" @click="add" v-if="ifchange">选择请购单</el-button>
       </div>
       <el-table
         :data="tableDataNew"
@@ -45,96 +43,98 @@
           <template slot-scope="props">
             <el-form label-position="left" inline class="demo-table-expand">
               <el-form-item label="备注">
-                <el-input type="textarea" v-model="props.row.sod_remarks" rows="3" :disabled="!ifchange"
+                <el-input type="textarea" v-model="props.row.cd_remarks" rows="3" :disabled="!ifchange"
                     placeholder="请输入200字以内的描述" maxlength="200" show-word-limit clearable></el-input>
               </el-form-item>
             </el-form>
           </template>
         </el-table-column>
-        <el-table-column prop="sod_iden" sortable label="物料编码" align="center"></el-table-column>
-        <el-table-column prop="sod_name" sortable label="物料名称" :filters="sod_nameSet"
+        <el-table-column prop="cd_iden" sortable label="物料编码" align="center"></el-table-column>
+        <el-table-column prop="cd_name" sortable label="物料名称" :filters="cd_nameSet"
       :filter-method="filter" align="center"></el-table-column>
-        <el-table-column prop="sod_specification" sortable label="规格" :filters="sod_specificationSet"
+        <el-table-column prop="cd_specification" sortable label="规格" :filters="cd_specificationSet"
       :filter-method="filter" align="center"></el-table-column>
-        <el-table-column prop="sod_model" sortable label="型号" :filters="sod_modelSet"
+        <el-table-column prop="cd_model" sortable label="型号" :filters="cd_modelSet"
       :filter-method="filter" align="center"></el-table-column>
-        <el-table-column prop="sod_meterage" sortable label="单位" :filters="sod_meterageSet"
+        <el-table-column prop="cd_meterage" sortable label="单位" :filters="cd_meterageSet"
       :filter-method="filter" align="center"></el-table-column>
-        <el-table-column prop="sod_num" sortable label="请购数量" align="center">
+        <el-table-column prop="cd_num" sortable label="数量" align="center">
           <template slot-scope="scope">
             <el-input
               v-if="formadd.so_type=='退换货'"
               prefix-icon="el-icon-minus"
               placeholder="1"
               :disabled="!ifchange"
-              v-model="scope.row.sod_num"
-              @input="scope.row.sod_num = inputnum(scope.row.sod_num)"
-              @change="scope.row.sod_num = changenum(scope.row.sod_num)">
+              v-model="scope.row.cd_num"
+              @input="scope.row.cd_num = inputnum(scope.row.cd_num)"
+              @change="scope.row.cd_num = changenum(scope.row.cd_num)">
             </el-input>
             <el-input
               v-else
               placeholder="1"
               :disabled="!ifchange"
-              v-model="scope.row.sod_num"
-              @input="scope.row.sod_num = inputnum(scope.row.sod_num)"
-              @change="scope.row.sod_num = changenum(scope.row.sod_num)">
+              v-model="scope.row.cd_num"
+              @input="scope.row.cd_num = inputnum(scope.row.cd_num)"
+              @change="scope.row.cd_num = changenum(scope.row.cd_num)">
             </el-input>
           </template>
         </el-table-column>
-        <el-table-column prop="sod_taxRate" sortable label="税率" align="center">
+        <el-table-column prop="cd_taxRate" sortable label="税率" align="center">
           <template slot-scope="scope">
             <el-input
               placeholder="13"
               :disabled="!ifchange"
-              v-model="scope.row.sod_taxRate"
-              @input="scope.row.sod_taxRate = inputsodTaxRate(scope.row.sod_taxRate)"
-              @change="scope.row.sod_taxRate = changesodTaxRate(scope.row.sod_taxRate)">
+              v-model="scope.row.cd_taxRate"
+              @input="scope.row.cd_taxRate = inputcdTaxRate(scope.row.cd_taxRate)"
+              @change="scope.row.cd_taxRate = changecdTaxRate(scope.row.cd_taxRate)">
             </el-input>
           </template>
         </el-table-column>
-        <el-table-column prop="sod_tax_unitPrice" sortable label="含税单价" align="center">
+        <el-table-column prop="cd_tax_unitPrice" sortable label="含税单价" align="center">
           <template slot-scope="scope">
             <el-input
               placeholder="0"
               :disabled="!ifchange"
-              v-model="scope.row.sod_tax_unitPrice"
-              @input="scope.row.sod_tax_unitPrice = inputsodTaxUnitPrice(scope.row.sod_tax_unitPrice)"
-              @change="scope.row.sod_tax_unitPrice = changesodTaxUnitPrice(scope.row.sod_tax_unitPrice)">
+              v-model="scope.row.cd_tax_unitPrice"
+              @input="scope.row.cd_tax_unitPrice = inputcdTaxUnitPrice(scope.row.cd_tax_unitPrice)"
+              @change="scope.row.cd_tax_unitPrice = changecdTaxUnitPrice(scope.row.cd_tax_unitPrice)">
             </el-input>
           </template>
         </el-table-column>
-        <el-table-column prop="sod_tax_unitPrice/(1+sod_taxRate/100)" sortable label="无税单价" align="center">
+        <el-table-column prop="cd_tax_unitPrice/(1+cd_taxRate/100)" sortable label="无税单价" align="center">
           <template slot-scope="scope">
             <el-tag
               :type="'success'"
-            >{{(scope.row.sod_tax_unitPrice/(1+scope.row.sod_taxRate/100)).toFixed(2)}}
+            >{{(scope.row.cd_tax_unitPrice/(1+scope.row.cd_taxRate/100)).toFixed(2)}}
             </el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="sod_tax_unitPrice*sod_num*" sortable label="含税金额" align="center">
+        <el-table-column prop="cd_tax_unitPrice*cd_num*" sortable label="含税金额" align="center">
           <template slot-scope="scope">
             <el-tag
               :type="'success'"
-            >{{(scope.row.sod_tax_unitPrice*scope.row.sod_num).toFixed(2)}}
+            >{{(scope.row.cd_tax_unitPrice*scope.row.cd_num).toFixed(2)}}
             </el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="sod_tax_unitPrice*sod_num/(1+sod_taxRate/100)" sortable label="无税金额" align="center">
+        <el-table-column prop="cd_tax_unitPrice*cd_num/(1+cd_taxRate/100)" sortable label="无税金额" align="center">
           <template slot-scope="scope">
             <el-tag
               :type="'success'"
-            >{{(scope.row.sod_tax_unitPrice*scope.row.sod_num/(1+scope.row.sod_taxRate/100)).toFixed(2)}}
+            >{{(scope.row.cd_tax_unitPrice*scope.row.cd_num/(1+scope.row.cd_taxRate/100)).toFixed(2)}}
             </el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="sod_tax_unitPrice*sod_num*sod_taxRate/100/(1+sod_taxRate/100)" sortable label="税额" align="center">
+        <el-table-column prop="cd_tax_unitPrice*cd_num*cd_taxRate/100/(1+cd_taxRate/100)" sortable label="税额" align="center">
           <template slot-scope="scope">
             <el-tag
               :type="'success'"
-            >{{(scope.row.sod_tax_unitPrice*scope.row.sod_num*scope.row.sod_taxRate/100/(1+scope.row.sod_taxRate/100)).toFixed(2)}}
+            >{{(scope.row.cd_tax_unitPrice*scope.row.cd_num*scope.row.cd_taxRate/100/(1+scope.row.cd_taxRate/100)).toFixed(2)}}
             </el-tag>
           </template>
         </el-table-column>
+        <el-table-column prop="cd_rp_iden" sortable label="请购单号" :filters="cd_rpidenset"
+      :filter-method="filter" align="center"></el-table-column>
         <el-table-column label="操作" align="center" v-if="ifchange">
           <template slot-scope="scope">
             <el-button
@@ -163,20 +163,20 @@
     </div>
     <!-- 新增弹出框 -->
     <el-dialog title="新增物料" :visible.sync="addVisible" width="90%" append-to-body>
-      <Sodadd @add="addPrd" :tableHas="tableData"></Sodadd>
+      <Cdadd @add="addPrd" :tableHas="tableData"></Cdadd>
     </el-dialog>
   </div>
 </template>
 
 <script>
 import {postAPI} from '../../api/api'
-import Sodadd from './SellSodAdd'
+import Cdadd from './PurConCdAdd.vue'
 
 export default {
-  name: 'sell_sod',
+  name: 'pc_cd',
   props: ['formadd', 'ifchange'],
   components: {
-    Sodadd
+    Cdadd
   },
   data () {
     return {
@@ -188,10 +188,11 @@ export default {
       tableData: [],
       tableDataNew: [],
       multipleSelection: [],
-      sod_nameSet: [],
-      sod_specificationSet: [],
-      sod_modelSet: [],
-      sod_meterageSet: [],
+      cd_nameSet: [],
+      cd_specificationSet: [],
+      cd_modelSet: [],
+      cd_meterageSet: [],
+      cd_rpidenset: [],
       addVisible: false,
       pageTotal: 0
     }
@@ -202,39 +203,47 @@ export default {
   methods: {
     getData () {
       let _this = this
-      postAPI('/so_sod', this.formadd).then(function (res) {
+      postAPI('/pc_cd', this.formadd).then(function (res) {
         _this.tableData = res.data.list
         _this.find()
         let nameset = new Set()
         let specificationset = new Set()
         let modelset = new Set()
         let meterageset = new Set()
+        let rpidenset = new Set()
         for (let i in _this.tableData) {
-          nameset.add(_this.tableData[i]['sod_name'])
-          specificationset.add(_this.tableData[i]['sod_specification'])
-          modelset.add(_this.tableData[i]['sod_model'])
-          meterageset.add(_this.tableData[i]['sod_meterage'])
+          nameset.add(_this.tableData[i]['cd_name'])
+          specificationset.add(_this.tableData[i]['cd_specification'])
+          modelset.add(_this.tableData[i]['cd_model'])
+          meterageset.add(_this.tableData[i]['cd_meterage'])
+          rpidenset.add(_this.tableData[i]['cd_rp_iden'])
         }
         for (let i of nameset) {
-          _this.sod_nameSet.push({
+          _this.cd_nameSet.push({
             text: i,
             value: i
           })
         }
         for (let i of meterageset) {
-          _this.sod_meterageSet.push({
+          _this.cd_meterageSet.push({
+            text: i,
+            value: i
+          })
+        }
+        for (let i of rpidenset) {
+          _this.cd_rp_idenset.push({
             text: i,
             value: i
           })
         }
         for (let i of specificationset) {
-          _this.sod_specificationSet.push({
+          _this.cd_specificationSet.push({
             text: i,
             value: i
           })
         }
         for (let i of modelset) {
-          _this.sod_modelSet.push({
+          _this.cd_modelSet.push({
             text: i,
             value: i
           })
@@ -264,11 +273,11 @@ export default {
     find () {
       this.pageTotal = 0
       this.tableDataNew = this.tableData.filter(data => !this.search ||
-        data.sod_iden.toLowerCase().includes(this.search.toLowerCase()) ||
-        data.sod_name.toLowerCase().includes(this.search.toLowerCase()) ||
-        data.sod_specification.toLowerCase().includes(this.search.toLowerCase()) ||
-        data.sod_model.toLowerCase().includes(this.search.toLowerCase()) ||
-        data.sod_meterage.toLowerCase().includes(this.search.toLowerCase()))
+        data.cd_iden.toLowerCase().includes(this.search.toLowerCase()) ||
+        data.cd_name.toLowerCase().includes(this.search.toLowerCase()) ||
+        data.cd_specification.toLowerCase().includes(this.search.toLowerCase()) ||
+        data.cd_model.toLowerCase().includes(this.search.toLowerCase()) ||
+        data.cd_meterage.toLowerCase().includes(this.search.toLowerCase()))
     },
     // 新增
     add () {
@@ -299,7 +308,7 @@ export default {
       }
       return num
     },
-    inputsodTaxRate (num) {
+    inputcdTaxRate (num) {
       num = num.replace(/[^\d]/g, '')
       if (num > 16) {
         num = 16
@@ -309,13 +318,13 @@ export default {
       }
       return num
     },
-    changesodTaxRate (num) {
+    changecdTaxRate (num) {
       if (num === '') {
         num = 13
       }
       return num
     },
-    inputsodTaxUnitPrice (num) {
+    inputcdTaxUnitPrice (num) {
       if (num !== '' && num.substr(0, 1) === '.') {
         num = ''
       }
@@ -331,7 +340,7 @@ export default {
       }
       return num
     },
-    changesodTaxUnitPrice (num) {
+    changecdTaxUnitPrice (num) {
       if (num === '') {
         num = 0
       }

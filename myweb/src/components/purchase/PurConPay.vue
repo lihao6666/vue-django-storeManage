@@ -3,7 +3,7 @@
     <div class="crumbs">
       <el-breadcrumb separator="/">
         <el-breadcrumb-item>
-          <i class="el-icon-lx-cascades"></i> 物料明细
+          <i class="el-icon-lx-cascades"></i> 付款协议
         </el-breadcrumb-item>
       </el-breadcrumb>
     </div>
@@ -15,20 +15,10 @@
           v-if="ifchange"
           @click="delAllSelection"
         >批量删除</el-button>
-        <el-input
-          placeholder="关键字搜索"
-          prefix-icon="el-icon-search"
-          class="input-search"
-          @input="find"
-          clearable
-          v-model="search">
-        </el-input>
-        <el-button type="primary" class="button-save" v-if="ifchange">保 存</el-button>
-        <el-button type="primary" class="button-save" v-if="ifchange">提 交</el-button>
         <el-button type="primary" icon="el-icon-plus" class="button-save" @click="add" v-if="ifchange">新增</el-button>
       </div>
       <el-table
-        :data="tableDataNew"
+        :data="tableData"
         class="table"
         ref="multipleTable"
         header-cell-class-name="table-header"
@@ -45,94 +35,64 @@
           <template slot-scope="props">
             <el-form label-position="left" inline class="demo-table-expand">
               <el-form-item label="备注">
-                <el-input type="textarea" v-model="props.row.sod_remarks" rows="3" :disabled="!ifchange"
+                <el-input type="textarea" v-model="props.row.pay_remarks" rows="3" :disabled="!ifchange"
                     placeholder="请输入200字以内的描述" maxlength="200" show-word-limit clearable></el-input>
               </el-form-item>
             </el-form>
           </template>
         </el-table-column>
-        <el-table-column prop="sod_iden" sortable label="物料编码" align="center"></el-table-column>
-        <el-table-column prop="sod_name" sortable label="物料名称" :filters="sod_nameSet"
-      :filter-method="filter" align="center"></el-table-column>
-        <el-table-column prop="sod_specification" sortable label="规格" :filters="sod_specificationSet"
-      :filter-method="filter" align="center"></el-table-column>
-        <el-table-column prop="sod_model" sortable label="型号" :filters="sod_modelSet"
-      :filter-method="filter" align="center"></el-table-column>
-        <el-table-column prop="sod_meterage" sortable label="单位" :filters="sod_meterageSet"
-      :filter-method="filter" align="center"></el-table-column>
-        <el-table-column prop="sod_num" sortable label="请购数量" align="center">
+        <el-table-column prop="pay_batch" sortable label="付款批次" align="center">
           <template slot-scope="scope">
             <el-input
-              v-if="formadd.so_type=='退换货'"
-              prefix-icon="el-icon-minus"
               placeholder="1"
+              class="little"
               :disabled="!ifchange"
-              v-model="scope.row.sod_num"
-              @input="scope.row.sod_num = inputnum(scope.row.sod_num)"
-              @change="scope.row.sod_num = changenum(scope.row.sod_num)">
-            </el-input>
-            <el-input
-              v-else
-              placeholder="1"
-              :disabled="!ifchange"
-              v-model="scope.row.sod_num"
-              @input="scope.row.sod_num = inputnum(scope.row.sod_num)"
-              @change="scope.row.sod_num = changenum(scope.row.sod_num)">
+              v-model="scope.row.pay_batch"
+              @input="scope.row.pay_batch = inputPayPrepay(scope.row.pay_batch)"
+              @change="scope.row.pay_batch = changePayPrepay(scope.row.pay_batch)">
             </el-input>
           </template>
         </el-table-column>
-        <el-table-column prop="sod_taxRate" sortable label="税率" align="center">
+        <el-table-column prop="pay_rate" sortable label="付款比例" align="center">
           <template slot-scope="scope">
             <el-input
-              placeholder="13"
+              placeholder="1"
+              class="little"
               :disabled="!ifchange"
-              v-model="scope.row.sod_taxRate"
-              @input="scope.row.sod_taxRate = inputsodTaxRate(scope.row.sod_taxRate)"
-              @change="scope.row.sod_taxRate = changesodTaxRate(scope.row.sod_taxRate)">
+              v-model="scope.row.pay_rate"
+              @input="scope.row.pay_rate = inputPayRate(scope.row.pay_rate)"
+              @change="scope.row.pay_rate = changePayRate(scope.row.pay_rate)">
             </el-input>
           </template>
         </el-table-column>
-        <el-table-column prop="sod_tax_unitPrice" sortable label="含税单价" align="center">
+        <el-table-column prop="pay_price" sortable label="付款金额" align="center">
           <template slot-scope="scope">
             <el-input
               placeholder="0"
+              class="little"
               :disabled="!ifchange"
-              v-model="scope.row.sod_tax_unitPrice"
-              @input="scope.row.sod_tax_unitPrice = inputsodTaxUnitPrice(scope.row.sod_tax_unitPrice)"
-              @change="scope.row.sod_tax_unitPrice = changesodTaxUnitPrice(scope.row.sod_tax_unitPrice)">
+              v-model="scope.row.pay_price"
+              @input="scope.row.pay_price = inputPayPrice(scope.row.pay_price)"
+              @change="scope.row.pay_price = changePayPrice(scope.row.pay_price)">
             </el-input>
           </template>
         </el-table-column>
-        <el-table-column prop="sod_tax_unitPrice/(1+sod_taxRate/100)" sortable label="无税单价" align="center">
+        <el-table-column prop="pay_planDate" sortable label="计划付款日期" align="center">
           <template slot-scope="scope">
-            <el-tag
-              :type="'success'"
-            >{{(scope.row.sod_tax_unitPrice/(1+scope.row.sod_taxRate/100)).toFixed(2)}}
-            </el-tag>
+            <el-date-picker
+              v-model="scope.row.pay_planDate"
+              class="big"
+              type="date"
+              placeholder="选择日期">
+            </el-date-picker>
           </template>
         </el-table-column>
-        <el-table-column prop="sod_tax_unitPrice*sod_num*" sortable label="含税金额" align="center">
+        <el-table-column prop="pay_prepay" sortable label="是否预付款" align="center">
           <template slot-scope="scope">
-            <el-tag
-              :type="'success'"
-            >{{(scope.row.sod_tax_unitPrice*scope.row.sod_num).toFixed(2)}}
-            </el-tag>
-          </template>
-        </el-table-column>
-        <el-table-column prop="sod_tax_unitPrice*sod_num/(1+sod_taxRate/100)" sortable label="无税金额" align="center">
-          <template slot-scope="scope">
-            <el-tag
-              :type="'success'"
-            >{{(scope.row.sod_tax_unitPrice*scope.row.sod_num/(1+scope.row.sod_taxRate/100)).toFixed(2)}}
-            </el-tag>
-          </template>
-        </el-table-column>
-        <el-table-column prop="sod_tax_unitPrice*sod_num*sod_taxRate/100/(1+sod_taxRate/100)" sortable label="税额" align="center">
-          <template slot-scope="scope">
-            <el-tag
-              :type="'success'"
-            >{{(scope.row.sod_tax_unitPrice*scope.row.sod_num*scope.row.sod_taxRate/100/(1+scope.row.sod_taxRate/100)).toFixed(2)}}
-            </el-tag>
+            <el-select v-model="scope.row.pay_prepay" placeholder="请选择" class="little">
+              <el-option key="1" label="是" value="1"></el-option>
+              <el-option key="0" label="否" value="0"></el-option>
+            </el-select>
           </template>
         </el-table-column>
         <el-table-column label="操作" align="center" v-if="ifchange">
@@ -161,38 +121,23 @@
         </el-pagination>
       </div>
     </div>
-    <!-- 新增弹出框 -->
-    <el-dialog title="新增物料" :visible.sync="addVisible" width="90%" append-to-body>
-      <Sodadd @add="addPrd" :tableHas="tableData"></Sodadd>
-    </el-dialog>
   </div>
 </template>
 
 <script>
 import {postAPI} from '../../api/api'
-import Sodadd from './SellSodAdd'
 
 export default {
-  name: 'sell_sod',
+  name: 'pc_pay',
   props: ['formadd', 'ifchange'],
-  components: {
-    Sodadd
-  },
   data () {
     return {
       query: {
         pageIndex: 1,
         pageSize: 5
       },
-      search: '',
       tableData: [],
-      tableDataNew: [],
       multipleSelection: [],
-      sod_nameSet: [],
-      sod_specificationSet: [],
-      sod_modelSet: [],
-      sod_meterageSet: [],
-      addVisible: false,
       pageTotal: 0
     }
   },
@@ -200,45 +145,19 @@ export default {
     this.getData()
   },
   methods: {
+    changeSelect (val) {
+      console.log(val)
+    },
     getData () {
       let _this = this
-      postAPI('/so_sod', this.formadd).then(function (res) {
+      postAPI('/pc_pay', this.formadd).then(function (res) {
         _this.tableData = res.data.list
-        _this.find()
-        let nameset = new Set()
-        let specificationset = new Set()
-        let modelset = new Set()
-        let meterageset = new Set()
-        for (let i in _this.tableData) {
-          nameset.add(_this.tableData[i]['sod_name'])
-          specificationset.add(_this.tableData[i]['sod_specification'])
-          modelset.add(_this.tableData[i]['sod_model'])
-          meterageset.add(_this.tableData[i]['sod_meterage'])
-        }
-        for (let i of nameset) {
-          _this.sod_nameSet.push({
-            text: i,
-            value: i
-          })
-        }
-        for (let i of meterageset) {
-          _this.sod_meterageSet.push({
-            text: i,
-            value: i
-          })
-        }
-        for (let i of specificationset) {
-          _this.sod_specificationSet.push({
-            text: i,
-            value: i
-          })
-        }
-        for (let i of modelset) {
-          _this.sod_modelSet.push({
-            text: i,
-            value: i
-          })
-        }
+        // _this.tableData = [{pay_batch: '1',
+        //   pay_planDate: '2019-10-10',
+        //   pay_prepay: '1',
+        //   pay_price: '300.5',
+        //   pay_rate: '10',
+        //   pay_remarks: '10'}]
         _this.pageTotal = res.data.list.length
       }).catch(function (err) {
         console.log(err)
@@ -253,69 +172,50 @@ export default {
       return 'tableRowDisplay'
     },
     // 表格下拉筛选
-    filter (value, row, column) {
+    filterHandler (value, row, column) {
       const property = column['property']
       if (row[property] === value) {
         return true
       }
       return false
     },
-    // 查询
-    find () {
-      this.pageTotal = 0
-      this.tableDataNew = this.tableData.filter(data => !this.search ||
-        data.sod_iden.toLowerCase().includes(this.search.toLowerCase()) ||
-        data.sod_name.toLowerCase().includes(this.search.toLowerCase()) ||
-        data.sod_specification.toLowerCase().includes(this.search.toLowerCase()) ||
-        data.sod_model.toLowerCase().includes(this.search.toLowerCase()) ||
-        data.sod_meterage.toLowerCase().includes(this.search.toLowerCase()))
-    },
     // 新增
     add () {
-      this.addVisible = true
     },
-    // 新增物料
-    addPrd (val) {
-      this.tableData = this.tableData.concat(val)
-      this.find()
-      let message = '新增' + val.length + '条'
-      this.$message.success(message)
-      this.addVisible = false
-    },
-    // 修改数量
-    inputnum (num) {
+    // 修改
+    inputPayPrepay (num) {
       num = num.replace(/[^\d]/g, '')
-      if (num.substr(0, 1) === '0' && num.length === 2) {
-        num = num.substr(1, num.length)
-      }
-      return num
-    },
-    changenum (num) {
-      if (num < 1) {
-        num = 1
-      }
-      if (num === '') {
-        num = 1
-      }
-      return num
-    },
-    inputsodTaxRate (num) {
-      num = num.replace(/[^\d]/g, '')
-      if (num > 16) {
-        num = 16
+      if (num > 10) {
+        num = 10
       }
       if (num.substr(0, 1) === '0' && num.length === 2) {
         num = num.substr(1, num.length)
       }
       return num
     },
-    changesodTaxRate (num) {
+    changePayPrepay (num) {
       if (num === '') {
-        num = 13
+        num = 1
       }
       return num
     },
-    inputsodTaxUnitPrice (num) {
+    inputPayRate (num) {
+      num = num.replace(/[^\d]/g, '')
+      if (num > 100) {
+        num = 100
+      }
+      if (num.substr(0, 1) === '0' && num.length === 2) {
+        num = num.substr(1, num.length)
+      }
+      return num
+    },
+    changePayRate (num) {
+      if (num === '') {
+        num = 1
+      }
+      return num
+    },
+    inputPayPrice (num) {
       if (num !== '' && num.substr(0, 1) === '.') {
         num = ''
       }
@@ -331,7 +231,7 @@ export default {
       }
       return num
     },
-    changesodTaxUnitPrice (num) {
+    changePayPrice (num) {
       if (num === '') {
         num = 0
       }
@@ -347,7 +247,6 @@ export default {
         .then(() => {
           this.$message.success('删除成功')
           this.tableData.splice(index, 1)
-          this.find()
         })
         .catch(() => {
           this.$message({
@@ -383,7 +282,6 @@ export default {
             let x = this.tableData.valueOf(this.multipleSelection[i])
             this.tableData.splice(x, 1)
           }
-          this.find()
           this.$message.success('删除' + delnum + '条成功')
         })
         .catch(() => {
@@ -435,5 +333,11 @@ export default {
   .button-save {
     float: right;
     margin-left: 30px;
+  }
+  .little {
+    width: 60%;
+  }
+  .big {
+    width: 90%;
   }
 </style>

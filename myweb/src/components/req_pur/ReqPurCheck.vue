@@ -123,15 +123,15 @@
       </div>
     </div>
     <!-- 新增弹出框 -->
-    <el-dialog title="新增" :visible.sync="addVisible" width="90%">
+    <el-dialog title="新增" :visible.sync="addVisible" width="90%" :close-on-click-modal="false">
       <Reqadd ref="Reqadd" :editform="addform" :ifchange="true"></Reqadd>
     </el-dialog>
     <!-- 编辑弹出框 -->
-    <el-dialog title="编辑" :visible.sync="editVisible" width="90%">
+    <el-dialog title="编辑" :visible.sync="editVisible" width="90%" :close-on-click-modal="false" :destroy-on-close="true" :before-close="closePcedit">
       <Reqadd ref="Reqedit" :editform="editform" :ifchange="true"></Reqadd>
     </el-dialog>
     <!-- 详情弹出框 -->
-    <el-dialog title="详情" :visible.sync="moreVisible" width="90%">
+    <el-dialog title="详情" :visible.sync="moreVisible" width="90%" :destroy-on-close="true">
       <Reqadd ref="Reqmore" :editform="moreform" :ifchange="false"></Reqadd>
     </el-dialog>
   </div>
@@ -270,6 +270,7 @@ export default {
         .then(() => {
           this.$message.success('删除成功')
           this.tableData.splice(index, 1)
+          this.find()
         })
         .catch(() => {
           this.$message({
@@ -321,6 +322,18 @@ export default {
     },
     handleSizeChange (val) {
       this.query.pageSize = val
+    },
+    // 关闭窗口二次确认
+    closePcedit () {
+      this.$confirm('确定要关闭吗？', '提示', {
+        type: 'warning'
+      })
+        .then(() => {
+          this.editVisible = false
+        })
+        .catch(() => {
+          this.editVisible = true
+        })
     }
   }
 }

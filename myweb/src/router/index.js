@@ -25,18 +25,23 @@ export default new Router({
           meta: {title: '销售订单'}
         },
         {
+          path: '/constract',
+          component: () => import(/* webpackChunkName: "销售订单" */ '../components/purchase/PurConCheck'),
+          meta: {title: '采购合同'}
+        },
+        {
           path: '/organizationmanage',
-          component: () => import(/* webpackChunkName: "donate" */ '../components/System/OrganizationManage.vue'),
+          component: () => import(/* webpackChunkName: "donate" */ '../components/system/OrganizationManage.vue'),
           meta: {title: '组织架构管理'}
         },
         {
           path: '/rolemanage',
-          component: () => import(/* webpackChunkName: "donate" */ '../components/System/RoleManage.vue'),
+          component: () => import(/* webpackChunkName: "donate" */ '../components/system/RoleManage.vue'),
           meta: {title: '角色管理'}
         },
         {
           path: '/usermanage',
-          component: () => import(/* webpackChunkName: "donate" */ '../components/System/UserManage.vue'),
+          component: () => import(/* webpackChunkName: "donate" */ '../components/system/UserManage.vue'),
           meta: {title: '用户管理'}
         },
         {
