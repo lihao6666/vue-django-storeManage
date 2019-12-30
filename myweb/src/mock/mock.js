@@ -9,3 +9,4 @@ Mock.mock('/so_sod', 'post', require('./json/so_sod'))
 Mock.mock('/so_sod_add', 'post', require('./json/so_sod_add'))
 
 Mock.mock('/test2', 'post', require('./json/test2'))
+Mock.mock('/basic_data', 'post', require('./json/basic_data'))

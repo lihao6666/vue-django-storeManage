@@ -151,11 +151,13 @@ export default {
       dpm_name: '',
       dpm_orgaSet: [],
       dpm_creatorSet: [],
-      editform: {},
+      editform: {
+        dpm_name: '',
+        dpm_center: ''
+      },
       tableData: [],
       tableDataNew: [],
       multipleSelection: [],
-      delList: [],
       alterVisible: false,
       editVisible: false,
       pageTotal: 0,
@@ -241,7 +243,8 @@ export default {
     },
     // 编辑操作
     handleEdit (row) {
-      this.editform = row
+      this.editform.dpm_name = row.dpm_name
+      this.editform.dpm_center = row.dpm_center
       this.dpm_name = row.dpm_name
       this.editVisible = true
     },
@@ -259,7 +262,7 @@ export default {
     saveAlter () {
       this.alterVisible = false
       this.$message.success(`新增成功`)
-      postAPI('/test2', {data: this.form}).then(function (res) {
+      postAPI('/test2', {data: this.form, table: 'department'}).then(function (res) {
         console.log(res)
       }).catch(function (err) {
         console.log(err)
@@ -297,8 +300,5 @@ export default {
   }
   .green {
     color: GREEN;
-  }
-  .mr10 {
-    margin-right: 10px;
   }
 </style>
