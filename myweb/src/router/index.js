@@ -77,12 +77,12 @@ export default new Router({
         {
           path: '/materialtype',
           component: () => import(/* webpackChunkName: "donate" */ '../components/basic_data/MaterialType.vue'),
-          meta: {title: '计量单位维护'}
+          meta: {title: '物料类别维护'}
         },
         {
           path: '/material',
           component: () => import(/* webpackChunkName: "donate" */ '../components/basic_data/Material.vue'),
-          meta: {title: '计量单位维护'}
+          meta: {title: '物料维护'}
         }
       ]
     },
