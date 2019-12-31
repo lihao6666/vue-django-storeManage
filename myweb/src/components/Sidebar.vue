@@ -202,7 +202,7 @@ export default {
               title: '仓库维护'
             },
             {
-              index: 'provider',
+              index: 'supplier',
               title: '供应商维护'
             },
             {
@@ -210,11 +210,11 @@ export default {
               title: '客户维护'
             },
             {
-              index: 'units',
+              index: 'meterage',
               title: '计量单位维护'
             },
             {
-              index: 'materialclass',
+              index: 'materialtype',
               title: '物料类别维护'
             },
             {

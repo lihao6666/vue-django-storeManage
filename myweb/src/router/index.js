@@ -58,6 +58,31 @@ export default new Router({
           path: '/store',
           component: () => import(/* webpackChunkName: "donate" */ '../components/basic_data/Store.vue'),
           meta: {title: '仓库维护'}
+        },
+        {
+          path: '/supplier',
+          component: () => import(/* webpackChunkName: "donate" */ '../components/basic_data/Supplier.vue'),
+          meta: {title: '供应商维护'}
+        },
+        {
+          path: '/client',
+          component: () => import(/* webpackChunkName: "donate" */ '../components/basic_data/Client.vue'),
+          meta: {title: '客户维护'}
+        },
+        {
+          path: '/meterage',
+          component: () => import(/* webpackChunkName: "donate" */ '../components/basic_data/Meterage.vue'),
+          meta: {title: '计量单位维护'}
+        },
+        {
+          path: '/materialtype',
+          component: () => import(/* webpackChunkName: "donate" */ '../components/basic_data/MaterialType.vue'),
+          meta: {title: '计量单位维护'}
+        },
+        {
+          path: '/material',
+          component: () => import(/* webpackChunkName: "donate" */ '../components/basic_data/Material.vue'),
+          meta: {title: '计量单位维护'}
         }
       ]
     },

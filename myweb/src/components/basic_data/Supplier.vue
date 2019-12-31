@@ -3,7 +3,7 @@
     <div class="crumbs">
       <el-breadcrumb separator="/">
         <el-breadcrumb-item>
-          <i class="el-icon-lx-cascades"></i> 中心管理
+          <i class="el-icon-lx-cascades"></i> 供应商维护
         </el-breadcrumb-item>
       </el-breadcrumb>
     </div>
@@ -30,19 +30,20 @@
           <template slot-scope="props">
             <el-form label-position="left" inline class="demo-table-expand">
               <el-form-item label="备注：">
-                <span>{{ props.row.center_remarks }}</span>
+                <span>{{ props.row.supply_remarks }}</span>
               </el-form-item>
             </el-form>
           </template>
         </el-table-column>
         <el-table-column type="index" width="50"></el-table-column>
-        <el-table-column prop="center_name" sortable label="名称" :filters="center_nameSet"
+        <el-table-column prop="supply_iden" sortable label="编码" align="center"></el-table-column>
+        <el-table-column prop="supply_name" sortable label="名称" :filters="supply_nameSet"
                          :filter-method="filter" align="center"></el-table-column>
-        <el-table-column prop="center_area" sortable label="区域" :filters="center_areaSet"
+        <el-table-column prop="supply_type" sortable label="类型" :filters="supply_typeSet"
                          :filter-method="filter" align="center"></el-table-column>
-        <el-table-column prop="center_creator" sortable label="创建人" :filters="center_creatorSet"
+        <el-table-column prop="supply_creator" sortable label="创建人" :filters="supply_creatorSet"
                          :filter-method="filter" align="center"></el-table-column>
-        <el-table-column prop="center_createDate" sortable label="创建日期" align="center"></el-table-column>
+        <el-table-column prop="supply_createDate" sortable label="创建日期" align="center"></el-table-column>
         <el-table-column label="操作" align="center">
           <template slot-scope="scope">
             <el-button
@@ -56,7 +57,7 @@
               icon="el-icon-unlock"
               class="red"
               @click="handleStop(scope.row)"
-              v-if="scope.row.center_status==='启用'"
+              v-if="scope.row.supply_status==='启用'"
             >停用
             </el-button>
             <el-button
@@ -64,7 +65,7 @@
               icon="el-icon-lock"
               class="green"
               @click="handleStart(scope.row)"
-              v-if="scope.row.center_status==='停用'"
+              v-if="scope.row.supply_status==='停用'"
             >启用
             </el-button>
           </template>
@@ -88,27 +89,30 @@
     <el-dialog title="新增" :visible.sync="alterVisible" width="35%" >
       <el-form ref="form" :model="form" label-width="70px"  class="form" >
         <el-row>
-          <el-form-item label="名称" class="inputs" align="left">
+          <el-form-item label="编码" class="inputs" align="left">
             <el-col :span="10">
-              <el-input v-model="form.center_name" ></el-input>
+              <el-input v-model="form.supply_iden" ></el-input>
             </el-col>
           </el-form-item>
         </el-row>
         <el-row>
-          <el-form-item label="区域"  align="left">
-            <el-select v-model="form.center_area" placeholder="请选择区域"  class="option" >
-              <el-option
-                v-for="item in area_options"
-                :key="item"
-                :label="item"
-                :value="item">
-              </el-option>
+          <el-form-item label="名称" class="inputs" align="left">
+            <el-col :span="10">
+              <el-input v-model="form.supply_name" ></el-input>
+            </el-col>
+          </el-form-item>
+        </el-row>
+        <el-row>
+          <el-form-item label="类型"  align="left">
+            <el-select v-model="form.supply_type" placeholder="请选择区域"  class="option" >
+              <el-option key="内部单位" label="内部单位" value="内部单位"> </el-option>
+              <el-option key="外部单位" label="外部单位" value="外部单位"> </el-option>
             </el-select>
           </el-form-item>
         </el-row>
         <el-row>
           <el-form-item label="备注" align="left">
-            <el-input type="textarea" class="textarea" v-model="form.center_remarks"
+            <el-input type="textarea" class="textarea" v-model="form.supply_remarks"
                       placeholder="请输入内容" :autosize="{ minRows: 2, maxRows: 6}" maxlength="200" show-word-limit></el-input>
           </el-form-item>
         </el-row>
@@ -123,27 +127,30 @@
     <el-dialog title="编辑" :visible.sync="editVisible" width="35%">
       <el-form ref="form" :model="editform" label-width="70px">
         <el-row>
-          <el-form-item label="名称" class="inputs" align="left">
+          <el-form-item label="编码" class="inputs" align="left">
             <el-col :span="10">
-              <el-input v-model="editform.center_name" ></el-input>
+              <el-input v-model="editform.supply_iden" ></el-input>
             </el-col>
           </el-form-item>
         </el-row>
         <el-row>
-          <el-form-item label="区域"  align="left">
-            <el-select v-model="editform.center_area" placeholder="请选择区域"  class="option" >
-              <el-option
-                v-for="item in area_options"
-                :key="item"
-                :label="item"
-                :value="item">
-              </el-option>
-            </el-select>
+          <el-form-item label="名称" class="inputs" align="left">
+            <el-col :span="10">
+              <el-input v-model="editform.supply_name" ></el-input>
+            </el-col>
           </el-form-item>
         </el-row>
         <el-row>
+          <el-form-item label="类型"  align="left">
+          <el-select v-model="editform.supply_type" placeholder="请选择区域"  class="option" >
+            <el-option key="内部单位" label="内部单位" value="内部单位"> </el-option>
+            <el-option key="外部单位" label="外部单位" value="外部单位"> </el-option>
+          </el-select>
+        </el-form-item>
+        </el-row>
+        <el-row>
           <el-form-item label="备注" align="left">
-            <el-input type="textarea" class="textarea" v-model="editform.center_remarks"
+            <el-input type="textarea" class="textarea" v-model="editform.supply_remarks"
                       placeholder="请输入内容" :autosize="{ minRows: 2, maxRows: 6}" maxlength="200" show-word-limit></el-input>
           </el-form-item>
         </el-row>
@@ -162,21 +169,22 @@ export default {
   name: 'test',
   data () {
     return {
-      area_options: [],
       query: {
         pageIndex: 1,
         pageSize: 10
       },
       search: '',
       form: {},
-      center_name: '',
-      center_nameSet: [],
-      center_areaSet: [],
-      center_creatorSet: [],
+      supply_iden: '',
+      supply_nameSet: [],
+      supply_typeSet: [],
+      supply_creatorSet: [],
       editform: {
-        center_name: '',
-        center_remarks: '',
-        center_area: ''
+        supply_iden: '',
+        supply_name: '',
+        supply_type: '',
+        supply_remarks: '',
+        supply_area: ''
       },
       tableData: [],
       tableDataNew: [],
@@ -194,33 +202,32 @@ export default {
   },
   methods: {
     getData () {
-      this.getlist()
       let _this = this
-      postAPI('/center').then(function (res) {
+      postAPI('/supplier').then(function (res) {
         _this.tableData = res.data.list
         _this.tableDataNew = _this.tableData
         let nameset = new Set()
-        let areaset = new Set()
+        let typeset = new Set()
         let creatorset = new Set()
         for (let i in _this.tableData) {
-          nameset.add(_this.tableData[i]['center_name'])
-          areaset.add(_this.tableData[i]['center_area'])
-          creatorset.add(_this.tableData[i]['center_creator'])
+          nameset.add(_this.tableData[i]['supply_name'])
+          typeset.add(_this.tableData[i]['supply_type'])
+          creatorset.add(_this.tableData[i]['supply_creator'])
         }
         for (let i of nameset) {
-          _this.center_nameSet.push({
+          _this.supply_nameSet.push({
             text: i,
             value: i
           })
         }
-        for (let i of areaset) {
-          _this.center_areaSet.push({
+        for (let i of typeset) {
+          _this.supply_typeSet.push({
             text: i,
             value: i
           })
         }
         for (let i of creatorset) {
-          _this.center_creatorSet.push({
+          _this.supply_creatorSet.push({
             text: i,
             value: i
           })
@@ -252,7 +259,7 @@ export default {
     },
     // 禁用操作
     handleStop (row) {
-      postAPI('/center', {data: row, center_status: '停用'}).then(function (res) {
+      postAPI('/supplier', {data: row, supply_status: '停用'}).then(function (res) {
         console.log(res)
       }).catch(function (err) {
         console.log(err)
@@ -262,49 +269,34 @@ export default {
     find () {
       this.pageTotal = 0
       this.tableDataNew = this.tableData.filter(data => !this.search ||
-          String(data.center_name).toLowerCase().includes(this.search.toLowerCase()) ||
-          String(data.center_area).toLowerCase().includes(this.search.toLowerCase()) ||
-          String(data.center_createDate).toLowerCase().includes(this.search.toLowerCase()) ||
-          String(data.center_remarks).toLowerCase().includes(this.search.toLowerCase()) ||
-          String(data.center_creator).toLowerCase().includes(this.search.toLowerCase()))
+          String(data.supply_name).toLowerCase().includes(this.search.toLowerCase()) ||
+          String(data.supply_iden).toLowerCase().includes(this.search.toLowerCase()) ||
+          String(data.supply_createDate).toLowerCase().includes(this.search.toLowerCase()) ||
+          String(data.supply_remarks).toLowerCase().includes(this.search.toLowerCase()) ||
+          String(data.supply_creator).toLowerCase().includes(this.search.toLowerCase()))
     },
     // 启用
     handleStart (row) {
-      postAPI('/center', {data: row, center_status: '启用'}).then(function (res) {
+      postAPI('/supplier', {data: row, supply_status: '启用'}).then(function (res) {
         console.log(res)
-      }).catch(function (err) {
-        console.log(err)
-      })
-    },
-    // 获取列表
-    getlist () {
-      let _this = this
-      postAPI('/area').then(function (res) {
-        let alterarea = new Set()
-        for (let i in res.data.list) {
-          alterarea.add(res.data.list[i]['area_name'])
-        }
-        for (let j of alterarea) {
-          _this.area_options.push(j)
-        }
       }).catch(function (err) {
         console.log(err)
       })
     },
     // 编辑操作
     handleEdit (row) {
-      this.editform.center_name = row.center_name
-      this.editform.center_name = row.center_name
-      this.editform.center_area = row.center_area
-      this.editform.center_remarks = row.center_remarks
-      this.center_name = row.center_name
+      this.editform.supply_iden = row.supply_iden
+      this.editform.supply_name = row.supply_name
+      this.editform.supply_type = row.supply_type
+      this.editform.supply_remarks = row.supply_remarks
+      this.supply_iden = row.supply_iden
       this.editVisible = true
     },
     // 保存编辑
     saveEdit () {
       this.editVisible = false
       this.$message.success(`修改成功`)
-      postAPI('/center', {data: this.editform, center_name: this.center_name}).then(function (res) {
+      postAPI('/supplier', {data: this.editform, supply_name: this.supply_name}).then(function (res) {
         console.log(res)
       }).catch(function (err) {
         console.log(err)
@@ -314,7 +306,7 @@ export default {
     saveAlter () {
       this.alterVisible = false
       this.$message.success(`新增成功`)
-      postAPI('/center', {data: this.form, table: 'organization'}).then(function (res) {
+      postAPI('/supplier', {data: this.form, table: 'supplier'}).then(function (res) {
         console.log(res)
       }).catch(function (err) {
         console.log(err)

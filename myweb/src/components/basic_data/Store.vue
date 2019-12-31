@@ -30,19 +30,24 @@
           <template slot-scope="props">
             <el-form label-position="left" inline class="demo-table-expand">
               <el-form-item label="备注：">
-                <span>{{ props.row.center_remarks }}</span>
+                <span>{{ props.row.center_wh_remarks }}</span>
               </el-form-item>
             </el-form>
           </template>
         </el-table-column>
         <el-table-column type="index" width="50"></el-table-column>
-        <el-table-column prop="center_name" sortable label="名称" :filters="center_nameSet"
+        <el-table-column prop="center_wh_name" sortable label="仓库编码"  align="center"></el-table-column>
+        <el-table-column prop="center_wh_belong_orga" sortable label="所属组织" :filters="center_wh_orgaSet"
                          :filter-method="filter" align="center"></el-table-column>
-        <el-table-column prop="center_area" sortable label="区域" :filters="center_areaSet"
+        <el-table-column prop="center_wh_name" sortable label="仓库名称" :filters="center_wh_nameSet"
                          :filter-method="filter" align="center"></el-table-column>
-        <el-table-column prop="center_creator" sortable label="创建人" :filters="center_creatorSet"
+        <el-table-column prop="center_wh_belong_center" sortable label="所属中心" :filters="center_wh_centerSet"
                          :filter-method="filter" align="center"></el-table-column>
-        <el-table-column prop="center_createDate" sortable label="创建日期" align="center"></el-table-column>
+        <el-table-column prop="center_wh_belong_brand" sortable label="所属品牌" :filters="center_wh_brandSet"
+                         :filter-method="filter" align="center"></el-table-column>
+        <el-table-column prop="center_wh_creator" sortable label="创建人" :filters="center_wh_creatorSet"
+                         :filter-method="filter" align="center"></el-table-column>
+        <el-table-column prop="center_wh_createDate" sortable label="创建日期" align="center"></el-table-column>
         <el-table-column label="操作" align="center">
           <template slot-scope="scope">
             <el-button
@@ -56,7 +61,7 @@
               icon="el-icon-unlock"
               class="red"
               @click="handleStop(scope.row)"
-              v-if="scope.row.center_status==='启用'"
+              v-if="scope.row.center_wh_status==='启用'"
             >停用
             </el-button>
             <el-button
@@ -64,7 +69,7 @@
               icon="el-icon-lock"
               class="green"
               @click="handleStart(scope.row)"
-              v-if="scope.row.center_status==='停用'"
+              v-if="scope.row.center_wh_status==='停用'"
             >启用
             </el-button>
           </template>
@@ -88,17 +93,48 @@
     <el-dialog title="新增" :visible.sync="alterVisible" width="35%" >
       <el-form ref="form" :model="form" label-width="70px"  class="form" >
         <el-row>
-          <el-form-item label="名称" class="inputs" align="left">
+          <el-form-item label="所属组织"  align="left">
+            <el-select v-model="form.center_wh_belong_orga" placeholder="请选择区域"  class="option" >
+              <el-option
+                v-for="item in orga_options"
+                :key="item"
+                :label="item"
+                :value="item">
+              </el-option>
+            </el-select>
+          </el-form-item>
+        </el-row>
+        <el-row>
+          <el-form-item label="仓库编码" class="inputs" align="left">
             <el-col :span="10">
-              <el-input v-model="form.center_name" ></el-input>
+              <el-input v-model="form.center_wh_iden" ></el-input>
             </el-col>
           </el-form-item>
         </el-row>
         <el-row>
-          <el-form-item label="区域"  align="left">
-            <el-select v-model="form.center_area" placeholder="请选择区域"  class="option" >
+          <el-form-item label="仓库名称" class="inputs" align="left">
+            <el-col :span="10">
+              <el-input v-model="form.center_wh_name" ></el-input>
+            </el-col>
+          </el-form-item>
+        </el-row>
+        <el-row>
+          <el-form-item label="所属中心"  align="left">
+            <el-select v-model="form.center_wh_belong_center" placeholder="请选择区域"  class="option" >
               <el-option
-                v-for="item in area_options"
+                v-for="item in center_options"
+                :key="item"
+                :label="item"
+                :value="item">
+              </el-option>
+            </el-select>
+          </el-form-item>
+        </el-row>
+        <el-row>
+          <el-form-item label="所属品牌"  align="left">
+            <el-select v-model="form.center_wh_belong_brand" placeholder="请选择区域"  class="option" >
+              <el-option
+                v-for="item in brand_options"
                 :key="item"
                 :label="item"
                 :value="item">
@@ -108,7 +144,7 @@
         </el-row>
         <el-row>
           <el-form-item label="备注" align="left">
-            <el-input type="textarea" class="textarea" v-model="form.center_remarks"
+            <el-input type="textarea" class="textarea" v-model="form.center_wh_remarks"
                       placeholder="请输入内容" :autosize="{ minRows: 2, maxRows: 6}" maxlength="200" show-word-limit></el-input>
           </el-form-item>
         </el-row>
@@ -121,19 +157,50 @@
 
     <!-- 编辑弹出框 -->
     <el-dialog title="编辑" :visible.sync="editVisible" width="35%">
-      <el-form ref="form" :model="editform" label-width="70px">
+      <el-form ref="form" :model="editform" label-width="70px"  class="form" >
         <el-row>
-          <el-form-item label="名称" class="inputs" align="left">
+          <el-form-item label="所属组织"  align="left">
+            <el-select v-model="editform.center_wh_belong_orga" placeholder="请选择区域"  class="option" >
+              <el-option
+                v-for="item in orga_options"
+                :key="item"
+                :label="item"
+                :value="item">
+              </el-option>
+            </el-select>
+          </el-form-item>
+        </el-row>
+        <el-row>
+          <el-form-item label="仓库编码" class="inputs" align="left">
             <el-col :span="10">
-              <el-input v-model="editform.center_name" ></el-input>
+              <el-input v-model="editform.center_wh_iden" ></el-input>
             </el-col>
           </el-form-item>
         </el-row>
         <el-row>
-          <el-form-item label="区域"  align="left">
-            <el-select v-model="editform.center_area" placeholder="请选择区域"  class="option" >
+          <el-form-item label="仓库名称" class="inputs" align="left">
+            <el-col :span="10">
+              <el-input v-model="editform.center_wh_name" ></el-input>
+            </el-col>
+          </el-form-item>
+        </el-row>
+        <el-row>
+          <el-form-item label="所属中心"  align="left">
+            <el-select v-model="editform.center_wh_belong_center" placeholder="请选择区域"  class="option" >
               <el-option
-                v-for="item in area_options"
+                v-for="item in center_options"
+                :key="item"
+                :label="item"
+                :value="item">
+              </el-option>
+            </el-select>
+          </el-form-item>
+        </el-row>
+        <el-row>
+          <el-form-item label="所属品牌"  align="left">
+            <el-select v-model="editform.center_wh_belong_brand" placeholder="请选择区域"  class="option" >
+              <el-option
+                v-for="item in brand_options"
                 :key="item"
                 :label="item"
                 :value="item">
@@ -143,7 +210,7 @@
         </el-row>
         <el-row>
           <el-form-item label="备注" align="left">
-            <el-input type="textarea" class="textarea" v-model="editform.center_remarks"
+            <el-input type="textarea" class="textarea" v-model="editform.center_wh_remarks"
                       placeholder="请输入内容" :autosize="{ minRows: 2, maxRows: 6}" maxlength="200" show-word-limit></el-input>
           </el-form-item>
         </el-row>
@@ -162,21 +229,28 @@ export default {
   name: 'test',
   data () {
     return {
-      area_options: [],
+      orga_options: [],
+      center_options: [],
+      brand_options: [],
       query: {
         pageIndex: 1,
         pageSize: 10
       },
       search: '',
       form: {},
-      center_name: '',
-      center_nameSet: [],
-      center_areaSet: [],
-      center_creatorSet: [],
+      center_wh_iden: '',
+      center_wh_nameSet: [],
+      center_wh_orgaSet: [],
+      center_wh_centerSet: [],
+      center_wh_brandSet: [],
+      center_wh_creatorSet: [],
       editform: {
-        center_name: '',
-        center_remarks: '',
-        center_area: ''
+        center_wh_name: '',
+        center_wh_remarks: '',
+        center_wh_iden: '',
+        center_wh_belong_orga: '',
+        center_wh_belong_center: '',
+        center_wh_belong_brand: ''
       },
       tableData: [],
       tableDataNew: [],
@@ -196,31 +270,47 @@ export default {
     getData () {
       this.getlist()
       let _this = this
-      postAPI('/center').then(function (res) {
+      postAPI('/store').then(function (res) {
         _this.tableData = res.data.list
         _this.tableDataNew = _this.tableData
         let nameset = new Set()
-        let areaset = new Set()
+        let orgaset = new Set()
+        let centerset = new Set()
+        let brandset = new Set()
         let creatorset = new Set()
         for (let i in _this.tableData) {
-          nameset.add(_this.tableData[i]['center_name'])
-          areaset.add(_this.tableData[i]['center_area'])
-          creatorset.add(_this.tableData[i]['center_creator'])
+          nameset.add(_this.tableData[i]['center_wh_name'])
+          orgaset.add(_this.tableData[i]['center_wh_belong_orga'])
+          brandset.add(_this.tableData[i]['center_wh_belong_brand'])
+          centerset.add(_this.tableData[i]['center_wh_belong_center'])
+          creatorset.add(_this.tableData[i]['center_wh_creator'])
         }
         for (let i of nameset) {
-          _this.center_nameSet.push({
+          _this.center_wh_nameSet.push({
             text: i,
             value: i
           })
         }
-        for (let i of areaset) {
-          _this.center_areaSet.push({
+        for (let i of orgaset) {
+          _this.center_wh_orgaSet.push({
+            text: i,
+            value: i
+          })
+        }
+        for (let i of centerset) {
+          _this.center_wh_centerSet.push({
+            text: i,
+            value: i
+          })
+        }
+        for (let i of brandset) {
+          _this.center_wh_brandSet.push({
             text: i,
             value: i
           })
         }
         for (let i of creatorset) {
-          _this.center_creatorSet.push({
+          _this.center_wh_creatorSet.push({
             text: i,
             value: i
           })
@@ -252,7 +342,7 @@ export default {
     },
     // 禁用操作
     handleStop (row) {
-      postAPI('/center', {data: row, center_status: '停用'}).then(function (res) {
+      postAPI('/store', {data: row, center_wh_status: '停用'}).then(function (res) {
         console.log(res)
       }).catch(function (err) {
         console.log(err)
@@ -262,16 +352,17 @@ export default {
     find () {
       this.pageTotal = 0
       this.tableDataNew = this.tableData.filter(data => !this.search ||
-          String(data.center_name).toLowerCase().includes(this.search.toLowerCase()) ||
-          String(data.center_name).toLowerCase().includes(this.search.toLowerCase()) ||
-          String(data.center_area).toLowerCase().includes(this.search.toLowerCase()) ||
-          String(data.center_createDate).toLowerCase().includes(this.search.toLowerCase()) ||
-          String(data.center_remarks).toLowerCase().includes(this.search.toLowerCase()) ||
-          String(data.center_creator).toLowerCase().includes(this.search.toLowerCase()))
+          String(data.center_wh_name).toLowerCase().includes(this.search.toLowerCase()) ||
+          String(data.center_wh_belong_orga).toLowerCase().includes(this.search.toLowerCase()) ||
+          String(data.center_wh_belong_brand).toLowerCase().includes(this.search.toLowerCase()) ||
+          String(data.center_wh_belong_center).toLowerCase().includes(this.search.toLowerCase()) ||
+          String(data.center_wh_createDate).toLowerCase().includes(this.search.toLowerCase()) ||
+          String(data.center_wh_remarks).toLowerCase().includes(this.search.toLowerCase()) ||
+          String(data.center_wh_creator).toLowerCase().includes(this.search.toLowerCase()))
     },
     // 启用
     handleStart (row) {
-      postAPI('/center', {data: row, center_status: '启用'}).then(function (res) {
+      postAPI('/store', {data: row, center_wh_status: '启用'}).then(function (res) {
         console.log(res)
       }).catch(function (err) {
         console.log(err)
@@ -280,13 +371,35 @@ export default {
     // 获取列表
     getlist () {
       let _this = this
-      postAPI('/area').then(function (res) {
-        let alterarea = new Set()
+      postAPI('/organization').then(function (res) {
+        let alterorga = new Set()
         for (let i in res.data.list) {
-          alterarea.add(res.data.list[i]['area_name'])
+          alterorga.add(res.data.list[i]['orga_name'])
         }
-        for (let j of alterarea) {
-          _this.area_options.push(j)
+        for (let j of alterorga) {
+          _this.orga_options.push(j)
+        }
+      }).catch(function (err) {
+        console.log(err)
+      })
+      postAPI('/center').then(function (res) {
+        let altercenter = new Set()
+        for (let i in res.data.list) {
+          altercenter.add(res.data.list[i]['center_name'])
+        }
+        for (let j of altercenter) {
+          _this.center_options.push(j)
+        }
+      }).catch(function (err) {
+        console.log(err)
+      })
+      postAPI('/brand').then(function (res) {
+        let alterbrand = new Set()
+        for (let i in res.data.list) {
+          alterbrand.add(res.data.list[i]['brand_name'])
+        }
+        for (let j of alterbrand) {
+          _this.brand_options.push(j)
         }
       }).catch(function (err) {
         console.log(err)
@@ -294,18 +407,20 @@ export default {
     },
     // 编辑操作
     handleEdit (row) {
-      this.editform.center_name = row.center_name
-      this.editform.center_name = row.center_name
-      this.editform.center_area = row.center_area
-      this.editform.center_remarks = row.center_remarks
-      this.center_name = row.center_name
+      this.editform.center_wh_iden = row.center_wh_iden
+      this.editform.center_wh_name = row.center_wh_name
+      this.editform.center_wh_belong_orga = row.center_wh_belong_orga
+      this.editform.center_wh_belong_brand = row.center_wh_belong_brand
+      this.editform.center_wh_belong_center = row.center_wh_belong_center
+      this.editform.center_wh_remarks = row.center_wh_remarks
+      this.center_wh_iden = row.center_wh_iden
       this.editVisible = true
     },
     // 保存编辑
     saveEdit () {
       this.editVisible = false
       this.$message.success(`修改成功`)
-      postAPI('/center', {data: this.editform, center_name: this.center_name}).then(function (res) {
+      postAPI('/store', {data: this.editform, center_wh_iden: this.center_wh_iden}).then(function (res) {
         console.log(res)
       }).catch(function (err) {
         console.log(err)
@@ -315,7 +430,7 @@ export default {
     saveAlter () {
       this.alterVisible = false
       this.$message.success(`新增成功`)
-      postAPI('/center', {data: this.form, table: 'organization'}).then(function (res) {
+      postAPI('/center', {data: this.form, table: 'center_warehouse'}).then(function (res) {
         console.log(res)
       }).catch(function (err) {
         console.log(err)
