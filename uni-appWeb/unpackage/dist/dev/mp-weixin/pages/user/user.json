@@ -1,4 +1,8 @@
 {
   "navigationBarTitleText": "我的",
-  "usingComponents": {}
+  "usingComponents": {
+    "cmd-avatar": "/components/cmd-avatar/cmd-avatar",
+    "cmd-icon": "/components/cmd-icon/cmd-icon",
+    "cmd-cell-item": "/components/cmd-cell-item/cmd-cell-item"
+  }
 }

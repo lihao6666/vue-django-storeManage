@@ -1,0 +1,14 @@
+
+.content {
+	padding: 0;
+}
+.aboutUs {
+	background: #FFFFFF;
+}
+.title {
+	border-top: 10rpx;
+}
+.infomation {
+	font-size: 15rpx;
+}
+

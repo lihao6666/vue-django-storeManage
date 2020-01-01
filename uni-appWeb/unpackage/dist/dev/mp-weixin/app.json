@@ -1,13 +1,16 @@
 {
   "pages": [
     "pages/main/main",
+    "pages/index/index",
+    "pages/user/user",
     "pages/login/login",
     "pages/reg/reg",
     "pages/pwd/pwd",
-    "pages/user/user",
     "pages/requisitions/requisitions",
     "pages/requisitions/start",
-    "pages/index/index"
+    "pages/user/phoneus",
+    "pages/user/setting",
+    "pages/user/myinfo"
   ],
   "subPackages": [],
   "window": {
@@ -40,5 +43,6 @@
       }
     ]
   },
-  "usingComponents": {}
+  "usingComponents": {},
+  "sitemapLocation": "sitemap86.json"
 }
