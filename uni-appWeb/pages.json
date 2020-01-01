@@ -3,7 +3,7 @@
         {
             "path": "pages/main/main",
             "style": {
-                "navigationBarTitleText": "登录模板"
+                "navigationBarTitleText": "主页"
             }
         }, {
             "path": "pages/login/login",
@@ -38,7 +38,7 @@
         },{
             "path": "pages/index/index",
             "style": {
-                "navigationBarTitleText": "首页"
+                "navigationBarTitleText": "仓库"
             }
         }
     ],
@@ -47,18 +47,13 @@
         "selectedColor": "#0faeff",
         "backgroundColor": "#ffffff",
         "list": [{
-            "pagePath": "pages/index/index",
-            "text": "首页",
+            "pagePath": "pages/main/main",
+            "text": "主页",
             "iconPath": "static/img/home.png",
             "selectedIconPath": "static/img/homeHL.png"
         },{
-            "pagePath": "pages/main/main",
-            "text": "搜索",
-            "iconPath": "static/img/home.png",
-            "selectedIconPath": "static/img/homeHL.png"
-        }, {
-            "pagePath": "pages/requisitions/requisitions",
-            "text": "请购",
+            "pagePath": "pages/index/index",
+            "text": "仓库",
             "iconPath": "static/img/home.png",
             "selectedIconPath": "static/img/homeHL.png"
         },{
