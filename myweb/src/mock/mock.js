@@ -11,6 +11,12 @@ Mock.mock('/so_sod_add', 'post', require('./json/so_sod_add'))
 Mock.mock('/pc_check', 'post', require('./json/pc_check'))
 Mock.mock('/pc_cd', 'post', require('./json/pc_cd'))
 Mock.mock('/pc_pay', 'post', require('./json/pc_pay'))
+Mock.mock('/pc_cd_add', 'post', require('./json/pc_cd_add'))
+
+Mock.mock('/po_check', 'post', require('./json/po_check'))
+Mock.mock('/po_od', 'post', require('./json/po_od'))
+Mock.mock('/po_od_add_rp', 'post', require('./json/po_od_add_rp'))
+Mock.mock('/po_od_add_pc', 'post', require('./json/po_od_add_pc'))
 
 Mock.mock('/test2', 'post', require('./json/test2'))
 Mock.mock('/organization', 'post', require('./json/organization'))
