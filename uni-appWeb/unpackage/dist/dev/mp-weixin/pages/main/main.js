@@ -133,7 +133,7 @@ __webpack_require__.r(__webpack_exports__);
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var maintabs = function maintabs() {return __webpack_require__.e(/*! import() | components/mainpage/Maintabs */ "components/mainpage/Maintabs").then(__webpack_require__.bind(null, /*! ../../components/mainpage/Maintabs.vue */ 77));};var _default =
+Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var maintabs = function maintabs() {return __webpack_require__.e(/*! import() | components/mainpage/Maintabs */ "components/mainpage/Maintabs").then(__webpack_require__.bind(null, /*! ../../components/mainpage/Maintabs.vue */ 97));};var _default =
 
 
 

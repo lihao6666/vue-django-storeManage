@@ -5,27 +5,32 @@
             "style": {
                 "navigationBarTitleText": "主页"
             }
-        }, {
-            "path": "pages/login/login",
+        },{
+            "path": "pages/index/index",
             "style": {
-                "navigationBarTitleText": "登录"
+                "navigationBarTitleText": "仓库"
             }
-        }, {
-            "path": "pages/reg/reg",
-            "style": {
-                "navigationBarTitleText": "注册"
-            }
-        }, {
-            "path": "pages/pwd/pwd",
-            "style": {
-                "navigationBarTitleText": "找回密码"
-            }
-        }, {
+        },{
             "path": "pages/user/user",
             "style": {
                 "navigationBarTitleText": "我的"
             }
-        }, {
+        },{
+            "path": "pages/login/login",
+            "style": {
+                "navigationBarTitleText": "登录"
+            }
+        },{
+            "path": "pages/reg/reg",
+            "style": {
+                "navigationBarTitleText": "注册"
+            }
+        },{
+            "path": "pages/pwd/pwd",
+            "style": {
+                "navigationBarTitleText": "找回密码"
+            }
+        },{
             "path": "pages/requisitions/requisitions",
             "style": {
                 "navigationBarTitleText": "请购"
@@ -36,9 +41,19 @@
                 "navigationBarTitleText": "新建"
             }
         },{
-            "path": "pages/index/index",
+            "path": "pages/user/phoneus",
             "style": {
-                "navigationBarTitleText": "仓库"
+                "navigationBarTitleText": "联系我们"
+            }
+        },{
+            "path": "pages/user/setting",
+            "style": {
+                "navigationBarTitleText": "系统设置"
+            }
+        },{
+            "path": "pages/user/myinfo",
+            "style": {
+                "navigationBarTitleText": "我的信息"
             }
         }
     ],

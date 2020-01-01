@@ -1,0 +1,52 @@
+
+.content {
+	padding: 0;
+}
+.personHead {
+	display: -webkit-box;
+	display: -webkit-flex;
+	display: flex;
+	-webkit-box-orient: horizontal;
+	-webkit-box-direction: normal;
+	-webkit-flex-direction: row;
+	        flex-direction: row;
+	-webkit-box-align: center;
+	-webkit-align-items: center;
+	        align-items: center;
+	height: 170rpx;
+	padding-left: 20px;
+	background: -webkit-linear-gradient(bottom, #365fff, #0faeff);
+	background: linear-gradient(to top, #365fff, #0faeff);
+	border-top: 0;
+}
+.personHeadBox {
+	border-radius: 10rpx;
+	display: -webkit-box;
+	display: -webkit-flex;
+	display: flex;
+	-webkit-box-orient: vertical;
+	-webkit-box-direction: normal;
+	-webkit-flex-direction: column;
+	        flex-direction: column;
+	-webkit-box-pack: center;
+	-webkit-justify-content: center;
+	        justify-content: center;
+	-webkit-box-align: start;
+	-webkit-align-items: flex-start;
+	        align-items: flex-start;
+}
+.userName {
+	font-size: 18px;
+	font-weight: 1000;
+	color: #000000;
+	font-family: '\6977\4F53';
+}
+.userId {
+	font-size: 14px;
+	font-weight: 1000;
+	color: #000000;
+}
+.personList {
+	background: #FFFFFF;
+}
+
