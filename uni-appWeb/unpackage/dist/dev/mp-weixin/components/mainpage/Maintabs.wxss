@@ -1,0 +1,40 @@
+.TabBox {
+  width: 100vw;
+  color: rgba(255, 255, 255, 0.5);
+}
+.TabBox .click {
+    color: white;
+}
+.TabBox .Tabs {
+    width: 100%;
+    left: 0;
+    top: 0;
+    font-size: 30rpx;
+    background-color: #0faeff;
+}
+.TabBox .Tabs .Item {
+      height: 90rpx;
+      display: inline-block;
+      line-height: 90rpx;
+      text-align: center;
+}
+.TabBox .Tabs .underlineBox {
+      height: 3px;
+      width: 20%;
+      display: -webkit-box;
+      display: -webkit-flex;
+      display: flex;
+      -webkit-align-content: center;
+              align-content: center;
+      -webkit-box-pack: center;
+      -webkit-justify-content: center;
+              justify-content: center;
+      -webkit-transition: .5s;
+      transition: .5s;
+}
+.TabBox .Tabs .underlineBox .underline {
+        width: 84rpx;
+        height: 4px;
+        background-color: white;
+}
+

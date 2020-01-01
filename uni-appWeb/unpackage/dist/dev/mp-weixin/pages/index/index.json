@@ -1,5 +1,5 @@
 {
-  "navigationBarTitleText": "首页",
+  "navigationBarTitleText": "仓库",
   "usingComponents": {
     "refresh": "/components/refresh",
     "nav-tab": "/components/navTab"
