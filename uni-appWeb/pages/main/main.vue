@@ -1,83 +1,48 @@
 <template>
-    <view class="content">
-        <view v-if="hasLogin" class="hello">
-            <view class="title">
-                您好 {{userName}}，您已成功登录。
-            </view>
-            <view class="ul">
-                <view>这是 uni-app 带登录模板的示例App首页。</view>
-                <view>在 “我的” 中点击 “退出” 可以 “注销当前账户”</view>
-            </view>
-        </view>
-        <view v-if="!hasLogin" class="hello">
-            <view class="title">
-                您好 游客。
-            </view>
-            <view class="ul">
-                <view>这是 uni-app 带登录模板的示例App首页。</view>
-                <view>在 “我的” 中点击 “登录” 可以 “登录您的账户”</view>
-            </view>
-        </view>
+    <view>
+		<view class="tabs">
+            <maintabs :tabTitle="tabTitle" @changeTab='changeTab'></maintabs>
+		</view>
+		<view class="info">
+			<swiper style="min-height: 100vh;" :current="currentTab" @change="swiperTab">
+				<swiper-item v-for="(listItem,listIndex) in list" :key="listIndex">
+					<scroll-view style="height: 100%;" scroll-y="true" @scrolltolower="lower1" scroll-with-animation :scroll-into-view="toView">
+						<view style="width: 100%;height: 153upx;"></view> <!-- 边距盒子 -->
+						<view class='content'>
+							<view class='card' v-for="(item,index) in listItem" v-if="listItem.length > 0" :key="index">
+								{{item}}
+							</view>
+						</view>
+						<view class='noCard' v-if="listItem.length===0">
+							暂无信息
+						</view>
+						<view style="width: 100%;height: 100upx;opacity:0;">底部占位盒子</view>
+					</scroll-view>
+				</swiper-item>
+			</swiper>
+		</view>
     </view>
 </template>
 
 <script>
-    import {
-        mapState
-    } from 'vuex'
-
-    export default {
-        computed: mapState(['forcedLogin', 'hasLogin', 'userName']),
-        onLoad() {
-            if (!this.hasLogin) {
-                uni.showModal({
-                    title: '未登录',
-                    content: '您未登录，需要登录后才能继续',
-                    /**
-                     * 如果需要强制登录，不显示取消按钮
-                     */
-                    showCancel: !this.forcedLogin,
-                    success: (res) => {
-                        if (res.confirm) {
-							/**
-							 * 如果需要强制登录，使用reLaunch方式
-							 */
-                            if (this.forcedLogin) {
-                                uni.reLaunch({
-                                    url: '../login/login'
-                                });
-                            } else {
-                                uni.navigateTo({
-                                    url: '../login/login'
-                                });
-                            }
-                        }
-                    }
-                });
-            }
-        }
-    }
+import maintabs from '../../components/mainpage/Maintabs.vue';
+export default {
+	components: {maintabs},
+	data() {
+		return {
+			tabTitle:['请购','出库','销售','转库']
+		};
+	},
+	methods: {
+		changeTab(index) {
+			
+		}
+	}
+}
 </script>
 
 <style>
-    .hello {
-        display: flex;
-        flex: 1;
-        flex-direction: column;
-    }
-
-    .title {
-        color: #8f8f94;
-        margin-top: 50upx;
-    }
-
-    .ul {
-        font-size: 30upx;
-        color: #8f8f94;
-        margin-top: 50upx;
-    }
-
-    .ul>view {
-        line-height: 50upx;
-    }
+	.tabs {
+		padding: 0;
+	}
 </style>
