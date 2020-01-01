@@ -1,0 +1,116 @@
+{
+  "list": [
+    {
+      "dpm_name" : "某中心",
+      "dpm_remarks" : "sdfsdfaedsfa",
+      "dpm_center" : "0",
+      "dpm_creator" : "zzz",
+      "dpm_createDate" : "2019-12-27 16:18:00",
+      "dpm_status": "启用"
+    },
+    {
+      "dpm_name" : "学习中心",
+      "dpm_status": "启用",
+      "dpm_remarks" : "sdfsdfaedsfa",
+      "dpm_center" : "1",
+      "dpm_creator" : "zzz",
+      "dpm_createDate" : "2019-12-27 16:18:00"
+    },
+    {
+      "dpm_name" : "某中心",
+      "dpm_status": "启用",
+      "dpm_remarks" : "sdfsdfaedsfa",
+      "dpm_center" :"0",
+      "dpm_creator" : "zzz",
+      "dpm_createDate" : "2019-12-27 16:18:00"
+    },
+    {
+      "dpm_name" : "某中心",
+      "dpm_status": "启用",
+      "dpm_remarks" : "sdfsdfaedsfa",
+      "dpm_center" :"0",
+      "dpm_creator" : "zzz",
+      "dpm_createDate" : "2019-12-27 16:18:00"
+    },
+    {
+      "dpm_name" : "某中心",
+      "dpm_status": "启用",
+      "dpm_remarks" : "sdfsdfaedsfa",
+      "dpm_center" :"0",
+      "dpm_creator" : "zzz",
+      "dpm_createDate" : "2019-12-27 16:18:00"
+    },
+    {
+      "dpm_name" : "某中心",
+      "dpm_status": "启用",
+      "dpm_remarks" : "sdfsdfaedsfa",
+      "dpm_center" :"0",
+      "dpm_creator" : "zzz",
+      "dpm_createDate" : "2019-12-27 16:18:00"
+    },
+    {
+      "dpm_name" : "某中心",
+      "dpm_status": "启用",
+      "dpm_remarks" : "sdfsdfaedsfa",
+      "dpm_center" :"0",
+      "dpm_creator" : "zzz",
+      "dpm_createDate" : "2019-12-27 16:18:00"
+    },
+    {
+      "dpm_name" : "某中心",
+      "dpm_status": "启用",
+      "dpm_remarks" : "sdfsdfaedsfa",
+      "dpm_center" :"0",
+      "dpm_creator" : "zzz",
+      "dpm_createDate" : "2019-12-27 16:18:00"
+    },
+    {
+      "dpm_name" : "某中心",
+      "dpm_status": "启用",
+      "dpm_remarks" : "sdfsdfaedsfa",
+      "dpm_center" :"0",
+      "dpm_creator" : "zzz",
+      "dpm_createDate" : "2019-12-27 16:18:00"
+    },
+    {
+      "dpm_name" : "某中心",
+      "dpm_status": "启用",
+      "dpm_remarks" : "sdfsdfaedsfa",
+      "dpm_center" :"0",
+      "dpm_creator" : "zzz",
+      "dpm_createDate" : "2019-12-27 16:18:00"
+    },
+    {
+      "dpm_name" : "某中心",
+      "dpm_status": "启用",
+      "dpm_remarks" : "sdfsdfaedsfa",
+      "dpm_center" :"0",
+      "dpm_creator" : "zzz",
+      "dpm_createDate" : "2019-12-27 16:18:00"
+    },
+    {
+      "dpm_name" : "某中心",
+      "dpm_status": "启用",
+      "dpm_remarks" : "sdfsdfaedsfa",
+      "dpm_center" :"0",
+      "dpm_creator" : "zzz",
+      "dpm_createDate" : "2019-12-27 16:18:00"
+    },
+    {
+      "dpm_name" : "某中心",
+      "dpm_status": "启用",
+      "dpm_remarks" : "sdfsdfaedsfa",
+      "dpm_center" :"0",
+      "dpm_creator" : "zzz",
+      "dpm_createDate" : "2019-12-27 16:18:00"
+    },
+    {
+      "dpm_name" : "某中心",
+      "dpm_status": "启用",
+      "dpm_remarks" : "sdfsdfaedsfa",
+      "dpm_center" :"0",
+      "dpm_creator" : "zzz",
+      "dpm_createDate" : "2019-12-27 16:18:00"
+    }
+  ]
+}

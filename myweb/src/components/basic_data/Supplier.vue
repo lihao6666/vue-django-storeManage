@@ -20,6 +20,7 @@
         <el-button type="primary" icon="el-icon-circle-plus-outline" @click="handleAlter" class="alter-button">新增</el-button>
       </div>
       <el-table
+        max-height="580"
         :data="tableDataNew"
         class="table"
         ref="multipleTable"
@@ -174,7 +175,13 @@ export default {
         pageSize: 10
       },
       search: '',
-      form: {},
+      form: {
+        supply_iden: '',
+        supply_name: '',
+        supply_type: '',
+        supply_remarks: '',
+        supply_area: ''
+      },
       supply_iden: '',
       supply_nameSet: [],
       supply_typeSet: [],
@@ -256,6 +263,22 @@ export default {
     // 新增
     handleAlter () {
       this.alterVisible = true
+      let _this = this
+      postAPI('/supplier').then(function (res) {
+        let maxiden = String(parseInt(res.data.max_iden) + 1)
+        _this.form.supply_iden = maxiden
+        for (let i = 0; i < 7 - maxiden.length; i++) {
+          _this.form.supply_iden = '0' + _this.form.supply_iden
+        }
+      })
+    },
+    // 一键清除新增表单
+    clearform () {
+      this.form.supply_area = ''
+      this.form.supply_iden = ''
+      this.form.supply_name = ''
+      this.form.supply_remarks = ''
+      this.form.supply_type = ''
     },
     // 禁用操作
     handleStop (row) {
@@ -306,6 +329,7 @@ export default {
     saveAlter () {
       this.alterVisible = false
       this.$message.success(`新增成功`)
+      this.clearform()
       postAPI('/supplier', {data: this.form, table: 'supplier'}).then(function (res) {
         console.log(res)
       }).catch(function (err) {

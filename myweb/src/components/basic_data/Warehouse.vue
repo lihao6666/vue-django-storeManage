@@ -3,7 +3,7 @@
     <div class="crumbs">
       <el-breadcrumb separator="/">
         <el-breadcrumb-item>
-          <i class="el-icon-lx-cascades"></i> 客户维护
+          <i class="el-icon-lx-cascades"></i> 总仓维护
         </el-breadcrumb-item>
       </el-breadcrumb>
     </div>
@@ -20,6 +20,7 @@
         <el-button type="primary" icon="el-icon-circle-plus-outline" @click="handleAlter" class="alter-button">新增</el-button>
       </div>
       <el-table
+        max-height="580"
         :data="tableDataNew"
         class="table"
         ref="multipleTable"
@@ -30,20 +31,22 @@
           <template slot-scope="props">
             <el-form label-position="left" inline class="demo-table-expand">
               <el-form-item label="备注：">
-                <span>{{ props.row.customer_remarks }}</span>
+                <span>{{ props.row.total_remarks }}</span>
               </el-form-item>
             </el-form>
           </template>
         </el-table-column>
         <el-table-column type="index" width="50"></el-table-column>
-        <el-table-column prop="customer_iden" sortable label="编码" align="center"></el-table-column>
-        <el-table-column prop="customer_name" sortable label="名称" :filters="customer_nameSet"
+        <el-table-column prop="total_name" sortable label="仓库编码"  align="center"></el-table-column>
+        <el-table-column prop="total_belong_orga" sortable label="所属组织" :filters="total_orgaSet"
                          :filter-method="filter" align="center"></el-table-column>
-        <el-table-column prop="customer_type" sortable label="类型" :filters="customer_typeSet"
+        <el-table-column prop="total_name" sortable label="仓库名称" :filters="total_nameSet"
                          :filter-method="filter" align="center"></el-table-column>
-        <el-table-column prop="customer_creator" sortable label="创建人" :filters="customer_creatorSet"
+        <el-table-column prop="total_belong_brand" sortable label="所属品牌" :filters="total_brandSet"
                          :filter-method="filter" align="center"></el-table-column>
-        <el-table-column prop="customer_createDate" sortable label="创建日期" align="center"></el-table-column>
+        <el-table-column prop="total_creator" sortable label="创建人" :filters="total_creatorSet"
+                         :filter-method="filter" align="center"></el-table-column>
+        <el-table-column prop="total_createDate" sortable label="创建日期" align="center"></el-table-column>
         <el-table-column label="操作" align="center">
           <template slot-scope="scope">
             <el-button
@@ -57,7 +60,7 @@
               icon="el-icon-unlock"
               class="red"
               @click="handleStop(scope.row)"
-              v-if="scope.row.customer_status==='启用'"
+              v-if="scope.row.total_status==='启用'"
             >停用
             </el-button>
             <el-button
@@ -65,7 +68,7 @@
               icon="el-icon-lock"
               class="green"
               @click="handleStart(scope.row)"
-              v-if="scope.row.customer_status==='停用'"
+              v-if="scope.row.total_status==='停用'"
             >启用
             </el-button>
           </template>
@@ -89,30 +92,46 @@
     <el-dialog title="新增" :visible.sync="alterVisible" width="35%" >
       <el-form ref="form" :model="form" label-width="70px"  class="form" >
         <el-row>
-          <el-form-item label="编码" class="inputs" align="left">
+          <el-form-item label="所属组织"  align="left">
+            <el-select v-model="form.total_belong_orga" placeholder="请选择区域"  class="option" >
+              <el-option
+                v-for="item in orga_options"
+                :key="item"
+                :label="item"
+                :value="item">
+              </el-option>
+            </el-select>
+          </el-form-item>
+        </el-row>
+        <el-row>
+          <el-form-item label="仓库编码" class="inputs" align="left">
             <el-col :span="10">
-              <el-input v-model="form.customer_iden" ></el-input>
+              <el-input v-model="form.total_iden" ></el-input>
             </el-col>
           </el-form-item>
         </el-row>
         <el-row>
-          <el-form-item label="名称" class="inputs" align="left">
+          <el-form-item label="仓库名称" class="inputs" align="left">
             <el-col :span="10">
-              <el-input v-model="form.customer_name" ></el-input>
+              <el-input v-model="form.total_name" ></el-input>
             </el-col>
           </el-form-item>
         </el-row>
         <el-row>
-          <el-form-item label="类型"  align="left">
-            <el-select v-model="form.customer_type" placeholder="请选择区域"  class="option" >
-              <el-option key="内部单位" label="内部单位" value="内部单位"> </el-option>
-              <el-option key="外部单位" label="外部单位" value="外部单位"> </el-option>
+          <el-form-item label="所属品牌"  align="left">
+            <el-select v-model="form.total_belong_brand" placeholder="请选择区域"  class="option" >
+              <el-option
+                v-for="item in brand_options"
+                :key="item"
+                :label="item"
+                :value="item">
+              </el-option>
             </el-select>
           </el-form-item>
         </el-row>
         <el-row>
           <el-form-item label="备注" align="left">
-            <el-input type="textarea" class="textarea" v-model="form.customer_remarks"
+            <el-input type="textarea" class="textarea" v-model="form.total_remarks"
                       placeholder="请输入内容" :autosize="{ minRows: 2, maxRows: 6}" maxlength="200" show-word-limit></el-input>
           </el-form-item>
         </el-row>
@@ -125,32 +144,48 @@
 
     <!-- 编辑弹出框 -->
     <el-dialog title="编辑" :visible.sync="editVisible" width="35%">
-      <el-form ref="form" :model="editform" label-width="70px">
+      <el-form ref="form" :model="editform" label-width="70px"  class="form" >
         <el-row>
-          <el-form-item label="编码" class="inputs" align="left">
+          <el-form-item label="所属组织"  align="left">
+            <el-select v-model="editform.total_belong_orga" placeholder="请选择区域"  class="option" >
+              <el-option
+                v-for="item in orga_options"
+                :key="item"
+                :label="item"
+                :value="item">
+              </el-option>
+            </el-select>
+          </el-form-item>
+        </el-row>
+        <el-row>
+          <el-form-item label="仓库编码" class="inputs" align="left">
             <el-col :span="10">
-              <el-input v-model="editform.customer_iden" ></el-input>
+              <el-input v-model="editform.total_iden" ></el-input>
             </el-col>
           </el-form-item>
         </el-row>
         <el-row>
-          <el-form-item label="名称" class="inputs" align="left">
+          <el-form-item label="仓库名称" class="inputs" align="left">
             <el-col :span="10">
-              <el-input v-model="editform.customer_name" ></el-input>
+              <el-input v-model="editform.total_name" ></el-input>
             </el-col>
           </el-form-item>
         </el-row>
         <el-row>
-          <el-form-item label="类型"  align="left">
-            <el-select v-model="editform.customer_type" placeholder="请选择区域"  class="option" >
-              <el-option key="内部单位" label="内部单位" value="内部单位"> </el-option>
-              <el-option key="外部单位" label="外部单位" value="外部单位"> </el-option>
+          <el-form-item label="所属品牌"  align="left">
+            <el-select v-model="editform.total_belong_brand" placeholder="请选择区域"  class="option" >
+              <el-option
+                v-for="item in brand_options"
+                :key="item"
+                :label="item"
+                :value="item">
+              </el-option>
             </el-select>
           </el-form-item>
         </el-row>
         <el-row>
           <el-form-item label="备注" align="left">
-            <el-input type="textarea" class="textarea" v-model="editform.customer_remarks"
+            <el-input type="textarea" class="textarea" v-model="editform.total_remarks"
                       placeholder="请输入内容" :autosize="{ minRows: 2, maxRows: 6}" maxlength="200" show-word-limit></el-input>
           </el-form-item>
         </el-row>
@@ -169,22 +204,32 @@ export default {
   name: 'test',
   data () {
     return {
+      orga_options: [],
+      center_options: [],
+      brand_options: [],
       query: {
         pageIndex: 1,
         pageSize: 10
       },
       search: '',
-      form: {},
-      customer_iden: '',
-      customer_nameSet: [],
-      customer_typeSet: [],
-      customer_creatorSet: [],
+      form: {
+        total_name: '',
+        total_remarks: '',
+        total_iden: '',
+        total_belong_orga: '',
+        total_belong_brand: ''
+      },
+      total_iden: '',
+      total_nameSet: [],
+      total_orgaSet: [],
+      total_brandSet: [],
+      total_creatorSet: [],
       editform: {
-        customer_iden: '',
-        customer_name: '',
-        customer_type: '',
-        customer_remarks: '',
-        customer_area: ''
+        total_name: '',
+        total_remarks: '',
+        total_iden: '',
+        total_belong_orga: '',
+        total_belong_brand: ''
       },
       tableData: [],
       tableDataNew: [],
@@ -202,32 +247,41 @@ export default {
   },
   methods: {
     getData () {
+      this.getlist()
       let _this = this
-      postAPI('/client').then(function (res) {
+      postAPI('/warehouse').then(function (res) {
         _this.tableData = res.data.list
         _this.tableDataNew = _this.tableData
         let nameset = new Set()
-        let typeset = new Set()
+        let orgaset = new Set()
+        let brandset = new Set()
         let creatorset = new Set()
         for (let i in _this.tableData) {
-          nameset.add(_this.tableData[i]['customer_name'])
-          typeset.add(_this.tableData[i]['customer_type'])
-          creatorset.add(_this.tableData[i]['customer_creator'])
+          nameset.add(_this.tableData[i]['total_name'])
+          orgaset.add(_this.tableData[i]['total_belong_orga'])
+          brandset.add(_this.tableData[i]['total_belong_brand'])
+          creatorset.add(_this.tableData[i]['total_creator'])
         }
         for (let i of nameset) {
-          _this.customer_nameSet.push({
+          _this.total_nameSet.push({
             text: i,
             value: i
           })
         }
-        for (let i of typeset) {
-          _this.customer_typeSet.push({
+        for (let i of orgaset) {
+          _this.total_orgaSet.push({
+            text: i,
+            value: i
+          })
+        }
+        for (let i of brandset) {
+          _this.total_brandSet.push({
             text: i,
             value: i
           })
         }
         for (let i of creatorset) {
-          _this.customer_creatorSet.push({
+          _this.total_creatorSet.push({
             text: i,
             value: i
           })
@@ -256,10 +310,26 @@ export default {
     // 新增
     handleAlter () {
       this.alterVisible = true
+      let _this = this
+      postAPI('/warehouse').then(function (res) {
+        let maxiden = String(parseInt(res.data.max_iden) + 1)
+        _this.form.total_iden = maxiden
+        for (let i = 0; i < 6 - maxiden.length; i++) {
+          _this.form.total_iden = '0' + _this.form.total_iden
+        }
+      })
+    },
+    // 一键清除新增表单
+    clearform () {
+      this.form.total_belong_brand = ''
+      this.form.total_belong_orga = ''
+      this.form.total_iden = ''
+      this.form.total_name = ''
+      this.form.total_remarks = ''
     },
     // 禁用操作
     handleStop (row) {
-      postAPI('/client', {data: row, customer_status: '停用'}).then(function (res) {
+      postAPI('/store', {data: row, total_status: '停用'}).then(function (res) {
         console.log(res)
       }).catch(function (err) {
         console.log(err)
@@ -269,34 +339,74 @@ export default {
     find () {
       this.pageTotal = 0
       this.tableDataNew = this.tableData.filter(data => !this.search ||
-          String(data.customer_name).toLowerCase().includes(this.search.toLowerCase()) ||
-          String(data.customer_iden).toLowerCase().includes(this.search.toLowerCase()) ||
-          String(data.customer_createDate).toLowerCase().includes(this.search.toLowerCase()) ||
-          String(data.customer_remarks).toLowerCase().includes(this.search.toLowerCase()) ||
-          String(data.customer_creator).toLowerCase().includes(this.search.toLowerCase()))
+          String(data.total_name).toLowerCase().includes(this.search.toLowerCase()) ||
+          String(data.total_belong_orga).toLowerCase().includes(this.search.toLowerCase()) ||
+          String(data.total_belong_brand).toLowerCase().includes(this.search.toLowerCase()) ||
+          String(data.total_createDate).toLowerCase().includes(this.search.toLowerCase()) ||
+          String(data.total_remarks).toLowerCase().includes(this.search.toLowerCase()) ||
+          String(data.total_creator).toLowerCase().includes(this.search.toLowerCase()))
     },
     // 启用
     handleStart (row) {
-      postAPI('/client', {data: row, customer_status: '启用'}).then(function (res) {
+      postAPI('/store', {data: row, total_status: '启用'}).then(function (res) {
         console.log(res)
+      }).catch(function (err) {
+        console.log(err)
+      })
+    },
+    // 获取列表
+    getlist () {
+      let _this = this
+      postAPI('/organization').then(function (res) {
+        let alterorga = new Set()
+        for (let i in res.data.list) {
+          alterorga.add(res.data.list[i]['orga_name'])
+        }
+        for (let j of alterorga) {
+          _this.orga_options.push(j)
+        }
+      }).catch(function (err) {
+        console.log(err)
+      })
+      postAPI('/center').then(function (res) {
+        let altercenter = new Set()
+        for (let i in res.data.list) {
+          altercenter.add(res.data.list[i]['center_name'])
+        }
+        for (let j of altercenter) {
+          _this.center_options.push(j)
+        }
+      }).catch(function (err) {
+        console.log(err)
+      })
+      postAPI('/brand').then(function (res) {
+        let alterbrand = new Set()
+        for (let i in res.data.list) {
+          alterbrand.add(res.data.list[i]['brand_name'])
+        }
+        for (let j of alterbrand) {
+          _this.brand_options.push(j)
+        }
       }).catch(function (err) {
         console.log(err)
       })
     },
     // 编辑操作
     handleEdit (row) {
-      this.editform.customer_iden = row.customer_iden
-      this.editform.customer_name = row.customer_name
-      this.editform.customer_type = row.customer_type
-      this.editform.customer_remarks = row.customer_remarks
-      this.customer_iden = row.customer_iden
+      this.editform.total_iden = row.total_iden
+      this.editform.total_name = row.total_name
+      this.editform.total_belong_orga = row.total_belong_orga
+      this.editform.total_belong_brand = row.total_belong_brand
+      this.editform.total_belong_center = row.total_belong_center
+      this.editform.total_remarks = row.total_remarks
+      this.total_iden = row.total_iden
       this.editVisible = true
     },
     // 保存编辑
     saveEdit () {
       this.editVisible = false
       this.$message.success(`修改成功`)
-      postAPI('/client', {data: this.editform, customer_name: this.customer_name}).then(function (res) {
+      postAPI('/warehouse', {data: this.editform, total_iden: this.total_iden}).then(function (res) {
         console.log(res)
       }).catch(function (err) {
         console.log(err)
@@ -306,7 +416,8 @@ export default {
     saveAlter () {
       this.alterVisible = false
       this.$message.success(`新增成功`)
-      postAPI('/client', {data: this.form, table: 'organization'}).then(function (res) {
+      this.clearform()
+      postAPI('/warehouse', {data: this.form, table: 'total_warehouse'}).then(function (res) {
         console.log(res)
       }).catch(function (err) {
         console.log(err)

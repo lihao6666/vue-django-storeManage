@@ -20,6 +20,7 @@
         <el-button type="primary" icon="el-icon-circle-plus-outline" @click="handleAlter" class="alter-button">新增</el-button>
       </div>
       <el-table
+        max-height="580"
         :data="tableDataNew"
         class="table"
         ref="multipleTable"
@@ -85,6 +86,18 @@
     <!-- 新增弹出框 -->
     <el-dialog title="新增" :visible.sync="alterVisible" width="35%" >
       <el-form ref="form" :model="form" label-width="70px"  class="form" >
+        <el-row>
+          <el-form-item label="分类" class="inputs" align="left">
+            <el-col :span="10">
+              <el-cascader :options="options">
+                <template slot-scope="{ node, data }">
+                  <span>{{ data.label }}</span>
+                  <span v-if="!node.isLeaf"> ({{ data.children.length }}) </span>
+                </template>
+              </el-cascader>
+            </el-col>
+          </el-form-item>
+        </el-row>
         <el-row>
           <el-form-item label="编码" class="inputs" align="left">
             <el-col :span="10">
@@ -208,13 +221,21 @@ export default {
   name: 'test',
   data () {
     return {
+      options: [],
       meterage_options: [],
       query: {
         pageIndex: 1,
         pageSize: 10
       },
       search: '',
-      form: {},
+      form: {
+        material_iden: '',
+        material_name: '',
+        material_specification: '',
+        material_model: '',
+        material_meterage: '',
+        material_attr: ''
+      },
       material_name: '',
       material_specSet: [],
       material_nameSet: [],
@@ -247,6 +268,7 @@ export default {
   methods: {
     getData () {
       this.getlist()
+      this.getoptions()
       let _this = this
       postAPI('/material').then(function (res) {
         _this.tableData = res.data.list
@@ -326,6 +348,15 @@ export default {
     handleAlter () {
       this.alterVisible = true
     },
+    // 一键清除新增表单
+    clearform () {
+      this.form.material_attr = ''
+      this.form.material_iden = ''
+      this.form.material_meterage = ''
+      this.form.material_model = ''
+      this.form.material_specification = ''
+      this.form.material_name = ''
+    },
     // 禁用操作
     handleStop (row) {
       postAPI('/material', {data: row, material_status: '停用'}).then(function (res) {
@@ -354,6 +385,36 @@ export default {
       }).catch(function (err) {
         console.log(err)
       })
+    },
+    // 获取级联选择器
+    getoptions () {
+      // let _this = this
+      // postAPI('/material_type').then(function (res) {
+        // let firstlevel = []
+        // let secondlevel = []
+        // let thirdlevel = []
+        // let length = 2
+        // for (let i in res.data.list) {
+        //   if (res.data.list[i]['type_iden'].length === 2) {
+        //     firstlevel.push({
+        //       value: res.data.list[i]['type_iden'],
+        //       label: res.data.list[i]['type_name'],
+        //       children: []
+        //     })
+        //   }
+        //   if (res.data.list[i]['type_iden'].length === 4) {
+        //     secondlevel.push({
+        //       value: res.data.list[i]['type_iden'],
+        //       label: res.data.list[i]['type_name']
+        //     })
+        //   }
+        // }
+        // console.log(firstlevel)
+        // _this.options.push(firstlevel)
+        // console.log(_this.options)
+      // }).catch(function (err) {
+      //   console.log(err)
+      // })
     },
     // 获取列表
     getlist () {
@@ -395,6 +456,7 @@ export default {
     saveAlter () {
       this.alterVisible = false
       this.$message.success(`新增成功`)
+      this.clearform()
       postAPI('/material', {data: this.form, table: 'material'}).then(function (res) {
         console.log(res)
       }).catch(function (err) {

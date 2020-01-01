@@ -20,6 +20,7 @@
         <el-button type="primary" icon="el-icon-circle-plus-outline" @click="handleAlter" class="alter-button">新增</el-button>
       </div>
       <el-table
+        max-height="580"
         :data="tableDataNew"
         class="table"
         ref="multipleTable"
@@ -141,7 +142,10 @@ export default {
         pageSize: 10
       },
       search: '',
-      form: {},
+      form: {
+        brand_name: '',
+        brand_description: ''
+      },
       brand_name: '',
       brand_nameSet: [],
       brand_creatorSet: [],
@@ -212,6 +216,11 @@ export default {
     handleAlter () {
       this.alterVisible = true
     },
+    // 一键清除新增表单
+    clearform () {
+      this.form.brand_name = ''
+      this.form.brand_description = ''
+    },
     // 禁用操作
     handleStop (row) {
       postAPI('/brand', {data: row, brand_status: '停用'}).then(function (res) {
@@ -260,6 +269,7 @@ export default {
     saveAlter () {
       this.alterVisible = false
       this.$message.success(`新增成功`)
+      this.clearform()
       postAPI('/brand', {data: this.form, table: 'organization'}).then(function (res) {
         console.log(res)
       }).catch(function (err) {

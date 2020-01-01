@@ -3,7 +3,7 @@
     <div class="crumbs">
       <el-breadcrumb separator="/">
         <el-breadcrumb-item>
-          <i class="el-icon-lx-cascades"></i> 仓库维护
+          <i class="el-icon-lx-cascades"></i> 中心仓库维护
         </el-breadcrumb-item>
       </el-breadcrumb>
     </div>
@@ -20,6 +20,7 @@
         <el-button type="primary" icon="el-icon-circle-plus-outline" @click="handleAlter" class="alter-button">新增</el-button>
       </div>
       <el-table
+        max-height="580"
         :data="tableDataNew"
         class="table"
         ref="multipleTable"
@@ -237,7 +238,14 @@ export default {
         pageSize: 10
       },
       search: '',
-      form: {},
+      form: {
+        center_wh_name: '',
+        center_wh_remarks: '',
+        center_wh_iden: '',
+        center_wh_belong_orga: '',
+        center_wh_belong_center: '',
+        center_wh_belong_brand: ''
+      },
       center_wh_iden: '',
       center_wh_nameSet: [],
       center_wh_orgaSet: [],
@@ -339,6 +347,23 @@ export default {
     // 新增
     handleAlter () {
       this.alterVisible = true
+      let _this = this
+      postAPI('/store').then(function (res) {
+        let maxiden = String(parseInt(res.data.max_iden) + 1)
+        _this.form.store_iden = maxiden
+        for (let i = 0; i < 6 - maxiden.length; i++) {
+          _this.form.store_iden = '0' + _this.form.store_iden
+        }
+      })
+    },
+    // 一键清除新增表单
+    clearform () {
+      this.form.center_wh_belong_brand = ''
+      this.form.center_wh_belong_center = ''
+      this.form.center_wh_belong_orga = ''
+      this.form.center_wh_iden = ''
+      this.form.center_wh_name = ''
+      this.form.center_wh_remarks = ''
     },
     // 禁用操作
     handleStop (row) {
@@ -430,7 +455,8 @@ export default {
     saveAlter () {
       this.alterVisible = false
       this.$message.success(`新增成功`)
-      postAPI('/center', {data: this.form, table: 'center_warehouse'}).then(function (res) {
+      this.clearform()
+      postAPI('/store', {data: this.form, table: 'center_warehouse'}).then(function (res) {
         console.log(res)
       }).catch(function (err) {
         console.log(err)

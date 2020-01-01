@@ -60,6 +60,11 @@ export default new Router({
           meta: {title: '品牌管理'}
         },
         {
+          path: '/warehouse',
+          component: () => import(/* webpackChunkName: "donate" */ '../components/basic_data/warehouse.vue'),
+          meta: {title: '总仓维护'}
+        },
+        {
           path: '/store',
           component: () => import(/* webpackChunkName: "donate" */ '../components/basic_data/Store.vue'),
           meta: {title: '仓库维护'}
@@ -70,8 +75,8 @@ export default new Router({
           meta: {title: '供应商维护'}
         },
         {
-          path: '/client',
-          component: () => import(/* webpackChunkName: "donate" */ '../components/basic_data/Client.vue'),
+          path: '/customer',
+          component: () => import(/* webpackChunkName: "donate" */ '../components/basic_data/Customer.vue'),
           meta: {title: '客户维护'}
         },
         {

@@ -20,6 +20,7 @@
         <el-button type="primary" icon="el-icon-circle-plus-outline" @click="handleAlter" class="alter-button">新增</el-button>
       </div>
       <el-table
+        max-height="580"
         :data="tableDataNew"
         class="table"
         ref="multipleTable"
@@ -246,7 +247,15 @@ export default {
       area_options: [],
       dpm_options: [],
       search: '',
-      form: {},
+      form: {
+        user_name: '',
+        user_id: '',
+        user_mailbox: '',
+        user_area: '',
+        user_phone_number: '',
+        user_department: '',
+        user_role: ''
+      },
       user_id: '',
       editform: {
         user_name: '',
@@ -279,7 +288,7 @@ export default {
     getData () {
       this.getlist()
       let _this = this
-      postAPI('/test2').then(function (res) {
+      postAPI('/users').then(function (res) {
         _this.tableData = res.data.list
         _this.tableDataNew = _this.tableData
         let areaset = new Set()
@@ -354,7 +363,7 @@ export default {
     // 获取列表
     getlist () {
       let _this = this
-      postAPI('/test2').then(function (res) {
+      postAPI('/role').then(function (res) {
         let alterrole = new Set()
         for (let i in res.data.list) {
           alterrole.add(res.data.list[i]['role'])
@@ -376,7 +385,7 @@ export default {
       }).catch(function (err) {
         console.log(err)
       })
-      postAPI('/test2').then(function (res) {
+      postAPI('/department').then(function (res) {
         let alterdpm = new Set()
         for (let i in res.data.list) {
           alterdpm.add(res.data.list[i]['dpm_name'])
@@ -392,9 +401,19 @@ export default {
     handleAlter () {
       this.alterVisible = true
     },
+    // 一键清除新增表单
+    clearform () {
+      this.form.user_name = ''
+      this.form.user_id = ''
+      this.form.user_mailbox = ''
+      this.form.user_area = ''
+      this.form.user_phone_number = ''
+      this.form.user_department = ''
+      this.form.user_role = ''
+    },
     // 禁用操作
     handleStop (index, row) {
-      postAPI('/test2', {data: row, status: '停用'}).then(function (res) {
+      postAPI('/users', {data: row, status: '停用'}).then(function (res) {
         console.log(res)
       }).catch(function (err) {
         console.log(err)
@@ -402,7 +421,7 @@ export default {
     },
     // 启用
     handleStart (index, row) {
-      postAPI('/test2', {data: row, status: '启用'}).then(function (res) {
+      postAPI('/users', {data: row, status: '启用'}).then(function (res) {
         console.log(res)
       }).catch(function (err) {
         console.log(err)
@@ -432,7 +451,7 @@ export default {
     saveEdit () {
       this.editVisible = false
       this.$message.success(`修改成功`)
-      postAPI('/test2', {data: this.editform, user_id: this.user_id}).then(function (res) {
+      postAPI('/users', {data: this.editform, user_id: this.user_id}).then(function (res) {
         console.log(res)
       }).catch(function (err) {
         console.log(err)
@@ -442,7 +461,8 @@ export default {
     saveAlter () {
       this.alterVisible = false
       this.$message.success(`新增成功`)
-      postAPI('/test2', {data: this.form, table: 'users'}).then(function (res) {
+      this.clearform()
+      postAPI('/users', {data: this.form, table: 'users'}).then(function (res) {
         console.log(res)
       }).catch(function (err) {
         console.log(err)

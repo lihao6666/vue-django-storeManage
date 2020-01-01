@@ -20,6 +20,7 @@
         <el-button type="primary" icon="el-icon-circle-plus-outline" @click="handleAlter" class="alter-button">新增</el-button>
       </div>
       <el-table
+        max-height="580"
         :data="tableDataNew"
         class="table"
         ref="multipleTable"
@@ -148,7 +149,10 @@ export default {
         pageSize: 10
       },
       search: '',
-      form: {},
+      form: {
+        role_description: '',
+        role: ''
+      },
       editform: {
         role_description: '',
         role: ''
@@ -173,7 +177,7 @@ export default {
   methods: {
     getData () {
       let _this = this
-      postAPI('/test2').then(function (res) {
+      postAPI('/role').then(function (res) {
         _this.tableData = res.data.list
         _this.tableDataNew = _this.tableData
         let roleset = new Set()
@@ -228,9 +232,14 @@ export default {
     handleAlter () {
       this.alterVisible = true
     },
+    // 一键清除新增表单
+    clearform () {
+      this.form.role = ''
+      this.form.role_description = ''
+    },
     // 禁用操作
     handleStop (row) {
-      postAPI('/test2', {data: row, status: '停用'}).then(function (res) {
+      postAPI('/role', {data: row, status: '停用'}).then(function (res) {
         console.log(res)
       }).catch(function (err) {
         console.log(err)
@@ -238,7 +247,7 @@ export default {
     },
     // 启用
     handleStart (row) {
-      postAPI('/test2', {data: row, status: '启用'}).then(function (res) {
+      postAPI('/role', {data: row, status: '启用'}).then(function (res) {
         console.log(res)
       }).catch(function (err) {
         console.log(err)
@@ -254,7 +263,7 @@ export default {
     saveEdit () {
       this.editVisible = false
       this.$message.success(`修改成功`)
-      postAPI('/test2', {data: this.editform, role: this.role}).then(function (res) {
+      postAPI('/role', {data: this.editform, role: this.role}).then(function (res) {
         console.log(res)
       }).catch(function (err) {
         console.log(err)
@@ -264,7 +273,8 @@ export default {
     saveAlter () {
       this.alterVisible = false
       this.$message.success(`新增成功`)
-      postAPI('/test2', {data: this.form, table: 'role'}).then(function (res) {
+      this.clearform()
+      postAPI('/role', {data: this.form, table: 'role'}).then(function (res) {
         console.log(res)
       }).catch(function (err) {
         console.log(err)
