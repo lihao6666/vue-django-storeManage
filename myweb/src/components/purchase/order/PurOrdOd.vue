@@ -156,7 +156,7 @@
       </div>
     </div>
     <!-- 新增弹出框 -->
-    <el-dialog title="新增物料" :visible.sync="addVisible" width="90%" append-to-body>
+    <el-dialog title="新增采购订单物料" :visible.sync="addVisible" width="90%" append-to-body>
       <Odaddrp v-if="!formadd.po_contractFrom" @add="addOdRp" :tableHas="tableData" :formadd="formadd" :ifhasorga="ifhasorga"></Odaddrp>
       <Odaddpc v-else @add="addOdPc" :tableHas="tableData" :formadd="formadd" :ifhasorga="ifhasorga"></Odaddpc>
     </el-dialog>
