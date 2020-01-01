@@ -21,20 +21,14 @@
     "backgroundColor": "#ffffff",
     "list": [
       {
-        "pagePath": "pages/index/index",
-        "text": "首页",
-        "iconPath": "static/img/home.png",
-        "selectedIconPath": "static/img/homeHL.png"
-      },
-      {
         "pagePath": "pages/main/main",
-        "text": "搜索",
+        "text": "主页",
         "iconPath": "static/img/home.png",
         "selectedIconPath": "static/img/homeHL.png"
       },
       {
-        "pagePath": "pages/requisitions/requisitions",
-        "text": "请购",
+        "pagePath": "pages/index/index",
+        "text": "仓库",
         "iconPath": "static/img/home.png",
         "selectedIconPath": "static/img/homeHL.png"
       },

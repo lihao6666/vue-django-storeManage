@@ -1,4 +1,6 @@
 {
-  "navigationBarTitleText": "登录模板",
-  "usingComponents": {}
+  "navigationBarTitleText": "主页",
+  "usingComponents": {
+    "maintabs": "/components/mainpage/Maintabs"
+  }
 }

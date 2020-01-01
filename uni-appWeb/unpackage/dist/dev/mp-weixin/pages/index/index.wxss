@@ -9,12 +9,13 @@
 }
 .content {
   width: 100%;
+  padding: 0;
 }
 .card {
   width: 90%;
   height: 200rpx;
   background-color: white;
-  margin: 0 auto 30rpx;
+  margin: 30rpx auto 0;
   background: #FFFFFF;
   box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.1);
   border-radius: 5px;
@@ -58,7 +59,7 @@
   -webkit-justify-content: flex-start;
           justify-content: flex-start;
   font-size: 24rpx;
-  background-color: #50B7EA;
+  background-color: #0faeff;
   z-index: 996;
 }
 .searchInput999 {
