@@ -1,0 +1,35 @@
+{
+  "max_iden": "000003",
+  "list": [
+    {
+      "total_iden": "001",
+      "total_name" : "某总仓",
+      "total_belong_orga": "ss",
+      "total_belong_brand": "音乐",
+      "total_remarks": "sadffsaefaefsaefs",
+      "total_creator": "zyj",
+      "total_createDate": "2019-12-30 22:00",
+      "total_status": "启用"
+    },
+    {
+      "total_iden": "001",
+      "total_name" : "某总仓",
+      "total_belong_orga": "ss",
+      "total_belong_brand": "音乐",
+      "total_remarks": "sadffsaefaefsaefs",
+      "total_creator": "zyj",
+      "total_createDate": "2019-12-30 22:00",
+      "total_status": "启用"
+    },
+    {
+      "total_iden": "001",
+      "total_name" : "某总仓",
+      "total_belong_orga": "ss",
+      "total_belong_brand": "音乐",
+      "total_remarks": "sadffsaefaefsaefs",
+      "total_creator": "zyj",
+      "total_createDate": "2019-12-30 22:00",
+      "total_status": "停用"
+    }
+  ]
+}

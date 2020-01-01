@@ -20,6 +20,7 @@
         <el-button type="primary" icon="el-icon-circle-plus-outline" @click="handleAlter" class="alter-button">新增</el-button>
       </div>
       <el-table
+        max-height="580"
         :data="tableDataNew"
         class="table"
         ref="multipleTable"
@@ -159,7 +160,13 @@ export default {
         pageSize: 10
       },
       search: '',
-      form: {},
+      form: {
+        meterage_iden: '',
+        meterage_name: '',
+        meterage_dimension: '',
+        meterage_remarks: '',
+        meterage_area: ''
+      },
       meterage_iden: '',
       meterage_nameSet: [],
       meterage_dimSet: [],
@@ -241,6 +248,23 @@ export default {
     // 新增
     handleAlter () {
       this.alterVisible = true
+      let _this = this
+      postAPI('/meterage').then(function (res) {
+        let maxiden = String(parseInt(res.data.max_iden) + 1)
+        _this.form.meterage_iden = maxiden
+        for (let i = 0; i < 6 - maxiden.length; i++) {
+          _this.form.meterage_iden = '0' + _this.form.meterage_iden
+        }
+      })
+    },
+    // 一键清除新增表单
+    clearform () {
+      this.form.meterage_area = ''
+      this.form.meterage_dimension = ''
+      this.form.meterage_iden = ''
+      this.form.meterage_name = ''
+      this.form.meterage_remarks = ''
+      this.form.material_meterage = ''
     },
     // 禁用操作
     handleStop (row) {
@@ -291,6 +315,7 @@ export default {
     saveAlter () {
       this.alterVisible = false
       this.$message.success(`新增成功`)
+      this.clearform()
       postAPI('/meterage', {data: this.form, table: 'meterage'}).then(function (res) {
         console.log(res)
       }).catch(function (err) {

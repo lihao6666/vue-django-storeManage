@@ -1,0 +1,48 @@
+{
+  "list": [
+    {
+      "od_iden": "01",
+      "od_name": "笔",
+      "od_specification": "2B",
+      "od_model": "2*2",
+      "od_meterage": "根",
+      "od_num": "10",
+      "od_taxRate": "10",
+      "od_tax_unitPrice": "10.5",
+      "od_remarks": "10"
+    },
+    {
+      "od_iden": "01",
+      "od_name": "笔",
+      "od_specification": "2B",
+      "od_model": "2*2",
+      "od_meterage": "根",
+      "od_num": "10",
+      "od_taxRate": "10",
+      "od_tax_unitPrice": "10.5",
+      "od_remarks": "10"
+    },
+    {
+      "od_iden": "01",
+      "od_name": "笔",
+      "od_specification": "2B",
+      "od_model": "2*2",
+      "od_meterage": "根",
+      "od_num": "10",
+      "od_taxRate": "10",
+      "od_tax_unitPrice": "10.5",
+      "od_remarks": "10"
+    },
+    {
+      "od_iden": "01",
+      "od_name": "笔",
+      "od_specification": "2B",
+      "od_model": "2*2",
+      "od_meterage": "根",
+      "od_num": "10",
+      "od_taxRate": "10",
+      "od_tax_unitPrice": "10.5",
+      "od_remarks": "10"
+    }
+  ]
+}

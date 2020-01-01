@@ -3,7 +3,7 @@
     <div class="crumbs">
       <el-breadcrumb separator="/">
         <el-breadcrumb-item>
-          <i class="el-icon-lx-cascades"></i> 请购单物料
+          <i class="el-icon-lx-cascades"></i> 物料明细
         </el-breadcrumb-item>
       </el-breadcrumb>
     </div>
@@ -17,12 +17,6 @@
           clearable
           v-model="search">
         </el-input>
-        <el-switch
-          v-model="ifshowadd"
-          @change="switchChange"
-          class="el-switch-ifshowadd"
-          active-text="显示已添加">
-        </el-switch>
         <el-button type="primary" class="button-save" @click="save">添 加</el-button>
       </div>
       <el-table
@@ -31,23 +25,36 @@
         ref="multipleTable"
         header-cell-class-name="table-header"
         :row-class-name="tableRowClassName"
-        @selection-change="handleSelectionChange"
         size="mini"
       >
-        <el-table-column type="selection" :selectable="selectable" width="55"></el-table-column>
-        <el-table-column prop="prd_iden" sortable label="物料编码" align="center"></el-table-column>
-        <el-table-column prop="prd_name" sortable label="物料名称" :filters="prd_nameSet"
-      :filter-method="filter" align="center"></el-table-column>
-        <el-table-column prop="prd_specification" sortable label="规格" :filters="prd_specificationSet"
-      :filter-method="filter" align="center"></el-table-column>
-        <el-table-column prop="prd_model" sortable label="型号" :filters="prd_modelSet"
-      :filter-method="filter" align="center"></el-table-column>
-        <el-table-column prop="prd_meterage" sortable label="计量单位" :filters="prd_meterageSet"
-      :filter-method="filter" align="center"></el-table-column>
-        <el-table-column prop="prd_attr" sortable label="存货属性" :filters="prd_attrSet"
-      :filter-method="filter" align="center">
+        <el-table-column type="expand">
+          <template slot-scope="props">
+            <el-form label-position="left" inline class="demo-table-expand">
+              <el-form-item label="备注">
+                <span>{{props.row.od_rp_remarks}}</span>
+              </el-form-item>
+            </el-form>
+          </template>
         </el-table-column>
-        <el-table-column prop="prd_present_num" sortable label="现存量" align="center"></el-table-column>
+        <el-table-column prop="od_iden" sortable label="物料编码" :filters="od_idenSet"
+      :filter-method="filter"  align="center"></el-table-column>
+        <el-table-column prop="od_name" sortable label="物料名称" :filters="od_nameSet"
+      :filter-method="filter" align="center"></el-table-column>
+        <el-table-column prop="od_specification" sortable label="规格" :filters="od_specificationSet"
+      :filter-method="filter" align="center"></el-table-column>
+        <el-table-column prop="od_model" sortable label="型号" :filters="od_modelSet"
+      :filter-method="filter" align="center"></el-table-column>
+        <el-table-column prop="od_meterage" sortable label="单位" :filters="od_meterageSet"
+      :filter-method="filter" align="center"></el-table-column>
+        <el-table-column prop="od_num" sortable label="数量" align="center"></el-table-column>
+        <el-table-column prop="od_taxRate" sortable label="税率" align="center"></el-table-column>
+        <el-table-column prop="od_tax_unitPrice" sortable label="含税单价" align="center"></el-table-column>
+        <el-table-column prop="od_unitPrice" sortable label="无税单价" align="center"></el-table-column>
+        <el-table-column prop="od_tax_sum" sortable label="含税金额" align="center"></el-table-column>
+        <el-table-column prop="od_sum" sortable label="无税金额" align="center"></el-table-column>
+        <el-table-column prop="od_tax_price" sortable label="税额" align="center"></el-table-column>
+        <el-table-column prop="od_rp_iden" sortable label="请购单号" :filters="od_rp_idenSet"
+      :filter-method="filter" align="center"></el-table-column>
       </el-table>
       <!-- 分页 -->
       <div class="pagination">
@@ -67,11 +74,10 @@
 </template>
 
 <script>
-import {postAPI} from '../../api/api'
+import {postAPI} from '../../../api/api'
 
 export default {
   name: 'pc_cd_add',
-  props: ['tableHas'],
   data () {
     return {
       query: {
@@ -81,14 +87,14 @@ export default {
       search: '',
       tableData: [],
       tableDataNew: [],
-      multipleSelection: [],
-      prd_nameSet: [],
-      prd_specificationSet: [],
-      prd_modelSet: [],
-      prd_meterageSet: [],
-      prd_attrSet: [],
-      pageTotal: 0,
-      ifshowadd: true
+      od_idenSet: [],
+      od_nameSet: [],
+      od_specificationSet: [],
+      od_modelSet: [],
+      od_meterageSet: [],
+      od_rp_idenSet: [],
+      od_attrSet: [],
+      pageTotal: 0
     }
   },
   created () {
@@ -97,7 +103,7 @@ export default {
   methods: {
     getData () {
       let _this = this
-      postAPI('/req_pur_prd_add').then(function (res) {
+      postAPI('/po_od_add_rp').then(function (res) {
         _this.tableData = res.data.list
         _this.find()
         let nameset = new Set()
@@ -105,39 +111,55 @@ export default {
         let modelset = new Set()
         let meterageset = new Set()
         let attrset = new Set()
+        let rpidenset = new Set()
+        let idenset = new Set()
         for (let i in _this.tableData) {
-          nameset.add(_this.tableData[i]['prd_name'])
-          specificationset.add(_this.tableData[i]['prd_specification'])
-          modelset.add(_this.tableData[i]['prd_model'])
-          meterageset.add(_this.tableData[i]['prd_meterage'])
-          attrset.add(_this.tableData[i]['prd_attr'])
+          nameset.add(_this.tableData[i]['od_name'])
+          specificationset.add(_this.tableData[i]['od_specification'])
+          modelset.add(_this.tableData[i]['od_model'])
+          meterageset.add(_this.tableData[i]['od_meterage'])
+          attrset.add(_this.tableData[i]['od_attr'])
+          rpidenset.add(_this.tableData[i]['od_rp_iden'])
+          idenset.add(_this.tableData[i]['od_iden'])
         }
         for (let i of nameset) {
-          _this.prd_nameSet.push({
+          _this.od_nameSet.push({
             text: i,
             value: i
           })
         }
         for (let i of meterageset) {
-          _this.prd_meterageSet.push({
+          _this.od_meterageSet.push({
             text: i,
             value: i
           })
         }
         for (let i of specificationset) {
-          _this.prd_specificationSet.push({
+          _this.od_specificationSet.push({
             text: i,
             value: i
           })
         }
         for (let i of modelset) {
-          _this.prd_modelSet.push({
+          _this.od_modelSet.push({
+            text: i,
+            value: i
+          })
+        }
+        for (let i of rpidenset) {
+          _this.od_rp_idenset.push({
+            text: i,
+            value: i
+          })
+        }
+        for (let i of idenset) {
+          _this.od_idenSet.push({
             text: i,
             value: i
           })
         }
         for (let i of attrset) {
-          _this.prd_attrSet.push({
+          _this.od_attrSet.push({
             text: i,
             value: i
           })
@@ -166,13 +188,13 @@ export default {
     // 查询
     find () {
       this.pageTotal = 0
-      this.tableDataNew = this.tableData.filter(data => (this.ifshowadd || this.selectable(data, 0)) &&
-        (!this.search ||
-        data.prd_iden.toLowerCase().includes(this.search.toLowerCase()) ||
-        data.prd_name.toLowerCase().includes(this.search.toLowerCase()) ||
-        data.prd_specification.toLowerCase().includes(this.search.toLowerCase()) ||
-        data.prd_model.toLowerCase().includes(this.search.toLowerCase()) ||
-        data.prd_meterage.toLowerCase().includes(this.search.toLowerCase())))
+      this.tableDataNew = this.tableData.filter(data => (!this.search ||
+        data.od_iden.toLowerCase().includes(this.search.toLowerCase()) ||
+        data.od_name.toLowerCase().includes(this.search.toLowerCase()) ||
+        data.od_specification.toLowerCase().includes(this.search.toLowerCase()) ||
+        data.od_model.toLowerCase().includes(this.search.toLowerCase()) ||
+        data.od_rp_iden.toLowerCase().includes(this.search.toLowerCase()) ||
+        data.od_meterage.toLowerCase().includes(this.search.toLowerCase())))
     },
     // 分页导航
     handlePageChange (val) {
@@ -181,27 +203,9 @@ export default {
     handleSizeChange (val) {
       this.query.pageSize = val
     },
-    // 多选操作
-    handleSelectionChange (val) {
-      this.multipleSelection = val
-    },
-    // 显示已添加按钮的事件
-    switchChange (val) {
-      this.find()
-    },
-    // 可选项
-    selectable (row, index) {
-      for (let i in this.tableHas) {
-        if (this.tableHas[i].prd_iden === row.prd_iden) {
-          return false
-        }
-      }
-      return true
-    },
     // 保存
     save () {
-      this.$emit('add', this.multipleSelection)
-      this.multipleSelection = []
+      this.$emit('add', this.tableData)
     }
   }
 }

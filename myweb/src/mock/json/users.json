@@ -1,0 +1,171 @@
+{
+  "list": [
+    {
+      "user_name": "zyj",
+      "user_id": "2017212385",
+      "user_phone_number": "11111111110",
+      "user_mailbox": "1070926433@qq.com",
+      "user_area": "南京",
+      "user_department": ["部门"],
+      "user_role": ["老师"],
+      "user_creator": "sss",
+      "user_createDate": "2019-12-27 16:18:00",
+      "user_status": "启用"
+    },
+    {
+      "user_name": "zyj",
+      "user_id": "2017212385",
+      "user_area": "南京",
+      "user_phone_number": "11111111110",
+      "user_mailbox": "1070926433@qq.com",
+      "user_department": ["部门"],
+      "user_role": ["老师"],
+      "user_creator": "sss",
+      "user_createDate": "2019-12-27 16:18:00",
+      "user_status": "启用"
+    },
+    {
+      "user_name": "zyj",
+      "user_id": "2017212385",
+      "user_area": "南京",
+      "user_phone_number": "11111111110",
+      "user_mailbox": "1070926433@qq.com",
+      "user_department": ["部门2"],
+      "user_role": ["老师"],
+      "user_creator": "sss",
+      "user_createDate": "2019-12-27 16:18:00",
+      "user_status": "启用"
+    },
+    {
+      "user_name": "zyj",
+      "user_area": "南京",
+      "user_id": "2017165655",
+      "user_phone_number": "2651516",
+      "user_mailbox": "165151@qq.com",
+      "user_department": ["部门"],
+      "user_role": ["老师"],
+      "user_creator": "asd",
+      "user_createDate": "2019-12-27 16:18:00",
+      "user_status": "启用"
+    },
+    {
+      "user_name": "zyj",
+      "user_area": "南京",
+      "user_id": "2017165655",
+      "user_phone_number": "2651516",
+      "user_mailbox": "165151@qq.com",
+      "user_department": ["部门"],
+      "user_role": ["老师"],
+      "user_creator": "asd",
+      "user_createDate": "2019-12-27 16:18:00",
+      "user_status": "停用"
+    },
+    {
+      "user_name": "zyj",
+      "user_id": "2017165655",
+      "user_area": "南京",
+      "user_phone_number": "2651516",
+      "user_mailbox": "165151@qq.com",
+      "user_department": ["部门"],
+      "user_role": ["老师"],
+      "user_creator": "asd",
+      "user_createDate": "2019-12-27 16:18:00",
+      "user_status": "停用"
+    },
+    {
+      "user_name": "zyj",
+      "user_role": ["老师"],
+      "user_id": "2017165655",
+      "user_phone_number": "2651516",
+      "user_mailbox": "165151@qq.com",
+      "user_department": ["部门"],
+      "user_creator": "asd",
+      "user_createDate": "2019-12-27 16:18:00",
+      "user_status": "启用"
+    },
+    {
+      "user_name": "zyj",
+      "user_area": "南京",
+      "user_id": "2017165655",
+      "user_phone_number": "2651516",
+      "user_mailbox": "165151@qq.com",
+      "user_department": ["部门"],
+      "user_role": ["老师"],
+      "user_creator": "asd",
+      "user_createDate": "2019-12-27 16:18:00",
+      "user_status": "启用"
+    },
+    {
+      "user_name": "zyj",
+      "user_area": "南京",
+      "user_id": "2017165655",
+      "user_phone_number": "2651516",
+      "user_mailbox": "165151@qq.com",
+      "user_department": ["部门"],
+      "user_role": ["老师"],
+      "user_creator": "asd",
+      "user_createDate": "2019-12-27 16:18:00",
+      "user_status": "启用"
+    },
+    {
+      "user_name": "zyj",
+      "user_area": "南京",
+      "user_id": "2017165655",
+      "user_phone_number": "2651516",
+      "user_mailbox": "165151@qq.com",
+      "user_department": ["部门"],
+      "user_role": ["老师"],
+      "user_creator": "asd",
+      "user_createDate": "2019-12-27 16:18:00",
+      "user_status": "启用"
+    },
+    {
+      "user_name": "zyj",
+      "user_id": "2017165655",
+      "user_area": "南京",
+      "user_phone_number": "2651516",
+      "user_mailbox": "165151@qq.com",
+      "user_department": ["部门"],
+      "user_role": ["老师"],
+      "user_creator": "asd",
+      "user_createDate": "2019-12-27 16:18:00",
+      "user_status": "启用"
+    },
+    {
+      "user_name": "zyj",
+      "user_id": "2017165655",
+      "user_area": "南京",
+      "user_phone_number": "2651516",
+      "user_mailbox": "165151@qq.com",
+      "user_department": ["部门"],
+      "user_role": ["老师"],
+      "user_creator": "asd",
+      "user_createDate": "2019-12-27 16:18:00",
+      "user_status": "启用"
+    },
+    {
+      "user_name": "zyj",
+      "user_id": "2017165655",
+      "user_area": "南京",
+      "user_phone_number": "2651516",
+      "user_mailbox": "165151@qq.com",
+      "user_department": ["部门"],
+      "user_role": ["老师"],
+      "user_creator": "asd",
+      "user_createDate": "2019-12-27 16:18:00",
+      "user_status": "启用"
+    },
+    {
+      "user_name": "zyj",
+      "user_id": "2017165655",
+      "user_area": "南京",
+      "user_phone_number": "2651516",
+      "user_mailbox": "165151@qq.com",
+      "user_department": ["部门"],
+      "user_role": ["老师","班主任"],
+      "user_creator": "asd",
+      "user_createDate": "2019-12-27 16:18:00",
+      "user_status": "启用"
+    }
+  ]
+}

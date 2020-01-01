@@ -16,7 +16,7 @@
         <el-button type="primary" class="primary" @click.native.prevent="handleSubmit" :loading="isLogin" >登录</el-button>
       </el-form-item>
     </el-form>
-    <div class="littlename">2019 © 艺朝艺夕仓储管理系统-V1.0</div>
+    <div class="littlename">2020 © 艺朝艺夕仓储管理系统-V1.0</div>
   </div>
 </template>
 

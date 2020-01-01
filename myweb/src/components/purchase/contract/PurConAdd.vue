@@ -42,6 +42,17 @@
     </div>
     <Pccd :formadd="formadd" :ifchange="ifchange"></Pccd>
     <Pcpay :formadd="formadd" :ifchange="ifchange"></Pcpay>
+    <el-row :gutter="20" v-if="ifchange" class="el-row-button">
+      <el-col :span="1" :offset="18">
+        <el-button >取 消</el-button>
+      </el-col>
+      <el-col :span="1" :offset="1">
+        <el-button type="primary">提 交</el-button>
+      </el-col>
+      <el-col :span="1" :offset="1">
+        <el-button type="primary">保 存</el-button>
+      </el-col>
+    </el-row>
   </div>
 </template>
 
@@ -119,5 +130,14 @@ export default {
   .form-item-save {
     float: right;
     margin-top: 20px;
+  }
+  .null {
+    width: 70%;
+  }
+  .button-save {
+    margin-left: 30px;
+  }
+  .el-row-button {
+    top: 15px;
   }
 </style>

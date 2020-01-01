@@ -21,13 +21,18 @@ export default new Router({
         },
         {
           path: '/sell',
-          component: () => import(/* webpackChunkName: "销售订单" */ '../components/sell/SellCheck.vue'),
+          component: () => import('../components/sell/SellCheck.vue'),
           meta: {title: '销售订单'}
         },
         {
           path: '/constract',
-          component: () => import(/* webpackChunkName: "销售订单" */ '../components/purchase/PurConCheck'),
+          component: () => import('../components/purchase/contract/PurConCheck'),
           meta: {title: '采购合同'}
+        },
+        {
+          path: '/purchase',
+          component: () => import('../components/purchase/order/PurOrdCheck'),
+          meta: {title: '采购订单'}
         },
         {
           path: '/organizationmanage',
@@ -60,6 +65,11 @@ export default new Router({
           meta: {title: '品牌管理'}
         },
         {
+          path: '/warehouse',
+          component: () => import(/* webpackChunkName: "donate" */ '../components/basic_data/warehouse.vue'),
+          meta: {title: '总仓维护'}
+        },
+        {
           path: '/store',
           component: () => import(/* webpackChunkName: "donate" */ '../components/basic_data/Store.vue'),
           meta: {title: '仓库维护'}
@@ -70,8 +80,8 @@ export default new Router({
           meta: {title: '供应商维护'}
         },
         {
-          path: '/client',
-          component: () => import(/* webpackChunkName: "donate" */ '../components/basic_data/Client.vue'),
+          path: '/customer',
+          component: () => import(/* webpackChunkName: "donate" */ '../components/basic_data/Customer.vue'),
           meta: {title: '客户维护'}
         },
         {

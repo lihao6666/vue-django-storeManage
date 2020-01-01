@@ -20,6 +20,7 @@
         <el-button type="primary" icon="el-icon-circle-plus-outline" @click="handleAlter" class="alter-button">新增</el-button>
       </div>
       <el-table
+        max-height="580"
         :data="tableDataNew"
         class="table"
         ref="multipleTable"
@@ -168,7 +169,11 @@ export default {
         pageSize: 10
       },
       search: '',
-      form: {},
+      form: {
+        center_name: '',
+        center_remarks: '',
+        center_area: ''
+      },
       center_name: '',
       center_nameSet: [],
       center_areaSet: [],
@@ -250,6 +255,12 @@ export default {
     handleAlter () {
       this.alterVisible = true
     },
+    // 一键清除新增表单
+    clearform () {
+      this.form.center_name = ''
+      this.form.center_area = ''
+      this.form.center_remarks = ''
+    },
     // 禁用操作
     handleStop (row) {
       postAPI('/center', {data: row, center_status: '停用'}).then(function (res) {
@@ -304,6 +315,7 @@ export default {
     saveEdit () {
       this.editVisible = false
       this.$message.success(`修改成功`)
+      this.clearform()
       postAPI('/center', {data: this.editform, center_name: this.center_name}).then(function (res) {
         console.log(res)
       }).catch(function (err) {

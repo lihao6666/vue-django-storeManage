@@ -63,6 +63,7 @@
               @input="scope.row.pay_rate = inputPayRate(scope.row.pay_rate)"
               @change="scope.row.pay_rate = changePayRate(scope.row.pay_rate)">
             </el-input>
+            <span>%</span>
           </template>
         </el-table-column>
         <el-table-column prop="pay_price" sortable label="付款金额" align="center">
@@ -83,13 +84,14 @@
               v-model="scope.row.pay_planDate"
               class="big"
               type="date"
+              :disabled="!ifchange"
               placeholder="选择日期">
             </el-date-picker>
           </template>
         </el-table-column>
         <el-table-column prop="pay_prepay" sortable label="是否预付款" align="center">
           <template slot-scope="scope">
-            <el-select v-model="scope.row.pay_prepay" placeholder="请选择" class="little">
+            <el-select v-model="scope.row.pay_prepay" placeholder="请选择" class="little" :disabled="!ifchange">
               <el-option key="1" label="是" value="1"></el-option>
               <el-option key="0" label="否" value="0"></el-option>
             </el-select>
@@ -125,7 +127,7 @@
 </template>
 
 <script>
-import {postAPI} from '../../api/api'
+import {postAPI} from '../../../api/api'
 
 export default {
   name: 'pc_pay',
@@ -152,12 +154,6 @@ export default {
       let _this = this
       postAPI('/pc_pay', this.formadd).then(function (res) {
         _this.tableData = res.data.list
-        // _this.tableData = [{pay_batch: '1',
-        //   pay_planDate: '2019-10-10',
-        //   pay_prepay: '1',
-        //   pay_price: '300.5',
-        //   pay_rate: '10',
-        //   pay_remarks: '10'}]
         _this.pageTotal = res.data.list.length
       }).catch(function (err) {
         console.log(err)
@@ -181,6 +177,7 @@ export default {
     },
     // 新增
     add () {
+      this.tableData.push({})
     },
     // 修改
     inputPayPrepay (num) {
