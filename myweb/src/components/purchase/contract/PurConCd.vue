@@ -49,7 +49,8 @@
             </el-form>
           </template>
         </el-table-column>
-        <el-table-column prop="cd_iden" sortable label="物料编码" align="center"></el-table-column>
+        <el-table-column prop="cd_iden" sortable label="物料编码" :filters="cd_idenSet"
+      :filter-method="filter"  align="center"></el-table-column>
         <el-table-column prop="cd_name" sortable label="物料名称" :filters="cd_nameSet"
       :filter-method="filter" align="center"></el-table-column>
         <el-table-column prop="cd_specification" sortable label="规格" :filters="cd_specificationSet"
@@ -163,13 +164,13 @@
     </div>
     <!-- 新增弹出框 -->
     <el-dialog title="新增物料" :visible.sync="addVisible" width="90%" append-to-body>
-      <Cdadd @add="addPrd" :tableHas="tableData"></Cdadd>
+      <Cdadd @add="addPrd" :tableHas="tableData" :formadd="formadd"></Cdadd>
     </el-dialog>
   </div>
 </template>
 
 <script>
-import {postAPI} from '../../api/api'
+import {postAPI} from '../../../api/api'
 import Cdadd from './PurConCdAdd.vue'
 
 export default {
@@ -188,6 +189,7 @@ export default {
       tableData: [],
       tableDataNew: [],
       multipleSelection: [],
+      cd_idenSet: [],
       cd_nameSet: [],
       cd_specificationSet: [],
       cd_modelSet: [],
@@ -211,15 +213,23 @@ export default {
         let modelset = new Set()
         let meterageset = new Set()
         let rpidenset = new Set()
+        let idenset = new Set()
         for (let i in _this.tableData) {
           nameset.add(_this.tableData[i]['cd_name'])
           specificationset.add(_this.tableData[i]['cd_specification'])
           modelset.add(_this.tableData[i]['cd_model'])
           meterageset.add(_this.tableData[i]['cd_meterage'])
           rpidenset.add(_this.tableData[i]['cd_rp_iden'])
+          idenset.add(_this.tableData[i]['cd_iden'])
         }
         for (let i of nameset) {
           _this.cd_nameSet.push({
+            text: i,
+            value: i
+          })
+        }
+        for (let i of idenset) {
+          _this.cd_idenSet.push({
             text: i,
             value: i
           })
@@ -273,11 +283,11 @@ export default {
     find () {
       this.pageTotal = 0
       this.tableDataNew = this.tableData.filter(data => !this.search ||
-        data.cd_iden.toLowerCase().includes(this.search.toLowerCase()) ||
-        data.cd_name.toLowerCase().includes(this.search.toLowerCase()) ||
-        data.cd_specification.toLowerCase().includes(this.search.toLowerCase()) ||
-        data.cd_model.toLowerCase().includes(this.search.toLowerCase()) ||
-        data.cd_meterage.toLowerCase().includes(this.search.toLowerCase()))
+        String(data.cd_iden).toLowerCase().includes(String(this.search).toLowerCase()) ||
+        String(data.cd_name).toLowerCase().includes(String(this.search).toLowerCase()) ||
+        String(data.cd_specification).toLowerCase().includes(String(this.search).toLowerCase()) ||
+        String(data.cd_model).toLowerCase().includes(String(this.search).toLowerCase()) ||
+        String(data.cd_meterage).toLowerCase().includes(String(this.search).toLowerCase()))
     },
     // 新增
     add () {
@@ -285,6 +295,11 @@ export default {
     },
     // 新增物料
     addPrd (val) {
+      for (let i in val) {
+        val[i].cd_num = '1'
+        val[i].cd_taxRate = '13'
+        val[i].cd_tax_unitPrice = '0.00'
+      }
       this.tableData = this.tableData.concat(val)
       this.find()
       let message = '新增' + val.length + '条'

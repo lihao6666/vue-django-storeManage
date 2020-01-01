@@ -21,13 +21,18 @@ export default new Router({
         },
         {
           path: '/sell',
-          component: () => import(/* webpackChunkName: "销售订单" */ '../components/sell/SellCheck.vue'),
+          component: () => import('../components/sell/SellCheck.vue'),
           meta: {title: '销售订单'}
         },
         {
           path: '/constract',
-          component: () => import(/* webpackChunkName: "销售订单" */ '../components/purchase/PurConCheck'),
+          component: () => import('../components/purchase/contract/PurConCheck'),
           meta: {title: '采购合同'}
+        },
+        {
+          path: '/purchase',
+          component: () => import('../components/purchase/order/PurOrdCheck'),
+          meta: {title: '采购订单'}
         },
         {
           path: '/organizationmanage',

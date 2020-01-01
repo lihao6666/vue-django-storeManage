@@ -1,0 +1,82 @@
+{
+  "list": [
+    {
+      "od_iden": "01",
+      "od_name": "笔",
+      "od_specification": "2B",
+      "od_model": "2*2",
+      "od_meterage": "根",
+      "od_attr": "存货",
+      "od_present_num": "10",
+      "od_prd_num": "10",
+      "od_rp_iden": "0110",
+      "od_rp_from": "软件学院",
+      "od_rp_date": "2017-10-10 12:00:00"
+    },
+    {
+      "od_iden": "01",
+      "od_name": "笔",
+      "od_specification": "2B",
+      "od_model": "2*2",
+      "od_meterage": "根",
+      "od_attr": "存货",
+      "od_present_num": "10",
+      "od_prd_num": "10",
+      "od_rp_iden": "0110",
+      "od_rp_from": "软件学院",
+      "od_rp_date": "2017-10-10 12:00:00"
+    },
+    {
+      "od_iden": "01",
+      "od_name": "笔",
+      "od_specification": "2B",
+      "od_model": "2*2",
+      "od_meterage": "根",
+      "od_attr": "存货",
+      "od_present_num": "10",
+      "od_prd_num": "10",
+      "od_rp_iden": "0110",
+      "od_rp_from": "软件学院",
+      "od_rp_date": "2017-10-10 12:00:00"
+    },
+    {
+      "od_iden": "01",
+      "od_name": "笔",
+      "od_specification": "2B",
+      "od_model": "2*2",
+      "od_meterage": "根",
+      "od_attr": "存货",
+      "od_present_num": "10",
+      "od_prd_num": "10",
+      "od_rp_iden": "0110",
+      "od_rp_from": "软件学院",
+      "od_rp_date": "2017-10-10 12:00:00"
+    },
+    {
+      "od_iden": "01",
+      "od_name": "笔",
+      "od_specification": "2B",
+      "od_model": "2*2",
+      "od_meterage": "根",
+      "od_attr": "存货",
+      "od_present_num": "10",
+      "od_prd_num": "10",
+      "od_rp_iden": "0110",
+      "od_rp_from": "软件学院",
+      "od_rp_date": "2017-10-10 12:00:00"
+    },
+    {
+      "od_iden": "01",
+      "od_name": "笔",
+      "od_specification": "2B",
+      "od_model": "2*2",
+      "od_meterage": "根",
+      "od_attr": "存货",
+      "od_present_num": "10",
+      "od_prd_num": "10",
+      "od_rp_iden": "0110",
+      "od_rp_from": "软件学院",
+      "od_rp_date": "2017-10-10 12:00:00"
+    }
+  ]
+}
