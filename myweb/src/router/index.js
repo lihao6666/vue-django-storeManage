@@ -48,6 +48,46 @@ export default new Router({
           path: '/organization',
           component: () => import(/* webpackChunkName: "donate" */ '../components/basic_data/Organization.vue'),
           meta: {title: '库存组织管理'}
+        },
+        {
+          path: '/center',
+          component: () => import(/* webpackChunkName: "donate" */ '../components/basic_data/Center.vue'),
+          meta: {title: '中心管理'}
+        },
+        {
+          path: '/brand',
+          component: () => import(/* webpackChunkName: "donate" */ '../components/basic_data/Brand.vue'),
+          meta: {title: '品牌管理'}
+        },
+        {
+          path: '/store',
+          component: () => import(/* webpackChunkName: "donate" */ '../components/basic_data/Store.vue'),
+          meta: {title: '仓库维护'}
+        },
+        {
+          path: '/supplier',
+          component: () => import(/* webpackChunkName: "donate" */ '../components/basic_data/Supplier.vue'),
+          meta: {title: '供应商维护'}
+        },
+        {
+          path: '/client',
+          component: () => import(/* webpackChunkName: "donate" */ '../components/basic_data/Client.vue'),
+          meta: {title: '客户维护'}
+        },
+        {
+          path: '/meterage',
+          component: () => import(/* webpackChunkName: "donate" */ '../components/basic_data/Meterage.vue'),
+          meta: {title: '计量单位维护'}
+        },
+        {
+          path: '/materialtype',
+          component: () => import(/* webpackChunkName: "donate" */ '../components/basic_data/MaterialType.vue'),
+          meta: {title: '物料类别维护'}
+        },
+        {
+          path: '/material',
+          component: () => import(/* webpackChunkName: "donate" */ '../components/basic_data/Material.vue'),
+          meta: {title: '物料维护'}
         }
       ]
     },

@@ -1,0 +1,28 @@
+{
+  "list": [
+    {
+      "center_name": "中心",
+      "center_area": "南京",
+      "center_remarks": "15881526ss",
+      "center_creator": "zyj",
+      "center_createDate": "2019-12-30 22:00",
+      "center_status": "启用"
+    },
+    {
+      "center_name": "中心",
+      "center_area": "南京",
+      "center_remarks": "15881526ss",
+      "center_creator": "zyj",
+      "center_createDate": "2019-12-30 22:00",
+      "center_status": "启用"
+    },
+    {
+      "center_name": "中心2",
+      "center_area": "杭州",
+      "center_remarks": "15881526ss",
+      "center_creator": "zyj2",
+      "center_createDate": "2019-12-30 22:00",
+      "center_status": "停用"
+    }
+  ]
+}

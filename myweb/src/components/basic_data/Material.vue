@@ -3,7 +3,7 @@
     <div class="crumbs">
       <el-breadcrumb separator="/">
         <el-breadcrumb-item>
-          <i class="el-icon-lx-cascades"></i> 库存组织管理
+          <i class="el-icon-lx-cascades"></i> 物料维护
         </el-breadcrumb-item>
       </el-breadcrumb>
     </div>
@@ -26,24 +26,21 @@
         :row-class-name="tableRowClassName"
         header-cell-class-name="table-header"
       >
-        <el-table-column type="expand" >
-          <template slot-scope="props">
-            <el-form label-position="left" inline class="demo-table-expand">
-              <el-form-item label="备注：">
-                <span>{{ props.row.orga_remarks }}</span>
-              </el-form-item>
-            </el-form>
-          </template>
-        </el-table-column>
         <el-table-column type="index" width="50"></el-table-column>
-        <el-table-column prop="orga_iden" sortable label="编码"  align="center"></el-table-column>
-        <el-table-column prop="orga_name" sortable label="名称" :filters="orga_nameSet"
+        <el-table-column prop="material_iden" sortable label="编码" align="center"></el-table-column>
+        <el-table-column prop="material_name" sortable label="名称" :filters="material_nameSet"
                          :filter-method="filter" align="center"></el-table-column>
-        <el-table-column prop="orga_area" sortable label="区域" :filters="orga_areaSet"
+        <el-table-column prop="material_specification" sortable label="规格" :filters="material_specSet"
                          :filter-method="filter" align="center"></el-table-column>
-        <el-table-column prop="orga_creator" sortable label="创建人" :filters="orga_creatorSet"
+        <el-table-column prop="material_model" sortable label="型号" :filters="material_modelSet"
                          :filter-method="filter" align="center"></el-table-column>
-        <el-table-column prop="orga_createDate" sortable label="创建日期" align="center"></el-table-column>
+        <el-table-column prop="material_meterage" sortable label="计量单位" :filters="material_meterageSet"
+                         :filter-method="filter" align="center"></el-table-column>
+        <el-table-column prop="material_attr" sortable label="存货属性" :filters="material_attrSet"
+                         :filter-method="filter" align="center"></el-table-column>
+        <el-table-column prop="material_creator" sortable label="创建人" :filters="material_creatorSet"
+                         :filter-method="filter" align="center"></el-table-column>
+        <el-table-column prop="material_createDate" sortable label="创建日期" align="center"></el-table-column>
         <el-table-column label="操作" align="center">
           <template slot-scope="scope">
             <el-button
@@ -57,7 +54,7 @@
               icon="el-icon-unlock"
               class="red"
               @click="handleStop(scope.row)"
-              v-if="scope.row.orga_status==='启用'"
+              v-if="scope.row.material_status==='启用'"
             >停用
             </el-button>
             <el-button
@@ -65,7 +62,7 @@
               icon="el-icon-lock"
               class="green"
               @click="handleStart(scope.row)"
-              v-if="scope.row.orga_status==='停用'"
+              v-if="scope.row.material_status==='停用'"
             >启用
             </el-button>
           </template>
@@ -89,24 +86,38 @@
     <el-dialog title="新增" :visible.sync="alterVisible" width="35%" >
       <el-form ref="form" :model="form" label-width="70px"  class="form" >
         <el-row>
-        <el-form-item label="编码" class="inputs" align="left">
-          <el-col :span="10">
-            <el-input v-model="form.orga_iden" ></el-input>
-          </el-col>
-        </el-form-item>
-        </el-row>
-        <el-row>
-          <el-form-item label="名称" class="inputs"  align="left">
+          <el-form-item label="编码" class="inputs" align="left">
             <el-col :span="10">
-              <el-input v-model="form.orga_name" ></el-input>
+              <el-input v-model="form.material_iden" ></el-input>
             </el-col>
           </el-form-item>
         </el-row>
         <el-row>
-          <el-form-item label="区域"  align="left">
-            <el-select v-model="form.orga_area" placeholder="请选择区域"  class="option" >
+          <el-form-item label="名称" class="inputs" align="left">
+            <el-col :span="10">
+              <el-input v-model="form.material_name" ></el-input>
+            </el-col>
+          </el-form-item>
+        </el-row>
+        <el-row>
+          <el-form-item label="规格" class="inputs" align="left">
+            <el-col :span="10">
+              <el-input v-model="form.material_specification" ></el-input>
+            </el-col>
+          </el-form-item>
+        </el-row>
+        <el-row>
+          <el-form-item label="型号" class="inputs" align="left">
+            <el-col :span="10">
+              <el-input v-model="form.material_model" ></el-input>
+            </el-col>
+          </el-form-item>
+        </el-row>
+        <el-row>
+          <el-form-item label="计量单位"  align="left">
+            <el-select v-model="form.material_meterage" placeholder="请选择区域"  class="option" >
               <el-option
-                v-for="item in area_options"
+                v-for="item in meterage_options"
                 :key="item"
                 :label="item"
                 :value="item">
@@ -115,10 +126,13 @@
           </el-form-item>
         </el-row>
         <el-row>
-          <el-form-item label="备注" align="left">
-            <el-input type="textarea" class="textarea" v-model="form.orga_remarks"
-                      placeholder="请输入内容" :autosize="{ minRows: 2, maxRows: 6}" maxlength="200" show-word-limit></el-input>
-          </el-form-item>
+        <el-form-item label="存货属性"  align="left">
+          <el-select v-model="form.material_attr" placeholder="请选择"  class="option" >
+            <el-option key="存货" label="存货" value="存货"> </el-option>
+            <el-option key="固定资产" label="固定资产" value="固定资产"> </el-option>
+            <el-option key="费用" label="费用" value="费用"> </el-option>
+          </el-select>
+        </el-form-item>
         </el-row>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -133,22 +147,36 @@
         <el-row>
           <el-form-item label="编码" class="inputs" align="left">
             <el-col :span="10">
-              <el-input v-model="editform.orga_iden" ></el-input>
+              <el-input v-model="editform.material_iden" ></el-input>
             </el-col>
           </el-form-item>
         </el-row>
         <el-row>
           <el-form-item label="名称" class="inputs" align="left">
             <el-col :span="10">
-              <el-input v-model="editform.orga_name" ></el-input>
+              <el-input v-model="editform.material_name" ></el-input>
             </el-col>
           </el-form-item>
         </el-row>
         <el-row>
-          <el-form-item label="区域"  align="left">
-            <el-select v-model="editform.orga_area" placeholder="请选择区域"  class="option" >
+          <el-form-item label="规格" class="inputs" align="left">
+            <el-col :span="10">
+              <el-input v-model="editform.material_specification" ></el-input>
+            </el-col>
+          </el-form-item>
+        </el-row>
+        <el-row>
+          <el-form-item label="型号" class="inputs" align="left">
+            <el-col :span="10">
+              <el-input v-model="editform.material_model" ></el-input>
+            </el-col>
+          </el-form-item>
+        </el-row>
+        <el-row>
+          <el-form-item label="计量单位"  align="left">
+            <el-select v-model="editform.material_meterage" placeholder="请选择区域"  class="option" >
               <el-option
-                v-for="item in area_options"
+                v-for="item in meterage_options"
                 :key="item"
                 :label="item"
                 :value="item">
@@ -157,9 +185,12 @@
           </el-form-item>
         </el-row>
         <el-row>
-          <el-form-item label="备注" align="left">
-            <el-input type="textarea" class="textarea" v-model="editform.orga_remarks"
-                      placeholder="请输入内容" :autosize="{ minRows: 2, maxRows: 6}" maxlength="200" show-word-limit></el-input>
+          <el-form-item label="存货属性"  align="left">
+            <el-select v-model="editform.material_attr" placeholder="请选择"  class="option" >
+              <el-option key="存货" label="存货" value="存货"> </el-option>
+              <el-option key="固定资产" label="固定资产" value="固定资产"> </el-option>
+              <el-option key="费用" label="费用" value="费用"> </el-option>
+            </el-select>
           </el-form-item>
         </el-row>
       </el-form>
@@ -177,22 +208,27 @@ export default {
   name: 'test',
   data () {
     return {
-      area_options: [],
+      meterage_options: [],
       query: {
         pageIndex: 1,
         pageSize: 10
       },
       search: '',
       form: {},
-      orga_iden: '',
-      orga_nameSet: [],
-      orga_areaSet: [],
-      orga_creatorSet: [],
+      material_name: '',
+      material_specSet: [],
+      material_nameSet: [],
+      material_modelSet: [],
+      material_meterageSet: [],
+      material_attrSet: [],
+      material_creatorSet: [],
       editform: {
-        orga_iden: '',
-        orga_name: '',
-        orga_remarks: '',
-        orga_area: ''
+        material_iden: '',
+        material_name: '',
+        material_specification: '',
+        material_model: '',
+        material_meterage: '',
+        material_attr: ''
       },
       tableData: [],
       tableDataNew: [],
@@ -212,31 +248,55 @@ export default {
     getData () {
       this.getlist()
       let _this = this
-      postAPI('/organization').then(function (res) {
+      postAPI('/material').then(function (res) {
         _this.tableData = res.data.list
         _this.tableDataNew = _this.tableData
         let nameset = new Set()
-        let areaset = new Set()
+        let specset = new Set()
+        let modelset = new Set()
+        let meterageset = new Set()
+        let attrset = new Set()
         let creatorset = new Set()
         for (let i in _this.tableData) {
-          nameset.add(_this.tableData[i]['orga_name'])
-          areaset.add(_this.tableData[i]['orga_area'])
-          creatorset.add(_this.tableData[i]['orga_creator'])
+          nameset.add(_this.tableData[i]['material_iden'])
+          specset.add(_this.tableData[i]['material_specification'])
+          modelset.add(_this.tableData[i]['material_model'])
+          meterageset.add(_this.tableData[i]['material_meterage'])
+          attrset.add(_this.tableData[i]['material_attr'])
+          creatorset.add(_this.tableData[i]['material_creator'])
         }
         for (let i of nameset) {
-          _this.orga_nameSet.push({
+          _this.material_nameSet.push({
             text: i,
             value: i
           })
         }
-        for (let i of areaset) {
-          _this.orga_areaSet.push({
+        for (let i of specset) {
+          _this.material_specSet.push({
+            text: i,
+            value: i
+          })
+        }
+        for (let i of modelset) {
+          _this.material_modelSet.push({
+            text: i,
+            value: i
+          })
+        }
+        for (let i of meterageset) {
+          _this.material_meterageSet.push({
+            text: i,
+            value: i
+          })
+        }
+        for (let i of attrset) {
+          _this.material_attrSet.push({
             text: i,
             value: i
           })
         }
         for (let i of creatorset) {
-          _this.orga_creatorSet.push({
+          _this.material_creatorSet.push({
             text: i,
             value: i
           })
@@ -268,7 +328,7 @@ export default {
     },
     // 禁用操作
     handleStop (row) {
-      postAPI('/organization', {data: row, orga_status: '停用'}).then(function (res) {
+      postAPI('/material', {data: row, material_status: '停用'}).then(function (res) {
         console.log(res)
       }).catch(function (err) {
         console.log(err)
@@ -278,16 +338,18 @@ export default {
     find () {
       this.pageTotal = 0
       this.tableDataNew = this.tableData.filter(data => !this.search ||
-          String(data.orga_name).toLowerCase().includes(this.search.toLowerCase()) ||
-          String(data.orga_iden).toLowerCase().includes(this.search.toLowerCase()) ||
-          String(data.orga_area).toLowerCase().includes(this.search.toLowerCase()) ||
-          String(data.orga_createDate).toLowerCase().includes(this.search.toLowerCase()) ||
-          String(data.orga_remarks).toLowerCase().includes(this.search.toLowerCase()) ||
-          String(data.orga_creator).toLowerCase().includes(this.search.toLowerCase()))
+          String(data.material_name).toLowerCase().includes(this.search.toLowerCase()) ||
+          String(data.material_iden).toLowerCase().includes(this.search.toLowerCase()) ||
+          String(data.material_specification).toLowerCase().includes(this.search.toLowerCase()) ||
+          String(data.material_model).toLowerCase().includes(this.search.toLowerCase()) ||
+          String(data.material_meterage).toLowerCase().includes(this.search.toLowerCase()) ||
+          String(data.material_meterage).toLowerCase().includes(this.search.toLowerCase()) ||
+          String(data.material_attr).toLowerCase().includes(this.search.toLowerCase()) ||
+          String(data.material_creator).toLowerCase().includes(this.search.toLowerCase()))
     },
     // 启用
     handleStart (row) {
-      postAPI('/organization', {data: row, orga_status: '启用'}).then(function (res) {
+      postAPI('/material', {data: row, material_status: '启用'}).then(function (res) {
         console.log(res)
       }).catch(function (err) {
         console.log(err)
@@ -296,13 +358,13 @@ export default {
     // 获取列表
     getlist () {
       let _this = this
-      postAPI('/area').then(function (res) {
-        let alterarea = new Set()
+      postAPI('/materage').then(function (res) {
+        let altermeterage = new Set()
         for (let i in res.data.list) {
-          alterarea.add(res.data.list[i]['area_name'])
+          altermeterage.add(res.data.list[i]['meterage_name'])
         }
-        for (let j of alterarea) {
-          _this.area_options.push(j)
+        for (let j of altermeterage) {
+          _this.meterage_options.push(j)
         }
       }).catch(function (err) {
         console.log(err)
@@ -310,18 +372,20 @@ export default {
     },
     // 编辑操作
     handleEdit (row) {
-      this.editform.orga_iden = row.orga_iden
-      this.editform.orga_name = row.orga_name
-      this.editform.orga_area = row.orga_area
-      this.editform.orga_remarks = row.orga_remarks
-      this.orga_iden = row.orga_iden
+      this.editform.material_name = row.material_name
+      this.editform.material_iden = row.material_iden
+      this.editform.material_specification = row.material_specification
+      this.editform.material_model = row.material_model
+      this.editform.material_meterage = row.material_meterage
+      this.editform.material_attr = row.material_attr
+      this.material_name = row.material_name
       this.editVisible = true
     },
     // 保存编辑
     saveEdit () {
       this.editVisible = false
       this.$message.success(`修改成功`)
-      postAPI('/organization', {data: this.editform, orga_iden: this.orga_iden}).then(function (res) {
+      postAPI('/material', {data: this.editform, material_name: this.material_name}).then(function (res) {
         console.log(res)
       }).catch(function (err) {
         console.log(err)
@@ -331,7 +395,7 @@ export default {
     saveAlter () {
       this.alterVisible = false
       this.$message.success(`新增成功`)
-      postAPI('/organization', {data: this.form, table: 'organization'}).then(function (res) {
+      postAPI('/material', {data: this.form, table: 'material'}).then(function (res) {
         console.log(res)
       }).catch(function (err) {
         console.log(err)

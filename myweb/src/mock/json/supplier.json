@@ -1,0 +1,31 @@
+{
+  "list": [
+    {
+      "supply_iden": "01",
+      "supply_name": "供应商",
+      "supply_type": "aaa",
+      "supply_remarks": "asdfesgdfgfhf",
+      "supply_creator": "zyj",
+      "supply_createDate": "2019-12-30 22:00",
+      "supply_status": "启用"
+    },
+    {
+      "supply_iden": "01",
+      "supply_name": "供应商",
+      "supply_type": "aaa",
+      "supply_remarks": "asdfesgdfgfhf",
+      "supply_creator": "zyj",
+      "supply_createDate": "2019-12-30 22:00",
+      "supply_status": "启用"
+    },
+    {
+      "supply_iden": "01",
+      "supply_name": "供应商",
+      "supply_type": "aaa",
+      "supply_remarks": "asdfesgdfgfhf",
+      "supply_creator": "zyj",
+      "supply_createDate": "2019-12-30 22:00",
+      "supply_status": "停用"
+    }
+  ]
+}
