@@ -20,6 +20,7 @@
         <el-button type="primary" icon="el-icon-circle-plus-outline" @click="handleAlter" class="alter-button">新增</el-button>
       </div>
       <el-table
+        max-height="580"
         :data="tableDataNew"
         class="table"
         ref="multipleTable"
@@ -183,7 +184,12 @@ export default {
         pageSize: 10
       },
       search: '',
-      form: {},
+      form: {
+        orga_iden: '',
+        orga_name: '',
+        orga_remarks: '',
+        orga_area: ''
+      },
       orga_iden: '',
       orga_nameSet: [],
       orga_areaSet: [],
@@ -265,6 +271,21 @@ export default {
     // 新增
     handleAlter () {
       this.alterVisible = true
+      let _this = this
+      postAPI('/organization').then(function (res) {
+        let maxiden = String(parseInt(res.data.max_iden) + 1)
+        _this.form.orga_iden = maxiden
+        for (let i = 0; i < 6 - maxiden.length; i++) {
+          _this.form.orga_iden = '0' + _this.form.orga_iden
+        }
+      })
+    },
+    // 一键清除新增表单
+    clearform () {
+      this.form.orga_area = ''
+      this.form.orga_iden = ''
+      this.form.orga_name = ''
+      this.form.orga_remarks = ''
     },
     // 禁用操作
     handleStop (row) {
@@ -331,6 +352,7 @@ export default {
     saveAlter () {
       this.alterVisible = false
       this.$message.success(`新增成功`)
+      this.clearform()
       postAPI('/organization', {data: this.form, table: 'organization'}).then(function (res) {
         console.log(res)
       }).catch(function (err) {

@@ -1,4 +1,5 @@
 {
+  "max_iden": "000003",
   "list": [
     {
       "customer_iden": "000001",
@@ -10,7 +11,7 @@
       "customer_status": "启用"
     },
     {
-      "customer_iden": "000001",
+      "customer_iden": "000002",
       "customer_name": "小明",
       "customer_type": "某类型",
       "customer_remarks": "15881526ss",
@@ -19,7 +20,7 @@
       "customer_status": "启用"
     },
     {
-      "customer_iden": "000001",
+      "customer_iden": "000003",
       "customer_name": "小明",
       "customer_type": "某类型",
       "customer_remarks": "15881526ss",

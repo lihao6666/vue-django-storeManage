@@ -198,6 +198,10 @@ export default {
               title: '品牌管理'
             },
             {
+              index: 'warehouse',
+              title: '总仓维护'
+            },
+            {
               index: 'store',
               title: '仓库维护'
             },
@@ -206,7 +210,7 @@ export default {
               title: '供应商维护'
             },
             {
-              index: 'client',
+              index: 'customer',
               title: '客户维护'
             },
             {

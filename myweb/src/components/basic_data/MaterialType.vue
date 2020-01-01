@@ -20,6 +20,7 @@
         <el-button type="primary" icon="el-icon-circle-plus-outline" @click="handleAlter" class="alter-button">新增</el-button>
       </div>
       <el-table
+        max-height="580"
         :data="tableDataNew"
         class="table"
         ref="multipleTable"
@@ -135,7 +136,12 @@ export default {
         pageSize: 10
       },
       search: '',
-      form: {},
+      form: {
+        type_iden: '',
+        type_name: '',
+        type_remarks: '',
+        type_area: ''
+      },
       type_iden: '',
       type_nameSet: [],
       type_creatorSet: [],
@@ -208,6 +214,13 @@ export default {
     handleAlter () {
       this.alterVisible = true
     },
+    // 一键清除新增表单
+    clearform () {
+      this.form.type_iden = ''
+      this.form.type_iden = ''
+      this.form.type_name = ''
+      this.form.type_remarks = ''
+    },
     // 禁用操作
     handleStop (row) {
       postAPI('/material_type', {data: row, type_status: '停用'}).then(function (res) {
@@ -256,6 +269,7 @@ export default {
     saveAlter () {
       this.alterVisible = false
       this.$message.success(`新增成功`)
+      this.clearform()
       postAPI('/material_type', {data: this.form, table: 'material_type'}).then(function (res) {
         console.log(res)
       }).catch(function (err) {
