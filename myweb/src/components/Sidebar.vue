@@ -154,7 +154,7 @@ export default {
               title: '库存查询',
               subs: [
                 {
-                  index: 'storecheck',
+                  index: 'stockcheck',
                   title: '现存量查询'
                 }
               ]
