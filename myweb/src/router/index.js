@@ -103,6 +103,11 @@ export default new Router({
           path: '/stockcheck',
           component: () => import(/* webpackChunkName: "donate" */ '../components/store/stock/StockCheck.vue'),
           meta: {title: '库存量查询'}
+        },
+        {
+          path: '/stockrequisition',
+          component: () => import(/* webpackChunkName: "donate" */ '../components/store/stock_adjustment/TransferRequest.vue'),
+          meta: {title: '库存量查询'}
         }
       ]
     },
