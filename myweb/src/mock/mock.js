@@ -32,3 +32,5 @@ Mock.mock('/customer', 'post', require('./json/customer'))
 Mock.mock('/materage', 'post', require('./json/meterage'))
 Mock.mock('/material_type', 'post', require('./json/material_type'))
 Mock.mock('/material', 'post', require('./json/material'))
+
+Mock.mock('/stock_check', 'post', require('./json/stock_check'))

@@ -98,6 +98,11 @@ export default new Router({
           path: '/material',
           component: () => import(/* webpackChunkName: "donate" */ '../components/basic_data/Material.vue'),
           meta: {title: '物料维护'}
+        },
+        {
+          path: '/stockcheck',
+          component: () => import(/* webpackChunkName: "donate" */ '../components/store/stock/StockCheck.vue'),
+          meta: {title: '库存量查询'}
         }
       ]
     },

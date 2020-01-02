@@ -1,0 +1,76 @@
+{
+  "list": [
+    {
+      "orga_name": "某库存组织",
+      "warehouse": "总仓或中心仓库",
+      "material_iden": "01",
+      "material_name": "某物料",
+      "material_specification": "规格",
+      "material_model": "型号",
+      "material_meterage": "重量",
+      "present_num": "12",
+      "present_price": "100",
+      "present_sum": "12"
+    },
+    {
+      "orga_name": "某库存组织",
+      "warehouse": "总仓或中心仓库",
+      "material_iden": "01",
+      "material_name": "某物料",
+      "material_specification": "规格",
+      "material_model": "型号",
+      "material_meterage": "重量",
+      "present_num": "12",
+      "present_price": "100",
+      "present_sum": "12"
+    },
+    {
+      "orga_name": "某库存组织",
+      "warehouse": "总仓或中心仓库",
+      "material_iden": "01",
+      "material_name": "某物料",
+      "material_specification": "规格",
+      "material_model": "型号",
+      "material_meterage": "重量",
+      "present_num": "12",
+      "present_price": "100",
+      "present_sum": "12"
+    },
+    {
+      "orga_name": "某库存组织",
+      "warehouse": "总仓或中心仓库",
+      "material_iden": "01",
+      "material_name": "某物料",
+      "material_specification": "规格",
+      "material_model": "型号",
+      "material_meterage": "重量",
+      "present_num": "12",
+      "present_price": "100",
+      "present_sum": "12"
+    },
+    {
+      "orga_name": "某库存组织",
+      "warehouse": "总仓或中心仓库",
+      "material_iden": "01",
+      "material_name": "某物料",
+      "material_specification": "规格",
+      "material_model": "型号",
+      "material_meterage": "重量",
+      "present_num": "12",
+      "present_price": "100",
+      "present_sum": "12"
+    },
+    {
+      "orga_name": "某库存组织",
+      "warehouse": "总仓或中心仓库",
+      "material_iden": "01",
+      "material_name": "某物料",
+      "material_specification": "规格",
+      "material_model": "型号",
+      "material_meterage": "重量",
+      "present_num": "12",
+      "present_price": "100",
+      "present_sum": "12"
+    }
+  ]
+}
