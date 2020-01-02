@@ -3,9 +3,10 @@
     <div class="container">
       <el-form ref="form" :inline="true" :model="formadd" label-width="70px" size="mini">
         <el-form-item label="库存组织">
-          <el-select v-model="formadd.req_pur_orga" placeholder="请选择" :disabled="!ifchange">
-            <el-option  v-for="item in form_req_pur_orga" v-bind:key="item" :label="item" :value="item"></el-option>
-          </el-select>
+          <el-tag
+            :type="'success'"
+          >{{formadd.req_pur_orga}}
+          </el-tag>
         </el-form-item>
         <el-form-item label="申请部门">
           <el-select v-model="formadd.req_pur_from" placeholder="请选择" :disabled="!ifchange">
@@ -72,17 +73,13 @@ export default {
         }]
       },
       formadd: {
+        req_pur_iden: this.editform.req_pur_iden,
         req_pur_orga: this.editform.req_pur_orga,
         req_pur_from: this.editform.req_pur_from,
         req_pur_type: this.editform.req_pur_type,
         req_pur_remarks: this.editform.req_pur_remarks,
         req_pur_date: this.editform.req_pur_date
       },
-      form_req_pur_orga: [
-        '礼品',
-        '教学用品',
-        '销售商品'
-      ],
       form_req_pur_from: [
         '礼品',
         '教学用品',
@@ -97,6 +94,7 @@ export default {
   },
   methods: {
     getForm () {
+      this.formadd.req_pur_iden = this.editform.req_pur_iden
       this.formadd.req_pur_orga = this.editform.req_pur_orga
       this.formadd.req_pur_from = this.editform.req_pur_from
       this.formadd.req_pur_type = this.editform.req_pur_type

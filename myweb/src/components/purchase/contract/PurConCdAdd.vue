@@ -9,6 +9,9 @@
     </div>
     <div class="container">
       <div class="handle-box">
+        <el-select v-model="formadd.pc_orga" placeholder="请选择库存组织" :disabled="ifhasorga">
+          <el-option v-for="item in form_pc_orga" v-bind:key="item" :label="item" :value="item"></el-option>
+        </el-select>
         <el-input
           placeholder="关键字搜索"
           prefix-icon="el-icon-search"
@@ -87,7 +90,7 @@ import {postAPI} from '../../../api/api'
 
 export default {
   name: 'pc_cd_add',
-  props: ['tableHas', 'formadd'],
+  props: ['tableHas', 'formadd', 'ifhasorga'],
   data () {
     return {
       query: {
@@ -109,7 +112,7 @@ export default {
       cd_rp_creatorSet: [],
       pageTotal: 0,
       ifshowadd: true,
-      form_po_orga: [
+      form_pc_orga: [
         '合肥工业大学'
       ]
     }
@@ -260,6 +263,7 @@ export default {
     save () {
       this.$emit('add', this.multipleSelection)
       this.multipleSelection = []
+      this.$refs.multipleTable.clearSelection()
     }
   }
 }

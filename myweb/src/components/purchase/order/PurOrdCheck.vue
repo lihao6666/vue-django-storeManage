@@ -147,6 +147,7 @@ export default {
       addrpVisible: false,
       addpcVisible: false,
       addrpform: {
+        po_iden: '',
         po_orga: '',
         po_supply: '',
         po_contractFrom: '',
@@ -155,6 +156,7 @@ export default {
         po_sum: 0
       },
       addpcform: {
+        po_iden: '',
         po_orga: '',
         po_supply: '',
         po_contractFrom: '1',
@@ -265,6 +267,9 @@ export default {
         .then(() => {
           this.$message.success('删除成功')
           this.tableData.splice(index, 1)
+          let pageIndexNew = Math.ceil((this.pageTotal - 1) / this.query.pageSize) // 新的页面数量
+          this.query.pageIndex = (this.query.pageIndex > pageIndexNew) ? pageIndexNew : this.query.pageIndex
+          this.query.pageIndex = (this.query.pageIndex === 0) ? 1 : 0
           this.find()
         })
         .catch(() => {

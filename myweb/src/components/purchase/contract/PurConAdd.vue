@@ -3,9 +3,10 @@
     <div class="container">
       <el-form ref="form" :inline="true" :model="formadd" label-width="70px" size="mini">
         <el-form-item label="库存组织">
-          <el-select v-model="formadd.pc_orga" placeholder="请选择" :disabled="!ifchange">
-            <el-option  v-for="item in form_pc_orga" v-bind:key="item" :label="item" :value="item"></el-option>
-          </el-select>
+          <el-tag
+            :type="'success'"
+          >{{formadd.pc_orga}}
+          </el-tag>
         </el-form-item>
         <el-form-item label="合同名称">
           <el-input type="textarea" v-model="formadd.pc_name" rows="1" :disabled="!ifchange"
@@ -91,6 +92,7 @@ export default {
         }]
       },
       formadd: {
+        pc_iden: this.editform.pc_iden,
         pc_orga: this.editform.pc_orga,
         pc_name: this.editform.pc_name,
         pc_supply: this.editform.pc_supply,
@@ -98,11 +100,6 @@ export default {
         pc_date: this.editform.pc_date,
         pc_sum: this.editform.pc_sum
       },
-      form_pc_orga: [
-        '礼品',
-        '教学用品',
-        '销售商品'
-      ],
       form_pc_supply: [
         '礼品',
         '教学用品',
@@ -112,6 +109,7 @@ export default {
   },
   methods: {
     getForm () {
+      this.formadd.pc_iden = this.editform.pc_iden
       this.formadd.pc_orga = this.editform.pc_orga
       this.formadd.pc_name = this.editform.pc_name
       this.formadd.pc_supply = this.editform.pc_supply
