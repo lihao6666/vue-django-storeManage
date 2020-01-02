@@ -37,11 +37,13 @@
           >{{formadd.po_contractFrom}}
           </el-tag>
         </el-form-item>
-        <el-form-item label="备注">
-          <el-input type="textarea" v-model="formadd.po_remarks" rows="3" :disabled="!ifchange"
-                    placeholder="请输入200字以内的描述" maxlength="200" show-word-limit clearable></el-input>
-        </el-form-item>
-        <el-button type="primary" class="form-item-save" v-if="ifchange">保 存</el-button>
+        <el-row>
+          <el-form-item label="备注">
+            <el-input type="textarea" v-model="formadd.po_remarks" rows="3" class="form-item-from" :disabled="!ifchange"
+                      placeholder="请输入200字以内的描述" maxlength="200" show-word-limit clearable></el-input>
+          </el-form-item>
+          <el-button type="primary" class="form-item-save" v-if="ifchange">保 存</el-button>
+        </el-row>
       </el-form>
     </div>
     <Pood :formadd="formadd" :ifchange="ifchange"></Pood>
@@ -119,5 +121,8 @@ export default {
   .form-item-save {
     float: right;
     margin-top: 20px;
+  }
+  .form-item-from {
+    width: 200%;
   }
 </style>

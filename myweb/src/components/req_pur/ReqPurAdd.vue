@@ -29,11 +29,13 @@
             </el-date-picker>
           </el-col>
         </el-form-item>
-        <el-form-item label="备注">
-          <el-input type="textarea" v-model="formadd.req_pur_remarks" rows="3" class="form-item-from" :disabled="!ifchange"
-                    placeholder="请输入200字以内的描述" maxlength="200" show-word-limit clearable></el-input>
-        </el-form-item>
-        <el-button type="primary" class="form-item-save" v-if="ifchange">保 存</el-button>
+        <el-row>
+          <el-form-item label="备注">
+            <el-input type="textarea" v-model="formadd.req_pur_remarks" rows="3" class="form-item-from" :disabled="!ifchange"
+                      placeholder="请输入200字以内的描述" maxlength="200" show-word-limit clearable></el-input>
+          </el-form-item>
+          <el-button type="primary" class="form-item-save" v-if="ifchange">保 存</el-button>
+        </el-row>
       </el-form>
     </div>
     <Reqprd :formadd="formadd" :ifchange="ifchange"></Reqprd>
