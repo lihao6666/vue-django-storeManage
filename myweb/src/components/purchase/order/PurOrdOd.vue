@@ -29,6 +29,7 @@
         <el-button v-if="ifchange && formadd.po_contractFrom" type="primary" icon="el-icon-plus" class="button-save" @click="add">选择合同</el-button>
       </div>
       <el-table
+        max-height="580"
         :data="tableDataNew"
         class="table"
         ref="multipleTable"

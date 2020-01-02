@@ -17,7 +17,7 @@
           clearable
           v-model="search">
         </el-input>
-        <el-button type="primary" icon="el-icon-circle-plus-outline" @click="handleAlter" class="alter-button">新增</el-button>
+        <el-button type="primary" icon="el-icon-plus" @click="handleAlter" class="alter-button">新增</el-button>
       </div>
       <el-table
         max-height="580"
@@ -88,86 +88,98 @@
 
     <!-- 新增弹出框 -->
     <el-dialog title="新增" :visible.sync="alterVisible" width="35%" >
-      <el-form ref="form" :model="form" label-width="70px"  class="form" >
-        <el-row>
-        <el-form-item label="编码" class="inputs" align="left">
-          <el-col :span="10">
-            <el-input v-model="form.orga_iden" ></el-input>
-          </el-col>
-        </el-form-item>
-        </el-row>
-        <el-row>
-          <el-form-item label="名称" class="inputs"  align="left">
+      <div class="container">
+        <el-form ref="form" :model="form" label-width="70px"  class="form" >
+          <el-row>
+          <el-form-item label="编码" class="inputs" align="left">
             <el-col :span="10">
-              <el-input v-model="form.orga_name" ></el-input>
+              <el-input v-model="form.orga_iden" ></el-input>
             </el-col>
           </el-form-item>
-        </el-row>
-        <el-row>
-          <el-form-item label="区域"  align="left">
-            <el-select v-model="form.orga_area" placeholder="请选择区域"  class="option" >
-              <el-option
-                v-for="item in area_options"
-                :key="item"
-                :label="item"
-                :value="item">
-              </el-option>
-            </el-select>
-          </el-form-item>
-        </el-row>
-        <el-row>
-          <el-form-item label="备注" align="left">
-            <el-input type="textarea" class="textarea" v-model="form.orga_remarks"
-                      placeholder="请输入内容" :autosize="{ minRows: 2, maxRows: 6}" maxlength="200" show-word-limit></el-input>
-          </el-form-item>
-        </el-row>
-      </el-form>
-      <span slot="footer" class="dialog-footer">
-                <el-button @click="alterVisible = false">取 消</el-button>
-                <el-button type="primary" @click="saveAlter">确 定</el-button>
-            </span>
+          </el-row>
+          <el-row>
+            <el-form-item label="名称" class="inputs"  align="left">
+              <el-col :span="10">
+                <el-input v-model="form.orga_name" ></el-input>
+              </el-col>
+            </el-form-item>
+          </el-row>
+          <el-row>
+            <el-form-item label="区域"  align="left">
+              <el-select v-model="form.orga_area" placeholder="请选择区域"  class="option" >
+                <el-option
+                  v-for="item in area_options"
+                  :key="item"
+                  :label="item"
+                  :value="item">
+                </el-option>
+              </el-select>
+            </el-form-item>
+          </el-row>
+          <el-row>
+            <el-form-item label="备注" align="left">
+              <el-input type="textarea" class="textarea" v-model="form.orga_remarks"
+                        placeholder="请输入200字以内的描述" :autosize="{ minRows: 2, maxRows: 6}" maxlength="200" show-word-limit></el-input>
+            </el-form-item>
+          </el-row>
+        </el-form>
+      </div>
+      <el-row :gutter="20" class="el-row-button-save">
+        <el-col :span="1" :offset="15">
+          <el-button @click="alterVisible = false">取 消</el-button>
+        </el-col>
+        <el-col :span="1" :offset="4">
+          <el-button type="primary" @click="saveAlter">确 定</el-button>
+        </el-col>
+      </el-row>
     </el-dialog>
 
     <!-- 编辑弹出框 -->
     <el-dialog title="编辑" :visible.sync="editVisible" width="35%">
-      <el-form ref="form" :model="editform" label-width="70px">
-        <el-row>
-          <el-form-item label="编码" class="inputs" align="left">
-            <el-col :span="10">
-              <el-input v-model="editform.orga_iden" ></el-input>
-            </el-col>
-          </el-form-item>
-        </el-row>
-        <el-row>
-          <el-form-item label="名称" class="inputs" align="left">
-            <el-col :span="10">
-              <el-input v-model="editform.orga_name" ></el-input>
-            </el-col>
-          </el-form-item>
-        </el-row>
-        <el-row>
-          <el-form-item label="区域"  align="left">
-            <el-select v-model="editform.orga_area" placeholder="请选择区域"  class="option" >
-              <el-option
-                v-for="item in area_options"
-                :key="item"
-                :label="item"
-                :value="item">
-              </el-option>
-            </el-select>
-          </el-form-item>
-        </el-row>
-        <el-row>
-          <el-form-item label="备注" align="left">
-            <el-input type="textarea" class="textarea" v-model="editform.orga_remarks"
-                      placeholder="请输入内容" :autosize="{ minRows: 2, maxRows: 6}" maxlength="200" show-word-limit></el-input>
-          </el-form-item>
-        </el-row>
-      </el-form>
-      <span slot="footer" class="dialog-footer">
-                <el-button @click="editVisible = false">取 消</el-button>
-                <el-button type="primary" @click="saveEdit">确 定</el-button>
-            </span>
+      <div class="container">
+        <el-form ref="form" :model="editform" label-width="70px">
+          <el-row>
+            <el-form-item label="编码" class="inputs" align="left">
+              <el-col :span="10">
+                <el-input v-model="editform.orga_iden" ></el-input>
+              </el-col>
+            </el-form-item>
+          </el-row>
+          <el-row>
+            <el-form-item label="名称" class="inputs" align="left">
+              <el-col :span="10">
+                <el-input v-model="editform.orga_name" ></el-input>
+              </el-col>
+            </el-form-item>
+          </el-row>
+          <el-row>
+            <el-form-item label="区域"  align="left">
+              <el-select v-model="editform.orga_area" placeholder="请选择区域"  class="option" >
+                <el-option
+                  v-for="item in area_options"
+                  :key="item"
+                  :label="item"
+                  :value="item">
+                </el-option>
+              </el-select>
+            </el-form-item>
+          </el-row>
+          <el-row>
+            <el-form-item label="备注" align="left">
+              <el-input type="textarea" class="textarea" v-model="editform.orga_remarks"
+                        placeholder="请输入200字以内的描述" :autosize="{ minRows: 2, maxRows: 6}" maxlength="200" show-word-limit></el-input>
+            </el-form-item>
+          </el-row>
+        </el-form>
+      </div>
+      <el-row :gutter="20" class="el-row-button-save">
+        <el-col :span="1" :offset="15">
+          <el-button @click="alterVisible = false">取 消</el-button>
+        </el-col>
+        <el-col :span="1" :offset="4">
+          <el-button type="primary" @click="saveAlter">确 定</el-button>
+        </el-col>
+      </el-row>
     </el-dialog>
   </div>
 </template>
@@ -181,7 +193,7 @@ export default {
       area_options: [],
       query: {
         pageIndex: 1,
-        pageSize: 10
+        pageSize: 5
       },
       search: '',
       form: {
@@ -206,9 +218,7 @@ export default {
       delList: [],
       alterVisible: false,
       editVisible: false,
-      pageTotal: 0,
-      idx: -1,
-      id: -1
+      pageTotal: 0
     }
   },
   created () {
@@ -367,9 +377,28 @@ export default {
       this.query.pageSize = val
     }
   }
-}
-</script>
+}</script>
 
+<style>
+  .tableRowDisplay {
+    display: none;
+  }
+  .el-row-button-save {
+    top: 15px;
+  }
+  .demo-table-expand {
+    font-size: 0;
+  }
+  .demo-table-expand label {
+    width: 90px;
+    color: #99a9bf;
+  }
+  .demo-table-expand .el-form-item {
+    margin-right: 0;
+    margin-bottom: 0;
+    width: 100%;
+  }
+</style>
 <style scoped>
   .handle-box {
     margin-bottom: 20px;
