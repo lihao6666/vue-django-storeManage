@@ -2,7 +2,7 @@
 .content {
 	padding: 0;
 }
-.personHead {
+.person-head {
 	display: -webkit-box;
 	display: -webkit-flex;
 	display: flex;
@@ -19,8 +19,7 @@
 	background: linear-gradient(to top, #365fff, #0faeff);
 	border-top: 0;
 }
-.personHeadBox {
-	border-radius: 10rpx;
+.person-head-box {
 	display: -webkit-box;
 	display: -webkit-flex;
 	display: flex;
@@ -35,18 +34,18 @@
 	-webkit-align-items: flex-start;
 	        align-items: flex-start;
 }
-.userName {
+.user-name {
 	font-size: 18px;
 	font-weight: 1000;
 	color: #000000;
 	font-family: '\6977\4F53';
 }
-.userId {
+.user-id {
 	font-size: 14px;
 	font-weight: 1000;
 	color: #000000;
 }
-.personList {
+.person-list {
 	background: #FFFFFF;
 }
 

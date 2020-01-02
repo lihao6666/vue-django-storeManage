@@ -10,7 +10,8 @@
     "pages/requisitions/start",
     "pages/user/phoneus",
     "pages/user/setting",
-    "pages/user/myinfo"
+    "pages/user/myinfo",
+    "pages/detail/detail"
   ],
   "subPackages": [],
   "window": {
@@ -44,5 +45,5 @@
     ]
   },
   "usingComponents": {},
-  "sitemapLocation": "sitemap86.json"
+  "sitemapLocation": "sitemap72.json"
 }
