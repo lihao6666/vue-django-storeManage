@@ -11,10 +11,10 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 
 import os
+import datetime
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
@@ -27,9 +27,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-
-#重载系统的用户，让UserProfile生效
-# AUTH_USER_MODEL = 'users.UserProfile'
+# 重载系统的用户，让UserProfile生效
+AUTH_USER_MODEL = 'base.UserProfile'
 
 
 # Application definition
@@ -42,21 +41,37 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'base',
-    'orderManage',
-    'storeManage'
+    # 'orderManage',
+    # 'storeManage'
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
+    # 'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
 ROOT_URLCONF = 'backstore.urls'
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        # 'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+        # 'rest_framework.authentication.SessionAuthentication',
+        # 'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
+    ),
+}
+
+
+JWT_AUTH = {
+    'JWT_EXPIRATION_DELTA': datetime.timedelta(days=2),
+}
+# JWT_EXPIRATION_DELTA 指明token的有效期
+
 
 TEMPLATES = [
     {
@@ -77,30 +92,31 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'backstore.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'backstore',        #数据库名字
-        'USER': 'root',          #账号
-        'PASSWORD': 'lh19990507',    #密码
+        'NAME': 'store',  # 数据库名字
+        'USER': 'root',  # 账号
+        'PASSWORD': 'lh19990507',  # 密码
         # 'HOST': '47.93.198.159',     #IP
-        'HOST': '127.0.0.1',     #IP
-        'PORT': '3306',          #端口
-        #这里引擎用innodb（默认myisam）
-        #因为后面第三方登录时，要求引擎为INNODB
+        'HOST': '127.0.0.1',  # IP
+        'PORT': '3306',  # 端口
+        'TEST': {
+            'NAME': 'store2'
+        }
+        # 这里引擎用innodb（默认myisam）
+        # 因为后面第三方登录时，要求引擎为INNODB
         # 'OPTIONS':{'init_command': 'SET storage_engine=INNODB'},    #按照课程会报错，改为
         # "OPTIONS":{"init_command":"SET default_storage_engine=INNODB;"}
     }
 }
 
-
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
-
+AUTHENTICATION_BACKENDS = ['django.contrib.auth.backends.AllowAllUsersModelBackend']
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -116,20 +132,18 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/2.2/topics/i18n/
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Shanghai'
 
 USE_I18N = True
 
 USE_L10N = True
 
-USE_TZ = True
-
+USE_TZ = False
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/

@@ -7,12 +7,14 @@ class PurchaseRequest(models.Model):
     """
     请购单
     """
+
     REQ_PUR_STATUS_CHOICES = (
         (0, '草稿'),
         (1, '已审批'),
         (2, '已关闭')
     )
-    pr_iden = models.CharField(max_length=15, verbose_name='请购单编号', primary_key=True)
+    id = models.AutoField(primary_key=True)
+    pr_iden = models.CharField(max_length=15, verbose_name='请购单编号')
     origanization = models.ForeignKey('base.Origanization', related_name='orga_pr', verbose_name='组织',
                                       on_delete=models.CASCADE)
     material_type = models.ForeignKey('base.MaterialType', verbose_name='物料类别', on_delete=models.CASCADE)
@@ -42,6 +44,7 @@ class PrDetail(models.Model):
         (0, '未使用'),
         (1, '已使用')
     )
+    id = models.AutoField(primary_key=True)
     purchase_request = models.ForeignKey('PurchaseRequest', related_name='pr_prd', verbose_name='请购单',
                                          on_delete=models.CASCADE)
     material = models.ForeignKey('base.Material', verbose_name='物料', related_name='material_prd',
@@ -63,7 +66,9 @@ class PurchaseContract(models.Model):
         (0, '草稿'),
         (1, '已审批')
     )
-    pc_iden = models.CharField(max_length=15, verbose_name='合同编号', primary_key=True)
+
+    id = models.AutoField(primary_key=True)
+    pc_iden = models.CharField(max_length=15, verbose_name='合同编号')
     organization = models.ForeignKey('base.Origanization', verbose_name='组织', related_name='orga_pc',
                                      on_delete=models.CASCADE)
     pc_name = models.CharField(max_length=20, verbose_name='合同名称')
@@ -87,6 +92,11 @@ class CdDetail(models.Model):
     """
     合同物料明细
     """
+    CD_USE_STATUS_CHOICES = (
+        (0, '未使用'),
+        (1, '已使用')
+    )
+    id = models.AutoField(primary_key=True)
     purchase_contract = models.ForeignKey('PurchaseContract', verbose_name='采购合同', related_name='pc_cd',
                                           on_delete=models.CASCADE)
     material = models.ForeignKey('base.Material', verbose_name='物料', related_name='material_cd',
@@ -100,6 +110,8 @@ class CdDetail(models.Model):
     cd_sum = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='无税总额')
     cd_rp_iden = models.CharField(max_length=15, verbose_name='请购单编号')
     cd_rpd_remarks = models.TextField(max_length=400, verbose_name='物料备注')
+    cd_used = models.IntegerField(choices=CD_USE_STATUS_CHOICES, verbose_name='明细单是否使用')
+
 
     class Meta:
         verbose_name = "合同物料明细"
@@ -116,9 +128,10 @@ class CdPayDetail(models.Model):
         (0, '是'),
         (1, '否')
     )
+    id = models.AutoField(primary_key=True)
     purchase_contract = models.ForeignKey('PurchaseContract', verbose_name='采购合同', related_name='pc_pay',
                                           on_delete=models.CASCADE)
-    pay_batch = models.IntegerField(verbose_name='付款批次', primary_key=True)
+    pay_batch = models.IntegerField(verbose_name='付款批次')
     pay_rate = models.IntegerField(verbose_name='付款比率')
     pay_price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='付款金额')
     pay_planDate = models.DateField(verbose_name='计划付款日期')
@@ -140,8 +153,8 @@ class PurchaseOrder(models.Model):
         (0, '草稿'),
         (1, '已审批')
     )
-
-    po_iden = models.CharField(max_length=15, verbose_name='采购订单编号', primary_key=True)
+    id = models.AutoField(primary_key=True)
+    po_iden = models.CharField(max_length=15, verbose_name='采购订单编号')
     organization = models.ForeignKey('base.Origanization', verbose_name='组织', related_name='orga_po',
                                      on_delete=models.CASCADE)
     supplier = models.ForeignKey('base.Supplier', verbose_name='供应商', related_name='supplier_po',
@@ -168,7 +181,7 @@ class OrDetail(models.Model):
     """
     采购订单明细
     """
-
+    id = models.AutoField(primary_key=True)
     purchase_contract = models.ForeignKey('PurchaseContract', verbose_name='采购合同', related_name='pc_od',
                                           on_delete=models.CASCADE)
     pr_detail = models.ForeignKey('PrDetail', verbose_name='请购单物料明细', related_name='pr_od',
@@ -200,7 +213,8 @@ class SellOrder(models.Model):
         (0, '草稿'),
         (1, '已审批')
     )
-    so_iden = models.CharField(max_length=15, verbose_name='销售订单编号', primary_key=True)
+    id = models.AutoField(primary_key=True)
+    so_iden = models.CharField(max_length=15, verbose_name='销售订单编号')
     organization = models.ForeignKey('base.Origanization', verbose_name='组织', related_name='orga_so',
                                      on_delete=models.CASCADE)
     so_type = models.IntegerField(choices=SELL_ORDER_CHOICES, verbose_name='订单类型')
@@ -218,6 +232,7 @@ class SoDetail(models.Model):
     """
     销售订单明细
     """
+    id = models.AutoField(primary_key=True)
     sell_order = models.ForeignKey('SellOrder', verbose_name='销售订单', related_name='so_sod', on_delete=models.Model)
     material = models.ForeignKey('base.Material', verbose_name='物料', related_name='material_sod',
                                  on_delete=models.CASCADE)
@@ -242,7 +257,8 @@ class BuyInStore(models.Model):
         (0, '草稿'),
         (1, '已审批')
     )
-    bis_iden = models.CharField(max_length=15, verbose_name='入库单编号', primary_key=True)
+    id = models.AutoField(primary_key=True)
+    bis_iden = models.CharField(max_length=15, verbose_name='入库单编号')
     origanization = models.ForeignKey('base.Origanization', verbose_name='组织', related_name='orga_bis',
                                       on_delete=models.CASCADE)
     totalwarehouse = models.ForeignKey('base.TotalWareHouse', verbose_name='总仓', related_name='total_ware_house_bis',
@@ -266,6 +282,7 @@ class BisDetail(models.Model):
     """
     采购入库单明细
     """
+    id = models.AutoField(primary_key=True)
     buy_in_store = models.ForeignKey('MaterialSo', verbose_name='材料出库单', related_name='mso_bd',
                                      on_delete=models.CASCADE)
     material = models.ForeignKey('base.Material', verbose_name='物料', related_name='material_bd',
@@ -294,7 +311,8 @@ class OtherSi(models.Model):
         (0, '草稿'),
         (1, '已审批')
     )
-    osi_iden = models.CharField(max_length=15, verbose_name='其它入库单编号', primary_key=True)
+    id = models.AutoField(primary_key=True)
+    osi_iden = models.CharField(max_length=15, verbose_name='其它入库单编号')
     organization = models.ForeignKey('base.Origanization', verbose_name='组织', related_name='orga_osi',
                                      on_delete=models.CASCADE)
     transfer = models.OneToOneField('Transfer', verbose_name='转库单', on_delete=models.CASCADE)  # 如果不行保存为转库单iden
@@ -320,6 +338,7 @@ class OsiDetail(models.Model):
     """
     其它入库单明细
     """
+    id = models.AutoField(primary_key=True)
     other_si = models.ForeignKey('OtherSi',verbose_name='其它入库单',related_name='osi_osid',on_delete=models.CASCADE)
     material = models.ForeignKey('base.Material', verbose_name='物料', related_name='material_osid',
                                  on_delete=models.CASCADE)
@@ -341,8 +360,8 @@ class MaterialSo(models.Model):
         (0, '草稿'),
         (1, '已审批')
     )
-
-    mso_iden = models.CharField(max_length=15, verbose_name='出库单编号', primary_key=True)
+    id = models.AutoField(primary_key=True)
+    mso_iden = models.CharField(max_length=15, verbose_name='出库单编号')
     organization = models.ForeignKey('base.Origanization', verbose_name='组织', related_name='orga_mso',
                                      on_delete=models.CASCADE)
     mso_type = models.IntegerField(choices=MSO_TYPE_CHOICES, verbose_name='材料出库类型')
@@ -367,7 +386,7 @@ class MsoDetail(models.Model):
     """
     材料出库单明细
     """
-
+    id = models.AutoField(primary_key=True)
     material_so = models.ForeignKey('MaterialSo', verbose_name='材料出库单', related_name='mso_msod',
                                     on_delete=models.CASCADE)
     material = models.ForeignKey('base.Material', verbose_name='物料', related_name='material_msod',
@@ -394,8 +413,8 @@ class SellSo(models.Model):
         (0, '草稿'),
         (1, '已审批')
     )
-
-    sso_iden = models.CharField(max_length=15, verbose_name='销售出库单编号', primary_key=True)
+    id = models.AutoField(primary_key=True)
+    sso_iden = models.CharField(max_length=15, verbose_name='销售出库单编号')
     organization = models.ForeignKey('base.Origanization', verbose_name='组织', related_name='orga_sso',
                                      on_delete=models.CASCADE)
     sell_order = models.OneToOneField('SellOrder', verbose_name='销售订单', on_delete=models.CASCADE)
@@ -424,7 +443,8 @@ class OtherSo(models.Model):
         (0, '草稿'),
         (1, '已审批')
     )
-    oso_iden = models.CharField(max_length=15, verbose_name='其它出库单编号', primary_key=True)
+    id = models.AutoField(primary_key=True)
+    oso_iden = models.CharField(max_length=15, verbose_name='其它出库单编号')
     organization = models.ForeignKey('base.Origanization', verbose_name='组织', related_name='orga_oso',
                                      on_delete=models.CASCADE)
     transfer = models.OneToOneField('Transfer', verbose_name='转库单', on_delete=models.CASCADE)
@@ -449,6 +469,7 @@ class OsoDetail(models.Model):
     """
     其它出库单明细
     """
+    id = models.AutoField(primary_key=True)
     other_so = models.ForeignKey('OtherSo', verbose_name='其它出库单', related_name='oso_osod', on_delete=models.CASCADE)
     material = models.ForeignKey('base.Material', verbose_name='物料', related_name='material_osod',
                                  on_delete=models.CASCADE)
@@ -467,7 +488,8 @@ class TransferRequest(models.Model):
         (0, '草稿'),
         (1, '已审批')
     )
-    str_iden = models.CharField(max_length=15, verbose_name='转库申请单编号', primary_key=True)
+    id = models.AutoField(primary_key=True)
+    str_iden = models.CharField(max_length=15, verbose_name='转库申请单编号')
     organization = models.ForeignKey('base.Origanization', verbose_name='组织', related_name='orga_str',
                                      on_delete=models.CASCADE)
     str_to_house = models.CharField(max_length=6, verbose_name='转入仓库编码')
@@ -488,6 +510,7 @@ class TrDetail(models.Model):
     """
     转库申请单明细
     """
+    id = models.AutoField(primary_key=True)
     transfer_request = models.ForeignKey('TransferRequest', verbose_name='转库申请单', related_name='str_trd',
                                          on_delete=models.CASCADE)
     material = models.ForeignKey('base.Material', verbose_name='物料', related_name='material_trd',
@@ -508,7 +531,8 @@ class Transfer(models.Model):
         (0, '草稿'),
         (1, '已审批')
     )
-    st_iden = models.CharField(max_length=15, verbose_name='转库单编号', primary_key=True)
+    id = models.AutoField(primary_key=True)
+    st_iden = models.CharField(max_length=15, verbose_name='转库单编号')
     transfer_request = models.OneToOneField('TransferRequest', verbose_name='转库申请单', on_delete=models.CASCADE)
     st_date = models.DateField(auto_now_add=True, verbose_name='转库日期')
     st_status = models.IntegerField(choices=ST_STATUS_CHOICES, verbose_name='转库单状态')
@@ -526,7 +550,7 @@ class StDetail(models.Model):
     """
     转库单明细
     """
-
+    id = models.AutoField(primary_key=True)
     transfer = models.ForeignKey('Transfer', verbose_name='转库单', related_name='st_td', on_delete=models.CASCADE)
     material = models.ForeignKey('base.Material', verbose_name='物料', related_name='material_td',
                                  on_delete=models.CASCADE)
@@ -550,8 +574,8 @@ class Inventory(models.Model):
         (0, '草稿'),
         (1, '已审批')
     )
-
-    sta_iden = models.CharField(max_length=15, verbose_name='库存盘点单编号', primary_key=True)
+    id = models.AutoField(primary_key=True)
+    sta_iden = models.CharField(max_length=15, verbose_name='库存盘点单编号')
     organization = models.ForeignKey('base.Origanization', verbose_name='组织', related_name='orga_sta',
                                      on_delete=models.CASCADE)
     sta_ware_house_iden = models.CharField(max_length=6, verbose_name='库存盘点仓库编码')
@@ -571,6 +595,7 @@ class StaDetail(models.Model):
     """
     库存盘点明细
     """
+    id = models.AutoField(primary_key=True)
     inventory = models.ForeignKey('Inventory', verbose_name='库存盘点单', related_name='sta_sd', on_delete=models.CASCADE)
     material = models.ForeignKey('base.Material', verbose_name='物料', related_name='material_sd',
                                  on_delete=models.CASCADE)
@@ -594,8 +619,8 @@ class OpeningInventory(models.Model):
         (0, '草稿'),
         (1, '已审批')
     )
-
-    oi_iden = models.CharField(max_length=15, verbose_name='期初库存单编号', primary_key=True)
+    id = models.AutoField(primary_key=True)
+    oi_iden = models.CharField(max_length=15, verbose_name='期初库存单编号')
     organization = models.ForeignKey('base.Origanization', verbose_name='组织', related_name='orga_oi',
                                      on_delete=models.CASCADE)
     oi_ware_house_iden = models.CharField(max_length=6, verbose_name='期初库存盘点仓库编码')
@@ -615,6 +640,8 @@ class OiDetail(models.Model):
     """
     期初库存盘点明细
     """
+
+    id = models.AutoField(primary_key=True)
     opening_inventory = models.ForeignKey('OpeningInventory', verbose_name='期初库存盘点', related_name='oi_oid',
                                           on_delete=models.CASCADE)
     material = models.ForeignKey('base.Material', verbose_name='物料', related_name='material_oid',
