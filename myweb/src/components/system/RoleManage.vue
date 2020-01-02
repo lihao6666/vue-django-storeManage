@@ -17,7 +17,7 @@
           clearable
           v-model="search">
         </el-input>
-        <el-button type="primary" icon="el-icon-circle-plus-outline" @click="handleAlter" class="alter-button">新增</el-button>
+        <el-button type="primary" icon="el-icon-plus" @click="handleAlter" class="alter-button">新增</el-button>
       </div>
       <el-table
         max-height="580"
@@ -91,62 +91,67 @@
 
     <!-- 新增弹出框 -->
     <el-dialog title="新增" :visible.sync="alterVisible" width="40%" >
-      <el-form ref="form" :model="form" label-width="80px" >
-        <el-row>
-          <el-form-item label="角色"  align="left">
-            <el-col :span="10">
-              <el-input v-model="form.role" class="name"></el-input>
-            </el-col>
-          </el-form-item>
-        </el-row>
-        <el-row>
-          <el-form-item label="角色描述" align="left">
-            <el-input type="textarea" class="textarea" v-model="form.role_description"
-                      placeholder="请输入内容" :autosize="{ minRows: 2, maxRows: 6}" maxlength="200" show-word-limit></el-input>
-          </el-form-item>
-        </el-row>
-        <el-row>
-          <el-form-item label="创建日期"    align="left">
-              <p>{{time}}</p>
-          </el-form-item>
-        </el-row>
-      </el-form>
-      <span slot="footer" class="dialog-footer">
-                <el-button @click="alterVisible = false">取 消</el-button>
-                <el-button type="primary" @click="saveAlter">确 定</el-button>
-            </span>
+      <div class="container">
+        <el-form ref="form" :model="form" label-width="80px" >
+          <el-row>
+            <el-form-item label="角色"  align="left">
+              <el-col :span="10">
+                <el-input v-model="form.role" class="name"></el-input>
+              </el-col>
+            </el-form-item>
+          </el-row>
+          <el-row>
+            <el-form-item label="角色描述" align="left">
+              <el-input type="textarea" class="textarea" v-model="form.role_description"
+                        placeholder="请输入200字以内的描述" :autosize="{ minRows: 2, maxRows: 6}" maxlength="200" show-word-limit></el-input>
+            </el-form-item>
+          </el-row>
+        </el-form>
+      </div>
+      <el-row :gutter="20" class="el-row-button-save">
+        <el-col :span="1" :offset="16">
+          <el-button @click="alterVisible = false">取 消</el-button>
+        </el-col>
+        <el-col :span="1" :offset="3">
+          <el-button type="primary" @click="saveAlter">确 定</el-button>
+        </el-col>
+      </el-row>
     </el-dialog>
     <!-- 编辑弹出框 -->
-    <el-dialog title="编辑" :visible.sync="editVisible" width="30%">
-      <el-form ref="form" :model="editform" label-width="70px">
-        <el-form-item label="角色">
-          <el-input v-model="editform.role"></el-input>
-        </el-form-item>
-        <el-form-item label="角色描述" align="left">
-          <el-input type="textarea" class="textarea" v-model="editform.role_description"
-                    placeholder="请输入内容" :autosize="{ minRows: 2, maxRows: 6}" maxlength="200" show-word-limit></el-input>
-        </el-form-item>
-      </el-form>
-      <span slot="footer" class="dialog-footer">
-                <el-button @click="editVisible = false">取 消</el-button>
-                <el-button type="primary" @click="saveEdit">确 定</el-button>
-            </span>
+    <el-dialog title="编辑" :visible.sync="editVisible" width="40%">
+      <div class="container">
+        <el-form ref="form" :model="editform" label-width="80px">
+          <el-form-item label="角色">
+            <el-input v-model="editform.role"></el-input>
+          </el-form-item>
+          <el-form-item label="角色描述" align="left">
+            <el-input type="textarea" class="textarea" v-model="editform.role_description"
+                      placeholder="请输入200字以内的描述" :autosize="{ minRows: 2, maxRows: 6}" maxlength="200" show-word-limit></el-input>
+          </el-form-item>
+        </el-form>
+      </div>
+      <el-row :gutter="20" class="el-row-button-save">
+        <el-col :span="1" :offset="16">
+          <el-button @click="alterVisible = false">取 消</el-button>
+        </el-col>
+        <el-col :span="1" :offset="3">
+          <el-button type="primary" @click="saveAlter">确 定</el-button>
+        </el-col>
+      </el-row>
     </el-dialog>
   </div>
 </template>
 
 <script>
-import moment from 'moment'
 import {postAPI} from '../../api/api'
 export default {
   name: 'test',
   data () {
     return {
       manager: 'XXX',
-      time: moment(new Date()).format('YYYY-MM-DD hh:mm:ss'),
       query: {
         pageIndex: 1,
-        pageSize: 10
+        pageSize: 5
       },
       search: '',
       form: {
@@ -166,9 +171,7 @@ export default {
       delList: [],
       alterVisible: false,
       editVisible: false,
-      pageTotal: 0,
-      idx: -1,
-      id: -1
+      pageTotal: 0
     }
   },
   created () {
@@ -290,6 +293,27 @@ export default {
   }
 }
 </script>
+
+<style>
+  .tableRowDisplay {
+    display: none;
+  }
+  .el-row-button-save {
+    top: 15px;
+  }
+  .demo-table-expand {
+    font-size: 0;
+  }
+  .demo-table-expand label {
+    width: 90px;
+    color: #99a9bf;
+  }
+  .demo-table-expand .el-form-item {
+    margin-right: 0;
+    margin-bottom: 0;
+    width: 100%;
+  }
+</style>
 
 <style scoped>
   .handle-box {

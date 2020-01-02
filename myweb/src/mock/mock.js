@@ -29,7 +29,7 @@ Mock.mock('/warehouse', 'post', require('./json/warehouse'))
 Mock.mock('/store', 'post', require('./json/store'))
 Mock.mock('/supplier', 'post', require('./json/supplier'))
 Mock.mock('/customer', 'post', require('./json/customer'))
-Mock.mock('/materage', 'post', require('./json/meterage'))
+Mock.mock('/meterage', 'post', require('./json/meterage'))
 Mock.mock('/material_type', 'post', require('./json/material_type'))
 Mock.mock('/material', 'post', require('./json/material'))
 

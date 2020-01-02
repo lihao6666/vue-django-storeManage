@@ -26,6 +26,7 @@
         <el-button type="primary" class="button-save" @click="save">添 加</el-button>
       </div>
       <el-table
+        max-height="580"
         :data="tableDataNew"
         class="table"
         ref="multipleTable"

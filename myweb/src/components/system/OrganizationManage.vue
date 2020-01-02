@@ -17,15 +17,15 @@
           clearable
           v-model="search">
         </el-input>
-        <el-button type="primary" icon="el-icon-circle-plus-outline" @click="handleAlter" class="alter-button">新增</el-button>
+        <el-button type="primary" icon="el-icon-plus" @click="handleAlter" class="alter-button">新增</el-button>
       </div>
       <el-table
         max-height="580"
         :data="tableDataNew"
         class="table"
         ref="multipleTable"
-        :row-class-name="tableRowClassName"
         header-cell-class-name="table-header"
+        :row-class-name="tableRowClassName"
       >
         <el-table-column type="expand" >
           <template slot-scope="props">
@@ -86,6 +86,7 @@
 
     <!-- 新增弹出框 -->
     <el-dialog title="新增" :visible.sync="alterVisible" width="40%" >
+      <div class="container">
         <el-form ref="form" :model="form" label-width="80px" >
           <el-row>
             <el-form-item label="部门名称"  align="left">
@@ -93,6 +94,7 @@
                 <el-input v-model="form.dpm_name" class="name"></el-input>
               </el-col>
               <el-switch
+                class="el-switch-center"
                 v-model="form.dpm_center"
                 active-color="#13ce66"
                 inactive-color="#ff4949"
@@ -106,45 +108,57 @@
           <el-row>
             <el-form-item label="备注" align="left">
               <el-input type="textarea" class="textarea" v-model="form.dpm_remarks"
-                        placeholder="请输入内容" :autosize="{ minRows: 2, maxRows: 6}" maxlength="200" show-word-limit></el-input>
+                        placeholder="请输入200字以内的描述" :autosize="{ minRows: 2, maxRows: 6}" maxlength="200" show-word-limit></el-input>
             </el-form-item>
           </el-row>
         </el-form>
-      <span slot="footer" class="dialog-footer">
-                <el-button @click="alterVisible = false">取 消</el-button>
-                <el-button type="primary" @click="saveAlter">确 定</el-button>
-            </span>
+      </div>
+      <el-row :gutter="20" class="el-row-button-save">
+        <el-col :span="1" :offset="16">
+          <el-button @click="alterVisible = false">取 消</el-button>
+        </el-col>
+        <el-col :span="1" :offset="3">
+          <el-button type="primary" @click="saveAlter" >确 定</el-button>
+        </el-col>
+      </el-row>
     </el-dialog>
     <!-- 编辑弹出框 -->
     <el-dialog title="编辑" :visible.sync="editVisible" width="40%">
-      <el-form ref="form" :model="editform" label-width="80px" >
-        <el-row>
-          <el-form-item label="部门名称"  align="left">
-            <el-col :span="10">
-              <el-input v-model="editform.dpm_name" class="name"></el-input>
-            </el-col>
-            <el-switch
-              v-model="editform.dpm_center"
-              active-color="#13ce66"
-              inactive-color="#ff4949"
-              active-text="中心"
-              inactive-text="其他"
-              active-value="1"
-              inactive-value="0">
-            </el-switch>
-          </el-form-item>
-        </el-row>
-        <el-row>
-          <el-form-item label="备注" align="left">
-            <el-input type="textarea" class="textarea" v-model="editform.dpm_remarks"
-                      placeholder="请输入内容" :autosize="{ minRows: 2, maxRows: 6}" maxlength="200" show-word-limit></el-input>
-          </el-form-item>
-        </el-row>
-      </el-form>
-      <span slot="footer" class="dialog-footer">
-                <el-button @click="editVisible = false">取 消</el-button>
-                <el-button type="primary" @click="saveEdit">确 定</el-button>
-            </span>
+      <div class="container">
+        <el-form ref="form" :model="editform" label-width="80px" >
+          <el-row>
+            <el-form-item label="部门名称"  align="left">
+              <el-col :span="10">
+                <el-input v-model="editform.dpm_name" class="name"></el-input>
+              </el-col>
+              <el-switch
+                v-model="editform.dpm_center"
+                class="el-switch-center"
+                active-color="#13ce66"
+                inactive-color="#ff4949"
+                active-text="中心"
+                inactive-text="其他"
+                active-value="1"
+                inactive-value="0">
+              </el-switch>
+            </el-form-item>
+          </el-row>
+          <el-row>
+            <el-form-item label="备注" align="left">
+              <el-input type="textarea" class="textarea" v-model="editform.dpm_remarks"
+                        placeholder="请输入200字以内的描述" :autosize="{ minRows: 2, maxRows: 6}" maxlength="200" show-word-limit></el-input>
+            </el-form-item>
+          </el-row>
+        </el-form>
+      </div>
+      <el-row :gutter="20" class="el-row-button-save">
+        <el-col :span="1" :offset="16">
+          <el-button @click="alterVisible = false">取 消</el-button>
+        </el-col>
+        <el-col :span="1" :offset="3">
+          <el-button type="primary" @click="saveAlter">确 定</el-button>
+        </el-col>
+      </el-row>
     </el-dialog>
   </div>
 </template>
@@ -157,7 +171,7 @@ export default {
     return {
       query: {
         pageIndex: 1,
-        pageSize: 10
+        pageSize: 5
       },
       search: '',
       form: {
@@ -178,9 +192,7 @@ export default {
       multipleSelection: [],
       alterVisible: false,
       editVisible: false,
-      pageTotal: 0,
-      idx: -1,
-      id: -1
+      pageTotal: 0
     }
   },
   created () {
@@ -191,7 +203,7 @@ export default {
       let _this = this
       postAPI('/department').then(function (res) {
         _this.tableData = res.data.list
-        _this.tableDataNew = _this.tableData
+        _this.find()
         let orgaset = new Set()
         let creatorset = new Set()
         for (let i in _this.tableData) {
@@ -257,7 +269,7 @@ export default {
         String(data.dpm_center).toLowerCase().includes(this.search.toLowerCase()) ||
         String(data.dpm_createDate).toLowerCase().includes(this.search.toLowerCase()) ||
         String(data.dpm_remarks).toLowerCase().includes(this.search.toLowerCase()) ||
-          String(data.dpm_creator).toLowerCase().includes(this.search.toLowerCase()))
+        String(data.dpm_creator).toLowerCase().includes(this.search.toLowerCase()))
     },
     // 启用
     handleStart (row) {
@@ -299,13 +311,39 @@ export default {
     // 分页导航
     handlePageChange (val) {
       this.query.pageIndex = val
+      console.log(val)
     },
     handleSizeChange (val) {
       this.query.pageSize = val
+      console.log(val)
     }
   }
 }
 </script>
+
+<style>
+  .el-switch-center {
+    margin-left: 30px;
+  }
+  .el-row-button-save {
+    top: 15px;
+  }
+  .tableRowDisplay {
+    display: none;
+  }
+  .demo-table-expand {
+    font-size: 0;
+  }
+  .demo-table-expand label {
+    width: 90px;
+    color: #99a9bf;
+  }
+  .demo-table-expand .el-form-item {
+    margin-right: 0;
+    margin-bottom: 0;
+    width: 100%;
+  }
+</style>
 
 <style scoped>
   .handle-box {

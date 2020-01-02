@@ -17,7 +17,7 @@
           clearable
           v-model="search">
         </el-input>
-        <el-button type="primary" icon="el-icon-circle-plus-outline" @click="handleAlter" class="alter-button">新增</el-button>
+        <el-button type="primary" icon="el-icon-plus" @click="handleAlter" class="alter-button">新增</el-button>
       </div>
       <el-table
         max-height="580"
@@ -84,149 +84,161 @@
 
     <!-- 新增弹出框 -->
     <el-dialog title="新增" :visible.sync="alterVisible" width="30%" >
-      <el-form ref="form" :model="form" label-width="80px"  class="form" >
-        <el-row>
-          <el-form-item label="姓名" class="inputs" align="left">
-            <el-col :span="10">
-              <el-input v-model="form.user_name" ></el-input>
-            </el-col>
-          </el-form-item>
-        </el-row>
-        <el-row>
-          <el-form-item label="工号" class="inputs" align="left">
-            <el-col :span="10">
-              <el-input v-model="form.user_id" ></el-input>
-            </el-col>
-          </el-form-item>
-        </el-row>
-        <el-row>
-          <el-form-item label="手机号" class="inputs" align="left">
-            <el-col :span="10">
-              <el-input v-model="form.user_phone_number" ></el-input>
-            </el-col>
-          </el-form-item>
-        </el-row>
-        <el-row>
-          <el-form-item label="邮箱" class="inputs" align="left">
-            <el-col :span="10">
-              <el-input v-model="form.user_mailbox"></el-input>
-            </el-col>
-          </el-form-item>
-        </el-row>
-        <el-row>
-          <el-form-item label="区域"  align="left">
-            <el-select v-model="form.user_area" placeholder="请选择区域"  class="option" >
-              <el-option
-                v-for="item in area_options"
-                :key="item"
-                :label="item"
-                :value="item">
-              </el-option>
-            </el-select>
-          </el-form-item>
-        </el-row>
-        <el-row>
-          <el-form-item label="部门"  align="left">
-            <el-select v-model="form.user_department" multiple placeholder="请选择部门" class="option" >
-              <el-option
-                v-for="item in dpm_options"
-                :key="item"
-                :label="item"
-                :value="item">
-              </el-option>
-            </el-select>
-          </el-form-item>
-        </el-row>
-        <el-row>
-          <el-form-item label="角色"  align="left">
-            <el-select v-model="form.user_role" multiple placeholder="请选择角色" class="option">
-              <el-option
-                v-for="item in role_options"
-                :key="item"
-                :label="item"
-                :value="item">
-              </el-option>
-            </el-select>
-          </el-form-item>
-        </el-row>
-      </el-form>
-      <span slot="footer" class="dialog-footer">
-                <el-button @click="alterVisible = false">取 消</el-button>
-                <el-button type="primary" @click="saveAlter">确 定</el-button>
-            </span>
+      <div class="container">
+        <el-form ref="form" :rules="rules" :model="form" label-width="80px"  class="form" >
+          <el-row>
+            <el-form-item label="姓名" class="inputs" align="left">
+              <el-col :span="10">
+                <el-input v-model="form.user_name" ></el-input>
+              </el-col>
+            </el-form-item>
+          </el-row>
+          <el-row>
+            <el-form-item label="工号" class="inputs" align="left" prop="user_id">
+              <el-col :span="10">
+                <el-input v-model="form.user_id" @input="form.user_id=inputnum(form.user_id)"></el-input>
+              </el-col>
+            </el-form-item>
+          </el-row>
+          <el-row>
+            <el-form-item label="手机号" class="inputs" align="left" prop="user_phone_number">
+              <el-col :span="10">
+                <el-input v-model="form.user_phone_number" ></el-input>
+              </el-col>
+            </el-form-item>
+          </el-row>
+          <el-row>
+            <el-form-item label="邮箱" class="inputs" align="left" prop="user_mailbox">
+              <el-col :span="10">
+                <el-input v-model="form.user_mailbox"></el-input>
+              </el-col>
+            </el-form-item>
+          </el-row>
+          <el-row>
+            <el-form-item label="区域"  align="left">
+              <el-select v-model="form.user_area" placeholder="请选择区域"  class="option" >
+                <el-option
+                  v-for="item in area_options"
+                  :key="item"
+                  :label="item"
+                  :value="item">
+                </el-option>
+              </el-select>
+            </el-form-item>
+          </el-row>
+          <el-row>
+            <el-form-item label="部门"  align="left">
+              <el-select v-model="form.user_department" multiple placeholder="请选择部门" class="option" >
+                <el-option
+                  v-for="item in dpm_options"
+                  :key="item"
+                  :label="item"
+                  :value="item">
+                </el-option>
+              </el-select>
+            </el-form-item>
+          </el-row>
+          <el-row>
+            <el-form-item label="角色"  align="left">
+              <el-select v-model="form.user_role" multiple placeholder="请选择角色" class="option">
+                <el-option
+                  v-for="item in role_options"
+                  :key="item"
+                  :label="item"
+                  :value="item">
+                </el-option>
+              </el-select>
+            </el-form-item>
+          </el-row>
+        </el-form>
+      </div>
+      <el-row :gutter="20" class="el-row-button-save">
+        <el-col :span="1" :offset="13">
+          <el-button @click="alterVisible = false">取 消</el-button>
+        </el-col>
+        <el-col :span="1" :offset="5">
+          <el-button type="primary" @click="saveAlter">确 定</el-button>
+        </el-col>
+      </el-row>
     </el-dialog>
     <!-- 编辑弹出框 -->
     <el-dialog title="编辑" :visible.sync="editVisible" width="30%">
-      <el-form ref="form" :model="editform" label-width="80px"  class="form" >
-        <el-row>
-          <el-form-item label="姓名" class="inputs" align="left">
-            <el-col :span="10">
-              <el-input v-model="editform.user_name" ></el-input>
-            </el-col>
-          </el-form-item>
-        </el-row>
-        <el-row>
-          <el-form-item label="工号" class="inputs" align="left">
-            <el-col :span="10">
-              <el-input v-model="editform.user_id" ></el-input>
-            </el-col>
-          </el-form-item>
-        </el-row>
-        <el-row>
-          <el-form-item label="手机号" class="inputs" align="left">
-            <el-col :span="10">
-              <el-input v-model="editform.user_phone_number" ></el-input>
-            </el-col>
-          </el-form-item>
-        </el-row>
-        <el-row>
-          <el-form-item label="邮箱" class="inputs" align="left">
-            <el-col :span="10">
-              <el-input v-model="editform.user_mailbox"></el-input>
-            </el-col>
-          </el-form-item>
-        </el-row>
-        <el-row>
-          <el-form-item label="区域"  align="left">
-            <el-select v-model="editform.user_area" placeholder="请选择区域"  class="option" >
-              <el-option
-                v-for="item in area_options"
-                :key="item"
-                :label="item"
-                :value="item">
-              </el-option>
-            </el-select>
-          </el-form-item>
-        </el-row>
-        <el-row>
-          <el-form-item label="部门"  align="left">
-            <el-select v-model="editform.user_department" multiple placeholder="请选择部门" class="option" >
-              <el-option
-                v-for="item in dpm_options"
-                :key="item"
-                :label="item"
-                :value="item">
-              </el-option>
-            </el-select>
-          </el-form-item>
-        </el-row>
-        <el-row>
-          <el-form-item label="角色"  align="left">
-            <el-select v-model="editform.user_role" multiple placeholder="请选择角色">
-              <el-option
-                v-for="item in role_options"
-                :key="item"
-                :label="item"
-                :value="item">
-              </el-option>
-            </el-select>
-          </el-form-item>
-        </el-row>
-      </el-form>
-      <span slot="footer" class="dialog-footer">
-                <el-button @click="editVisible = false">取 消</el-button>
-                <el-button type="primary" @click="saveEdit">确 定</el-button>
-            </span>
+      <div class="container">
+        <el-form ref="form" :model="editform" label-width="80px"  class="form" :rules="rules">
+          <el-row>
+            <el-form-item label="姓名" class="inputs" align="left" prop="user_name">
+              <el-col :span="10">
+                <el-input v-model="editform.user_name" ></el-input>
+              </el-col>
+            </el-form-item>
+          </el-row>
+          <el-row>
+            <el-form-item label="工号" class="inputs" align="left" prop="user_id" >
+              <el-col :span="10">
+                <el-input v-model="editform.user_id" @input="editform.user_id=inputnum(editform.user_id)"></el-input>
+              </el-col>
+            </el-form-item>
+          </el-row>
+          <el-row>
+            <el-form-item label="手机号" class="inputs" align="left" prop="user_phone_number">
+              <el-col :span="10">
+                <el-input v-model="editform.user_phone_number"></el-input>
+              </el-col>
+            </el-form-item>
+          </el-row>
+          <el-row>
+            <el-form-item label="邮箱" class="inputs" align="left" prop="user_mailbox">
+              <el-col :span="10">
+                <el-input v-model="editform.user_mailbox"></el-input>
+              </el-col>
+            </el-form-item>
+          </el-row>
+          <el-row>
+            <el-form-item label="区域"  align="left">
+              <el-select v-model="editform.user_area" placeholder="请选择区域"  class="option" >
+                <el-option
+                  v-for="item in area_options"
+                  :key="item"
+                  :label="item"
+                  :value="item">
+                </el-option>
+              </el-select>
+            </el-form-item>
+          </el-row>
+          <el-row>
+            <el-form-item label="部门"  align="left">
+              <el-select v-model="editform.user_department" multiple placeholder="请选择部门" class="option" >
+                <el-option
+                  v-for="item in dpm_options"
+                  :key="item"
+                  :label="item"
+                  :value="item">
+                </el-option>
+              </el-select>
+            </el-form-item>
+          </el-row>
+          <el-row>
+            <el-form-item label="角色"  align="left">
+              <el-select v-model="editform.user_role" multiple placeholder="请选择角色">
+                <el-option
+                  v-for="item in role_options"
+                  :key="item"
+                  :label="item"
+                  :value="item">
+                </el-option>
+              </el-select>
+            </el-form-item>
+          </el-row>
+        </el-form>
+      </div>
+      <el-row :gutter="20" class="el-row-button-save">
+        <el-col :span="1" :offset="13">
+          <el-button @click="alterVisible = false">取 消</el-button>
+        </el-col>
+        <el-col :span="1" :offset="5">
+          <el-button type="primary" @click="saveAlter">确 定</el-button>
+        </el-col>
+      </el-row>
     </el-dialog>
   </div>
 </template>
@@ -241,7 +253,35 @@ export default {
       time: moment(new Date()).format('YYYY-MM-DD hh:mm:ss'),
       query: {
         pageIndex: 1,
-        pageSize: 10
+        pageSize: 5
+      },
+      rules: {
+        user_mailbox: [{
+          required: true,
+          message: '请输入邮箱地址',
+          trigger: 'blur'
+        },
+        {
+          type: 'email',
+          message: '请输入正确的邮箱地址',
+          trigger: ['blur', 'change']
+        }
+        ],
+        user_phone_number: [{
+          required: true,
+          message: '请输入手机号',
+          trigger: 'blur'
+        },
+        {
+          message: '请输入正确的手机号',
+          pattern: /^1[34578]\d{9}$/,
+          trigger: ['blur', 'change']
+        }],
+        user_id: [{
+          required: true,
+          message: '请输入工号',
+          trigger: 'blur'
+        }]
       },
       role_options: [],
       area_options: [],
@@ -276,9 +316,7 @@ export default {
       delList: [],
       alterVisible: false,
       editVisible: false,
-      pageTotal: 0,
-      idx: -1,
-      id: -1
+      pageTotal: 0
     }
   },
   created () {
@@ -337,6 +375,11 @@ export default {
         return ''
       }
       return 'tableRowDisplay'
+    },
+    // 修改数量
+    inputnum (num) {
+      num = num.replace(/[^\d]/g, '')
+      return num
     },
     // 表格下拉筛选
     filter (value, row, column) {
@@ -479,6 +522,15 @@ export default {
 }
 </script>
 
+<style>
+  .el-row-button-save {
+    top: 15px;
+  }
+  .tableRowDisplay {
+    display: none;
+  }
+</style>
+
 <style scoped>
   .handle-box {
     margin-bottom: 20px;
@@ -502,6 +554,6 @@ export default {
     color: GREEN;
   }
   .inputs {
-    width: 115%;
+    width: 150%;
   }
 </style>

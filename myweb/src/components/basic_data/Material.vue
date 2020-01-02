@@ -17,7 +17,7 @@
           clearable
           v-model="search">
         </el-input>
-        <el-button type="primary" icon="el-icon-circle-plus-outline" @click="handleAlter" class="alter-button">新增</el-button>
+        <el-button type="primary" icon="el-icon-plus" @click="handleAlter" class="alter-button">新增</el-button>
       </div>
       <el-table
         max-height="580"
@@ -85,132 +85,150 @@
 
     <!-- 新增弹出框 -->
     <el-dialog title="新增" :visible.sync="alterVisible" width="35%" >
-      <el-form ref="form" :model="form" label-width="70px"  class="form" >
-        <el-row>
-          <el-form-item label="分类" class="inputs" align="left">
-            <el-col :span="10">
-              <el-cascader :options="options">
-                <template slot-scope="{ node, data }">
-                  <span>{{ data.label }}</span>
-                  <span v-if="!node.isLeaf"> ({{ data.children.length }}) </span>
-                </template>
-              </el-cascader>
-            </el-col>
-          </el-form-item>
-        </el-row>
-        <el-row>
-          <el-form-item label="编码" class="inputs" align="left">
-            <el-col :span="10">
-              <el-input v-model="form.material_iden" ></el-input>
-            </el-col>
-          </el-form-item>
-        </el-row>
-        <el-row>
-          <el-form-item label="名称" class="inputs" align="left">
-            <el-col :span="10">
-              <el-input v-model="form.material_name" ></el-input>
-            </el-col>
-          </el-form-item>
-        </el-row>
-        <el-row>
-          <el-form-item label="规格" class="inputs" align="left">
-            <el-col :span="10">
-              <el-input v-model="form.material_specification" ></el-input>
-            </el-col>
-          </el-form-item>
-        </el-row>
-        <el-row>
-          <el-form-item label="型号" class="inputs" align="left">
-            <el-col :span="10">
-              <el-input v-model="form.material_model" ></el-input>
-            </el-col>
-          </el-form-item>
-        </el-row>
-        <el-row>
-          <el-form-item label="计量单位"  align="left">
-            <el-select v-model="form.material_meterage" placeholder="请选择区域"  class="option" >
-              <el-option
-                v-for="item in meterage_options"
-                :key="item"
-                :label="item"
-                :value="item">
-              </el-option>
-            </el-select>
-          </el-form-item>
-        </el-row>
-        <el-row>
-        <el-form-item label="存货属性"  align="left">
-          <el-select v-model="form.material_attr" placeholder="请选择"  class="option" >
-            <el-option key="存货" label="存货" value="存货"> </el-option>
-            <el-option key="固定资产" label="固定资产" value="固定资产"> </el-option>
-            <el-option key="费用" label="费用" value="费用"> </el-option>
-          </el-select>
-        </el-form-item>
-        </el-row>
-      </el-form>
-      <span slot="footer" class="dialog-footer">
-                <el-button @click="alterVisible = false">取 消</el-button>
-                <el-button type="primary" @click="saveAlter">确 定</el-button>
-            </span>
-    </el-dialog>
-
-    <!-- 编辑弹出框 -->
-    <el-dialog title="编辑" :visible.sync="editVisible" width="35%">
-      <el-form ref="form" :model="editform" label-width="70px">
-        <el-row>
-          <el-form-item label="编码" class="inputs" align="left">
-            <el-col :span="10">
-              <el-input v-model="editform.material_iden" ></el-input>
-            </el-col>
-          </el-form-item>
-        </el-row>
-        <el-row>
-          <el-form-item label="名称" class="inputs" align="left">
-            <el-col :span="10">
-              <el-input v-model="editform.material_name" ></el-input>
-            </el-col>
-          </el-form-item>
-        </el-row>
-        <el-row>
-          <el-form-item label="规格" class="inputs" align="left">
-            <el-col :span="10">
-              <el-input v-model="editform.material_specification" ></el-input>
-            </el-col>
-          </el-form-item>
-        </el-row>
-        <el-row>
-          <el-form-item label="型号" class="inputs" align="left">
-            <el-col :span="10">
-              <el-input v-model="editform.material_model" ></el-input>
-            </el-col>
-          </el-form-item>
-        </el-row>
-        <el-row>
-          <el-form-item label="计量单位"  align="left">
-            <el-select v-model="editform.material_meterage" placeholder="请选择区域"  class="option" >
-              <el-option
-                v-for="item in meterage_options"
-                :key="item"
-                :label="item"
-                :value="item">
-              </el-option>
-            </el-select>
-          </el-form-item>
-        </el-row>
-        <el-row>
+      <div class="container">
+        <el-form ref="form" :model="form" label-width="100px"  class="form" >
+          <el-row>
+            <el-form-item label="分类" class="inputs" align="left">
+              <el-col :span="10">
+                <el-cascader :options="options" :props="{ expandTrigger: 'hover', checkStrictly: true  }" clearable @change="changeCascader">
+                  <template slot-scope="{ node, data }">
+                    <span>{{ data.label }}</span>
+                    <span v-if="!node.isLeaf"> ({{ data.children.length }}) </span>
+                  </template>
+                </el-cascader>
+              </el-col>
+            </el-form-item>
+          </el-row>
+          <el-row>
+            <el-form-item label="编码" class="inputs" align="left">
+              <el-col :span="10">
+                <el-tag
+                  :type="'success'"
+                >{{form.material_iden}}
+                </el-tag>
+              </el-col>
+            </el-form-item>
+          </el-row>
+          <el-row>
+            <el-form-item label="名称" class="inputs" align="left">
+              <el-col :span="10">
+                <el-input v-model="form.material_name" ></el-input>
+              </el-col>
+            </el-form-item>
+          </el-row>
+          <el-row>
+            <el-form-item label="规格" class="inputs" align="left">
+              <el-col :span="10">
+                <el-input v-model="form.material_specification" ></el-input>
+              </el-col>
+            </el-form-item>
+          </el-row>
+          <el-row>
+            <el-form-item label="型号" class="inputs" align="left">
+              <el-col :span="10">
+                <el-input v-model="form.material_model" ></el-input>
+              </el-col>
+            </el-form-item>
+          </el-row>
+          <el-row>
+            <el-form-item label="计量单位"  align="left">
+              <el-select v-model="form.material_meterage" placeholder="请选择区域"  class="option" >
+                <el-option
+                  v-for="item in meterage_options"
+                  :key="item"
+                  :label="item"
+                  :value="item">
+                </el-option>
+              </el-select>
+            </el-form-item>
+          </el-row>
+          <el-row>
           <el-form-item label="存货属性"  align="left">
-            <el-select v-model="editform.material_attr" placeholder="请选择"  class="option" >
+            <el-select v-model="form.material_attr" placeholder="请选择"  class="option" >
               <el-option key="存货" label="存货" value="存货"> </el-option>
               <el-option key="固定资产" label="固定资产" value="固定资产"> </el-option>
               <el-option key="费用" label="费用" value="费用"> </el-option>
             </el-select>
           </el-form-item>
-        </el-row>
-      </el-form>
-      <span slot="footer" class="dialog-footer">
-                <el-button @click="editVisible = false">取 消</el-button>
-                <el-button type="primary" @click="saveEdit">确 定</el-button>
-            </span>
+          </el-row>
+        </el-form>
+      </div>
+      <el-row :gutter="20" class="el-row-button-save">
+        <el-col :span="1" :offset="15">
+          <el-button @click="alterVisible = false">取 消</el-button>
+        </el-col>
+        <el-col :span="1" :offset="4">
+          <el-button type="primary" @click="saveAlter">确 定</el-button>
+        </el-col>
+      </el-row>
+    </el-dialog>
+
+    <!-- 编辑弹出框 -->
+    <el-dialog title="编辑" :visible.sync="editVisible" width="35%">
+      <div class="container">
+        <el-form ref="form" :model="editform" label-width="100px">
+          <el-row>
+            <el-form-item label="编码" class="inputs" align="left">
+              <el-col :span="10">
+                <el-tag
+                  :type="'success'"
+                >{{editform.material_iden}}
+                </el-tag>
+              </el-col>
+            </el-form-item>
+          </el-row>
+          <el-row>
+            <el-form-item label="名称" class="inputs" align="left">
+              <el-col :span="10">
+                <el-input v-model="editform.material_name" ></el-input>
+              </el-col>
+            </el-form-item>
+          </el-row>
+          <el-row>
+            <el-form-item label="规格" class="inputs" align="left">
+              <el-col :span="10">
+                <el-input v-model="editform.material_specification" ></el-input>
+              </el-col>
+            </el-form-item>
+          </el-row>
+          <el-row>
+            <el-form-item label="型号" class="inputs" align="left">
+              <el-col :span="10">
+                <el-input v-model="editform.material_model" ></el-input>
+              </el-col>
+            </el-form-item>
+          </el-row>
+          <el-row>
+            <el-form-item label="计量单位"  align="left">
+              <el-select v-model="editform.material_meterage" placeholder="请选择区域"  class="option" >
+                <el-option
+                  v-for="item in meterage_options"
+                  :key="item"
+                  :label="item"
+                  :value="item">
+                </el-option>
+              </el-select>
+            </el-form-item>
+          </el-row>
+          <el-row>
+            <el-form-item label="存货属性"  align="left">
+              <el-select v-model="editform.material_attr" placeholder="请选择"  class="option" >
+                <el-option key="存货" label="存货" value="存货"> </el-option>
+                <el-option key="固定资产" label="固定资产" value="固定资产"> </el-option>
+                <el-option key="费用" label="费用" value="费用"> </el-option>
+              </el-select>
+            </el-form-item>
+          </el-row>
+        </el-form>
+      </div>
+      <el-row :gutter="20" class="el-row-button-save">
+        <el-col :span="1" :offset="15">
+          <el-button @click="alterVisible = false">取 消</el-button>
+        </el-col>
+        <el-col :span="1" :offset="4">
+          <el-button type="primary" @click="saveAlter">确 定</el-button>
+        </el-col>
+      </el-row>
     </el-dialog>
   </div>
 </template>
@@ -225,7 +243,7 @@ export default {
       meterage_options: [],
       query: {
         pageIndex: 1,
-        pageSize: 10
+        pageSize: 5
       },
       search: '',
       form: {
@@ -257,9 +275,7 @@ export default {
       delList: [],
       alterVisible: false,
       editVisible: false,
-      pageTotal: 0,
-      idx: -1,
-      id: -1
+      pageTotal: 0
     }
   },
   created () {
@@ -387,39 +403,54 @@ export default {
       })
     },
     // 获取级联选择器
+    optionsAdd (parent, child, length, end) {
+      if (length === end) {
+        parent.push({
+          value: child.type_iden,
+          label: child.type_name,
+          children: []
+        })
+        return
+      }
+      let pub = child.type_iden.substring(0, length)
+      for (let i in parent) {
+        if (parent[i].value === pub) {
+          this.optionsAdd(parent[i].children, child, length + 2, end)
+          return
+        }
+      }
+      parent.push({
+        value: child.type_iden,
+        label: child.type_name,
+        children: []
+      })
+    },
     getoptions () {
-      // let _this = this
-      // postAPI('/material_type').then(function (res) {
-        // let firstlevel = []
-        // let secondlevel = []
-        // let thirdlevel = []
-        // let length = 2
-        // for (let i in res.data.list) {
-        //   if (res.data.list[i]['type_iden'].length === 2) {
-        //     firstlevel.push({
-        //       value: res.data.list[i]['type_iden'],
-        //       label: res.data.list[i]['type_name'],
-        //       children: []
-        //     })
-        //   }
-        //   if (res.data.list[i]['type_iden'].length === 4) {
-        //     secondlevel.push({
-        //       value: res.data.list[i]['type_iden'],
-        //       label: res.data.list[i]['type_name']
-        //     })
-        //   }
-        // }
-        // console.log(firstlevel)
-        // _this.options.push(firstlevel)
-        // console.log(_this.options)
-      // }).catch(function (err) {
-      //   console.log(err)
-      // })
+      let _this = this
+      postAPI('/material_type').then(function (res) {
+        let length = 2
+        while (res.data.list.length > 0) {
+          for (let i = 0; i < res.data.list.length; i++) {
+            if (res.data.list[i].type_iden.length === length) {
+              _this.optionsAdd(_this.options, res.data.list[i], 2, length)
+              res.data.list.splice(i, 1)
+              i -= 1
+            }
+          }
+          length += 2
+        }
+      }).catch(function (err) {
+        console.log(err)
+      })
+    },
+    // 选择分类
+    changeCascader (val) {
+      console.log(val)
     },
     // 获取列表
     getlist () {
       let _this = this
-      postAPI('/materage').then(function (res) {
+      postAPI('/meterage').then(function (res) {
         let altermeterage = new Set()
         for (let i in res.data.list) {
           altermeterage.add(res.data.list[i]['meterage_name'])
@@ -471,8 +502,28 @@ export default {
       this.query.pageSize = val
     }
   }
-}
-</script>
+}</script>
+
+<style>
+  .tableRowDisplay {
+    display: none;
+  }
+  .el-row-button-save {
+    top: 15px;
+  }
+  .demo-table-expand {
+    font-size: 0;
+  }
+  .demo-table-expand label {
+    width: 90px;
+    color: #99a9bf;
+  }
+  .demo-table-expand .el-form-item {
+    margin-right: 0;
+    margin-bottom: 0;
+    width: 100%;
+  }
+</style>
 
 <style scoped>
   .handle-box {
