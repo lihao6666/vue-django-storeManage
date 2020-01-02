@@ -52,12 +52,6 @@ export default {
 		return {
 			items: ['出库','请购','销售','转库'],
 			current: 0,
-			pattern: {
-				color: '#7A7E83',
-				backgroundColor: '#fff',
-				selectedColor: '#007AFF',
-				buttonColor: '#007AFF'
-			},
 			outList: outData.data,
 			purchaseList: [
 				
