@@ -1,7 +1,13 @@
 stages:
   - test
+  - build
 
 test_all:
   stage: test
   script: 
     - echo "test successful!"
+
+build_all:
+  stage: build
+  script:
+    - echo "build successful!"
