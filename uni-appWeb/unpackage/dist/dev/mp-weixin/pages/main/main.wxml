@@ -1,0 +1,1 @@
+<view><view class="tabs"><maintabs vue-id="1" tabTitle="{{tabTitle}}" data-event-opts="{{[['^changeTab',[['changeTab']]]]}}" bind:changeTab="__e" bind:__l="__l"></maintabs></view></view>

@@ -1,0 +1,6 @@
+{
+  "navigationBarTitleText": "主页",
+  "usingComponents": {
+    "maintabs": "/components/mainpage/Maintabs"
+  }
+}

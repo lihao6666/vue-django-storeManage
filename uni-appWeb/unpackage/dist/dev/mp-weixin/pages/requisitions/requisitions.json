@@ -1,0 +1,7 @@
+{
+  "navigationBarTitleText": "请购",
+  "usingComponents": {
+    "uni-section": "/components/uni-section/uni-section",
+    "uni-segmented-control": "/components/uni-section/uni-section"
+  }
+}

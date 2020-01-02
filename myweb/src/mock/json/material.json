@@ -1,0 +1,37 @@
+{
+  "list": [
+    {
+      "material_iden": "01",
+      "material_name": "某物料",
+      "material_specification": "规格",
+      "material_model": "型号",
+      "material_meterage": "重量",
+      "material_attr": "存货",
+      "material_creator": "zyj",
+      "material_createDate": "2019-12-30 22:00",
+      "material_status": "启用"
+    },
+    {
+      "material_iden": "01",
+      "material_name": "某物料",
+      "material_specification": "规格",
+      "material_model": "型号",
+      "material_meterage": "重量",
+      "material_attr": "存货",
+      "material_creator": "zyj",
+      "material_createDate": "2019-12-30 22:00",
+      "material_status": "启用"
+    },
+    {
+      "material_iden": "01",
+      "material_name": "某物料",
+      "material_specification": "规格",
+      "material_model": "型号",
+      "material_meterage": "重量",
+      "material_attr": "存货",
+      "material_creator": "zyj",
+      "material_createDate": "2019-12-30 22:00",
+      "material_status": "停用"
+    }
+  ]
+}

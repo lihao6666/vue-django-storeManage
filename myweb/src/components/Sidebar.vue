@@ -154,7 +154,7 @@ export default {
               title: '库存查询',
               subs: [
                 {
-                  index: 'storecheck',
+                  index: 'stockcheck',
                   title: '现存量查询'
                 }
               ]
@@ -198,23 +198,27 @@ export default {
               title: '品牌管理'
             },
             {
+              index: 'warehouse',
+              title: '总仓维护'
+            },
+            {
               index: 'store',
               title: '仓库维护'
             },
             {
-              index: 'provider',
+              index: 'supplier',
               title: '供应商维护'
             },
             {
-              index: 'client',
+              index: 'customer',
               title: '客户维护'
             },
             {
-              index: 'units',
+              index: 'meterage',
               title: '计量单位维护'
             },
             {
-              index: 'materialclass',
+              index: 'materialtype',
               title: '物料类别维护'
             },
             {

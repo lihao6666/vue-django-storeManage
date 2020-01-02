@@ -4,7 +4,7 @@
 		<refresh ref="refresh" @isRefresh='isRefresh'></refresh>
 		<view class='nav'>
 			<!-- #ifdef H5 -->
-				<view style="height: 44px;width: 100%;">边距盒子</view>
+				<view style="height: 44px;width: 100%;"></view> <!-- 边距盒子 -->
 			<!-- #endif -->
 			<!-- 搜索 -->
 			<view class='searchInput999'>
@@ -20,20 +20,19 @@
 		<swiper style="min-height: 100vh;" :current="currentTab" @change="swiperTab">
 			<swiper-item v-for="(listItem,listIndex) in list" :key="listIndex">
 				<scroll-view style="height: 100%;" scroll-y="true" @scrolltolower="lower1" scroll-with-animation :scroll-into-view="toView">
-				<view :id="'top'+listIndex" style="width: 100%;height: 180upx;">边距盒子</view>
-				<view class='content'>
-					<view class='card' v-for="(item,index) in listItem" v-if="listItem.length > 0" :key="index">
-						{{item}}
+					<view style="width: 100%;height: 153upx;"></view> <!-- 边距盒子 -->
+					<view class='content'>
+						<view class='card' v-for="(item,index) in listItem" v-if="listItem.length > 0" :key="index">
+							{{item}}
+						</view>
 					</view>
-				</view>
-				<view class='noCard' v-if="listItem.length===0">
-					暂无信息
-				</view>
-				<view style="width: 100%;height: 100upx;opacity:0;">底部占位盒子</view>
+					<view class='noCard' v-if="listItem.length===0">
+						暂无信息
+					</view>
+					<view style="width: 100%;height: 100upx;opacity:0;">底部占位盒子</view>
 				</scroll-view>
 			</swiper-item>
 		</swiper>
-		<tabBar4 :currentPage="currentPage"></tabBar4>
 	</view>
 </template>
 
@@ -41,9 +40,9 @@
 const util = require('../../util/util.js');
 import refresh from '../../components/refresh.vue';
 import navTab from '../../components/navTab.vue';
-import tabBar4 from '../../components/tabBar4.vue';
+
 export default {
-	components: {refresh,navTab,tabBar4},
+	components: {refresh,navTab},
 	data() {
 		return {
 			currentPage:'index',
@@ -129,7 +128,7 @@ export default {
 </script>
 
 <style lang="scss">
-		.container999 {
+	.container999 {
 	  width: 100vw;
 	  font-size: 28upx;
 	  min-height: 100vh;
@@ -140,13 +139,15 @@ export default {
 	}
 	.content {
 		width: 100%;
+		padding: 0;
 	}
 	
 	.card {
 		width: 90%;
-		height: 200upx;
+		height: 200rpx;
 		background-color: white;
-		margin: 0 auto 30upx auto;
+		margin: 30rpx auto 0;
+		
 		background: #FFFFFF;
 		box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.10);
 		border-radius: 5px;
@@ -178,7 +179,7 @@ export default {
 		align-items: flex-start;
 		justify-content: flex-start;
 		font-size: 24upx;
-		background-color: #50B7EA;
+		background-color: #0faeff;
 		z-index: 996;
 	}
 	

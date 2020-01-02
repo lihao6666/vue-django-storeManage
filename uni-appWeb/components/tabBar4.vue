@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
 	<view class="tabBar">
 		<view
 		 v-for="(item,index) in tabBar" 
@@ -31,10 +31,10 @@
 						imgClick:'../static/tab-index-current.png'
 					},
 					{
-						url:'qinggou',
-						text:'请购',
-						imgNormal:'../static/tab-cate.png',
-						imgClick:'../static/tab-cate-current.png'
+					    url: 'requisitions',
+					    text: '请购',
+					    imgNormal: "../static/img/home.png",
+					    imgClick: "../static/img/homeHL.png"
 					},{
 						url:'user',
 						text:'我的',
@@ -120,3 +120,4 @@
 		}
 	}
 </style>
+ -->

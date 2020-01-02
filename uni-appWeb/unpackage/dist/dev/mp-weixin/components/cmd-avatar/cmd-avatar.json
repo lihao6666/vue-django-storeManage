@@ -1,0 +1,6 @@
+{
+  "usingComponents": {
+    "cmd-icon": "/components/cmd-icon/cmd-icon"
+  },
+  "component": true
+}

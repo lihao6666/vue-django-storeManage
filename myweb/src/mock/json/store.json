@@ -1,0 +1,38 @@
+{
+  "max_iden": "000003",
+  "list": [
+    {
+      "center_wh_iden": "001",
+      "center_wh_name" : "某仓库",
+      "center_wh_belong_orga": "ss",
+      "center_wh_belong_brand": "音乐",
+      "center_wh_belong_center": "某中心",
+      "center_wh_remarks": "sadffsaefaefsaefs",
+      "center_wh_creator": "zyj",
+      "center_wh_createDate": "2019-12-30 22:00",
+      "center_wh_status": "启用"
+    },
+    {
+      "center_wh_iden": "001",
+      "center_wh_name" : "某仓库",
+      "center_wh_belong_orga": "ss",
+      "center_wh_belong_brand": "音乐",
+      "center_wh_belong_center": "某中心",
+      "center_wh_remarks": "sadffsaefaefsaefs",
+      "center_wh_creator": "zyj",
+      "center_wh_createDate": "2019-12-30 22:00",
+      "center_wh_status": "启用"
+    },
+    {
+      "center_wh_iden": "001",
+      "center_wh_name" : "某仓库",
+      "center_wh_belong_orga": "ss",
+      "center_wh_belong_brand": "音乐",
+      "center_wh_belong_center": "某中心",
+      "center_wh_remarks": "sadffsaefaefsaefs",
+      "center_wh_creator": "zyj",
+      "center_wh_createDate": "2019-12-30 22:00",
+      "center_wh_status": "停用"
+    }
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "list": [
+    {
+      "type_iden": "01",
+      "type_name": "某物料属性",
+      "type_creator": "zyj",
+      "type_createDate": "2019-12-30 22:00",
+      "type_status": "启用"
+    },
+    {
+      "type_iden": "0101",
+      "type_name": "某物料属性2",
+      "type_creator": "zyj",
+      "type_createDate": "2019-12-30 22:00",
+      "type_status": "启用"
+    },
+    {
+      "type_iden": "0102",
+      "type_name": "某物料属性2",
+      "type_creator": "zyj",
+      "type_createDate": "2019-12-30 22:00",
+      "type_status": "停用"
+    },
+    {
+      "type_iden": "010201",
+      "type_name": "某物料属性3",
+      "type_creator": "zyj",
+      "type_createDate": "2019-12-30 22:00",
+      "type_status": "停用"
+    }
+  ]
+}

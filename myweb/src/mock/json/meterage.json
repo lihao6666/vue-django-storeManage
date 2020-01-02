@@ -1,0 +1,29 @@
+{
+  "max_iden": "000003",
+  "list": [
+    {
+      "meterage_iden": "01",
+      "meterage_name": "某计量单位",
+      "meterage_dimension": "重量",
+      "meterage_creator": "zyj",
+      "meterage_createDate": "2019-12-30 22:00",
+      "meterage_status": "启用"
+    },
+    {
+      "meterage_iden": "01",
+      "meterage_name": "某计量单位",
+      "meterage_dimension": "重量",
+      "meterage_creator": "zyj",
+      "meterage_createDate": "2019-12-30 22:00",
+      "meterage_status": "启用"
+    },
+    {
+      "meterage_iden": "01",
+      "meterage_name": "某计量单位",
+      "meterage_dimension": "重量",
+      "meterage_creator": "zyj",
+      "meterage_createDate": "2019-12-30 22:00",
+      "meterage_status": "停用"
+    }
+  ]
+}
