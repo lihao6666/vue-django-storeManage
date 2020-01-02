@@ -2,11 +2,14 @@
   <dictionary name="lh">
     <words>
       <w>centerwarehouse</w>
+      <w>dpms</w>
       <w>iden</w>
       <w>meterage</w>
       <w>meterages</w>
       <w>meterial</w>
       <w>orga</w>
+      <w>passwd</w>
+      <w>prds</w>
       <w>totalwarehouse</w>
     </words>
   </dictionary>
