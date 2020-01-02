@@ -1,7 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="34c6b5b4-0631-4a35-9482-5f8673ee1af7" name="Default Changelist" comment="" />
+    <list default="true" id="34c6b5b4-0631-4a35-9482-5f8673ee1af7" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/base/Serializer.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backstore/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/backstore/settings.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backstore/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/backstore/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/base/migrations/0001_initial.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/base/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/base/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/base/tests.py" beforeDir="false" afterPath="$PROJECT_DIR$/base/tests.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/base/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/base/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/base/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/base/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/orderManage/migrations/0001_initial.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/orderManage/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/orderManage/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/storeManage/migrations/0001_initial.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/storeManage/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/storeManage/models.py" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -27,11 +41,20 @@
   <component name="FavoritesManager">
     <favorites_list name="store" />
   </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
   </component>
   <component name="ProjectId" id="1VSV9bdZTg74BQZCTawor0iAI2t" />
-  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="1" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showExcludedFiles" value="true" />
@@ -98,7 +121,7 @@
       <workItem from="1577343592625" duration="52968000" />
       <workItem from="1577513181545" duration="6382000" />
       <workItem from="1577528753842" duration="577000" />
-      <workItem from="1577593027609" duration="6129000" />
+      <workItem from="1577593027609" duration="91314000" />
     </task>
     <servers />
   </component>
@@ -122,9 +145,9 @@
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
     <state x="630" y="183" width="660" height="714" key="find.popup/1920.219.1440.900/0.0.1920.1080@0.0.1920.1080" timestamp="1577427173380" />
-    <state x="625" y="241" width="670" height="676" key="search.everywhere.popup" timestamp="1577517507799">
+    <state x="864" y="239" width="670" height="676" key="search.everywhere.popup" timestamp="1577846955801">
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
-    <state x="625" y="241" width="670" height="676" key="search.everywhere.popup/1920.219.1440.900/0.0.1920.1080@0.0.1920.1080" timestamp="1577517507799" />
+    <state x="864" y="239" width="670" height="676" key="search.everywhere.popup/1920.219.1440.900/0.0.1920.1080@0.0.1920.1080" timestamp="1577846955801" />
   </component>
 </project>
