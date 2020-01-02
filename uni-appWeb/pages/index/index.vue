@@ -9,7 +9,7 @@
 			<!-- 搜索 -->
 			<view class='searchInput999'>
 				<view class='searchBox999'>
-					<image src='/static/icon-search.png' class='search999'></image>
+					<icon type="search" size="16"></icon>
 				</view>
 				<input class='input999' placeholder="输入教学用品"></input>
 			</view>
@@ -22,8 +22,9 @@
 				<scroll-view style="height: 100%;" scroll-y="true" @scrolltolower="lower1" scroll-with-animation :scroll-into-view="toView">
 					<view style="width: 100%;height: 153upx;"></view> <!-- 边距盒子 -->
 					<view class='content'>
-						<view class='card' v-for="(item,index) in listItem" v-if="listItem.length > 0" :key="index">
-							{{item}}
+						<view class='card' @tap="detail" v-for="(item,index) in listItem" v-if="listItem.length > 0" :key="index">
+							<!-- <navigator url="./cart" hover-class="navigator-hover"> -->
+							<text class="test">{{item}}</text>
 						</view>
 					</view>
 					<view class='noCard' v-if="listItem.length===0">
@@ -50,7 +51,12 @@ export default {
 			tabTitle:['英语','科技','艺术','体育'], //导航栏格式 --导航栏组件
 			currentTab: 0, //sweiper所在页
 			pages:[1,1,1,1], //第几个swiper的第几页
-			list: [[1, 2, 3, 4, 5, 6],[1, 2, 3, 4, 5, 6],[1, 2, 3, 4, 5, 6],[1, 2, 3, 4, 5, 6]] //数据格式
+			list:[
+				[1, 2, 3, 4, 5, 6],
+				[1, 2, 3, 4, 5, 6],
+				[1, 2, 3, 4, 5, 6],
+				[1, 2, 3, 4, 5, 6]
+				] //数据格式
 		};
 	},
 	onLoad(e) {
@@ -59,11 +65,15 @@ export default {
 	onShow() {},
 	onHide() {},
 	methods: {
-		toTop(){
-			this.toView = ''
-			setTimeout(()=>{
-				this.toView = 'top' + this.currentTab
-			},10)
+		detail:function(e){
+			let listIndex = e.currentTarget.dataset.listIndex;
+			let index = e.currentTarget.dataset.index;
+			uni.navigateTo({
+				url: '../detail/detail?listIndex = listInddex & index = index',
+				success: res => {},
+				fail: () => {},
+				complete: () => {}
+			});	
 		},
 		changeTab(index){
 			this.currentTab = index;
@@ -141,7 +151,9 @@ export default {
 		width: 100%;
 		padding: 0;
 	}
-	
+	.test{
+		font-size: 10rpx;
+	}
 	.card {
 		width: 90%;
 		height: 200rpx;
@@ -209,6 +221,6 @@ export default {
 	
 	.input999 {
 		color: #999;
-		width: 80%;
+		width: 90%;
 	}
 </style>

@@ -55,7 +55,12 @@
             "style": {
                 "navigationBarTitleText": "我的信息"
             }
-        }
+        },{
+		    "path": "pages/detail/detail",
+		    "style": {
+		        "navigationBarTitleText": "货物详情"
+		    }
+		}
     ],
     "tabBar": {//下方导航栏
         "color": "#7a7e83",
