@@ -2,15 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="34c6b5b4-0631-4a35-9482-5f8673ee1af7" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/dictionaries/lh.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dictionaries/lh.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backstore/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/backstore/settings.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backstore/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/backstore/urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/base/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/base/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/base/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/base/urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/base/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/base/views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/orderManage/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/orderManage/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/orderManage/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/orderManage/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/purchase/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/purchase/urls.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -122,7 +115,7 @@
       <workItem from="1577343592625" duration="52968000" />
       <workItem from="1577513181545" duration="6382000" />
       <workItem from="1577528753842" duration="577000" />
-      <workItem from="1577593027609" duration="116495000" />
+      <workItem from="1577593027609" duration="116973000" />
     </task>
     <servers />
   </component>
