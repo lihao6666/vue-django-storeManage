@@ -3,9 +3,16 @@
     <div class="container">
       <el-form ref="form" :inline="true" :model="formadd" label-width="70px" size="mini">
         <el-form-item label="库存组织">
-          <el-select v-model="formadd.so_orga" placeholder="请选择" :disabled="!ifchange">
-            <el-option  v-for="item in form_so_orga" v-bind:key="item" :label="item" :value="item"></el-option>
-          </el-select>
+          <el-tag
+            :type="'success'"
+          >{{formadd.so_orga}}
+          </el-tag>
+        </el-form-item>
+        <el-form-item label="发货仓库">
+          <el-tag
+            :type="'success'"
+          >{{formadd.so_warehouse}}
+          </el-tag>
         </el-form-item>
         <el-form-item label="订单类型">
           <el-select v-model="formadd.so_type" placeholder="请选择" :disabled="!ifchange">
@@ -27,11 +34,6 @@
               :picker-options="pickerOptions" :disabled="!ifchange">
             </el-date-picker>
           </el-col>
-        </el-form-item>
-        <el-form-item label="发货仓库">
-          <el-select v-model="formadd.so_warehouse" placeholder="请选择" :disabled="!ifchange">
-            <el-option v-for="item in form_so_warehouse" v-bind:key="item" :label="item" :value="item"></el-option>
-          </el-select>
         </el-form-item>
         <el-form-item label="备注">
           <el-input type="textarea" v-model="formadd.so_remarks" rows="3" class="form-item-from" :disabled="!ifchange"
@@ -77,6 +79,7 @@ export default {
         }]
       },
       formadd: {
+        so_iden: this.editform.so_iden,
         so_orga: this.editform.so_orga,
         so_custom: this.editform.so_custom,
         so_warehouse: this.editform.so_warehouse,
@@ -84,17 +87,7 @@ export default {
         so_remarks: this.editform.so_remarks,
         so_date: this.editform.so_date
       },
-      form_so_orga: [
-        '礼品',
-        '教学用品',
-        '销售商品'
-      ],
       form_so_custom: [
-        '礼品',
-        '教学用品',
-        '销售商品'
-      ],
-      form_so_warehouse: [
         '礼品',
         '教学用品',
         '销售商品'
@@ -107,6 +100,7 @@ export default {
   },
   methods: {
     getForm () {
+      this.formadd.so_iden = this.editform.so_iden
       this.formadd.so_orga = this.editform.so_orga
       this.formadd.so_custom = this.editform.so_custom
       this.formadd.so_warehouse = this.editform.so_warehouse

@@ -38,7 +38,7 @@
           </el-tag>
         </el-form-item>
         <el-form-item label="备注">
-          <el-input type="textarea" v-model="formadd.po_remarks" rows="3" class="form-item-from" :disabled="!ifchange"
+          <el-input type="textarea" v-model="formadd.po_remarks" rows="3" :disabled="!ifchange"
                     placeholder="请输入200字以内的描述" maxlength="200" show-word-limit clearable></el-input>
         </el-form-item>
         <el-button type="primary" class="form-item-save" v-if="ifchange">保 存</el-button>
@@ -81,6 +81,7 @@ export default {
         }]
       },
       formadd: {
+        po_iden: this.editform.po_iden,
         po_orga: this.editform.po_orga,
         po_contractFrom: this.editform.po_contractFrom,
         po_supply: this.editform.po_supply,
@@ -102,6 +103,7 @@ export default {
   },
   methods: {
     getForm () {
+      this.formadd.po_iden = this.editform.po_iden
       this.formadd.po_orga = this.editform.po_orga
       this.formadd.po_contractFrom = this.editform.po_contractFrom
       this.formadd.po_supply = this.editform.po_supply
@@ -114,9 +116,6 @@ export default {
 </script>
 
 <style scoped>
-  .form-item-from {
-    width: 150%;
-  }
   .form-item-save {
     float: right;
     margin-top: 20px;

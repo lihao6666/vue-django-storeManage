@@ -151,6 +151,9 @@ export default {
       console.log(val)
     },
     getData () {
+      if (this.formadd.pc_iden === '') {
+        return
+      }
       let _this = this
       postAPI('/pc_pay', this.formadd).then(function (res) {
         _this.tableData = res.data.list
@@ -244,6 +247,10 @@ export default {
         .then(() => {
           this.$message.success('删除成功')
           this.tableData.splice(index, 1)
+          let pageIndexNew = Math.ceil((this.pageTotal - 1) / this.query.pageSize) // 新的页面数量
+          this.query.pageIndex = (this.query.pageIndex > pageIndexNew) ? pageIndexNew : this.query.pageIndex
+          this.query.pageIndex = (this.query.pageIndex === 0) ? 1 : 0
+          this.find()
         })
         .catch(() => {
           this.$message({
@@ -275,6 +282,7 @@ export default {
         .then(() => {
           let pageIndexNew = Math.ceil((this.pageTotal - this.multipleSelection.length) / this.query.pageSize) // 新的页面数量
           this.query.pageIndex = (this.query.pageIndex > pageIndexNew) ? pageIndexNew : this.query.pageIndex
+          this.query.pageIndex = (this.query.pageIndex === 0) ? 1 : 0
           for (let i in this.multipleSelection) {
             let x = this.tableData.valueOf(this.multipleSelection[i])
             this.tableData.splice(x, 1)

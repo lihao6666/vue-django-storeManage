@@ -251,6 +251,7 @@ export default {
     save () {
       this.$emit('add', this.multipleSelection)
       this.multipleSelection = []
+      this.$refs.multipleTable.clearSelection()
     }
   }
 }

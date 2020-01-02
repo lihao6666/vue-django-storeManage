@@ -165,7 +165,7 @@
     </div>
     <!-- 新增弹出框 -->
     <el-dialog title="新增物料" :visible.sync="addVisible" width="90%" append-to-body>
-      <Cdadd @add="addPrd" :tableHas="tableData" :formadd="formadd"></Cdadd>
+      <Cdadd @add="addPrd" :tableHas="tableData" :formadd="formadd" :ifhasorga="ifhasorga"></Cdadd>
     </el-dialog>
   </div>
 </template>
@@ -197,14 +197,23 @@ export default {
       cd_meterageSet: [],
       cd_rpidenset: [],
       addVisible: false,
+      ifhasorga: false,
       pageTotal: 0
     }
   },
   created () {
     this.getData()
+    this.$nextTick(function () {
+      if (!this.formadd.pc_orga) {
+        this.addVisible = true
+      }
+    })
   },
   methods: {
     getData () {
+      if (this.formadd.pc_iden === '') {
+        return
+      }
       let _this = this
       postAPI('/pc_cd', this.formadd).then(function (res) {
         _this.tableData = res.data.list
@@ -293,6 +302,11 @@ export default {
     // 新增
     add () {
       this.addVisible = true
+      if (this.formadd.pc_orga === '') {
+        this.ifhasorga = false
+      } else {
+        this.ifhasorga = true
+      }
     },
     // 新增物料
     addPrd (val) {
@@ -372,6 +386,9 @@ export default {
         .then(() => {
           this.$message.success('删除成功')
           this.tableData.splice(index, 1)
+          let pageIndexNew = Math.ceil((this.pageTotal - 1) / this.query.pageSize) // 新的页面数量
+          this.query.pageIndex = (this.query.pageIndex > pageIndexNew) ? pageIndexNew : this.query.pageIndex
+          this.query.pageIndex = (this.query.pageIndex === 0) ? 1 : 0
           this.find()
         })
         .catch(() => {
@@ -404,6 +421,7 @@ export default {
         .then(() => {
           let pageIndexNew = Math.ceil((this.pageTotal - this.multipleSelection.length) / this.query.pageSize) // 新的页面数量
           this.query.pageIndex = (this.query.pageIndex > pageIndexNew) ? pageIndexNew : this.query.pageIndex
+          this.query.pageIndex = (this.query.pageIndex === 0) ? 1 : 0
           for (let i in this.multipleSelection) {
             let x = this.tableData.valueOf(this.multipleSelection[i])
             this.tableData.splice(x, 1)

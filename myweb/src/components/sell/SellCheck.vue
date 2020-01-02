@@ -152,6 +152,7 @@ export default {
       pageTotal: 0,
       addVisible: false,
       addform: {
+        so_iden: '',
         so_orga: '',
         so_custom: '',
         so_warehouse: '',
@@ -268,6 +269,10 @@ export default {
         .then(() => {
           this.$message.success('删除成功')
           this.tableData.splice(index, 1)
+          let pageIndexNew = Math.ceil((this.pageTotal - 1) / this.query.pageSize) // 新的页面数量
+          this.query.pageIndex = (this.query.pageIndex > pageIndexNew) ? pageIndexNew : this.query.pageIndex
+          this.query.pageIndex = (this.query.pageIndex === 0) ? 1 : 0
+          this.find()
         })
         .catch(() => {
           this.$message({

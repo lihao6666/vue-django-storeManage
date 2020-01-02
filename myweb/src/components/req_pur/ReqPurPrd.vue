@@ -24,7 +24,7 @@
           v-model="search">
         </el-input>
         <el-button type="primary" class="button-save" v-if="ifchange">保 存</el-button>
-        <el-button type="primary" class="button-save" v-if="ifchange">提 交</el-button>
+        <el-button type="primary" class="button-save" v-if="ifchange" :disabled="!tableDataNew.length>0">提 交</el-button>
         <el-button type="primary" icon="el-icon-plus" class="button-save" @click="add" v-if="ifchange">新增</el-button>
       </div>
       <el-table
@@ -103,7 +103,7 @@
     </div>
     <!-- 新增弹出框 -->
     <el-dialog title="新增物料" :visible.sync="addVisible" width="90%" append-to-body>
-      <Prdadd @add="addPrd" :tableHas="tableData"></Prdadd>
+      <Prdadd @add="addPrd" :tableHas="tableData" :formadd="formadd" :ifhasorga="ifhasorga"></Prdadd>
     </el-dialog>
   </div>
 </template>
@@ -133,14 +133,23 @@ export default {
       prd_modelSet: [],
       prd_meterageSet: [],
       addVisible: false,
-      pageTotal: 0
+      pageTotal: 0,
+      ifhasorga: false
     }
   },
   created () {
     this.getData()
+    this.$nextTick(function () {
+      if (!this.formadd.req_pur_orga) {
+        this.addVisible = true
+      }
+    })
   },
   methods: {
     getData () {
+      if (this.formadd.req_pur_iden === '') {
+        return
+      }
       let _this = this
       postAPI('/req_pur_prd', this.formadd).then(function (res) {
         _this.tableData = res.data.list
@@ -213,9 +222,17 @@ export default {
     // 新增
     add () {
       this.addVisible = true
+      if (this.formadd.req_pur_orga === '') {
+        this.ifhasorga = false
+      } else {
+        this.ifhasorga = true
+      }
     },
     // 新增物料
     addPrd (val) {
+      for (let i in val) {
+        val[i].prd_num = 1
+      }
       this.tableData = this.tableData.concat(val)
       this.find()
       let message = '新增' + val.length + '条'
@@ -244,9 +261,10 @@ export default {
       })
         .then(() => {
           this.$message.success('删除成功')
+          this.tableData.splice(index, 1)
           let pageIndexNew = Math.ceil((this.pageTotal - 1) / this.query.pageSize) // 新的页面数量
           this.query.pageIndex = (this.query.pageIndex > pageIndexNew) ? pageIndexNew : this.query.pageIndex
-          this.tableData.splice(index, 1)
+          this.query.pageIndex = (this.query.pageIndex === 0) ? 1 : 0
           this.find()
         })
         .catch(() => {
@@ -279,6 +297,7 @@ export default {
         .then(() => {
           let pageIndexNew = Math.ceil((this.pageTotal - this.multipleSelection.length) / this.query.pageSize) // 新的页面数量
           this.query.pageIndex = (this.query.pageIndex > pageIndexNew) ? pageIndexNew : this.query.pageIndex
+          this.query.pageIndex = (this.query.pageIndex === 0) ? 1 : 0
           for (let i in this.multipleSelection) {
             let x = this.tableData.valueOf(this.multipleSelection[i])
             this.tableData.splice(x, 1)
