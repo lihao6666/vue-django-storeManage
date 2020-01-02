@@ -1,14 +1,14 @@
 <template>
 	<view class="content">
-		<view class="blankBox"></view>
-		<view class="aboutUs">
+		<view class="blank-box"></view>
+		<view class="about-us">
 			<view class="title">关于我们</view>
 			<view class="infomation">
 			    本产品由"Mars456"小组独立开发。"Mars456"小组来自合肥工业大学软件学院。如果你对互联网产品开发有兴趣，欢迎通过以下方式联系我们。
 			</view>
 		</view>
-		<view class="blankBox"></view>
-		<view class="aboutUs">
+		<view class="blank-box"></view>
+		<view class="about-us">
 			<view class="title">联系方式</view>
 			<view class="infomation">
 				<view>电话：13505656290</view>
@@ -27,10 +27,10 @@
 	.content {
 		padding: 0;
 	}
-	.blankBox {
+	.blank-box {
 		height: 40upx;
 	}
-	.aboutUs {
+	.about-us {
 		background: #FFFFFF;
 	}
 	.title {

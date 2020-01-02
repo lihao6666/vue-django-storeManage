@@ -2,13 +2,19 @@
 .content {
 	padding: 0;
 }
-.aboutUs {
+.blank-box {
+	height: 40rpx;
+}
+.about-us {
 	background: #FFFFFF;
 }
 .title {
 	border-top: 10rpx;
+	font-size: 35rpx;
+	padding: 10rpx;
 }
 .infomation {
 	font-size: 15rpx;
+	padding: 10rpx;
 }
 

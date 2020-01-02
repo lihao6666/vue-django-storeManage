@@ -11,6 +11,9 @@
   width: 100%;
   padding: 0;
 }
+.test {
+  font-size: 10rpx;
+}
 .card {
   width: 90%;
   height: 200rpx;
@@ -97,6 +100,6 @@
 }
 .input999 {
   color: #999;
-  width: 80%;
+  width: 90%;
 }
 

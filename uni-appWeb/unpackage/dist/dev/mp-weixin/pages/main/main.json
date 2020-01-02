@@ -1,6 +1,7 @@
 {
   "navigationBarTitleText": "主页",
   "usingComponents": {
-    "maintabs": "/components/mainpage/Maintabs"
+    "uni-segmented-control": "/components/uni-segmented-control/uni-segmented-control",
+    "uni-card": "/components/uni-card/uni-card"
   }
 }

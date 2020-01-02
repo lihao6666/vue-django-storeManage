@@ -1,13 +1,13 @@
 <template>
     <view class="content">
-		<view class="personHead">
+		<view class="person-head">
 			<cmd-avatar src="https://avatar.bbs.miui.com/images/noavatar_small.gif" @click="mydetail" size="md" :make="{'background-color': '#fff', 'margin-right': '10upx'}"></cmd-avatar>
-			<view class="personHeadBox">
-				<view class="userName">俞浩然</view>
-				<view class="userId">ID：123456789</view>
+			<view class="person-head-box">
+				<view class="user-name">俞浩然</view>
+				<view class="user-id">ID：123456789</view>
 			</view>
 		</view>
-		<view class="personList">
+		<view class="person-list">
 			<cmd-cell-item title="联系我们" slot-left arrow @click="phone">
 			  <cmd-icon type="phone" size="24" color="#368dff"></cmd-icon>
 			</cmd-cell-item>
@@ -53,7 +53,7 @@
 	.content {
 		padding: 0;
 	}
-	.personHead {
+	.person-head {
 		display: flex;
 		flex-direction: row;
 		align-items: center;
@@ -62,25 +62,24 @@
 		background: linear-gradient(to top, #365fff, #0faeff);
 		border-top: 0;
 	}
-	.personHeadBox {
-		border-radius: 10upx;
+	.person-head-box {
 		display: flex;
 		flex-direction: column;
 		justify-content: center;
 		align-items: flex-start;
 	}
-	.userName {
+	.user-name {
 		font-size: 18px;
 		font-weight: 1000;
 		color: #000000;
 		font-family: '楷体';
 	}
-	.userId {
+	.user-id {
 		font-size: 14px;
 		font-weight: 1000;
 		color: #000000;
 	}
-	.personList {
+	.person-list {
 		background: #FFFFFF;
 	}
 </style>
