@@ -20,7 +20,6 @@
         <el-button type="primary" icon="el-icon-plus" @click="handleAlter" class="alter-button">新增</el-button>
       </div>
       <el-table
-        max-height="580"
         :data="tableDataNew"
         class="table"
         ref="multipleTable"
@@ -96,16 +95,6 @@
                     <span v-if="!node.isLeaf"> ({{ data.children.length }}) </span>
                   </template>
                 </el-cascader>
-              </el-col>
-            </el-form-item>
-          </el-row>
-          <el-row>
-            <el-form-item label="编码" class="inputs" align="left">
-              <el-col :span="10">
-                <el-tag
-                  :type="'success'"
-                >{{form.material_iden}}
-                </el-tag>
               </el-col>
             </el-form-item>
           </el-row>

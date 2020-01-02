@@ -20,7 +20,6 @@
         <el-button type="primary" icon="el-icon-plus" @click="handleAlter" class="alter-button">新增</el-button>
       </div>
       <el-table
-        max-height="580"
         :data="tableDataNew"
         class="table"
         ref="multipleTable"
@@ -35,9 +34,17 @@
         <el-table-column prop="user_area" sortable label="区域" :filters="user_areaSet"
                          :filter-method="filter" align="center"></el-table-column>
         <el-table-column prop="user_department" sortable label="部门" :filters="user_dpmSet"
-                         :filter-method="filter" align="center"></el-table-column>
+                         :filter-method="filterMore" align="center">
+          <template slot-scope="scope">
+            <el-tag v-for="item in scope.row.user_department" v-bind:key="item" :type="'success'">{{item}}</el-tag>
+          </template>
+        </el-table-column>
         <el-table-column prop="user_role" sortable label="角色" :filters="user_roleSet"
-                         :filter-method="filter" align="center"></el-table-column>
+                         :filter-method="filterMore" align="center">
+          <template slot-scope="scope">
+            <el-tag v-for="item in scope.row.user_role" v-bind:key="item" :type="'success'">{{item}}</el-tag>
+          </template>
+        </el-table-column>
         <el-table-column prop="user_creator" sortable label="创建人" :filters="user_creatorSet"
                          :filter-method="filter" align="center"></el-table-column>
         <el-table-column prop="user_createDate" sortable label="创建日期" align="center"></el-table-column>
@@ -244,13 +251,11 @@
 </template>
 
 <script>
-import moment from 'moment'
 import {postAPI} from '../../api/api'
 export default {
   name: 'test',
   data () {
     return {
-      time: moment(new Date()).format('YYYY-MM-DD hh:mm:ss'),
       query: {
         pageIndex: 1,
         pageSize: 5
@@ -335,8 +340,12 @@ export default {
         let roleset = new Set()
         for (let i in _this.tableData) {
           areaset.add(_this.tableData[i]['user_area'])
-          dpmset.add(_this.tableData[i]['user_department'])
-          roleset.add(_this.tableData[i]['user_role'])
+          for (let j in _this.tableData[i]['user_department']) {
+            dpmset.add(_this.tableData[i]['user_department'][j])
+          }
+          for (let j in _this.tableData[i]['user_role']) {
+            roleset.add(_this.tableData[i]['user_role'][j])
+          }
           creatorset.add(_this.tableData[i]['user_creator'])
         }
         for (let i of areaset) {
@@ -385,6 +394,13 @@ export default {
     filter (value, row, column) {
       const property = column['property']
       if (row[property] === value) {
+        return true
+      }
+      return false
+    },
+    filterMore (value, row, column) {
+      const property = column['property']
+      if (row[property].indexOf(value) >= 0) {
         return true
       }
       return false

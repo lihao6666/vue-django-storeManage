@@ -20,7 +20,6 @@
         <el-button type="primary" icon="el-icon-plus" class="button-plus" @click="add">新增</el-button>
       </div>
       <el-table
-        max-height="580"
         :data="tableDataNew"
         class="table"
         ref="multipleTable"

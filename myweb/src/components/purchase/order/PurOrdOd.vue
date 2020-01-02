@@ -29,7 +29,6 @@
         <el-button v-if="ifchange && formadd.po_contractFrom" type="primary" icon="el-icon-plus" class="button-save" @click="add">选择合同</el-button>
       </div>
       <el-table
-        max-height="580"
         :data="tableDataNew"
         class="table"
         ref="multipleTable"
@@ -128,7 +127,7 @@
             </el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="od_rp_iden" sortable label="请购单号" :filters="od_rp_idenset"
+        <el-table-column prop="od_rp_iden" sortable label="请购单号" :filters="od_rp_idenSet"
       :filter-method="filter" align="center"></el-table-column>
         <el-table-column label="操作" align="center" v-if="ifchange">
           <template slot-scope="scope">
@@ -190,7 +189,7 @@ export default {
       od_specificationSet: [],
       od_modelSet: [],
       od_meterageSet: [],
-      od_rp_idenset: [],
+      od_rp_idenSet: [],
       addVisible: false,
       ifhasorga: false,
       pageTotal: 0
@@ -246,7 +245,7 @@ export default {
           })
         }
         for (let i of rpidenset) {
-          _this.od_rp_idenset.push({
+          _this.od_rp_idenSet.push({
             text: i,
             value: i
           })

@@ -18,6 +18,10 @@ Mock.mock('/po_od', 'post', require('./json/po_od'))
 Mock.mock('/po_od_add_rp', 'post', require('./json/po_od_add_rp'))
 Mock.mock('/po_od_add_pc', 'post', require('./json/po_od_add_pc'))
 
+Mock.mock('/bis_check', 'post', require('./json/bis_check'))
+Mock.mock('/bis_bd', 'post', require('./json/bis_bd'))
+Mock.mock('/bis_bd_add', 'post', require('./json/bis_bd_add'))
+
 Mock.mock('/department', 'post', require('./json/department'))
 Mock.mock('/users', 'post', require('./json/users'))
 Mock.mock('/role', 'post', require('./json/role'))

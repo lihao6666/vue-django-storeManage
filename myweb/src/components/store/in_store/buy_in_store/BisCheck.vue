@@ -3,7 +3,7 @@
     <div class="crumbs">
       <el-breadcrumb separator="/">
         <el-breadcrumb-item>
-          <i class="el-icon-lx-cascades"></i> 请购单
+          <i class="el-icon-lx-cascades"></i> 采购入库
         </el-breadcrumb-item>
       </el-breadcrumb>
     </div>
@@ -30,55 +30,38 @@
           <template slot-scope="props">
             <el-form label-position="left" inline class="demo-table-expand">
               <el-form-item label="备注">
-                <span>{{ props.row.req_pur_remarks }}</span>
-              </el-form-item>
-              <el-form-item v-if="props.row.req_pur_status==='已关闭'" label="关闭人">
-                <span>{{ props.row.req_pur_closer }}</span>
-              </el-form-item>
-              <el-form-item v-if="props.row.req_pur_status==='已关闭'" label="关闭时间">
-                <span>{{ props.row.req_pur_closeDate }}</span>
-              </el-form-item>
-              <el-form-item v-if="props.row.req_pur_status==='已关闭'" label="关闭原因">
-                <span>{{ props.row.req_pur_closeReason}}</span>
+                <span>{{ props.row.bis_remarks }}</span>
               </el-form-item>
             </el-form>
           </template>
         </el-table-column>
-        <el-table-column prop="req_pur_iden" sortable label="请购单号" align="center"></el-table-column>
-        <el-table-column prop="req_pur_orga" sortable label="库存组织" :filters="req_pur_orgaSet"
+        <el-table-column prop="bis_iden" sortable label="入库单编号" align="center"></el-table-column>
+        <el-table-column prop="bis_orga" sortable label="库存组织" :filters="bis_orgaSet"
       :filter-method="filter" align="center"></el-table-column>
-        <el-table-column prop="req_pur_type" sortable label="需求类型" :filters="req_pur_typeSet"
+        <el-table-column prop="bis_warehouse" sortable label="仓库" :filters="bis_warehouseSet"
       :filter-method="filter" align="center"></el-table-column>
-        <el-table-column prop="req_pur_from" sortable label="申请部门" :filters="req_pur_fromSet"
+        <el-table-column prop="bis_supply" sortable label="供应商" :filters="bis_supplySet"
       :filter-method="filter" align="center"></el-table-column>
-        <el-table-column prop="req_pur_date" sortable label="请购日期" align="center"></el-table-column>
-        <el-table-column prop="req_pur_status" sortable label="状态" :filters="req_pur_statusSet"
+        <el-table-column prop="bis_date" sortable label="入库日期" align="center"></el-table-column>
+        <el-table-column prop="bis_status" sortable label="状态" :filters="bis_statusSet"
       :filter-method="filter" align="center">
           <template slot-scope="scope">
-            <el-popover trigger="hover" placement="top" v-if="scope.row.req_pur_status==='已关闭'">
-              <p>关闭人: {{ scope.row.req_pur_closer }}</p>
-              <p>关闭时间: {{ scope.row.req_pur_closeDate }}</p>
-              <p>关闭原因: {{ scope.row.req_pur_closeReason }}</p>
-              <div slot="reference" class="name-wrapper">
-                <el-tag :type="'info'">{{scope.row.req_pur_status}}</el-tag>
-              </div>
-            </el-popover>
-            <el-tag v-else
-              :type="scope.row.req_pur_status==='已审批'?'success':(scope.row.req_pur_status==='已关闭'?'info':'')"
-            >{{scope.row.req_pur_status}}
+            <el-tag
+              :type="scope.row.bis_status==='已审批'?'success':''"
+            >{{scope.row.bis_status}}
             </el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="req_pur_creator" sortable label="创建人" :filters="req_pur_creatorSet"
+        <el-table-column prop="bis_creator" sortable label="创建人" :filters="bis_creatorSet"
       :filter-method="filter" align="center"></el-table-column>
-        <el-table-column prop="req_pur_createDate" sortable label="创建日期" align="center"></el-table-column>
+        <el-table-column prop="bis_createDate" sortable label="创建日期" align="center"></el-table-column>
         <el-table-column label="操作" align="center">
           <template slot-scope="scope">
             <el-button
               type="text"
               icon="el-icon-edit"
               @click="handleEdit(scope.$index, scope.row)"
-              v-if="scope.row.req_pur_status==='草稿'"
+              v-if="scope.row.bis_status==='草稿'"
             >编辑
             </el-button>
             <el-button
@@ -86,7 +69,7 @@
               icon="el-icon-delete"
               class="red"
               @click="handleDelete(scope.$index, scope.row)"
-              v-if="scope.row.req_pur_status==='草稿'"
+              v-if="scope.row.bis_status==='草稿'"
             >删除
             </el-button>
             <el-button
@@ -94,16 +77,8 @@
               icon="el-icon-postcard"
               class="green"
               @click="handleMore(scope.$index, scope.row)"
-              v-if="scope.row.req_pur_status==='已审批' || scope.row.req_pur_status==='已关闭'"
+              v-if="scope.row.bis_status==='已审批'"
             >详情
-            </el-button>
-            <el-button
-              type="text"
-              icon="el-icon-document-delete"
-              class="block"
-              @click="handleClose(scope.$index, scope.row)"
-              v-if="scope.row.req_pur_status==='已审批'"
-            >关闭
             </el-button>
           </template>
         </el-table-column>
@@ -124,25 +99,25 @@
     </div>
     <!-- 新增弹出框 -->
     <el-dialog title="新增" :visible.sync="addVisible" width="90%" :close-on-click-modal="false">
-      <Reqadd ref="Reqadd" :editform="addform" :ifchange="true"></Reqadd>
+      <Bisadd ref="poadd" :editform="addform" :ifchange="true"></Bisadd>
     </el-dialog>
     <!-- 编辑弹出框 -->
-    <el-dialog title="编辑" :visible.sync="editVisible" width="90%" :close-on-click-modal="false" :destroy-on-close="true" :before-close="closePcedit">
-      <Reqadd ref="Reqedit" :editform="editform" :ifchange="true"></Reqadd>
+    <el-dialog title="编辑" :visible.sync="editVisible" width="90%" :close-on-click-modal="false" :destroy-on-close="true" :before-close="closepoedit">
+      <Bisadd ref="poedit" :editform="editform" :ifchange="true"></Bisadd>
     </el-dialog>
     <!-- 详情弹出框 -->
     <el-dialog title="详情" :visible.sync="moreVisible" width="90%" :destroy-on-close="true">
-      <Reqadd ref="Reqmore" :editform="moreform" :ifchange="false"></Reqadd>
+      <Bisadd ref="pomore" :editform="moreform" :ifchange="false"></Bisadd>
     </el-dialog>
   </div>
 </template>
 
 <script>
-import Reqadd from './ReqPurAdd'
-import { postAPI } from '../../api/api'
+import Bisadd from './BisAdd'
+import { postAPI } from '../../../../api/api'
 
 export default {
-  name: 'req_pur_check',
+  name: 'bis_check',
   data () {
     return {
       query: {
@@ -152,11 +127,11 @@ export default {
       search: '',
       tableData: [],
       tableDataNew: [],
-      req_pur_orgaSet: [],
-      req_pur_typeSet: [],
-      req_pur_fromSet: [],
-      req_pur_statusSet: [],
-      req_pur_creatorSet: [],
+      bis_orgaSet: [],
+      bis_warehouseSet: [],
+      bis_supplySet: [],
+      bis_statusSet: [],
+      bis_creatorSet: [],
       editVisible: false,
       editform: {},
       moreVisible: false,
@@ -164,17 +139,17 @@ export default {
       pageTotal: 0,
       addVisible: false,
       addform: {
-        req_pur_iden: '',
-        req_pur_orga: '',
-        req_pur_from: '',
-        req_pur_type: '',
-        req_pur_remarks: '',
-        req_pur_date: ''
+        bis_iden: '',
+        bis_orga: '',
+        bis_supply: '',
+        bis_warehouse: '',
+        bis_remarks: '',
+        bis_date: ''
       }
     }
   },
   components: {
-    Reqadd
+    Bisadd
   },
   created () {
     this.getData()
@@ -182,47 +157,47 @@ export default {
   methods: {
     getData () {
       let _this = this
-      postAPI('/req_pur_check').then(function (res) {
+      postAPI('/bis_check').then(function (res) {
         _this.tableData = res.data.list
         _this.find()
         let orgaset = new Set()
-        let typeset = new Set()
+        let nameset = new Set()
         let statusset = new Set()
-        let fromset = new Set()
+        let supplyset = new Set()
         let creatorset = new Set()
         for (let i in _this.tableData) {
-          orgaset.add(_this.tableData[i]['req_pur_orga'])
-          fromset.add(_this.tableData[i]['req_pur_from'])
-          typeset.add(_this.tableData[i]['req_pur_type'])
-          statusset.add(_this.tableData[i]['req_pur_status'])
-          creatorset.add(_this.tableData[i]['req_pur_creator'])
+          orgaset.add(_this.tableData[i]['bis_orga'])
+          supplyset.add(_this.tableData[i]['bis_supply'])
+          nameset.add(_this.tableData[i]['bis_warehouse'])
+          statusset.add(_this.tableData[i]['bis_status'])
+          creatorset.add(_this.tableData[i]['bis_creator'])
         }
         for (let i of orgaset) {
-          _this.req_pur_orgaSet.push({
+          _this.bis_orgaSet.push({
             text: i,
             value: i
           })
         }
-        for (let i of fromset) {
-          _this.req_pur_fromSet.push({
+        for (let i of supplyset) {
+          _this.bis_supplySet.push({
             text: i,
             value: i
           })
         }
-        for (let i of typeset) {
-          _this.req_pur_typeSet.push({
+        for (let i of nameset) {
+          _this.bis_warehouseSet.push({
             text: i,
             value: i
           })
         }
         for (let i of statusset) {
-          _this.req_pur_statusSet.push({
+          _this.bis_statusSet.push({
             text: i,
             value: i
           })
         }
         for (let i of creatorset) {
-          _this.req_pur_creatorSet.push({
+          _this.bis_creatorSet.push({
             text: i,
             value: i
           })
@@ -252,11 +227,11 @@ export default {
     find () {
       this.pageTotal = 0
       this.tableDataNew = this.tableData.filter(data => !this.search ||
-        data.req_pur_iden.toLowerCase().includes(this.search.toLowerCase()) ||
-        data.req_pur_orga.toLowerCase().includes(this.search.toLowerCase()) ||
-        data.req_pur_type.toLowerCase().includes(this.search.toLowerCase()) ||
-        data.req_pur_from.toLowerCase().includes(this.search.toLowerCase()) ||
-        data.req_pur_creator.toLowerCase().includes(this.search.toLowerCase()))
+        data.bis_iden.toLowerCase().includes(this.search.toLowerCase()) ||
+        data.bis_orga.toLowerCase().includes(this.search.toLowerCase()) ||
+        data.bis_warehouse.toLowerCase().includes(this.search.toLowerCase()) ||
+        data.bis_supply.toLowerCase().includes(this.search.toLowerCase()) ||
+        data.bis_creator.toLowerCase().includes(this.search.toLowerCase()))
     },
     // 新增
     add () {
@@ -287,14 +262,14 @@ export default {
     handleEdit (index, row) {
       this.editform = row
       let _this = this
-      this.$nextTick(() => _this.$refs.Reqedit.getForm())
+      this.$nextTick(() => _this.$refs.poedit.getForm())
       this.editVisible = true
     },
     // 详情操作
     handleMore (index, row) {
       this.moreform = row
       let _this = this
-      this.$nextTick(() => _this.$refs.Reqmore.getForm())
+      this.$nextTick(() => _this.$refs.pomore.getForm())
       this.moreVisible = true
     },
     // 关闭操作
@@ -328,7 +303,7 @@ export default {
       this.query.pageSize = val
     },
     // 关闭窗口二次确认
-    closePcedit () {
+    closepoedit () {
       this.$confirm('确定要关闭吗？', '提示', {
         type: 'warning'
       })
@@ -379,14 +354,11 @@ export default {
     color: #00a854;
   }
 
-  .block {
-    color: grey;
-  }
-
   .input-search {
     width: 50%;
   }
   .button-plus {
     float: right;
+    margin-left: 30px;
   }
 </style>

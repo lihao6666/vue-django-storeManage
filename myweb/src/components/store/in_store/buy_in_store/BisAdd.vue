@@ -5,19 +5,23 @@
         <el-form-item label="库存组织">
           <el-tag
             :type="'success'"
-          >{{formadd.po_orga}}
+          >{{formadd.bis_orga}}
           </el-tag>
         </el-form-item>
-        <el-form-item label="供应商">
-          <el-select v-if="!formadd.po_contractFrom" v-model="formadd.po_supply" placeholder="请选择" :disabled="!ifchange">
-            <el-option v-for="item in form_po_supply" v-bind:key="item" :label="item" :value="item"></el-option>
+        <el-form-item label="仓库">
+          <el-select v-model="formadd.bis_warehouse" placeholder="请选择" :disabled="!ifchange">
+            <el-option v-for="item in form_bis_warehouse" v-bind:key="item" :label="item" :value="item"></el-option>
           </el-select>
-          <el-tag v-else :type="'success'">{{formadd.po_supply}}</el-tag>
         </el-form-item>
-        <el-form-item label="订单日期">
+        <el-form-item label="供应商">
+          <el-select v-model="formadd.bis_supply" placeholder="请选择" :disabled="!ifchange">
+            <el-option v-for="item in form_bis_supply" v-bind:key="item" :label="item" :value="item"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="入库日期">
           <el-col :span="11">
             <el-date-picker
-              v-model="formadd.po_date"
+              v-model="formadd.bis_date"
               type="datetime"
               placeholder="选择日期时间"
               align="right"
@@ -25,21 +29,9 @@
             </el-date-picker>
           </el-col>
         </el-form-item>
-        <el-form-item label="价税合计">
-          <el-tag
-            :type="'success'"
-          >{{formadd.po_sum}}
-          </el-tag>
-        </el-form-item>
-        <el-form-item label="来源合同">
-          <el-tag
-            :type="'success'"
-          >{{formadd.po_contractFrom}}
-          </el-tag>
-        </el-form-item>
         <el-row>
           <el-form-item label="备注">
-            <el-input type="textarea" v-model="formadd.po_remarks" rows="3" class="form-item-from" :disabled="!ifchange"
+            <el-input type="textarea" v-model="formadd.bis_remarks" rows="3" class="form-item-from" :disabled="!ifchange"
                       placeholder="请输入200字以内的描述" maxlength="200" show-word-limit clearable></el-input>
           </el-form-item>
           <el-button type="primary" class="form-item-save" v-if="ifchange">保 存</el-button>
@@ -51,9 +43,9 @@
 </template>
 
 <script>
-import Pood from './PurOrdOd'
+import Pood from './BisBd'
 export default {
-  name: 'po_add',
+  name: 'bis_add',
   props: ['editform', 'ifchange'],
   components: {
     Pood
@@ -83,15 +75,19 @@ export default {
         }]
       },
       formadd: {
-        po_iden: this.editform.po_iden,
-        po_orga: this.editform.po_orga,
-        po_contractFrom: this.editform.po_contractFrom,
-        po_supply: this.editform.po_supply,
-        po_remarks: this.editform.po_remarks,
-        po_date: this.editform.po_date,
-        po_sum: this.editform.po_sum
+        bis_iden: this.editform.bis_iden,
+        bis_orga: this.editform.bis_orga,
+        bis_warehouse: this.editform.bis_warehouse,
+        bis_supply: this.editform.bis_supply,
+        bis_remarks: this.editform.bis_remarks,
+        bis_date: this.editform.bis_date
       },
-      form_po_supply: [
+      form_bis_supply: [
+        '礼品',
+        '教学用品',
+        '销售商品'
+      ],
+      form_bis_warehouse: [
         '礼品',
         '教学用品',
         '销售商品'
@@ -100,13 +96,12 @@ export default {
   },
   methods: {
     getForm () {
-      this.formadd.po_iden = this.editform.po_iden
-      this.formadd.po_orga = this.editform.po_orga
-      this.formadd.po_contractFrom = this.editform.po_contractFrom
-      this.formadd.po_supply = this.editform.po_supply
-      this.formadd.po_remarks = this.editform.po_remarks
-      this.formadd.po_date = this.editform.po_date
-      this.formadd.po_sum = this.editform.po_sum
+      this.formadd.bis_iden = this.editform.bis_iden
+      this.formadd.bis_orga = this.editform.bis_orga
+      this.formadd.bis_warehouse = this.editform.bis_warehouse
+      this.formadd.bis_supply = this.editform.bis_supply
+      this.formadd.bis_remarks = this.editform.bis_remarks
+      this.formadd.bis_date = this.editform.bis_date
     }
   }
 }

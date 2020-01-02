@@ -20,7 +20,6 @@
         <el-button type="primary" icon="el-icon-plus" @click="handleAlter" class="alter-button">新增</el-button>
       </div>
       <el-table
-        max-height="580"
         :data="tableDataNew"
         class="table"
         ref="multipleTable"
@@ -93,7 +92,7 @@
           <el-row>
             <el-form-item label="编码" class="inputs" align="left">
               <el-col :span="10">
-                <el-input v-model="form.supply_iden" ></el-input>
+                <el-tag :type="'success'">{{form.supply_iden}}</el-tag>
               </el-col>
             </el-form-item>
           </el-row>
@@ -137,7 +136,7 @@
           <el-row>
             <el-form-item label="编码" class="inputs" align="left">
               <el-col :span="10">
-                <el-input v-model="editform.supply_iden" ></el-input>
+                <el-tag :type="'success'">{{editform.supply_iden}}</el-tag>
               </el-col>
             </el-form-item>
           </el-row>

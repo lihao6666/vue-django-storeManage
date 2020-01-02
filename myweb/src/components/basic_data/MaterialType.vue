@@ -20,7 +20,6 @@
         <el-button type="primary" icon="el-icon-plus" @click="handleAlter" class="alter-button">新增</el-button>
       </div>
       <el-table
-        max-height="580"
         :data="tableDataNew"
         class="table"
         ref="multipleTable"
@@ -80,9 +79,23 @@
       <div class="container">
         <el-form ref="form" :model="form" label-width="70px"  class="form" >
           <el-row>
+            <el-form-item label="分类" class="inputs" align="left">
+              <el-col :span="10">
+                <el-cascader :options="options" :props="{ expandTrigger: 'hover', checkStrictly: true  }" clearable @change="changeCascader">
+                  <template slot-scope="{ node, data }">
+                    <span>{{ data.label }}</span>
+                    <span v-if="!node.isLeaf"> ({{ data.children.length }}) </span>
+                  </template>
+                </el-cascader>
+              </el-col>
+            </el-form-item>
+          </el-row>
+          <el-row>
             <el-form-item label="编码" class="inputs" align="left">
               <el-col :span="10">
-                <el-input v-model="form.type_iden" ></el-input>
+                <el-input v-model="input_iden" @input="form.type_iden = option_iden + (input_iden = inputIden(input_iden))" >
+                  <template slot="prepend">{{option_iden}}</template>
+                </el-input>
               </el-col>
             </el-form-item>
           </el-row>
@@ -112,7 +125,9 @@
           <el-row>
             <el-form-item label="编码" class="inputs" align="left">
               <el-col :span="10">
-                <el-input v-model="editform.type_iden" ></el-input>
+                <el-input v-model="input_iden2" @input="editform.type_iden = option_iden2 + (input_iden2 = inputIden(input_iden2))">
+                  <template slot="prepend">{{option_iden2}}</template>
+                </el-input>
               </el-col>
             </el-form-item>
           </el-row>
@@ -143,6 +158,11 @@ export default {
   name: 'test',
   data () {
     return {
+      options: [],
+      option_iden: '',
+      option_iden2: '',
+      input_iden: '',
+      input_iden2: '',
       query: {
         pageIndex: 1,
         pageSize: 5
@@ -177,6 +197,7 @@ export default {
   },
   methods: {
     getData () {
+      this.getoptions()
       let _this = this
       postAPI('/material_type').then(function (res) {
         _this.tableData = res.data.list
@@ -212,6 +233,17 @@ export default {
       }
       return 'tableRowDisplay'
     },
+    // 选择分类
+    changeCascader (val) {
+      this.option_iden = val[val.length - 1]
+    },
+    // 编码校验
+    inputIden (val) {
+      if (val.length > 2) {
+        val = val.substring(0, 2)
+      }
+      return val
+    },
     // 表格下拉筛选
     filter (value, row, column) {
       const property = column['property']
@@ -223,6 +255,47 @@ export default {
     // 新增
     handleAlter () {
       this.alterVisible = true
+    },
+    // 获取级联选择器
+    optionsAdd (parent, child, length, end) {
+      if (length === end) {
+        parent.push({
+          value: child.type_iden,
+          label: child.type_name,
+          children: []
+        })
+        return
+      }
+      let pub = child.type_iden.substring(0, length)
+      for (let i in parent) {
+        if (parent[i].value === pub) {
+          this.optionsAdd(parent[i].children, child, length + 2, end)
+          return
+        }
+      }
+      parent.push({
+        value: child.type_iden,
+        label: child.type_name,
+        children: []
+      })
+    },
+    getoptions () {
+      let _this = this
+      postAPI('/material_type').then(function (res) {
+        let length = 2
+        while (res.data.list.length > 0) {
+          for (let i = 0; i < res.data.list.length; i++) {
+            if (res.data.list[i].type_iden.length === length) {
+              _this.optionsAdd(_this.options, res.data.list[i], 2, length)
+              res.data.list.splice(i, 1)
+              i -= 1
+            }
+          }
+          length += 2
+        }
+      }).catch(function (err) {
+        console.log(err)
+      })
     },
     // 一键清除新增表单
     clearform () {
@@ -264,6 +337,8 @@ export default {
       this.editform.type_remarks = row.type_remarks
       this.type_iden = row.type_iden
       this.editVisible = true
+      this.input_iden2 = this.editform.type_iden.substring(this.editform.type_iden.length - 2)
+      this.option_iden2 = this.editform.type_iden.substring(0, this.editform.type_iden.length - 2)
     },
     // 保存编辑
     saveEdit () {
