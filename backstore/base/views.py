@@ -56,7 +56,7 @@ class UserView(APIView):
 class UserNewView(APIView):
     def get(self, request):
         departments = models.Department.objects.filter(dpm_status=1).values_list('dpm_name', flat=True)
-        roles = models.Role.objects.filter(role_status=1).values_list('role_name', flat=True)
+        roles = models.Role.objects.filter(role_status=1).values_list('role', flat=True)
         areas = models.Area.objects.filter(area_status=1).values_list('area_name', flat=True)
         return Response({"departments": departments, "roles": roles, "areas": areas})
 
@@ -224,6 +224,8 @@ class RolesView(APIView):
         if roles:
             roles_serializer = RoleSerializer(roles, many=True)
             return Response({"roles": roles_serializer.data})
+        else:
+            return Response({"message": "未查询到信息"})
 
 
 class RoleAddView(APIView):
@@ -235,20 +237,20 @@ class RoleAddView(APIView):
 
     def post(self, request):
         json_data = json.loads(self.request.body.decode("utf-8"))
-        role_name = json_data['role_name']
+        role = json_data['role']
         role_power = json_data['role_power']
         role_description = json_data['role_description']
         role_status = json_data['role_status']
         role_creator = json_data['role_creator']
-        if self.nameCheck(role_name):
-            models.Role.objects.create(role_name=role_name, role_power=role_power, role_description=role_description,
+        if self.nameCheck(role):
+            models.Role.objects.create(role=role, role_power=role_power, role_description=role_description,
                                        role_status=role_status,
                                        role_creator=role_creator)
         return Response({'message': self.message, 'signal': self.signal})
 
     def nameCheck(self, name):
         try:
-            user = models.Role.objects.get(role_name=name)
+            user = models.Role.objects.get(role=name)
         except models.Role.DoesNotExist:
             return True
         else:
@@ -266,10 +268,12 @@ class RoleUpdateView(APIView):
     def post(self, request):
         json_data = json.loads(self.request.body.decode("utf-8"))
         role_power = json_data['role_power']
-        role_name = json_data['role_name']
+        role = json_data['role']
         role_status = json_data['role_status']
+        role_remarks = json_data['role_remarks']
         try:
-            models.Role.objects.filter(role_name=role_name).update(role_power=role_power, role_status=role_status)
+            models.Role.objects.filter(role=role).update(role_power=role_power, role_status=role_status,
+                                                                   role_remarks=role_remarks)
         except:
             self.message = "更新失败"
             self.signal = 1
@@ -413,11 +417,12 @@ class OrganizationUpdateView(APIView):
 
 
 """
-部门维护接口
+部门维护接口(暂时没有实现)
 - 查看部门详情业务
 - 部门添加
 - 部门信息修改
 """
+
 
 """
 品牌维护接口
@@ -516,7 +521,6 @@ class TotalWareHouseNewView(APIView):
         for area_name in areas_name:
             organization = models.Organization.objects.filter(area_name=area_name, orga_status=1).values_list(
                 'orga_name', flat=True)
-            print(organization)
             organizations[area_name] = organization
         return Response({"brands": brands, "organizations": organizations})
 
@@ -937,16 +941,17 @@ class MaterialNewView(APIView):
         material_types = models.MaterialType.objects.filter(type_status=1).values_list('type_iden', 'type_name')
         material_types = [list(material_type) for material_type in material_types]
         for i, material_type in enumerate(material_types):
-            material_iden = models.Material.objects.filter(material_type_iden=material_type[0]).aggregate(Max('material_iden'
-                                                                                                         ))[
-                'material_iden__max']
+            material_iden = \
+                models.Material.objects.filter(material_type_iden=material_type[0]).aggregate(Max('material_iden'
+                                                                                                  ))[
+                    'material_iden__max']
             material_types[i].append(material_iden)
 
         """
         计量单位包括量纲和计量单位名称
         """
         meterages = models.Meterage.objects.filter(meterage_status=1).values_list('meterage_dimension',
-                                                                              'meterage_iden', 'meterage_name')
+                                                                                  'meterage_iden', 'meterage_name')
         # 这里没有按照量纲再去区别
         return Response({"material_types": material_types, "meterages": meterages})
 

@@ -71,7 +71,7 @@ class Role(models.Model):
         (1, '启用')
     )
     id = models.AutoField(primary_key=True)
-    role_name = models.CharField(max_length=15, unique=True, verbose_name='角色名称')
+    role= models.CharField(max_length=15, unique=True, verbose_name='角色名称')
     role_status = models.IntegerField(choices=ROLE_STATUS_CHOICES, default=1, verbose_name='角色状态')
     role_power = models.CharField(max_length=60, verbose_name='角色权限', null=True)
     role_description = models.TextField(max_length=400, verbose_name='角色描述', null=True)

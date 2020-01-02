@@ -15,9 +15,10 @@ class PurchaseRequest(models.Model):
     )
     id = models.AutoField(primary_key=True)
     pr_iden = models.CharField(max_length=15, verbose_name='请购单编号')
-    origanization = models.ForeignKey('base.Origanization', related_name='orga_pr', verbose_name='组织',
-                                      on_delete=models.CASCADE)
-    material_type = models.ForeignKey('base.MaterialType', verbose_name='物料类别', on_delete=models.CASCADE)
+    organization = models.ForeignKey('base.Organization', related_name='orga_pr', verbose_name='组织',
+                                     on_delete=models.CASCADE)
+    pr_need_type = models.CharField(max_length=20, verbose_name='需求类型')
+    # material_type = models.ForeignKey('base.MaterialType', verbose_name='物料类别', on_delete=models.CASCADE)
     pr_department = models.CharField(max_length=20, verbose_name='请购部门')
     pr_date = models.DateTimeField(auto_now_add=True, verbose_name='请购日期')
     pr_remarks = models.TextField(max_length=400, verbose_name='请购备注')
@@ -32,7 +33,7 @@ class PurchaseRequest(models.Model):
         verbose_name = "请购单"
 
     def __str__(self):
-        return self.rp_iden
+        return self.pr_iden
 
 
 class PrDetail(models.Model):
@@ -111,7 +112,6 @@ class CdDetail(models.Model):
     cd_rp_iden = models.CharField(max_length=15, verbose_name='请购单编号')
     cd_rpd_remarks = models.TextField(max_length=400, verbose_name='物料备注')
     cd_used = models.IntegerField(choices=CD_USE_STATUS_CHOICES, verbose_name='明细单是否使用')
-
 
     class Meta:
         verbose_name = "合同物料明细"
@@ -293,6 +293,7 @@ class BisDetail(models.Model):
     bd_sum = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='无税总额')
     po_iden = models.CharField(max_length=15, verbose_name='采购订单号')
     pr_iden = models.CharField(max_length=15, verbose_name='请购订单号')
+
     # bd_remarks = models.TextField(max_length=200, verbose_name='采购入库单明细备注')
 
     class Meta:
@@ -317,7 +318,7 @@ class OtherSi(models.Model):
                                      on_delete=models.CASCADE)
     transfer = models.OneToOneField('Transfer', verbose_name='转库单', on_delete=models.CASCADE)  # 如果不行保存为转库单iden
     inventory = models.OneToOneField('Inventory', verbose_name='库存盘点单', on_delete=models.CASCADE)  # 同上
-    osi_house = models.CharField(max_length=15,verbose_name='其它入库仓库编号')
+    osi_house = models.CharField(max_length=15, verbose_name='其它入库仓库编号')
 
     osi_type = models.IntegerField(choices=OSI_TYPE_CHOICES, verbose_name='其它入库单类型')
     osi_date = models.DateField(auto_now_add=True, verbose_name='其它出库日期')
@@ -339,13 +340,13 @@ class OsiDetail(models.Model):
     其它入库单明细
     """
     id = models.AutoField(primary_key=True)
-    other_si = models.ForeignKey('OtherSi',verbose_name='其它入库单',related_name='osi_osid',on_delete=models.CASCADE)
+    other_si = models.ForeignKey('OtherSi', verbose_name='其它入库单', related_name='osi_osid', on_delete=models.CASCADE)
     material = models.ForeignKey('base.Material', verbose_name='物料', related_name='material_osid',
                                  on_delete=models.CASCADE)
     osid_paper_num = models.IntegerField(verbose_name='应收数量')
     osid_real_num = models.IntegerField(verbose_name='实收数量')
-    osid_price = models.DecimalField(max_digits=10,decimal_places=2,verbose_name='无税单价')
-    osid_sum = models.DecimalField(max_digits=10,decimal_places=2,verbose_name='无税总额')
+    osid_price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='无税单价')
+    osid_sum = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='无税总额')
 
 
 class MaterialSo(models.Model):
