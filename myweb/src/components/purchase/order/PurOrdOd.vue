@@ -209,7 +209,7 @@ export default {
         return
       }
       let _this = this
-      postAPI('/po_od', this.formadd).then(function (res) {
+      postAPI('/purchase/po_od', this.formadd).then(function (res) {
         _this.tableData = res.data.list
         _this.find()
         let nameset = new Set()

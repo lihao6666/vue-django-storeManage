@@ -119,7 +119,7 @@ export default {
   methods: {
     getData () {
       let _this = this
-      postAPI('/po_od_add_rp', this.formadd.po_orga).then(function (res) {
+      postAPI('/purchase/po_od_add_rp', this.formadd.po_orga).then(function (res) {
         _this.tableData = res.data.list
         _this.find()
         let nameset = new Set()
