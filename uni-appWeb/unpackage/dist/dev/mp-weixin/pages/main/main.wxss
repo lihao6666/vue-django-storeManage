@@ -35,5 +35,27 @@ view {
 	        align-items: center;
 	text-align: left;
 }
-
+.button-box {
+	display: -webkit-box;
+	display: -webkit-flex;
+	display: flex;
+	-webkit-box-pack: justify;
+	-webkit-justify-content: space-between;
+	        justify-content: space-between;
+	padding-top: 40rpx;
+}
+.delete {
+	width: 60rpx;
+	color: red;
+}
+.edit {
+	width: 60rpx;
+}
+.detail {
+	width: 60rpx;
+}
+.commit {
+	width: 60rpx;
+	color: green;
+}
 
