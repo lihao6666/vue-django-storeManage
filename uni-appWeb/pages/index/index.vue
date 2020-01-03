@@ -1,226 +1,242 @@
 <template>
-	<view class="container999" @touchstart="refreshStart" @touchmove="refreshMove" @touchend="refreshEnd">
-		<!-- 刷新组件需搭配scroll-view使用，并在pages.json中添加 "disableScroll":true-->
-		<refresh ref="refresh" @isRefresh='isRefresh'></refresh>
-		<view class='nav'>
-			<!-- #ifdef H5 -->
-				<view style="height: 44px;width: 100%;"></view> <!-- 边距盒子 -->
-			<!-- #endif -->
-			<!-- 搜索 -->
-			<view class='searchInput999'>
-				<view class='searchBox999'>
-					<icon type="search" size="16"></icon>
-				</view>
-				<input class='input999' placeholder="输入教学用品"></input>
-			</view>
-			<!-- 导航栏 agents导航栏标题 -->
-			<navTab ref="navTab" :tabTitle="tabTitle" @changeTab='changeTab'></navTab>
+    <view class="content">
+		<view class="learning-center">
+							<text class="learning-center-title">学习中心</text>
+								<view style="width: 80%; margin: auto; margin-bottom: 20px;">
+								        <xfl-select 
+								            :list="list1"
+								            :clearable="false"
+								            :showItemNum="5" 
+								            :listShow="true"
+								            :isCanInput="true"  
+								            :style_Container="'height: 50px; font-size: 16px;'"
+								            :placeholder = "'请选择学习中心'"
+								            :initValue="''"
+								            :selectHideType="'hideAll'"
+								        >
+								        </xfl-select>
+								</view>
+							</text>
 		</view>
-		<!-- swiper切换 swiper-item表示一页 scroll-view表示滚动视窗 -->
-		<swiper style="min-height: 100vh;" :current="currentTab" @change="swiperTab">
-			<swiper-item v-for="(listItem,listIndex) in list" :key="listIndex">
-				<scroll-view style="height: 100%;" scroll-y="true" @scrolltolower="lower1" scroll-with-animation :scroll-into-view="toView">
-					<view style="width: 100%;height: 153upx;"></view> <!-- 边距盒子 -->
-					<view class='content'>
-						<view class='card' @tap="detail" v-for="(item,index) in listItem" v-if="listItem.length > 0" :key="index">
-							<!-- <navigator url="./cart" hover-class="navigator-hover"> -->
-							<text class="test">{{item}}</text>
-						</view>
-					</view>
-					<view class='noCard' v-if="listItem.length===0">
-						暂无信息
-					</view>
-					<view style="width: 100%;height: 100upx;opacity:0;">底部占位盒子</view>
-				</scroll-view>
-			</swiper-item>
-		</swiper>
-	</view>
+		<view class="content-control">
+			<uni-segmented-control :current="current" :values="items" @clickItem="onClickItem" style-type="button" active-color="#0faeff"></uni-segmented-control>
+		</view>
+		<view class="current-content">
+			<view v-if="current === 0">
+				<view v-for="item in engList" :key="item.id" class="card-set">
+					<uni-card
+					    :title="item.total_iden" 
+					    mode="basic" 
+					    :is-shadow="true" 
+					>
+							<view>仓库编号：{{ item.stock_iden}}</view>
+							<view>物料名称：{{ item.total_name}}</view>
+							<view>规格：{{ item.total_specification }}</view>
+							<view>类型：{{ item.total_model }}</view>
+							<view>单位：{{ item.total_meterage }}</view>
+							<view>存货属性：{{ item.total_attr }}</view>
+						    <view>现存量：{{ item.total_present_num }}</view>
+					</uni-card>
+				</view>
+				<view>
+					<drag-button
+						:isDock="true"
+						:existTabBar="true"
+						@btnClick="newOrder(current)">
+					</drag-button>
+				</view>
+			</view>
+			<view v-if="current === 1">
+				<view v-for="item in tecList" :key="item.id" class="card-set">
+					<uni-card
+					    :title="item.total_iden" 
+					    mode="basic" 
+					    :is-shadow="true" 
+					>
+							<view>仓库编号：{{ item.stock_iden}}</view>
+							<view>物料名称：{{ item.total_name}}</view>
+							<view>规格：{{ item.total_specification }}</view>
+							<view>类型：{{ item.total_model }}</view>
+							<view>单位：{{ item.total_meterage }}</view>
+							<view>存货属性：{{ item.total_attr }}</view>
+						    <view>现存量：{{ item.total_present_num }}</view>
+					</uni-card>
+				</view>
+				<view>
+					<drag-button
+						:isDock="true"
+						:existTabBar="true"
+						@btnClick="newOrder(current)">
+					</drag-button>
+				</view>
+			</view>
+			<view v-if="current === 2">
+				<view v-for="item in artList" :key="item.id" class="card-set">
+					<uni-card
+					    :title="item.total_iden" 
+					    mode="basic" 
+					    :is-shadow="true" 
+					>
+							<view>仓库编号：{{ item.stock_iden}}</view>
+							<view>物料名称：{{ item.total_name}}</view>
+							<view>规格：{{ item.total_specification }}</view>
+							<view>类型：{{ item.total_model }}</view>
+							<view>单位：{{ item.total_meterage }}</view>
+							<view>存货属性：{{ item.total_attr }}</view>
+						    <view>现存量：{{ item.total_present_num }}</view>
+					</uni-card>
+				</view>
+				<view>
+					<drag-button
+						:isDock="true"
+						:existTabBar="true"
+						@btnClick="newOrder(current)">
+					</drag-button>
+				</view>
+			</view>
+			<view v-if="current === 3">
+				<view v-for="item in spoList" :key="item.id" class="card-set">
+					<uni-card
+					    :title="item.total_iden" 
+					    mode="basic" 
+					    :is-shadow="true" 
+					>
+							<view>仓库编号：{{ item.stock_iden}}</view>
+							<view>物料名称：{{ item.total_name}}</view>
+							<view>规格：{{ item.total_specification }}</view>
+							<view>类型：{{ item.total_model }}</view>
+							<view>单位：{{ item.total_meterage }}</view>
+							<view>存货属性：{{ item.total_attr }}</view>
+						    <view>现存量：{{ item.total_present_num }}</view>
+					</uni-card>
+				</view>>
+				<view>
+					<drag-button
+						:isDock="true"
+						:existTabBar="true"
+						@btnClick="newOrder(current)">
+					</drag-button>
+				</view>
+			</view>
+		</view>
+    </view>
 </template>
 
 <script>
-const util = require('../../util/util.js');
-import refresh from '../../components/refresh.vue';
-import navTab from '../../components/navTab.vue';
+import xflSelect from '../../components/xfl-select/xfl-select.vue';
+import uniSegmentedControl from '../../components/uni-segmented-control/uni-segmented-control.vue'
+import uniCard from '../../components/uni-card/uni-card.vue'
+import dragButton from '../../components/drag-button/drag-button.vue'
+import cmdIcon from "../../components/cmd-icon/cmd-icon.vue"
+import engData from '../../data/English.js'
+import tecData from '../../data/technology.js'
+import artData from '../../data/art.js'
+import spoData from '../../data/sports.js'
 
 export default {
-	components: {refresh,navTab},
+	components: {
+		xflSelect,
+		uniSegmentedControl,
+		uniCard,
+		dragButton,
+		cmdIcon
+	},
 	data() {
 		return {
-			currentPage:'index',
-			toView:'',//回到顶部id
-			tabTitle:['英语','科技','艺术','体育'], //导航栏格式 --导航栏组件
-			currentTab: 0, //sweiper所在页
-			pages:[1,1,1,1], //第几个swiper的第几页
-			list:[
-				[1, 2, 3, 4, 5, 6],
-				[1, 2, 3, 4, 5, 6],
-				[1, 2, 3, 4, 5, 6],
-				[1, 2, 3, 4, 5, 6]
-				] //数据格式
-		};
-	},
-	onLoad(e) {
-		
-	},
-	onShow() {},
-	onHide() {},
-	methods: {
-		detail:function(e){
-			let listIndex = e.currentTarget.dataset.listIndex;
-			let index = e.currentTarget.dataset.index;
-			uni.navigateTo({
-				url: '../detail/detail?listIndex = listInddex & index = index',
-				success: res => {},
-				fail: () => {},
-				complete: () => {}
-			});	
-		},
-		changeTab(index){
-			this.currentTab = index;
-		},
-		// 其他请求事件 当然刷新和其他请求可以写一起 多一层判断。
-		isRequest() {
-			return new Promise((resolve, reject) => {
-				this.pages[this.currentTab]++
-				var that = this
-				setTimeout(() => {
-					uni.hideLoading()
-					uni.showToast({
-						icon: 'none',
-						title: `请求第${that.currentTab + 1 }个导航栏的第${that.pages[that.currentTab]}页数据成功`
-					})
-					let newData = ['新数据1','新数据2','新数据3']
-					resolve(newData)
-				}, 1000)
-			})
-		},
-		// swiper 滑动
-		swiperTab: function(e) {
-			var index = e.detail.current //获取索引
-			this.$refs.navTab.longClick(index);
-		},
-		// 加载更多 util.throttle为防抖函数
-		lower1: util.throttle(function(e) {
-		console.log(`加载${this.currentTab}`)//currentTab表示当前所在页数 根据当前所在页数发起请求并带上page页数
-		uni.showLoading({
-			title: '加载中',
-			mask:true
-		})
-			this.isRequest().then((res)=>{
-				let tempList = this.list
-				tempList[this.currentTab] = tempList[this.currentTab].concat(res)
-				console.log(tempList)
-				this.list = tempList
-				this.$forceUpdate() //二维数组，开启强制渲染
-			})
-		}, 300),
-		// 刷新touch监听
-		refreshStart(e) {
-			this.$refs.refresh.refreshStart(e);
-		},
-		refreshMove(e){
-			this.$refs.refresh.refreshMove(e);
-		},
-		refreshEnd(e) {
-			this.$refs.refresh.refreshEnd(e);
-		},
-		isRefresh(){
-				setTimeout(() => {
-					uni.showToast({
-						icon: 'success',
-						title: '刷新成功'
-					})
-					this.$refs.refresh.endAfter() //刷新结束调用
-				}, 1000)
+			items: ['英语','科技','艺术','体育'],
+			list1: [
+					'安高中心',
+					'财富中心',
+					'稻香路中心',
+					'习友路中心'
+					],
+			current: 0,
+			//将data文件夹中的数据读入
+			engList: engData.data,
+			tecList: tecData.data,
+			artList: artData.data,
+			spoList: spoData.data,
 		}
+	},
+	methods: {
+		//切换tab
+		onClickItem(e) {
+			if (this.current !== e.currentIndex) {
+				this.current = e.currentIndex;
+			}
+		},
 	}
-};
+	
+	// onLoad: function() {   //登录检查函数
+	// 	loginMsg = this.checkLogin('../pages/main/main', 'switchTab');
+	// 	if(!loginMsg){
+	// 		return;
+	// 	}
+	// }
+}
+
 </script>
 
-<style lang="scss">
-	.container999 {
-	  width: 100vw;
-	  font-size: 28upx;
-	  min-height: 100vh;
-	  overflow: hidden;
-	  color: #6B8082;
-	  position: relative;
-	  background-color: #f6f6f6;
-	}
-	.content {
-		width: 100%;
-		padding: 0;
-	}
-	.test{
-		font-size: 10rpx;
-	}
-	.card {
-		width: 90%;
-		height: 200rpx;
-		background-color: white;
-		margin: 30rpx auto 0;
-		
-		background: #FFFFFF;
-		box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.10);
-		border-radius: 5px;
-		position: relative;
-	}
-	
-	.noCard {
-		width: 90%;
-		height: 200upx;
-		margin: auto;
-		background-color: white;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		color: #999999;
-		box-shadow: 0 0 10upx 0 rgba(0, 0, 0, 0.10);
-		border-radius: 10upx;
-	}
-	
-	
-	.nav {
-		position: fixed;
-		left: 0;
-		top: 0;
-		color: white;
-		width: 100%;
+<style>
+	page {
 		display: flex;
 		flex-direction: column;
-		align-items: flex-start;
-		justify-content: flex-start;
-		font-size: 24upx;
-		background-color: #0faeff;
-		z-index: 996;
+		box-sizing: border-box;
+		background-color: #efeff4;
+		min-height: 100%;
+		height: auto;
 	}
-	
-	.searchInput999 {
-		width: 90%;
-		margin: 0 auto;
-		background: white;
-		border-radius: 30upx;
-		display: flex;
-		align-items: center;
+	view {
+		font-size: 28rpx;
+		line-height: inherit;
+	}
+	.content {
+		padding: 0;
+	}
+	.tabs {
+		padding: 0;
+	}
+	.learning-center {
+				display: flex;
+				align-items: center;
+				position: relative;
+				padding: 0 30upx;
+				height: 100upx;
+				background: #fff;
+				border-bottom:1upx solid #F8F8F8;
+			}
+			.learning-center-title {
+				flex-shrink: 0;
+				width: 200rpx;
+				font-size: 16px;
+				color:#606266;
+			}
+	.content-control {
+		padding: 5upx;
+		width: auto;
+	}
+	.current-content {
 		justify-content: center;
-		height: 56upx;
-	}
-	
-	.search999 {
-		width: 32upx;
-		height: 32upx;
-	}
-	
-	.searchBox999 {
-		width: 56upx;
-		height: 56upx;
-		display: flex;
-		justify-content: center;
 		align-items: center;
+		text-align: left;
 	}
-	
-	.input999 {
-		color: #999;
-		width: 90%;
+	.button-box {
+		display: flex;
+		justify-content: space-between;
+		padding-top: 40upx;
+	}
+	.delete {
+		width: 60upx;
+		color: red;
+	}
+	.edit {
+		width: 60upx;
+	}
+	.detail {
+		width: 60upx;
+	}
+	.commit {
+		width: 60upx;
+		color: green;
 	}
 </style>
