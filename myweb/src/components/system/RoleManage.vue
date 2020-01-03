@@ -182,7 +182,7 @@ export default {
       let _this = this
       console.log(getAPI('/base/roles'))
       getAPI('/base/roles').then(function (res) {
-        if (res.data.roles) {
+        if (!res.data.roles) {
           return
         }
         _this.tableData = res.data.roles
@@ -259,7 +259,7 @@ export default {
             if (res.data.signal === 0) {
               _this.$message.success(`停用成功`)
             } else {
-              _this.$message.error(`停用失败`)
+              _this.$message.error(res.data.message)
               row.user_status = '启用'
             }
           }).catch(function (err) {
@@ -288,7 +288,7 @@ export default {
             if (res.data.signal === 0) {
               _this.$message.success(`启用`)
             } else {
-              _this.$message.error(`启用失败`)
+              _this.$message.error(res.data.message)
               row.user_status = '停用'
             }
           }).catch(function (err) {
@@ -317,18 +317,13 @@ export default {
         this.$message.error(`请填写完信息`)
         return
       }
-      let data = {
-        'role': this.editform.role,
-        'role_description': this.editform.role_description,
-        'role_status': this.editform.role_status
-      }
       let _this = this
-      postAPI('/base/roleUpdate', data).then(function (res) {
+      postAPI('/base/roleUpdate', this.editform).then(function (res) {
         if (res.data.signal === 0) {
           _this.$message.success(`修改成功`)
           _this.editVisible = false
         } else {
-          _this.$message.error(`修改失败`)
+          _this.$message.error(res.data.message)
         }
       }).catch(function (err) {
         console.log(err)
@@ -341,22 +336,23 @@ export default {
         this.$message.error(`请填写完信息`)
         return
       }
-      let creator = localStorage.getItem('ms_username')
       let data = {
         'role': this.form.role,
         'role_power': '',
         'role_description': this.form.role_description,
-        'role_status': '停用',
-        'role_creator': creator
+        'role_status': '禁用',
+        'role_creator': 'yq'
       }
+      console.log(data)
       let _this = this
       postAPI('/base/roleAdd', data).then(function (res) {
         if (res.data.signal === 0) {
           _this.$message.success(`新增成功`)
           _this.alterVisible = false
           _this.clearform()
+          _this.getData()
         } else {
-          _this.$message.error(`新增失败`)
+          _this.$message.error(res.data.message)
         }
       }).catch(function (err) {
         console.log(err)
