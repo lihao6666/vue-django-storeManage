@@ -84,7 +84,7 @@
     </div>
 
     <!-- 新增弹出框 -->
-    <el-dialog title="新增" :visible.sync="alterVisible" width="35%" >
+    <el-dialog title="新增" :visible.sync="alterVisible" width="35%" :close-on-click-modal="false">
       <div class="container">
         <el-form ref="form" :model="form" label-width="70px"  class="form" >
           <el-row>
@@ -113,7 +113,7 @@
     </el-dialog>
 
     <!-- 编辑弹出框 -->
-    <el-dialog title="编辑" :visible.sync="editVisible" width="35%">
+    <el-dialog title="编辑" :visible.sync="editVisible" width="35%" :close-on-click-modal="false">
       <div class="container">
         <el-form ref="form" :model="editform" label-width="70px">
           <el-row>
