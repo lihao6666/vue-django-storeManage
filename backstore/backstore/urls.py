@@ -21,5 +21,7 @@ urlpatterns = [
     #    path('admin/', admin.site.urls),
     path('base/', include(('base.urls','base'), namespace='base')),
     path('purchase/', include(('purchase.urls','purchase'), namespace='purchase')),
+    path('storeManage/', include(('storeManage.urls','storeManage'), namespace='storeManage')),
+
     path('jwt-token-auth/', obtain_jwt_token)
 ]

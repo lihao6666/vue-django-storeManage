@@ -77,16 +77,16 @@ class CenterSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
-class CenterWareHouseSerializer(serializers.ModelSerializer):
-    area_name = serializers.CharField(source='organization.area_name')
-    orga_name = serializers.CharField(source='organization.orga_name')
-    center_name = serializers.CharField(source='center.center_name')
-
-    class Meta:
-        model = models.CenterWareHouse
-        fields = ('id', 'center_wh_iden', 'center_wh_name', 'area_name', 'orga_name', 'center_name',
-                  'brand_name', 'center_wh_status', 'center_wh_remarks', 'center_wh_creator', 'center_wh_createDate'
-                  )
+# class CenterWareHouseSerializer(serializers.ModelSerializer):
+#     area_name = serializers.CharField(source='organization.area_name')
+#     orga_name = serializers.CharField(source='organization.orga_name')
+#     center_name = serializers.CharField(source='center.center_name')
+#
+#     class Meta:
+#         model = models.CenterWareHouse
+#         fields = ('id', 'center_wh_iden', 'center_wh_name', 'area_name', 'orga_name', 'center_name',
+#                   'brand_name', 'center_wh_status', 'center_wh_remarks', 'center_wh_creator', 'center_wh_createDate'
+#                   )
 
 
 class MeterageSerializer(serializers.ModelSerializer):
