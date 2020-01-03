@@ -182,6 +182,9 @@ export default {
       let _this = this
       console.log(getAPI('/base/roles'))
       getAPI('/base/roles').then(function (res) {
+        if (res.data.roles) {
+          return
+        }
         _this.tableData = res.data.roles
         _this.tableDataNew = _this.tableData
         console.log(res.data)
