@@ -174,7 +174,7 @@ export default {
   methods: {
     getData () {
       let _this = this
-      postAPI('/po_check').then(function (res) {
+      postAPI('/base/po_check').then(function (res) {
         _this.tableData = res.data.list
         _this.find()
         let orgaset = new Set()
