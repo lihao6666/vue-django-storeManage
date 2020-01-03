@@ -22,7 +22,6 @@
         </el-input>
       </div>
       <el-table
-        max-height="580"
         :data="tableDataNew"
         class="table"
         ref="multipleTable"

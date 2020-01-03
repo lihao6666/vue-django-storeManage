@@ -1,108 +1,118 @@
-// 导入axios
-import axios from 'axios'
-// 使用element-ui Message做消息提醒
-import {Message} from 'element-ui'
-// 1. 创建新的axios实例，
-const service = axios.create({
-  // 公共接口--这里注意后面会讲
-  // baseURL: process.env.BASE_API,
-  // 超时时间 单位是ms，这里设置了3s的超时时间
-  timeout: 3 * 1000
-})
-// 2.请求拦截器
-service.interceptors.request.use(config => {
-  // 发请求前做的一些处理，数据转化，配置请求头，设置token,设置loading等
-  // const token = getCookie('名称');注意使用的时候需要引入cookie方法，推荐js-cookie
-  config.data = JSON.stringify(config.data)
-  config.headers = {
-    'Content-Type': 'application/x-www-form-urlencoded'
-  }
-  // if(token){
-  //   config.params = {'token':token}
-  // }
-  // if (config.url === '...') {
-  //   config.headers = {
-  //     'Content-Type': 'application/json'
-  //   }
-  // } else {
-  //   let token = '123456'
-  //   if (token) {
-  //     config.headers = {
-  //       'Authorization': 'Bearer ' + token,
-  //       'Content-Type': 'application/json'
-  //     }
-  //   }
-  // }
-  // config.url = config.url + '?random=' + new Date().getTime()
+import axios from 'axios' // 引用axios
+import {MessageBox, Message} from 'element-ui'
+import Qs from 'qs' // 引入数据格式化
+import router from '@/router'
+// axios 配置
+axios.defaults.timeout = 50000 // 设置接口响应时间
+// axios.defaults.baseURL = 'https://easy-mock.com/mock/' // 这是调用数据接口,公共接口url+调用接口名
+let httpUrl = window.location.host
+if (httpUrl.indexOf('.com') !== -1) {
+  console.log('生产环境', httpUrl)
+} else if (httpUrl.indexOf('.net') !== -1) {
+  console.log('测试环境', httpUrl)
+  axios.defaults.baseURL = 'http://www.test.com' // 这是调用数据接口,公共接口url+调用接口名
+} else if (httpUrl.indexOf('localhost:8088') !== -1) {
+  console.log('指定开发环境', httpUrl)
+  axios.defaults.baseURL = 'http://localhost:8088/'
+} else {
+  console.log('开发环境', httpUrl)
+  axios.defaults.baseURL = 'http://localhost:8090/' // 这是调用数据接口,公共接口url+调用接口名
+}
+axios.defaults.withCredentials = true
 
-  return config
-}, error => {
-  Promise.reject(error)
-})
-
-// 3.响应拦截器
-service.interceptors.response.use(response => {
-  // 接收到响应数据并成功后的一些共有的处理，关闭loading等
-
-  return response
-}, error => {
-  /** *** 接收到异常响应的处理开始 *****/
-  if (error && error.response) {
-    // 1.公共错误处理
-    // 2.根据响应码具体处理
-    switch (error.response.status) {
-      case 400:
-        error.message = '错误请求'
-        break
-      case 401:
-        error.message = '未授权，请重新登录'
-        break
-      case 403:
-        error.message = '拒绝访问'
-        break
-      case 404:
-        error.message = '请求错误,未找到该资源'
-        window.location.href = '/NotFound'
-        break
-      case 405:
-        error.message = '请求方法未允许'
-        break
-      case 408:
-        error.message = '请求超时'
-        break
-      case 500:
-        error.message = '服务器端出错'
-        break
-      case 501:
-        error.message = '网络未实现'
-        break
-      case 502:
-        error.message = '网络错误'
-        break
-      case 503:
-        error.message = '服务不可用'
-        break
-      case 504:
-        error.message = '网络超时'
-        break
-      case 505:
-        error.message = 'http版本不支持该请求'
-        break
-      default:
-        error.message = `连接错误${error.response.status}`
+// http request 拦截器，通过这个，我们就可以把Cookie传到后台
+axios.interceptors.request.use(
+  config => {
+    console.log('请求路径', config.url)
+    if (config.url === '/b/login/checkLogin') {
+      config.headers = {
+        'Content-Type': 'application/x-www-form-urlencoded' // 设置跨域头部
+      }
+      config.data = Qs.stringify(config.data)
+    } else if (config.url === '/b/carModel/createCarModelVersion') {
+      // 此处设置文件上传，配置单独请求头
+      config.headers = {
+        'Content-Type': 'multipart/form-data'
+      }
+    } else {
+      let username = localStorage.getItem('ms_username')
+      if (username === null) {
+        return null
+      }
+      let bToken = localStorage.getItem('btoken')
+      if (bToken === null) {
+      } else {
+        config.data.vwToken = bToken
+      }
+      config.headers = {
+        'Content-Type': 'application/x-www-form-urlencoded' // 设置跨域头部
+      }
+      config.data = Qs.stringify(config.data)
     }
-  } else {
-    // 超时处理
-    if (JSON.stringify(error).includes('timeout')) {
-      Message.error('服务器响应超时，请刷新当前页')
-    }
-    error.message('连接服务器失败')
+    return config
+  },
+  err => {
+    return Promise.reject(err)
   }
-
-  Message.error(error.message)
-  /** *** 处理结束 *****/
-  // 如果不需要错误处理，以上的处理过程都可省略
-  return Promise.resolve(error.response)
-})
-// 4.导入文件
-export default service
+)
+// http response 拦截器
+axios.interceptors.response.use(
+  response => {
+    // console.log('请求拦截返回参数', response)
+    if (response.status === 200) {
+      // 成功
+      let returnCode = response.data.code
+      if (returnCode > 10000 && returnCode < 20000) {
+        // console.log('成功', response)
+        Message.success(response.data.msg)
+      } else if (returnCode >= 20000 && returnCode < 30000) {
+        // 只弹窗，不操作
+        // console.log('失败1', response)
+        Message.error(response.data.msg)
+      } else if (returnCode >= 30000 && returnCode < 40000) {
+        // 只弹窗，点击跳到登入页
+        localStorage.removeItem('ms_username')
+        MessageBox.confirm(response.data.msg, '确定登出', {
+          confirmButtonText: '重新登录',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          // console.log('此处应退出登录  重新实例化')
+          router.push({path: '/login'})
+        })
+      }
+    }
+    return response
+  },
+  error => {
+    // console.log('error', error.toString())
+    if (
+      error.toString().trim() ===
+      "TypeError: Cannot read property 'cancelToken' of null"
+    ) {
+      localStorage.removeItem('ms_username')
+      MessageBox.confirm(
+        '会话凭证失效，可以取消继续留在该页面，或者重新登录',
+        '确定登出',
+        {
+          confirmButtonText: '重新登录',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }
+      ).then(() => {
+        //  console.log('此处应退出登录  重新实例化')
+        router.push({path: '/login'})
+      })
+    }
+    // console.log(error.toString().trim())
+    if (error.toString().trim() === 'Error: Network Error') {
+      MessageBox.alert('网络请求异常，请稍后重试', '出错了', {
+        confirmButtonText: '确定',
+        callback: action => {
+        }
+      })
+    }
+    return Promise.reject(error.response.data)
+  }
+)
+export default axios

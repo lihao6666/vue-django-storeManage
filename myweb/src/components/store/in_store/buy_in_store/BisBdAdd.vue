@@ -9,8 +9,8 @@
     </div>
     <div class="container">
       <div class="handle-box">
-        <el-select v-model="formadd.po_orga" placeholder="请选择库存组织" :disabled="ifhasorga">
-          <el-option v-for="item in form_po_orga" v-bind:key="item" :label="item" :value="item"></el-option>
+        <el-select v-model="formadd.bis_orga" placeholder="请选择库存组织" :disabled="ifhasorga">
+          <el-option v-for="item in form_bis_orga" v-bind:key="item" :label="item" :value="item"></el-option>
         </el-select>
         <el-input
           placeholder="关键字搜索"
@@ -42,28 +42,28 @@
           <template slot-scope="props">
             <el-form label-position="left" inline class="demo-table-expand">
               <el-form-item label="备注">
-                <span>{{props.row.od_prd_remarks}}</span>
+                <span>{{props.row.bd_remarks}}</span>
               </el-form-item>
             </el-form>
           </template>
         </el-table-column>
-        <el-table-column prop="od_iden" sortable label="物料编码" :filters="od_idenSet"
+        <el-table-column prop="bd_iden" sortable label="物料编码" :filters="bd_idenSet"
+      :filter-method="filter"  align="center"></el-table-column>
+        <el-table-column prop="bd_name" sortable label="物料名称" :filters="bd_nameSet"
       :filter-method="filter" align="center"></el-table-column>
-        <el-table-column prop="od_name" sortable label="物料名称" :filters="od_nameSet"
+        <el-table-column prop="bd_specification" sortable label="规格" :filters="bd_specificationSet"
       :filter-method="filter" align="center"></el-table-column>
-        <el-table-column prop="od_specification" sortable label="规格" :filters="od_specificationSet"
+        <el-table-column prop="bd_model" sortable label="型号" :filters="bd_modelSet"
       :filter-method="filter" align="center"></el-table-column>
-        <el-table-column prop="od_model" sortable label="型号" :filters="od_modelSet"
+        <el-table-column prop="bd_meterage" sortable label="单位" :filters="bd_meterageSet"
       :filter-method="filter" align="center"></el-table-column>
-        <el-table-column prop="od_meterage" sortable label="单位" :filters="od_meterageSet"
+        <el-table-column prop="bd_num" sortable label="数量" align="center"></el-table-column>
+        <el-table-column prop="bd_unitPrice" sortable label="无税单价" align="center"></el-table-column>
+        <el-table-column prop="bd_rp_iden" sortable label="请购单号" :filters="bd_rp_idenSet"
       :filter-method="filter" align="center"></el-table-column>
-        <el-table-column prop="od_prd_num" sortable label="申请数量" align="center"></el-table-column>
-        <el-table-column prop="od_present_num" sortable label="现存量" align="center"></el-table-column>
-        <el-table-column prop="od_rp_iden" sortable label="请购单号" :filters="od_rp_idenSet"
+        <el-table-column prop="bd_po_iden" sortable label="采购订单号" :filters="bd_po_idenSet"
       :filter-method="filter" align="center"></el-table-column>
-        <el-table-column prop="od_rp_date" sortable label="请购日期" align="center"></el-table-column>
-        <el-table-column prop="od_rp_from" sortable label="申请部门" :filters="od_rp_fromSet"
-      :filter-method="filter" align="center"></el-table-column>
+        <el-table-column prop="bd_po_date" sortable label="订单日期" align="center"></el-table-column>
       </el-table>
       <!-- 分页 -->
       <div class="pagination">
@@ -83,10 +83,10 @@
 </template>
 
 <script>
-import {postAPI} from '../../../api/api'
+import { postAPI } from '../../../../api/api'
 
 export default {
-  name: 'pc_cd_add',
+  name: 'bis_bd_add',
   props: ['tableHas', 'formadd', 'ifhasorga'],
   data () {
     return {
@@ -98,17 +98,17 @@ export default {
       tableData: [],
       tableDataNew: [],
       multipleSelection: [],
-      od_idenSet: [],
-      od_nameSet: [],
-      od_specificationSet: [],
-      od_modelSet: [],
-      od_meterageSet: [],
-      od_attrSet: [],
-      od_rp_idenSet: [],
-      od_rp_fromSet: [],
+      bd_idenSet: [],
+      bd_nameSet: [],
+      bd_specificationSet: [],
+      bd_modelSet: [],
+      bd_meterageSet: [],
+      bd_attrSet: [],
+      bd_rp_idenSet: [],
+      bd_po_idenSet: [],
       pageTotal: 0,
       ifshowadd: true,
-      form_po_orga: [
+      form_bis_orga: [
         '合肥工业大学'
       ]
     }
@@ -119,7 +119,7 @@ export default {
   methods: {
     getData () {
       let _this = this
-      postAPI('/po_od_add_rp', this.formadd.po_orga).then(function (res) {
+      postAPI('/bis_bd_add', this.formadd.bis_orga).then(function (res) {
         _this.tableData = res.data.list
         _this.find()
         let nameset = new Set()
@@ -129,61 +129,61 @@ export default {
         let attrset = new Set()
         let rpidenset = new Set()
         let idenset = new Set()
-        let rpfromset = new Set()
+        let poidenset = new Set()
         for (let i in _this.tableData) {
-          nameset.add(_this.tableData[i]['od_name'])
-          specificationset.add(_this.tableData[i]['od_specification'])
-          modelset.add(_this.tableData[i]['od_model'])
-          meterageset.add(_this.tableData[i]['od_meterage'])
-          attrset.add(_this.tableData[i]['od_attr'])
-          rpidenset.add(_this.tableData[i]['od_rp_iden'])
-          rpfromset.add(_this.tableData[i]['od_rp_from'])
-          idenset.add(_this.tableData[i]['od_iden'])
+          nameset.add(_this.tableData[i]['bd_name'])
+          specificationset.add(_this.tableData[i]['bd_specification'])
+          modelset.add(_this.tableData[i]['bd_model'])
+          meterageset.add(_this.tableData[i]['bd_meterage'])
+          attrset.add(_this.tableData[i]['bd_attr'])
+          rpidenset.add(_this.tableData[i]['bd_rp_iden'])
+          poidenset.add(_this.tableData[i]['bd_po_iden'])
+          idenset.add(_this.tableData[i]['bd_iden'])
         }
         for (let i of nameset) {
-          _this.od_nameSet.push({
+          _this.bd_nameSet.push({
             text: i,
             value: i
           })
         }
         for (let i of meterageset) {
-          _this.od_meterageSet.push({
+          _this.bd_meterageSet.push({
             text: i,
             value: i
           })
         }
         for (let i of specificationset) {
-          _this.od_specificationSet.push({
+          _this.bd_specificationSet.push({
             text: i,
             value: i
           })
         }
         for (let i of modelset) {
-          _this.od_modelSet.push({
+          _this.bd_modelSet.push({
             text: i,
             value: i
           })
         }
         for (let i of attrset) {
-          _this.od_attrSet.push({
+          _this.bd_attrSet.push({
             text: i,
             value: i
           })
         }
         for (let i of rpidenset) {
-          _this.od_rp_idenSet.push({
+          _this.bd_rp_idenSet.push({
             text: i,
             value: i
           })
         }
         for (let i of idenset) {
-          _this.od_idenSet.push({
+          _this.bd_idenSet.push({
             text: i,
             value: i
           })
         }
-        for (let i of rpfromset) {
-          _this.od_rp_fromSet.push({
+        for (let i of poidenset) {
+          _this.bd_po_idenSet.push({
             text: i,
             value: i
           })
@@ -214,13 +214,13 @@ export default {
       this.pageTotal = 0
       this.tableDataNew = this.tableData.filter(data => (this.ifshowadd || this.selectable(data, 0)) &&
         (!this.search ||
-        data.od_iden.toLowerCase().includes(this.search.toLowerCase()) ||
-        data.od_name.toLowerCase().includes(this.search.toLowerCase()) ||
-        data.od_specification.toLowerCase().includes(this.search.toLowerCase()) ||
-        data.od_model.toLowerCase().includes(this.search.toLowerCase()) ||
-        data.od_rp_iden.toLowerCase().includes(this.search.toLowerCase()) ||
-        data.od_rp_from.toLowerCase().includes(this.search.toLowerCase()) ||
-        data.od_meterage.toLowerCase().includes(this.search.toLowerCase())))
+        data.bd_iden.toLowerCase().includes(this.search.toLowerCase()) ||
+        data.bd_name.toLowerCase().includes(this.search.toLowerCase()) ||
+        data.bd_specification.toLowerCase().includes(this.search.toLowerCase()) ||
+        data.bd_model.toLowerCase().includes(this.search.toLowerCase()) ||
+        data.bd_rp_iden.toLowerCase().includes(this.search.toLowerCase()) ||
+        data.bd_po_iden.toLowerCase().includes(this.search.toLowerCase()) ||
+        data.bd_meterage.toLowerCase().includes(this.search.toLowerCase())))
     },
     // 分页导航
     handlePageChange (val) {
@@ -240,7 +240,7 @@ export default {
     // 可选项
     selectable (row, index) {
       for (let i in this.tableHas) {
-        if (this.tableHas[i].od_iden === row.od_iden && this.tableHas[i].od_rp_iden === row.od_rp_iden) {
+        if (this.tableHas[i].bd_iden === row.bd_iden && this.tableHas[i].bd_rp_iden === row.bd_rp_iden) {
           return false
         }
       }

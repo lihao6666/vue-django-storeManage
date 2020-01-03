@@ -20,7 +20,6 @@
         <el-button type="primary" icon="el-icon-plus" class="button-plus" @click="add">新增</el-button>
       </div>
       <el-table
-        max-height="580"
         :data="tableDataNew"
         class="table"
         ref="multipleTable"
@@ -271,7 +270,7 @@ export default {
           this.tableData.splice(index, 1)
           let pageIndexNew = Math.ceil((this.pageTotal - 1) / this.query.pageSize) // 新的页面数量
           this.query.pageIndex = (this.query.pageIndex > pageIndexNew) ? pageIndexNew : this.query.pageIndex
-          this.query.pageIndex = (this.query.pageIndex === 0) ? 1 : 0
+          this.query.pageIndex = (this.query.pageIndex === 0) ? 1 : this.query.pageIndex
           this.find()
         })
         .catch(() => {

@@ -35,6 +35,11 @@ export default new Router({
           meta: {title: '采购订单'}
         },
         {
+          path: '/buyinstore',
+          component: () => import('../components/store/in_store/buy_in_store/BisCheck'),
+          meta: {title: '采购入库'}
+        },
+        {
           path: '/organizationmanage',
           component: () => import(/* webpackChunkName: "donate" */ '../components/system/OrganizationManage.vue'),
           meta: {title: '组织架构管理'}

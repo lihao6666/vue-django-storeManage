@@ -25,7 +25,7 @@
         </el-input>
         <el-button type="primary" class="button-save" v-if="ifchange">保 存</el-button>
         <el-button type="primary" class="button-save" v-if="ifchange" :disabled="!tableDataNew.length > 0">提 交</el-button>
-        <el-button type="primary" icon="el-icon-plus" class="button-save" @click="add" v-if="ifchange">新增</el-button>
+        <el-button v-if="ifchange" type="primary" icon="el-icon-plus" class="button-save" @click="add">选择采购单</el-button>
       </div>
       <el-table
         :data="tableDataNew"
@@ -45,96 +45,47 @@
           <template slot-scope="props">
             <el-form label-position="left" inline class="demo-table-expand">
               <el-form-item label="备注">
-                <el-input type="textarea" v-model="props.row.sod_remarks" rows="3" :disabled="!ifchange"
+                <el-input type="textarea" v-model="props.row.bd_remarks" rows="3" :disabled="!ifchange"
                     placeholder="请输入200字以内的描述" maxlength="200" show-word-limit clearable></el-input>
               </el-form-item>
             </el-form>
           </template>
         </el-table-column>
-        <el-table-column prop="sod_iden" sortable label="物料编码" align="center"></el-table-column>
-        <el-table-column prop="sod_name" sortable label="物料名称" :filters="sod_nameSet"
+        <el-table-column prop="bd_iden" sortable label="物料编码" :filters="bd_idenSet"
+      :filter-method="filter"  align="center"></el-table-column>
+        <el-table-column prop="bd_name" sortable label="物料名称" :filters="bd_nameSet"
       :filter-method="filter" align="center"></el-table-column>
-        <el-table-column prop="sod_specification" sortable label="规格" :filters="sod_specificationSet"
+        <el-table-column prop="bd_specification" sortable label="规格" :filters="bd_specificationSet"
       :filter-method="filter" align="center"></el-table-column>
-        <el-table-column prop="sod_model" sortable label="型号" :filters="sod_modelSet"
+        <el-table-column prop="bd_model" sortable label="型号" :filters="bd_modelSet"
       :filter-method="filter" align="center"></el-table-column>
-        <el-table-column prop="sod_meterage" sortable label="单位" :filters="sod_meterageSet"
+        <el-table-column prop="bd_meterage" sortable label="单位" :filters="bd_meterageSet"
       :filter-method="filter" align="center"></el-table-column>
-        <el-table-column prop="sod_num" sortable label="数量" align="center">
+        <el-table-column prop="bd_paper_num" sortable label="应收数量" align="center"></el-table-column>
+        <el-table-column prop="bd_real_num" sortable label="实收数量" align="center">
           <template slot-scope="scope">
             <el-input
-              v-if="formadd.so_type=='退换货'"
-              prefix-icon="el-icon-minus"
               placeholder="1"
               :disabled="!ifchange"
-              v-model="scope.row.sod_num"
-              @input="scope.row.sod_num = inputnum(scope.row.sod_num)"
-              @change="scope.row.sod_num = changenum(scope.row.sod_num)">
-            </el-input>
-            <el-input
-              v-else
-              placeholder="1"
-              :disabled="!ifchange"
-              v-model="scope.row.sod_num"
-              @input="scope.row.sod_num = inputnum(scope.row.sod_num)"
-              @change="scope.row.sod_num = changenum(scope.row.sod_num)">
+              v-model="scope.row.bd_real_num"
+              @input="scope.row.bd_real_num = inputnum(scope.row.bd_real_num)"
+              @change="scope.row.bd_real_num = changenum(scope.row.bd_real_num)">
             </el-input>
           </template>
         </el-table-column>
-        <el-table-column prop="sod_taxRate" sortable label="税率" align="center">
-          <template slot-scope="scope">
-            <el-input
-              placeholder="13"
-              :disabled="!ifchange"
-              v-model="scope.row.sod_taxRate"
-              @input="scope.row.sod_taxRate = inputsodTaxRate(scope.row.sod_taxRate)"
-              @change="scope.row.sod_taxRate = changesodTaxRate(scope.row.sod_taxRate)">
-            </el-input>
-          </template>
-        </el-table-column>
-        <el-table-column prop="sod_tax_unitPrice" sortable label="含税单价" align="center">
-          <template slot-scope="scope">
-            <el-input
-              placeholder="0"
-              :disabled="!ifchange"
-              v-model="scope.row.sod_tax_unitPrice"
-              @input="scope.row.sod_tax_unitPrice = inputsodTaxUnitPrice(scope.row.sod_tax_unitPrice)"
-              @change="scope.row.sod_tax_unitPrice = changesodTaxUnitPrice(scope.row.sod_tax_unitPrice)">
-            </el-input>
-          </template>
-        </el-table-column>
-        <el-table-column prop="sod_tax_unitPrice/(1+sod_taxRate/100)" sortable label="无税单价" align="center">
+        <el-table-column prop="bd_unitPrice" sortable label="无税单价" align="center"></el-table-column>
+        <el-table-column prop="bd_unitPrice*bd_real_num" sortable label="无税金额" align="center">
           <template slot-scope="scope">
             <el-tag
               :type="'success'"
-            >{{(scope.row.sod_tax_unitPrice/(1+scope.row.sod_taxRate/100)).toFixed(2)}}
+            >{{(scope.row.bd_unitPrice*scope.row.bd_real_num).toFixed(2)}}
             </el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="sod_tax_unitPrice*sod_num*" sortable label="含税金额" align="center">
-          <template slot-scope="scope">
-            <el-tag
-              :type="'success'"
-            >{{(scope.row.sod_tax_unitPrice*scope.row.sod_num).toFixed(2)}}
-            </el-tag>
-          </template>
-        </el-table-column>
-        <el-table-column prop="sod_tax_unitPrice*sod_num/(1+sod_taxRate/100)" sortable label="无税金额" align="center">
-          <template slot-scope="scope">
-            <el-tag
-              :type="'success'"
-            >{{(scope.row.sod_tax_unitPrice*scope.row.sod_num/(1+scope.row.sod_taxRate/100)).toFixed(2)}}
-            </el-tag>
-          </template>
-        </el-table-column>
-        <el-table-column prop="sod_tax_unitPrice*sod_num*sod_taxRate/100/(1+sod_taxRate/100)" sortable label="税额" align="center">
-          <template slot-scope="scope">
-            <el-tag
-              :type="'success'"
-            >{{(scope.row.sod_tax_unitPrice*scope.row.sod_num*scope.row.sod_taxRate/100/(1+scope.row.sod_taxRate/100)).toFixed(2)}}
-            </el-tag>
-          </template>
-        </el-table-column>
+        <el-table-column prop="bd_po_iden" sortable label="采购单号" :filters="bd_po_idenset"
+      :filter-method="filter" align="center"></el-table-column>
+        <el-table-column prop="bd_rp_iden" sortable label="请购单号" :filters="bd_rp_idenset"
+      :filter-method="filter" align="center"></el-table-column>
         <el-table-column label="操作" align="center" v-if="ifchange">
           <template slot-scope="scope">
             <el-button
@@ -162,21 +113,21 @@
       </div>
     </div>
     <!-- 新增弹出框 -->
-    <el-dialog title="新增物料" :visible.sync="addVisible" width="90%" append-to-body>
-      <Sodadd @add="addPrd" :tableHas="tableData" :formadd="formadd" :ifhasorga="ifhasorga"></Sodadd>
+    <el-dialog title="新增采购订单物料" :visible.sync="addVisible" width="90%" append-to-body>
+      <Bdadd @add="addBd" :tableHas="tableData" :formadd="formadd" :ifhasorga="ifhasorga"></Bdadd>
     </el-dialog>
   </div>
 </template>
 
 <script>
-import {postAPI} from '../../api/api'
-import Sodadd from './SellSodAdd'
+import { postAPI } from '../../../../api/api'
+import Bdadd from './BisBdAdd.vue'
 
 export default {
-  name: 'sell_sod',
+  name: 'bis_bd',
   props: ['formadd', 'ifchange'],
   components: {
-    Sodadd
+    Bdadd
   },
   data () {
     return {
@@ -188,10 +139,13 @@ export default {
       tableData: [],
       tableDataNew: [],
       multipleSelection: [],
-      sod_nameSet: [],
-      sod_specificationSet: [],
-      sod_modelSet: [],
-      sod_meterageSet: [],
+      bd_idenSet: [],
+      bd_nameSet: [],
+      bd_specificationSet: [],
+      bd_modelSet: [],
+      bd_meterageSet: [],
+      bd_po_idenset: [],
+      bd_rp_idenset: [],
       addVisible: false,
       ifhasorga: false,
       pageTotal: 0
@@ -200,50 +154,74 @@ export default {
   created () {
     this.getData()
     this.$nextTick(function () {
-      if (!this.formadd.so_orga && !this.formadd.so_warehouse) {
+      if (!this.formadd.bis_orga) {
         this.addVisible = true
       }
     })
   },
   methods: {
     getData () {
-      if (this.formadd.so_iden === '') {
+      if (this.formadd.bis_iden === '') {
         return
       }
       let _this = this
-      postAPI('/so_sod', this.formadd).then(function (res) {
+      postAPI('/bis_bd', this.formadd).then(function (res) {
         _this.tableData = res.data.list
         _this.find()
         let nameset = new Set()
         let specificationset = new Set()
         let modelset = new Set()
         let meterageset = new Set()
+        let rpidenset = new Set()
+        let poidenset = new Set()
+        let idenset = new Set()
         for (let i in _this.tableData) {
-          nameset.add(_this.tableData[i]['sod_name'])
-          specificationset.add(_this.tableData[i]['sod_specification'])
-          modelset.add(_this.tableData[i]['sod_model'])
-          meterageset.add(_this.tableData[i]['sod_meterage'])
+          nameset.add(_this.tableData[i]['bd_name'])
+          specificationset.add(_this.tableData[i]['bd_specification'])
+          modelset.add(_this.tableData[i]['bd_model'])
+          meterageset.add(_this.tableData[i]['bd_meterage'])
+          rpidenset.add(_this.tableData[i]['bd_rp_iden'])
+          poidenset.add(_this.tableData[i]['bd_po_iden'])
+          idenset.add(_this.tableData[i]['bd_iden'])
         }
         for (let i of nameset) {
-          _this.sod_nameSet.push({
+          _this.bd_nameSet.push({
+            text: i,
+            value: i
+          })
+        }
+        for (let i of idenset) {
+          _this.bd_idenSet.push({
             text: i,
             value: i
           })
         }
         for (let i of meterageset) {
-          _this.sod_meterageSet.push({
+          _this.bd_meterageSet.push({
+            text: i,
+            value: i
+          })
+        }
+        for (let i of rpidenset) {
+          _this.bd_rp_idenset.push({
+            text: i,
+            value: i
+          })
+        }
+        for (let i of poidenset) {
+          _this.bd_po_idenset.push({
             text: i,
             value: i
           })
         }
         for (let i of specificationset) {
-          _this.sod_specificationSet.push({
+          _this.bd_specificationSet.push({
             text: i,
             value: i
           })
         }
         for (let i of modelset) {
-          _this.sod_modelSet.push({
+          _this.bd_modelSet.push({
             text: i,
             value: i
           })
@@ -273,27 +251,27 @@ export default {
     find () {
       this.pageTotal = 0
       this.tableDataNew = this.tableData.filter(data => !this.search ||
-        data.sod_iden.toLowerCase().includes(this.search.toLowerCase()) ||
-        data.sod_name.toLowerCase().includes(this.search.toLowerCase()) ||
-        data.sod_specification.toLowerCase().includes(this.search.toLowerCase()) ||
-        data.sod_model.toLowerCase().includes(this.search.toLowerCase()) ||
-        data.sod_meterage.toLowerCase().includes(this.search.toLowerCase()))
+        data.bd_iden.toLowerCase().includes(this.search.toLowerCase()) ||
+        data.bd_name.toLowerCase().includes(this.search.toLowerCase()) ||
+        data.bd_specification.toLowerCase().includes(this.search.toLowerCase()) ||
+        data.bd_rp_iden.toLowerCase().includes(this.search.toLowerCase()) ||
+        data.bd_po_iden.toLowerCase().includes(this.search.toLowerCase()) ||
+        data.bd_model.toLowerCase().includes(this.search.toLowerCase()) ||
+        data.bd_meterage.toLowerCase().includes(this.search.toLowerCase()))
     },
     // 新增
     add () {
       this.addVisible = true
-      if (this.formadd.so_orga === '' || this.formadd.so_warehouse === '') {
+      if (this.formadd.bis_orga === '') {
         this.ifhasorga = false
       } else {
         this.ifhasorga = true
       }
     },
-    // 新增物料
-    addPrd (val) {
+    // 新增物料通过请购单
+    addBd (val) {
       for (let i in val) {
-        val[i].sod_num = '1'
-        val[i].sod_taxRate = '13'
-        val[i].sod_tax_unitPrice = '0.00'
+        val[i].bd_real_num = val[i].bd_paper_num
       }
       this.tableData = this.tableData.concat(val)
       this.find()
@@ -318,7 +296,7 @@ export default {
       }
       return num
     },
-    inputsodTaxRate (num) {
+    inputodTaxRate (num) {
       num = num.replace(/[^\d]/g, '')
       if (num > 16) {
         num = 16
@@ -328,13 +306,13 @@ export default {
       }
       return num
     },
-    changesodTaxRate (num) {
+    changeodTaxRate (num) {
       if (num === '') {
         num = 13
       }
       return num
     },
-    inputsodTaxUnitPrice (num) {
+    inputodTaxUnitPrice (num) {
       if (num !== '' && num.substr(0, 1) === '.') {
         num = ''
       }
@@ -350,7 +328,7 @@ export default {
       }
       return num
     },
-    changesodTaxUnitPrice (num) {
+    changeodTaxUnitPrice (num) {
       if (num === '') {
         num = 0
       }

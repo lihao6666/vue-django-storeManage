@@ -100,11 +100,11 @@ export default {
               title: '入库管理',
               subs: [
                 {
-                  index: 'buyinstock',
+                  index: 'buyinstore',
                   title: '采购入库'
                 },
                 {
-                  index: 'otherinstock',
+                  index: 'otherinstore',
                   title: '其他入库'
                 }
               ]
@@ -114,15 +114,15 @@ export default {
               title: '出库管理',
               subs: [
                 {
-                  index: 'materialsoutstock',
+                  index: 'materialsoutstore',
                   title: '材料出库'
                 },
                 {
-                  index: 'selloutstock',
+                  index: 'selloutstore',
                   title: '销售出库'
                 },
                 {
-                  index: 'otheroutstock',
+                  index: 'otheroutstore',
                   title: '其他出库'
                 }
               ]

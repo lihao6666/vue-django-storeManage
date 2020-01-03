@@ -3,7 +3,7 @@
     <div class="crumbs">
       <el-breadcrumb separator="/">
         <el-breadcrumb-item>
-          <i class="el-icon-lx-cascades"></i> 采购合同
+          <i class="el-icon-lx-cascades"></i> 采购入库
         </el-breadcrumb-item>
       </el-breadcrumb>
     </div>
@@ -30,39 +30,38 @@
           <template slot-scope="props">
             <el-form label-position="left" inline class="demo-table-expand">
               <el-form-item label="备注">
-                <span>{{ props.row.pc_remarks }}</span>
+                <span>{{ props.row.bis_remarks }}</span>
               </el-form-item>
             </el-form>
           </template>
         </el-table-column>
-        <el-table-column prop="pc_iden" sortable label="合同编号" align="center"></el-table-column>
-        <el-table-column prop="pc_orga" sortable label="库存组织" :filters="pc_orgaSet"
+        <el-table-column prop="bis_iden" sortable label="入库单编号" align="center"></el-table-column>
+        <el-table-column prop="bis_orga" sortable label="库存组织" :filters="bis_orgaSet"
       :filter-method="filter" align="center"></el-table-column>
-        <el-table-column prop="pc_name" sortable label="合同名称" :filters="pc_nameSet"
+        <el-table-column prop="bis_warehouse" sortable label="仓库" :filters="bis_warehouseSet"
       :filter-method="filter" align="center"></el-table-column>
-        <el-table-column prop="pc_supply" sortable label="供应商" :filters="pc_supplySet"
+        <el-table-column prop="bis_supply" sortable label="供应商" :filters="bis_supplySet"
       :filter-method="filter" align="center"></el-table-column>
-        <el-table-column prop="pc_date" sortable label="签订日期" align="center"></el-table-column>
-        <el-table-column prop="pc_sum" sortable label="合同金额" align="center"></el-table-column>
-        <el-table-column prop="pc_status" sortable label="状态" :filters="pc_statusSet"
+        <el-table-column prop="bis_date" sortable label="入库日期" align="center"></el-table-column>
+        <el-table-column prop="bis_status" sortable label="状态" :filters="bis_statusSet"
       :filter-method="filter" align="center">
           <template slot-scope="scope">
             <el-tag
-              :type="scope.row.pc_status==='已审批'?'success':''"
-            >{{scope.row.pc_status}}
+              :type="scope.row.bis_status==='已审批'?'success':''"
+            >{{scope.row.bis_status}}
             </el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="pc_creator" sortable label="创建人" :filters="pc_creatorSet"
+        <el-table-column prop="bis_creator" sortable label="创建人" :filters="bis_creatorSet"
       :filter-method="filter" align="center"></el-table-column>
-        <el-table-column prop="pc_createDate" sortable label="创建日期" align="center"></el-table-column>
+        <el-table-column prop="bis_createDate" sortable label="创建日期" align="center"></el-table-column>
         <el-table-column label="操作" align="center">
           <template slot-scope="scope">
             <el-button
               type="text"
               icon="el-icon-edit"
               @click="handleEdit(scope.$index, scope.row)"
-              v-if="scope.row.pc_status==='草稿'"
+              v-if="scope.row.bis_status==='草稿'"
             >编辑
             </el-button>
             <el-button
@@ -70,7 +69,7 @@
               icon="el-icon-delete"
               class="red"
               @click="handleDelete(scope.$index, scope.row)"
-              v-if="scope.row.pc_status==='草稿'"
+              v-if="scope.row.bis_status==='草稿'"
             >删除
             </el-button>
             <el-button
@@ -78,7 +77,7 @@
               icon="el-icon-postcard"
               class="green"
               @click="handleMore(scope.$index, scope.row)"
-              v-if="scope.row.pc_status==='已审批'"
+              v-if="scope.row.bis_status==='已审批'"
             >详情
             </el-button>
           </template>
@@ -100,25 +99,25 @@
     </div>
     <!-- 新增弹出框 -->
     <el-dialog title="新增" :visible.sync="addVisible" width="90%" :close-on-click-modal="false">
-      <Pcadd ref="Pcadd" :editform="addform" :ifchange="true"></Pcadd>
+      <Bisadd ref="poadd" :editform="addform" :ifchange="true"></Bisadd>
     </el-dialog>
     <!-- 编辑弹出框 -->
-    <el-dialog title="编辑" :visible.sync="editVisible" width="90%" :close-on-click-modal="false" :destroy-on-close="true" :before-close="closePcedit">
-      <Pcadd ref="Pcedit" :editform="editform" :ifchange="true"></Pcadd>
+    <el-dialog title="编辑" :visible.sync="editVisible" width="90%" :close-on-click-modal="false" :destroy-on-close="true" :before-close="closepoedit">
+      <Bisadd ref="poedit" :editform="editform" :ifchange="true"></Bisadd>
     </el-dialog>
     <!-- 详情弹出框 -->
     <el-dialog title="详情" :visible.sync="moreVisible" width="90%" :destroy-on-close="true">
-      <Pcadd ref="Pcmore" :editform="moreform" :ifchange="false"></Pcadd>
+      <Bisadd ref="pomore" :editform="moreform" :ifchange="false"></Bisadd>
     </el-dialog>
   </div>
 </template>
 
 <script>
-import Pcadd from './PurConAdd'
-import { postAPI } from '../../../api/api'
+import Bisadd from './BisAdd'
+import { postAPI } from '../../../../api/api'
 
 export default {
-  name: 'pc_check',
+  name: 'bis_check',
   data () {
     return {
       query: {
@@ -128,11 +127,11 @@ export default {
       search: '',
       tableData: [],
       tableDataNew: [],
-      pc_orgaSet: [],
-      pc_nameSet: [],
-      pc_supplySet: [],
-      pc_statusSet: [],
-      pc_creatorSet: [],
+      bis_orgaSet: [],
+      bis_warehouseSet: [],
+      bis_supplySet: [],
+      bis_statusSet: [],
+      bis_creatorSet: [],
       editVisible: false,
       editform: {},
       moreVisible: false,
@@ -140,18 +139,17 @@ export default {
       pageTotal: 0,
       addVisible: false,
       addform: {
-        pc_iden: '',
-        pc_orga: '',
-        pc_supply: '',
-        pc_name: '',
-        pc_remarks: '',
-        pc_date: '',
-        pc_sum: 0
+        bis_iden: '',
+        bis_orga: '',
+        bis_supply: '',
+        bis_warehouse: '',
+        bis_remarks: '',
+        bis_date: ''
       }
     }
   },
   components: {
-    Pcadd
+    Bisadd
   },
   created () {
     this.getData()
@@ -159,7 +157,7 @@ export default {
   methods: {
     getData () {
       let _this = this
-      postAPI('/pc_check').then(function (res) {
+      postAPI('/bis_check').then(function (res) {
         _this.tableData = res.data.list
         _this.find()
         let orgaset = new Set()
@@ -168,38 +166,38 @@ export default {
         let supplyset = new Set()
         let creatorset = new Set()
         for (let i in _this.tableData) {
-          orgaset.add(_this.tableData[i]['pc_orga'])
-          supplyset.add(_this.tableData[i]['pc_supply'])
-          nameset.add(_this.tableData[i]['pc_name'])
-          statusset.add(_this.tableData[i]['pc_status'])
-          creatorset.add(_this.tableData[i]['pc_creator'])
+          orgaset.add(_this.tableData[i]['bis_orga'])
+          supplyset.add(_this.tableData[i]['bis_supply'])
+          nameset.add(_this.tableData[i]['bis_warehouse'])
+          statusset.add(_this.tableData[i]['bis_status'])
+          creatorset.add(_this.tableData[i]['bis_creator'])
         }
         for (let i of orgaset) {
-          _this.pc_orgaSet.push({
+          _this.bis_orgaSet.push({
             text: i,
             value: i
           })
         }
         for (let i of supplyset) {
-          _this.pc_supplySet.push({
+          _this.bis_supplySet.push({
             text: i,
             value: i
           })
         }
         for (let i of nameset) {
-          _this.pc_nameSet.push({
+          _this.bis_warehouseSet.push({
             text: i,
             value: i
           })
         }
         for (let i of statusset) {
-          _this.pc_statusSet.push({
+          _this.bis_statusSet.push({
             text: i,
             value: i
           })
         }
         for (let i of creatorset) {
-          _this.pc_creatorSet.push({
+          _this.bis_creatorSet.push({
             text: i,
             value: i
           })
@@ -229,11 +227,11 @@ export default {
     find () {
       this.pageTotal = 0
       this.tableDataNew = this.tableData.filter(data => !this.search ||
-        data.pc_iden.toLowerCase().includes(this.search.toLowerCase()) ||
-        data.pc_orga.toLowerCase().includes(this.search.toLowerCase()) ||
-        data.pc_name.toLowerCase().includes(this.search.toLowerCase()) ||
-        data.pc_supply.toLowerCase().includes(this.search.toLowerCase()) ||
-        data.pc_creator.toLowerCase().includes(this.search.toLowerCase()))
+        data.bis_iden.toLowerCase().includes(this.search.toLowerCase()) ||
+        data.bis_orga.toLowerCase().includes(this.search.toLowerCase()) ||
+        data.bis_warehouse.toLowerCase().includes(this.search.toLowerCase()) ||
+        data.bis_supply.toLowerCase().includes(this.search.toLowerCase()) ||
+        data.bis_creator.toLowerCase().includes(this.search.toLowerCase()))
     },
     // 新增
     add () {
@@ -264,14 +262,14 @@ export default {
     handleEdit (index, row) {
       this.editform = row
       let _this = this
-      this.$nextTick(() => _this.$refs.Pcedit.getForm())
+      this.$nextTick(() => _this.$refs.poedit.getForm())
       this.editVisible = true
     },
     // 详情操作
     handleMore (index, row) {
       this.moreform = row
       let _this = this
-      this.$nextTick(() => _this.$refs.Pcmore.getForm())
+      this.$nextTick(() => _this.$refs.pomore.getForm())
       this.moreVisible = true
     },
     // 关闭操作
@@ -305,7 +303,7 @@ export default {
       this.query.pageSize = val
     },
     // 关闭窗口二次确认
-    closePcedit () {
+    closepoedit () {
       this.$confirm('确定要关闭吗？', '提示', {
         type: 'warning'
       })
@@ -354,10 +352,6 @@ export default {
 
   .green {
     color: #00a854;
-  }
-
-  .block {
-    color: grey;
   }
 
   .input-search {

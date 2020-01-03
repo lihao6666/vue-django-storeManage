@@ -20,7 +20,6 @@
         <el-button type="primary" icon="el-icon-plus" @click="handleAlter" class="alter-button">新增</el-button>
       </div>
       <el-table
-        max-height="580"
         :data="tableDataNew"
         class="table"
         ref="multipleTable"
@@ -87,13 +86,13 @@
     </div>
 
     <!-- 新增弹出框 -->
-    <el-dialog title="新增" :visible.sync="alterVisible" width="35%" >
+    <el-dialog title="新增" :visible.sync="alterVisible" width="35%" :close-on-click-modal="false">
       <div class="container">
         <el-form ref="form" :model="form" label-width="70px"  class="form" >
           <el-row>
             <el-form-item label="编码" class="inputs" align="left">
               <el-col :span="10">
-                <el-input v-model="form.supply_iden" ></el-input>
+                <el-tag :type="'success'">{{form.supply_iden}}</el-tag>
               </el-col>
             </el-form-item>
           </el-row>
@@ -131,13 +130,13 @@
     </el-dialog>
 
     <!-- 编辑弹出框 -->
-    <el-dialog title="编辑" :visible.sync="editVisible" width="35%">
+    <el-dialog title="编辑" :visible.sync="editVisible" width="35%" :close-on-click-modal="false">
       <div class="container">
         <el-form ref="form" :model="editform" label-width="70px">
           <el-row>
             <el-form-item label="编码" class="inputs" align="left">
               <el-col :span="10">
-                <el-input v-model="editform.supply_iden" ></el-input>
+                <el-tag :type="'success'">{{editform.supply_iden}}</el-tag>
               </el-col>
             </el-form-item>
           </el-row>
@@ -290,7 +289,7 @@ export default {
       this.form.supply_remarks = ''
       this.form.supply_type = ''
     },
-    // 禁用操作
+    // 停用操作
     handleStop (row) {
       postAPI('/supplier', {data: row, supply_status: '停用'}).then(function (res) {
         console.log(res)

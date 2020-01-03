@@ -20,7 +20,6 @@
         <el-button type="primary" icon="el-icon-plus" @click="handleAlter" class="alter-button">新增</el-button>
       </div>
       <el-table
-        max-height="580"
         :data="tableDataNew"
         class="table"
         ref="multipleTable"
@@ -84,7 +83,7 @@
     </div>
 
     <!-- 新增弹出框 -->
-    <el-dialog title="新增" :visible.sync="alterVisible" width="35%" >
+    <el-dialog title="新增" :visible.sync="alterVisible" width="35%" :close-on-click-modal="false">
       <div class="container">
         <el-form ref="form" :model="form" label-width="100px"  class="form" >
           <el-row>
@@ -96,16 +95,6 @@
                     <span v-if="!node.isLeaf"> ({{ data.children.length }}) </span>
                   </template>
                 </el-cascader>
-              </el-col>
-            </el-form-item>
-          </el-row>
-          <el-row>
-            <el-form-item label="编码" class="inputs" align="left">
-              <el-col :span="10">
-                <el-tag
-                  :type="'success'"
-                >{{form.material_iden}}
-                </el-tag>
               </el-col>
             </el-form-item>
           </el-row>
@@ -164,7 +153,7 @@
     </el-dialog>
 
     <!-- 编辑弹出框 -->
-    <el-dialog title="编辑" :visible.sync="editVisible" width="35%">
+    <el-dialog title="编辑" :visible.sync="editVisible" width="35%" :close-on-click-modal="false">
       <div class="container">
         <el-form ref="form" :model="editform" label-width="100px">
           <el-row>
@@ -373,7 +362,7 @@ export default {
       this.form.material_specification = ''
       this.form.material_name = ''
     },
-    // 禁用操作
+    // 停用操作
     handleStop (row) {
       postAPI('/material', {data: row, material_status: '停用'}).then(function (res) {
         console.log(res)
