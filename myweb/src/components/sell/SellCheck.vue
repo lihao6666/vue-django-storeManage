@@ -339,20 +339,16 @@ export default {
   .handle-box {
     margin-bottom: 20px;
   }
-
   .table {
     width: 100%;
     font-size: 14px;
   }
-
   .red {
     color: #ff0000;
   }
-
   .green {
     color: #00a854;
   }
-
   .input-search {
     width: 50%;
   }
