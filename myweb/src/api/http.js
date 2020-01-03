@@ -1,5 +1,5 @@
 // 导入封装好的axios实例
-import request from './request'
+import axios from './request'
 
 const http = {
   /**
@@ -13,7 +13,7 @@ const http = {
       url: url
     }
     if (params) config.params = params
-    return request(config)
+    return axios(config)
   },
   post (url, params) {
     const config = {
@@ -21,7 +21,7 @@ const http = {
       url: url
     }
     if (params) config.data = params
-    return request(config)
+    return axios(config)
   },
   put (url, params) {
     const config = {
@@ -29,7 +29,7 @@ const http = {
       url: url
     }
     if (params) config.params = params
-    return request(config)
+    return axios(config)
   },
   delete (url, params) {
     const config = {
@@ -37,7 +37,7 @@ const http = {
       url: url
     }
     if (params) config.params = params
-    return request(config)
+    return axios(config)
   }
 }
 // 导出

@@ -88,7 +88,7 @@
     </div>
 
     <!-- 新增弹出框 -->
-    <el-dialog title="新增" :visible.sync="alterVisible" width="35%" >
+    <el-dialog title="新增" :visible.sync="alterVisible" width="35%" :close-on-click-modal="false">
       <div class="container">
         <el-form ref="form" :model="form" label-width="100px"  class="form" >
           <el-row>
@@ -148,7 +148,7 @@
     </el-dialog>
 
     <!-- 编辑弹出框 -->
-    <el-dialog title="编辑" :visible.sync="editVisible" width="35%">
+    <el-dialog title="编辑" :visible.sync="editVisible" width="35%" :close-on-click-modal="false">
       <div class="container">
         <el-form ref="form" :model="editform" label-width="100px"  class="form" >
           <el-row>
@@ -336,7 +336,7 @@ export default {
       this.form.total_name = ''
       this.form.total_remarks = ''
     },
-    // 禁用操作
+    // 停用操作
     handleStop (row) {
       postAPI('/store', {data: row, total_status: '停用'}).then(function (res) {
         console.log(res)

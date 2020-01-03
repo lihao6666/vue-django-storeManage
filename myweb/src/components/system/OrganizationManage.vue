@@ -84,7 +84,7 @@
     </div>
 
     <!-- 新增弹出框 -->
-    <el-dialog title="新增" :visible.sync="alterVisible" width="40%" >
+    <el-dialog title="新增" :visible.sync="alterVisible" width="40%" :close-on-click-modal="false">
       <div class="container">
         <el-form ref="form" :model="form" label-width="80px" >
           <el-row>
@@ -122,7 +122,7 @@
       </el-row>
     </el-dialog>
     <!-- 编辑弹出框 -->
-    <el-dialog title="编辑" :visible.sync="editVisible" width="40%">
+    <el-dialog title="编辑" :visible.sync="editVisible" width="40%" :close-on-click-modal="false">
       <div class="container">
         <el-form ref="form" :model="editform" label-width="80px" >
           <el-row>
@@ -200,8 +200,8 @@ export default {
   methods: {
     getData () {
       let _this = this
-      postAPI('/department').then(function (res) {
-        _this.tableData = res.data.list
+      postAPI('/base/departments').then(function (res) {
+        _this.tableData = res.data.departments
         _this.find()
         let orgaset = new Set()
         let creatorset = new Set()
@@ -221,7 +221,7 @@ export default {
             value: i
           })
         }
-        _this.pageTotal = res.data.list.length
+        _this.pageTotal = res.data.departments.length
       }).catch(function (err) {
         console.log(err)
       })
@@ -252,9 +252,9 @@ export default {
     handleAlter () {
       this.alterVisible = true
     },
-    // 禁用操作
+    // 停用操作
     handleStop (row) {
-      postAPI('/department', {data: row, status: '停用'}).then(function (res) {
+      postAPI('/base/departments', {data: row, status: '停用'}).then(function (res) {
         console.log(res)
       }).catch(function (err) {
         console.log(err)
@@ -272,7 +272,7 @@ export default {
     },
     // 启用
     handleStart (row) {
-      postAPI('/department', {data: row, status: '启用'}).then(function (res) {
+      postAPI('/base/departments', {data: row, status: '启用'}).then(function (res) {
         console.log(res)
       }).catch(function (err) {
         console.log(err)
@@ -290,7 +290,7 @@ export default {
     saveEdit () {
       this.editVisible = false
       this.$message.success(`修改成功`)
-      postAPI('/department', {data: this.editform, dpm_name: this.dpm_name}).then(function (res) {
+      postAPI('/base/departments', {data: this.editform, dpm_name: this.dpm_name}).then(function (res) {
         console.log(res)
       }).catch(function (err) {
         console.log(err)
@@ -301,7 +301,7 @@ export default {
       this.alterVisible = false
       this.$message.success(`新增成功`)
       this.clearform()
-      postAPI('/department', {data: this.form, table: 'department'}).then(function (res) {
+      postAPI('/base/departments', {data: this.form, table: 'department'}).then(function (res) {
         console.log(res)
       }).catch(function (err) {
         console.log(err)

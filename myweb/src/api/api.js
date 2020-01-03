@@ -1,5 +1,4 @@
 import http from './http'
-import axios from 'axios'
 
 // get请求
 export function getAPI (url, params = null) {
@@ -8,7 +7,7 @@ export function getAPI (url, params = null) {
 
 // post请求
 export function postAPI (url, params = null) {
-  return axios.post(url, params)
+  return http.post(url, params)
 }
 
 // put 请求

@@ -387,7 +387,7 @@ export default {
           this.tableData.splice(index, 1)
           let pageIndexNew = Math.ceil((this.pageTotal - 1) / this.query.pageSize) // 新的页面数量
           this.query.pageIndex = (this.query.pageIndex > pageIndexNew) ? pageIndexNew : this.query.pageIndex
-          this.query.pageIndex = (this.query.pageIndex === 0) ? 1 : 0
+          this.query.pageIndex = (this.query.pageIndex === 0) ? 1 : this.query.pageIndex
           this.find()
         })
         .catch(() => {
@@ -420,7 +420,7 @@ export default {
         .then(() => {
           let pageIndexNew = Math.ceil((this.pageTotal - this.multipleSelection.length) / this.query.pageSize) // 新的页面数量
           this.query.pageIndex = (this.query.pageIndex > pageIndexNew) ? pageIndexNew : this.query.pageIndex
-          this.query.pageIndex = (this.query.pageIndex === 0) ? 1 : 0
+          this.query.pageIndex = (this.query.pageIndex === 0) ? 1 : this.query.pageIndex
           for (let i in this.multipleSelection) {
             let x = this.tableData.valueOf(this.multipleSelection[i])
             this.tableData.splice(x, 1)
