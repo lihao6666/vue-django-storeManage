@@ -3,7 +3,7 @@
     <div class="crumbs">
       <el-breadcrumb separator="/">
         <el-breadcrumb-item>
-          <i class="el-icon-lx-cascades"></i> 请购单
+          <i class="el-icon-lx-cascades"></i> 库存调整
         </el-breadcrumb-item>
       </el-breadcrumb>
     </div>
@@ -26,15 +26,6 @@
         header-cell-class-name="table-header"
         :row-class-name="tableRowClassName"
       >
-        <el-table-column type="expand">
-          <template slot-scope="props">
-            <el-form label-position="left" inline class="demo-table-expand">
-              <el-form-item label="备注">
-                <span>{{ props.row.str_remarks }}</span>
-              </el-form-item>
-            </el-form>
-          </template>
-        </el-table-column>
         <el-table-column prop="str_iden" sortable label="订单编号" align="center"></el-table-column>
         <el-table-column prop="str_orga" sortable label="库存组织" :filters="str_orgaSet"
                          :filter-method="filter" align="center"></el-table-column>
@@ -101,7 +92,7 @@
     </div>
     <!-- 新增弹出框 -->
     <el-dialog title="新增" :visible.sync="addVisible" width="90%" :close-on-click-modal="false">
-      <Transferadd ref="Transferadd" :editform="addform" :ifchange="true"></Transferadd>
+      <Transferadd ref="Transferadd" @close="close" :editform="addform" :ifchange="true"></Transferadd>
     </el-dialog>
     <!-- 编辑弹出框 -->
     <el-dialog title="编辑" :visible.sync="editVisible" width="90%" :close-on-click-modal="false" :destroy-on-close="true" :before-close="closePcedit">
@@ -109,6 +100,7 @@
     </el-dialog>
     <!-- 详情弹出框 -->
     <el-dialog title="详情" :visible.sync="moreVisible" width="90%" :destroy-on-close="true">
+      <Transferadd ref="Reqmore" :editform="moreform" :ifchange="false"></Transferadd>
     </el-dialog>
   </div>
 </template>
@@ -141,10 +133,10 @@ export default {
       pageTotal: 0,
       addVisible: false,
       addform: {
+        str_iden: '',
         str_orga: '',
         str_from: '',
-        str_type: '',
-        str_remarks: '',
+        str_to: '',
         str_req_date: ''
       }
     }
@@ -247,6 +239,10 @@ export default {
     // 新增
     add () {
       this.addVisible = true
+    },
+    // 关闭新增弹窗
+    close () {
+      this.addVisible = false
     },
     // 删除操作
     handleDelete (index, row) {

@@ -49,3 +49,5 @@ Mock.mock('/material', 'post', require('./json/material'))
 
 Mock.mock('/stock_check', 'post', require('./json/stock_check'))
 Mock.mock('/str_check', 'post', require('./json/str_check'))
+Mock.mock('/tr_detail', 'post', require('./json/tr_detail'))
+Mock.mock('/str_detail_add', 'post', require('./json/str_detail_add'))

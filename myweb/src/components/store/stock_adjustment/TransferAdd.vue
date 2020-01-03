@@ -3,18 +3,20 @@
     <div class="container">
       <el-form ref="form" :inline="true" :model="formadd" label-width="70px" size="mini">
         <el-form-item label="库存组织">
-          <el-select v-model="formadd.str_orga" placeholder="请选择" :disabled="!ifchange">
-            <el-option  v-for="item in form_str_orga" v-bind:key="item" :label="item" :value="item"></el-option>
-          </el-select>
+          <el-tag
+            :type="'success'"
+          >{{formadd.str_orga}}
+          </el-tag>
+        </el-form-item>
+        <el-form-item label="转出仓库">
+          <el-tag
+            :type="'success'"
+          >{{formadd.str_from}}
+          </el-tag>
         </el-form-item>
         <el-form-item label="转入仓库">
           <el-select v-model="formadd.str_to" placeholder="请选择" :disabled="!ifchange">
             <el-option v-for="item in form_str_to" v-bind:key="item" :label="item" :value="item"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="转出仓库">
-          <el-select v-model="formadd.str_from" placeholder="请选择" :disabled="!ifchange">
-            <el-option v-for="item in form_str_from" v-bind:key="item" :label="item" :value="item"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="申请部门">
@@ -26,27 +28,34 @@
           <el-col :span="11">
             <el-date-picker
               v-model="formadd.str_req_date"
-              type="datetime"
-              placeholder="选择日期时间"
               align="right"
-              :picker-options="pickerOptions" :disabled="!ifchange">
+              type="date"
+              placeholder="选择日期"
+              format="yyyy 年 MM 月 dd 日"
+              :disabled="!ifchange"
+              :picker-options="pickerOptions">
             </el-date-picker>
           </el-col>
         </el-form-item>
       </el-form>
     </div>
-    <Sosod :formadd="formadd" :ifchange="ifchange"></Sosod>
+    <Trdetail :formadd="formadd" @close="close" :ifchange="ifchange"></Trdetail>
   </div>
 </template>
 
 <script>
+import Trdetail from './TrDetail'
 export default {
   props: ['editform', 'ifchange'],
   components: {
+    Trdetail
   },
   data () {
     return {
       pickerOptions: {
+        disabledDate (time) {
+          return time.getTime() > Date.now()
+        },
         shortcuts: [{
           text: '今天',
           onClick (picker) {
@@ -69,6 +78,7 @@ export default {
         }]
       },
       formadd: {
+        str_iden: this.editform.str_iden,
         str_orga: this.editform.str_orga,
         str_to: this.editform.str_to,
         str_from: this.editform.str_from,
@@ -98,12 +108,16 @@ export default {
   },
   methods: {
     getForm () {
+      this.formadd.str_iden = this.editform.iden
       this.formadd.str_orga = this.editform.str_orga
-      this.formadd.str_custom = this.editform.str_custom
-      this.formadd.str_warehouse = this.editform.str_warehouse
-      this.formadd.str_type = this.editform.str_type
-      this.formadd.str_remarks = this.editform.str_remarks
-      this.formadd.str_date = this.editform.str_date
+      this.formadd.str_to = this.editform.str_to
+      this.formadd.str_from = this.editform.str_from
+      this.formadd.str_req_department = this.editform.str_req_department
+      this.formadd.str_req_date = this.editform.str_req_date
+    },
+    // 关闭新增弹窗
+    close () {
+      this.$emit('close')
     }
   }
 }
