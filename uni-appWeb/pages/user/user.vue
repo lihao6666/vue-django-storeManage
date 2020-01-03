@@ -2,17 +2,17 @@
     <view class="content">
 		<view class="person-head">
 			<cmd-avatar src="https://avatar.bbs.miui.com/images/noavatar_small.gif" @click="mydetail" size="md" :make="{'background-color': '#fff', 'margin-right': '10upx'}"></cmd-avatar>
-			<view class="person-head-box" @click="mydetail" v-for="info in myInfo" :key="info.id">
+			<view class="person-head-box" @click="mydetail(info)" v-for="info in myInfo" :key="info.id">
 				<view class="user-name">{{ info.user_name }}</view>
 				<view class="user-id">ID：{{ info.user_id }}</view>
 			</view>
 		</view>
 		<view class="person-list">
 			<cmd-cell-item title="联系我们" slot-left arrow @click="phone">
-			  <cmd-icon type="phone" size="24" color="#368dff"></cmd-icon>
+			    <cmd-icon type="phone" size="24" color="#368dff"></cmd-icon>
 			</cmd-cell-item>
 			<cmd-cell-item title="系统设置" slot-left arrow @click="setting">
-			  <cmd-icon type="settings" size="24" color="#368dff"></cmd-icon>
+			    <cmd-icon type="settings" size="24" color="#368dff"></cmd-icon>
 			</cmd-cell-item>
 		</view>
     </view>
@@ -37,7 +37,12 @@
 			}
 		},
         methods: {
-			mydetail() {
+			mydetail(info) {
+				try {
+				    uni.setStorageSync('userInfo', info);
+				} catch (e) {
+				    console.log("传用户信息失败")
+				}
 				uni.navigateTo({
 				    url: 'myinfo',
 				});
