@@ -115,7 +115,7 @@
 
 <script>
 import Pcadd from './PurConAdd'
-import {getAPI, postAPI} from '../../../api/api'
+import {getAPI} from '../../../api/api'
 
 export default {
   name: 'pc_check',
@@ -159,7 +159,7 @@ export default {
   methods: {
     getData () {
       let _this = this
-      getAPI('/pc_check').then(function (res) {
+      getAPI('/base/pc_check').then(function (res) {
         _this.tableData = res.data.list
         _this.find()
         let orgaset = new Set()

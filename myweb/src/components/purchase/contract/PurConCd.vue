@@ -214,7 +214,7 @@ export default {
         return
       }
       let _this = this
-      postAPI('/pc_cd', this.formadd).then(function (res) {
+      postAPI('/base/pc_cd', this.formadd).then(function (res) {
         _this.tableData = res.data.list
         _this.find()
         let nameset = new Set()

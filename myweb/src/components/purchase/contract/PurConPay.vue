@@ -155,7 +155,7 @@ export default {
         return
       }
       let _this = this
-      postAPI('/pc_pay', this.formadd).then(function (res) {
+      postAPI('/base/pc_pay', this.formadd).then(function (res) {
         _this.tableData = res.data.list
         _this.pageTotal = res.data.list.length
       }).catch(function (err) {
@@ -330,10 +330,6 @@ export default {
 
   .red {
     color: #ff0000;
-  }
-  .input-search {
-    margin-left: 20px;
-    width: 40%;
   }
   .button-save {
     float: right;
