@@ -20,7 +20,7 @@ let data = [
 		mso_date: '2020-1-2 15:00:00',
 		mso_req_department: '非中心',
 		mso_remarks: '上音乐课借用器材',
-		mso_status: '草稿',
+		mso_status: '已审批',
 		mso_creator: '张恩普',
 		mso_createDate: '2020-1-2 12:03:00'
 	},{
