@@ -4,6 +4,19 @@ from django.contrib.auth.models import AbstractUser
 
 # Create your models here.
 
+class UserNow(models.Model):
+    """
+    定义当前登录用户的信息用于全局使用，只存一条信息，同时可以修改
+    """
+    user_iden = models.CharField(max_length=20, verbose_name='登录工号')
+    user_name = models.CharField(max_length=20, verbose_name='登录人名字')
+    area_name = models.CharField(max_length=20, verbose_name='登录人区域')
+    user_departments = models.CharField(max_length=20, verbose_name='登录人部门')
+    user_roles = models.CharField(max_length=20, verbose_name='登录人角色')
+
+    class Meta:
+        verbose_name = "当前登录"
+
 
 class UserProfile(AbstractUser):
     """
@@ -71,7 +84,7 @@ class Role(models.Model):
         (1, '启用')
     )
     id = models.AutoField(primary_key=True)
-    role= models.CharField(max_length=15, unique=True, verbose_name='角色名称')
+    role = models.CharField(max_length=15, unique=True, verbose_name='角色名称')
     role_status = models.IntegerField(choices=ROLE_STATUS_CHOICES, default=1, verbose_name='角色状态')
     role_power = models.CharField(max_length=60, verbose_name='角色权限', null=True)
     role_description = models.TextField(max_length=400, verbose_name='角色描述', null=True)
@@ -164,6 +177,7 @@ class TotalWareHouse(models.Model):
     total_name = models.CharField(max_length=20, verbose_name='总仓名字')
     organization = models.ForeignKey('Organization', related_name='orga_total_ware_house', on_delete=models.CASCADE)
     total_status = models.IntegerField(choices=TOTAL_STATUS_CHOICES, default=1, verbose_name='总仓状态')
+    total_belong_center = models.CharField(max_length=20, verbose_name='所属中心编号', null=True)
     # brand = models.ForeignKey('Brand', verbose_name='品牌', on_delete=models.CASCADE)
     brand_name = models.CharField(max_length=20, verbose_name='品牌名称')
     total_remarks = models.TextField(max_length=400, verbose_name='总仓备注')
@@ -177,33 +191,33 @@ class TotalWareHouse(models.Model):
         return self.total_name
 
 
-class CenterWareHouse(models.Model):
-    """
-    中心仓库
-    """
-    CENTER_WH_STATUS_CHOICES = (
-        (0, '停用'),
-        (1, '启用')
-    )
-    id = models.AutoField(primary_key=True)
-    center_wh_iden = models.CharField(max_length=6, unique=True, verbose_name='中心仓库编码')
-    center_wh_name = models.CharField(max_length=20, verbose_name='中心仓库名字')
-    organization = models.ForeignKey('Organization', related_name='orga_center_ware_house', verbose_name='组织',
-                                     on_delete=models.CASCADE)
-    center = models.ForeignKey('Center', related_name='center_center_wh', verbose_name='所属中心',
-                                         on_delete=models.CASCADE)
-    center_wh_status = models.IntegerField(choices=CENTER_WH_STATUS_CHOICES, default=1, verbose_name='中心仓库状态')
-    # brand = models.ForeignKey('Brand', verbose_name='品牌', on_delete=models.CASCADE)
-    brand_name = models.CharField(max_length=20, verbose_name='品牌名称')
-    center_wh_remarks = models.TextField(max_length=400, verbose_name='中心仓库备注', null=True)
-    center_wh_creator = models.CharField(max_length=20, verbose_name="中心创建者")
-    center_wh_createDate = models.DateTimeField(auto_now_add=True, verbose_name='中心创建时间')
-
-    class Meta:
-        verbose_name = "中心仓库"
-
-    def __str__(self):
-        return self.center_wh_name
+# class CenterWareHouse(models.Model):
+#     """
+#     中心仓库
+#     """
+#     CENTER_WH_STATUS_CHOICES = (
+#         (0, '停用'),
+#         (1, '启用')
+#     )
+#     id = models.AutoField(primary_key=True)
+#     center_wh_iden = models.CharField(max_length=6, unique=True, verbose_name='中心仓库编码')
+#     center_wh_name = models.CharField(max_length=20, verbose_name='中心仓库名字')
+#     organization = models.ForeignKey('Organization', related_name='orga_center_ware_house', verbose_name='组织',
+#                                      on_delete=models.CASCADE)
+#     center = models.ForeignKey('Center', related_name='center_center_wh', verbose_name='所属中心',
+#                                on_delete=models.CASCADE)
+#     center_wh_status = models.IntegerField(choices=CENTER_WH_STATUS_CHOICES, default=1, verbose_name='中心仓库状态')
+#     # brand = models.ForeignKey('Brand', verbose_name='品牌', on_delete=models.CASCADE)
+#     brand_name = models.CharField(max_length=20, verbose_name='品牌名称')
+#     center_wh_remarks = models.TextField(max_length=400, verbose_name='中心仓库备注', null=True)
+#     center_wh_creator = models.CharField(max_length=20, verbose_name="中心创建者")
+#     center_wh_createDate = models.DateTimeField(auto_now_add=True, verbose_name='中心创建时间')
+#
+#     class Meta:
+#         verbose_name = "中心仓库"
+#
+#     def __str__(self):
+#         return self.center_wh_name
 
 
 class Supplier(models.Model):
