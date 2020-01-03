@@ -22,14 +22,12 @@
 							<view>创建日期：{{ item.mso_createDate }}</view>
 						</view>
 						<view v-if="judgeStatus(item.mso_status) === 0" class="button-box">
-							<view class="delete">删除</view>
-							<view class="edit">
-								编辑
-							</view>
-							<view class="commit">提交</view>
+							<view class="delete" @click="deleteOrder(item.mso_iden)">删除</view>
+							<view class="edit" @click="editOrder(item.mso_iden)">编辑</view>
+							<view class="commit" @click="commitOrder(item.mso_iden)">提交</view>
 						</view>
 						<view v-if="judgeStatus(item.mso_status) === 1" class="button-box">
-							<view class="detail">详情</view>
+							<view class="detail" @click="viewDetail(item.mso_iden)">详情</view>
 						</view>
 					</uni-card>
 				</view>
@@ -58,18 +56,16 @@
 							<view>创建日期：{{ item.rp_createDate }}</view>
 						</view>
 						<view v-if="judgeStatus(item.rp_status) === 0" class="button-box">
-							<view class="delete">删除</view>
-							<view class="edit">
-								编辑
-							</view>
-							<view class="commit">提交</view>
+							<view class="delete" @click="deleteOrder(item.rp_iden)">删除</view>
+							<view class="edit" @click="editOrder(item.rp_iden)">编辑</view>
+							<view class="commit" @click="commitOrder(item.rp_iden)">提交</view>
 						</view>
 						<view v-if="judgeStatus(item.rp_status) === 1" class="button-box">
-							<view class="detail">详情</view>
-							<view class="delete">关闭</view>
+							<view class="detail" @click="viewDetail(item.rp_iden)">详情</view>
+							<view class="delete" @click="closeOrder(item.rp_iden)">关闭</view>
 						</view>
 						<view v-if="judgeStatus(item.rp_status) === 2" class="button-box">
-							<view class="detail">详情</view>
+							<view class="detail" @click="viewDetail(item.rp_iden)">详情</view>
 						</view>
 					</uni-card>
 				</view>
@@ -99,14 +95,12 @@
 							<view>创建日期：{{ item.so_createDate }}</view>
 						</view>
 						<view v-if="judgeStatus(item.so_status) === 0" class="button-box">
-							<view class="delete">删除</view>
-							<view class="edit">
-								编辑
-							</view>
-							<view class="commit">提交</view>
+							<view class="delete" @click="deleteOrder(item.so_iden)">删除</view>
+							<view class="edit" @click="editOrder(item.so_iden)">编辑</view>
+							<view class="commit" @click="commitOrder(item.so_iden)">提交</view>
 						</view>
 						<view v-if="judgeStatus(item.so_status) === 1" class="button-box">
-							<view class="detail">详情</view>
+							<view class="detail" @click="viewDetail(item.so_iden)">详情</view>
 						</view>
 					</uni-card>
 				</view>
@@ -136,14 +130,12 @@
 							<view>创建日期：{{ item.str_createDate }}</view>
 						</view>
 						<view v-if="judgeStatus(item.str_status) === 0" class="button-box">
-							<view class="delete">删除</view>
-							<view class="edit">
-								编辑
-							</view>
-							<view class="commit">提交</view>
+							<view class="delete" @click="deleteOrder(item.str_iden)">删除</view>
+							<view class="edit" @click="editOrder(item.str_iden)">编辑</view>
+							<view class="commit" @click="commitOrder(item.str_iden)">提交</view>
 						</view>
 						<view v-if="judgeStatus(item.str_status) === 1" class="button-box">
-							<view class="detail">详情</view>
+							<view class="detail" @click="viewDetail(item.str_iden)">详情</view>
 						</view>
 					</uni-card>
 				</view>
@@ -246,8 +238,168 @@ export default {
 				    url: '../user/myinfo',
 				});
 			}
+		},
+		//删除单据
+		deleteOrder(iden) {
+			var diff = iden[0]+iden[1]
+			if(diff === "MS") {
+				uni.showModal({
+				    title: '提示',
+				    content: '确认删除草稿：'+iden+" ?",
+				    success: function (res) {
+				        if (res.confirm) {
+				            uni.navigateTo({
+				                url: '../user/myinfo',
+				            });
+				        } else if (res.cancel) {
+				            console.log('用户点击取消');
+				        }
+				    }
+				});
+			} else if(diff === "PR") {
+				uni.showModal({
+				    title: '提示',
+				    content: '确认删除草稿：'+iden+" ?",
+				    success: function (res) {
+				        if (res.confirm) {
+							uni.navigateTo({
+								url: '../user/myinfo',
+							});
+				        } else if (res.cancel) {
+				            
+				        }
+				    }
+				});
+			} else if(diff === "SO") {
+				uni.showModal({
+				    title: '提示',
+				    content: '确认删除草稿：'+iden+" ?",
+				    success: function (res) {
+				        if (res.confirm) {
+							uni.navigateTo({
+								url: '../user/myinfo',
+							});
+				        } else if (res.cancel) {
+				            
+				        }
+				    }
+				});
+			} else if(diff === "ST") {
+				uni.showModal({
+				    title: '提示',
+				    content: '确认删除草稿：'+iden+" ?",
+				    success: function (res) {
+				        if (res.confirm) {
+							uni.navigateTo({
+								url: '../user/myinfo',
+							});
+				        } else if (res.cancel) {
+				            
+				        }
+				    }
+				});
+			}
+		},
+		//提交草稿
+		commitOrder(iden) {
+			var diff = iden[0]+iden[1]
+			if(diff === "MS") {
+				uni.showModal({
+				    title: '提示',
+				    content: '确认提交草稿：'+iden+" ?",
+				    success: function (res) {
+				        if (res.confirm) {
+				            uni.navigateTo({
+				                url: '../user/myinfo',
+				            });
+				        } else if (res.cancel) {
+				            console.log('用户点击取消');
+				        }
+				    }
+				});
+			} else if(diff === "PR") {
+				uni.showModal({
+				    title: '提示',
+				    content: '确认提交草稿：'+iden+" ?",
+				    success: function (res) {
+				        if (res.confirm) {
+							uni.navigateTo({
+								url: '../user/myinfo',
+							});
+				        } else if (res.cancel) {
+				            
+				        }
+				    }
+				});
+			} else if(diff === "SO") {
+				uni.showModal({
+				    title: '提示',
+				    content: '确认提交草稿：'+iden+" ?",
+				    success: function (res) {
+				        if (res.confirm) {
+							uni.navigateTo({
+								url: '../user/myinfo',
+							});
+				        } else if (res.cancel) {
+				            
+				        }
+				    }
+				});
+			} else if(diff === "ST") {
+				uni.showModal({
+				    title: '提示',
+				    content: '确认提交草稿：'+iden+" ?",
+				    success: function (res) {
+				        if (res.confirm) {
+							uni.navigateTo({
+								url: '../user/myinfo',
+							});
+				        } else if (res.cancel) {
+				            
+				        }
+				    }
+				});
+			}
+		},
+		//编辑草稿
+		editOrder(iden) {
+			var diff = iden[0]+iden[1]
+			if(diff === "MS") {
+				uni.navigateTo({
+				    url: '../user/myinfo',
+				});
+			} else if(diff === "PR") {
+				uni.navigateTo({
+				    url: '../user/myinfo',
+				});
+			} else if(diff === "SO") {
+				uni.navigateTo({
+				    url: '../user/myinfo',
+				});
+			} else if(diff === "ST") {
+				uni.navigateTo({
+				    url: '../user/myinfo',
+				});
+			}
+		},
+		//关闭订单
+		closeOrder(iden) {
+			uni.showModal({
+			    title: '提示',
+			    content: '确认关闭请购单：'+iden+" ?",
+			    success: function (res) {
+			        if (res.confirm) {
+			            uni.navigateTo({
+			                url: '../user/myinfo',
+			            });
+			        } else if (res.cancel) {
+			            console.log('用户点击取消');
+			        }
+			    }
+			});
 		}
 	},
+	
 	
 	// onLoad: function() {   //登录检查函数
 	// 	loginMsg = this.checkLogin('../pages/main/main', 'switchTab');
