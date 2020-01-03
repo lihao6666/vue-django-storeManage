@@ -246,7 +246,4 @@ export default {
     float: right;
     margin-left: 30px;
   }
-  .el-switch-ifshowadd {
-    margin-left: 30px;
-  }
 </style>

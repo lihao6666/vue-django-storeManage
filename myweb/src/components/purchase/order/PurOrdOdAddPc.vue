@@ -204,11 +204,4 @@ export default {
   .input-search {
     width: 40%;
   }
-  .button-save {
-    float: right;
-    margin-left: 30px;
-  }
-  .el-switch-ifshowadd {
-    margin-left: 30px;
-  }
 </style>
