@@ -279,11 +279,11 @@ export default {
     },
     // 新增
     handleAlter () {
-      this.alterVisible = true
       let _this = this
       postAPI('/organization').then(function (res) {
         let maxiden = String(parseInt(res.data.max_iden) + 1)
         _this.form.orga_iden = maxiden
+        _this.alterVisible = true
         for (let i = 0; i < 6 - maxiden.length; i++) {
           _this.form.orga_iden = '0' + _this.form.orga_iden
         }
