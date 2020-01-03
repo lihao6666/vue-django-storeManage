@@ -21,7 +21,7 @@
 </template>
 
 <script>
-import {postAPI} from '../api/api'
+/* import {postAPI} from '../api/api' */
 
 export default {
   data () {
@@ -45,10 +45,10 @@ export default {
   methods: {
     handleSubmit () {
       if (this.loginData.checkName && this.loginData.checkPass) {
-        let data = {
-          'user_id': this.loginData.checkName,
-          'user_passwd': this.loginData.checkPass
-        }
+        // let data = {
+        //   'user_id': this.loginData.checkName,
+        //   'user_passwd': this.loginData.checkPass
+        // }
         let _this = this
         localStorage.setItem('ms_username', _this.loginData.checkName)
         _this.$router.push('/')

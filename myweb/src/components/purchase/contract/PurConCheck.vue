@@ -115,7 +115,7 @@
 
 <script>
 import Pcadd from './PurConAdd'
-import {getAPI, postAPI} from '../../../api/api'
+import {getAPI} from '../../../api/api'
 
 export default {
   name: 'pc_check',
