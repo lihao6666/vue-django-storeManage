@@ -10,6 +10,7 @@ urlpatterns = [
     path('userNew', views.UserNewView.as_view(), name='userNew'),
     path('userAdd', views.UserAddView.as_view(), name='userAdd'),
     path('userUpdate', views.UserUpdateView.as_view(), name='userUpdate'),
+    path('userStatus', views.UserStatusView.as_view(), name='userStatus'),
     path('users', views.UsersView.as_view(), name='users'),
 
     path('areas', views.AreasView.as_view(), name='areas'),
@@ -63,9 +64,6 @@ urlpatterns = [
     path('materialNew', views.MaterialNewView.as_view(), name='materialNew'),
     path('materialAdd', views.MaterialAddView.as_view(), name='materialAdd'),
     path('materialUpdate', views.MaterialUpdateView.as_view(), name='materialUpdate'),
-
-
-
 
 
 

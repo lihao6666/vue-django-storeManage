@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'base',
     'purchase',
+    'sell',
     # 'orderManage',
     'storeManage'
 ]

@@ -37,7 +37,8 @@ class UserProfile(AbstractUser):
     # user_status = models.IntegerField(choices=USER_STATUS_CHOICES, default=0, verbose_name='用户状态')
     user_departments = models.CharField(max_length=50, null=True, verbose_name='部门')
     user_roles = models.CharField(max_length=50, null=True, verbose_name='角色')
-    user_creator = models.CharField(max_length=20, verbose_name='员工创建人')
+    user_creator = models.CharField(max_length=20, verbose_name='员工创建人工号')
+    user_creator_name = models.CharField(max_length=20, verbose_name='员工创建人名字')
 
     # user_createDate = models.DateTimeField(auto_now_add=True, verbose_name='员工创建时间')
 
@@ -89,7 +90,7 @@ class Role(models.Model):
     role_power = models.CharField(max_length=60, verbose_name='角色权限', null=True)
     role_description = models.TextField(max_length=400, verbose_name='角色描述', null=True)
     role_creator = models.CharField(max_length=20, verbose_name='角色创建人')
-    role_createData = models.DateTimeField(auto_now_add=True, verbose_name="创建角色时间")
+    role_createDate = models.DateTimeField(auto_now_add=True, verbose_name="创建角色时间")
 
     class Meta:
         verbose_name = "角色"
