@@ -1,7 +1,8 @@
 {
   "navigationBarTitleText": "仓库",
   "usingComponents": {
-    "refresh": "/components/refresh",
-    "nav-tab": "/components/navTab"
+    "uni-segmented-control": "/components/uni-segmented-control/uni-segmented-control",
+    "uni-card": "/components/uni-card/uni-card",
+    "cmd-icon": "/components/cmd-icon/cmd-icon"
   }
 }

@@ -40,7 +40,11 @@
         <el-table-column prop="supply_name" sortable label="名称" :filters="supply_nameSet"
                          :filter-method="filter" align="center"></el-table-column>
         <el-table-column prop="supply_type" sortable label="类型" :filters="supply_typeSet"
-                         :filter-method="filter" align="center"></el-table-column>
+                         :filter-method="filter" align="center">
+          <template slot-scope="scope">
+            <el-tag :type="'success'">{{scope.row.supply_type==0?'内部单位':'外部单位'}}</el-tag>
+          </template>
+        </el-table-column>
         <el-table-column prop="supply_creator" sortable label="创建人" :filters="supply_creatorSet"
                          :filter-method="filter" align="center"></el-table-column>
         <el-table-column prop="supply_createDate" sortable label="创建日期" align="center"></el-table-column>
@@ -106,8 +110,7 @@
           <el-row>
             <el-form-item label="类型"  align="left">
               <el-select v-model="form.supply_type" placeholder="请选择区域"  class="option" >
-                <el-option key="内部单位" label="内部单位" value="内部单位"> </el-option>
-                <el-option key="外部单位" label="外部单位" value="外部单位"> </el-option>
+                <el-option v-for="item in supplytype" v-bind:key="item.value" :label="item.label" :value="item.value"></el-option>
               </el-select>
             </el-form-item>
           </el-row>
@@ -150,8 +153,7 @@
           <el-row>
             <el-form-item label="类型"  align="left">
             <el-select v-model="editform.supply_type" placeholder="请选择区域"  class="option" >
-              <el-option key="内部单位" label="内部单位" value="内部单位"> </el-option>
-              <el-option key="外部单位" label="外部单位" value="外部单位"> </el-option>
+              <el-option v-for="item in supplytype" v-bind:key="item.value" :label="item.label" :value="item.value"></el-option>
             </el-select>
           </el-form-item>
           </el-row>
@@ -165,7 +167,7 @@
       </div>
       <el-row :gutter="20" class="el-row-button-save">
         <el-col :span="1" :offset="15">
-          <el-button @click="alterVisible = false">取 消</el-button>
+          <el-button @click="editVisible = false">取 消</el-button>
         </el-col>
         <el-col :span="1" :offset="4">
           <el-button type="primary" @click="saveEdit">确 定</el-button>
@@ -176,7 +178,7 @@
 </template>
 
 <script>
-import {postAPI} from '../../api/api'
+import {postAPI, getAPI} from '../../api/api'
 export default {
   name: 'test',
   data () {
@@ -185,6 +187,16 @@ export default {
         pageIndex: 1,
         pageSize: 5
       },
+      supplytype: [
+        {
+          value: 1,
+          label: '外部单位'
+        },
+        {
+          value: 0,
+          label: '内部单位'
+        }
+      ],
       search: '',
       form: {
         supply_iden: '',
@@ -193,7 +205,7 @@ export default {
         supply_remarks: '',
         supply_area: ''
       },
-      supply_iden: '',
+      supply_status: '',
       supply_nameSet: [],
       supply_typeSet: [],
       supply_creatorSet: [],
@@ -219,9 +231,12 @@ export default {
   methods: {
     getData () {
       let _this = this
-      postAPI('/supplier').then(function (res) {
-        _this.tableData = res.data.list
-        _this.tableDataNew = _this.tableData
+      getAPI('/base/suppliers').then(function (res) {
+        if (res.data.message) {
+          return
+        }
+        _this.tableData = res.data.suppliers
+        _this.find()
         let nameset = new Set()
         let typeset = new Set()
         let creatorset = new Set()
@@ -248,7 +263,7 @@ export default {
             value: i
           })
         }
-        _this.pageTotal = res.data.list.length
+        _this.pageTotal = res.data.suppliers.length
       }).catch(function (err) {
         console.log(err)
       })
@@ -273,8 +288,13 @@ export default {
     handleAlter () {
       this.alterVisible = true
       let _this = this
-      postAPI('/supplier').then(function (res) {
-        let maxiden = String(parseInt(res.data.max_iden) + 1)
+      getAPI('/base/suppliers').then(function (res) {
+        let maxiden
+        if (res.data.message) {
+          maxiden = '0100001'
+        } else {
+          maxiden = String(parseInt(res.data.max_iden) + 1)
+        }
         _this.form.supply_iden = maxiden
         for (let i = 0; i < 7 - maxiden.length; i++) {
           _this.form.supply_iden = '0' + _this.form.supply_iden
@@ -289,13 +309,73 @@ export default {
       this.form.supply_remarks = ''
       this.form.supply_type = ''
     },
+    // 启用
+    handleStart (row) {
+      this.$confirm('确定要启用吗？', '提示', {
+        type: 'warning'
+      })
+        .then(() => {
+          let _this = this
+          let data = {
+            'supply_name': row.supply_name,
+            'supply_iden': row.supply_iden,
+            'supply_area': row.supply_area,
+            'supply_type': row.supply_type,
+            'supply_status': 1,
+            'supply_remarks': row.supply_remarks
+          }
+          postAPI('/base/supplierUpdate', data).then(function (res) {
+            if (res.data.signal === 0) {
+              _this.$message.success(`启用成功`)
+              _this.getData()
+            } else {
+              _this.$message.error(res.data.message)
+            }
+          }).catch(function (err) {
+            console.log(err)
+            _this.$message.error(`启用失败`)
+          })
+        })
+        .catch(() => {
+          this.$message({
+            type: 'info',
+            message: '取消启用'
+          })
+        })
+    },
     // 停用操作
     handleStop (row) {
-      postAPI('/supplier', {data: row, supply_status: 0}).then(function (res) {
-        console.log(res)
-      }).catch(function (err) {
-        console.log(err)
+      this.$confirm('确定要停用吗？', '提示', {
+        type: 'warning'
       })
+        .then(() => {
+          let _this = this
+          let data = {
+            'supply_name': row.supply_name,
+            'supply_iden': row.supply_iden,
+            'supply_area': row.supply_area,
+            'supply_type': row.supply_type,
+            'supply_status': 0,
+            'supply_remarks': row.supply_remarks
+          }
+          postAPI('/base/supplierUpdate', data).then(function (res) {
+            if (res.data.signal === 0) {
+              _this.$message.success(`停用成功`)
+              _this.getData()
+            } else {
+              _this.$message.error(res.data.message)
+            }
+          }).catch(function (err) {
+            console.log(err)
+            _this.$message.error(`停用失败`)
+          })
+        })
+        .catch(() => {
+          this.$message({
+            type: 'info',
+            message: '取消停用'
+          })
+        })
     },
     // 查询
     find () {
@@ -303,17 +383,9 @@ export default {
       this.tableDataNew = this.tableData.filter(data => !this.search ||
           String(data.supply_name).toLowerCase().includes(this.search.toLowerCase()) ||
           String(data.supply_iden).toLowerCase().includes(this.search.toLowerCase()) ||
-          String(data.supply_createDate).toLowerCase().includes(this.search.toLowerCase()) ||
+          String(data.supply_type).toLowerCase().includes(this.search.toLowerCase()) ||
           String(data.supply_remarks).toLowerCase().includes(this.search.toLowerCase()) ||
           String(data.supply_creator).toLowerCase().includes(this.search.toLowerCase()))
-    },
-    // 启用
-    handleStart (row) {
-      postAPI('/supplier', {data: row, supply_status: 1}).then(function (res) {
-        console.log(res)
-      }).catch(function (err) {
-        console.log(err)
-      })
     },
     // 编辑操作
     handleEdit (row) {
@@ -321,27 +393,65 @@ export default {
       this.editform.supply_name = row.supply_name
       this.editform.supply_type = row.supply_type
       this.editform.supply_remarks = row.supply_remarks
-      this.supply_iden = row.supply_iden
+      this.supply_status = row.supply_status
       this.editVisible = true
     },
     // 保存编辑
     saveEdit () {
-      this.editVisible = false
-      this.$message.success(`修改成功`)
-      postAPI('/supplier', {data: this.editform, supply_name: this.supply_name}).then(function (res) {
-        console.log(res)
+      let _this = this
+      if (_this.editform.supply_iden === '') {
+        _this.$message.error(`编码不能为空`)
+        return
+      }
+      if (_this.editform.supply_name === '') {
+        _this.$message.error(`名称不能为空`)
+        return
+      }
+      let data = {
+        'supply_iden': _this.editform.supply_iden,
+        'supply_name': _this.editform.supply_name,
+        'supply_type': _this.editform.supply_type,
+        'supply_remarks': _this.editform.supply_remarks,
+        'supply_status': _this.supply_status
+      }
+      postAPI('/base/supplierUpdate', data).then(function (res) {
+        if (res.data.signal === 0) {
+          _this.editVisible = false
+          _this.$message.success(`修改成功`)
+          _this.getData()
+        } else {
+          _this.$message.error(res.data.message)
+        }
       }).catch(function (err) {
+        _this.$message.error(`修改失败`)
         console.log(err)
       })
     },
     // 保存新增
     saveAlter () {
-      this.alterVisible = false
-      this.$message.success(`新增成功`)
-      this.clearform()
-      postAPI('/supplier', {data: this.form, table: 'supplier'}).then(function (res) {
-        console.log(res)
+      let _this = this
+      if (this.form.supply_name === '') {
+        _this.$message.error(`名称不能为空`)
+        return
+      }
+      let data = {
+        'supply_iden': _this.form.supply_iden,
+        'supply_name': _this.form.supply_name,
+        'supply_type': _this.form.supply_type,
+        'supply_remarks': _this.form.supply_remarks,
+        'supply_status': 0
+      }
+      postAPI('/base/supplierAdd', data).then(function (res) {
+        if (res.data.signal === 0) {
+          _this.$message.success(`新增成功`)
+          _this.alterVisible = false
+          _this.getData()
+          _this.clearform()
+        } else {
+          _this.$message.error(res.data.message)
+        }
       }).catch(function (err) {
+        _this.$message.error(`新增失败`)
         console.log(err)
       })
     },

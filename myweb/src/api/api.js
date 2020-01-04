@@ -20,10 +20,13 @@ if (httpUrl.indexOf('.com') !== -1) {
 }
 
 axios.interceptors.request.use(config => {
-  // let username = localStorage.getItem('ms_username')
-  // if (username === null) {
-  //   return null
-  // }
+  if (config.method === 'post') {
+    let username = localStorage.getItem('user_now_iden')
+    if (username !== null) {
+      config.data.user_now_iden = username
+    }
+  }
+  console.log(config)
   // let bToken = localStorage.getItem('btoken')
   // if (bToken === null) {
   // } else {
@@ -51,7 +54,7 @@ axios.interceptors.response.use(response => {
   //     Message.error(response.data.msg)
   //   } else if (returnCode >= 30000 && returnCode < 40000) {
   //     // 只弹窗，点击跳到登入页
-  //     localStorage.removeItem('ms_username')
+  //     localStorage.removeItem('user_now_iden')
   //     MessageBox.confirm(response.data.msg, '确定登出', {
   //       confirmButtonText: '重新登录',
   //       cancelButtonText: '取消',
@@ -83,7 +86,6 @@ export function getAPI (url, params = null) {
 export function postAPI (url, params = null) {
   return axios({
     method: 'post',
-    baseURL: 'http://127.0.0.1:8090',
     url,
     data: params,
     timeout: 10000,

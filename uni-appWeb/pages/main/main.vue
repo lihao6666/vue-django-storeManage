@@ -5,6 +5,7 @@
 		</view>
 		<view class="current-content">
 			<view v-if="current === 0">
+				<!-- <input v-model="filterText" type="text" placeholder="设备编号,设备名称" ></input> -->
 				<view v-for="item in outList" :key="item.id" class="card-set">
 					<uni-card
 					    :title="item.mso_iden"
@@ -176,9 +177,20 @@ export default {
 			outList: outData.data,
 			purchaseList: purchaseData.data,
 			sellList: sellData.data,
-			exchangeList: exchangeData.data
+			exchangeList: exchangeData.data,
+			// filterText: ''
 		}
 	},
+	// computed:{
+	// 	filterList () {
+	// 		var arr = []
+	// 		this.outList.forEach((item) => arr.push(item))
+	// 		if (this.filterText) {
+	// 			arr = this.outList.filter(item => item.mso_status.includes(this.filterText))
+	// 		}
+	// 		return arr
+	// 	}
+	// },
 	methods: {
 		//切换tab
 		onClickItem(e) {
@@ -397,9 +409,9 @@ export default {
 			        }
 			    }
 			});
-		}
-	},
-	
+		},
+
+	}
 	
 	// onLoad: function() {   //登录检查函数
 	// 	loginMsg = this.checkLogin('../pages/main/main', 'switchTab');

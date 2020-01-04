@@ -19,9 +19,9 @@ from rest_framework_jwt.views import obtain_jwt_token
 
 urlpatterns = [
     #    path('admin/', admin.site.urls),
-    path('base/', include(('base.urls','base'), namespace='base')),
-    path('purchase/', include(('purchase.urls','purchase'), namespace='purchase')),
-    path('storeManage/', include(('storeManage.urls','storeManage'), namespace='storeManage')),
-
-    path('jwt-token-auth/', obtain_jwt_token)
+    path('base/', include(('base.urls', 'base'), namespace='base')),
+    path('purchase/', include(('purchase.urls', 'purchase'), namespace='purchase')),
+    path('storeManage/', include(('storeManage.urls', 'storeManage'), namespace='storeManage')),
+    path('sell/', include(('sell.urls', 'sell'), namespace='sell')),
+    # path('jwt-token-auth/', obtain_jwt_token)
 ]

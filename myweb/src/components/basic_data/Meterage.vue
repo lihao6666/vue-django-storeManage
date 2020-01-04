@@ -97,11 +97,7 @@
           <el-row>
             <el-form-item label="量纲"  align="left">
               <el-select v-model="form.meterage_dimension" placeholder="请选择"  class="option" >
-                <el-option key="重量" label="重量" value="重量"> </el-option>
-                <el-option key="长度" label="长度" value="长度"> </el-option>
-                <el-option key="面积" label="面积" value="面积"> </el-option>
-                <el-option key="体积" label="体积" value="体积"> </el-option>
-                <el-option key="件数" label="件数" value="件数"> </el-option>
+                <el-option v-for="item in meteragetype" v-bind:key="item.value" :label="item.label" :value="item.value"></el-option>
               </el-select>
             </el-form-item>
           </el-row>
@@ -138,11 +134,7 @@
           <el-row>
             <el-form-item label="量纲"  align="left">
               <el-select v-model="editform.meterage_dimension" placeholder="请选择"  class="option" >
-                <el-option key="重量" label="重量" value="重量"> </el-option>
-                <el-option key="长度" label="长度" value="长度"> </el-option>
-                <el-option key="面积" label="面积" value="面积"> </el-option>
-                <el-option key="体积" label="体积" value="体积"> </el-option>
-                <el-option key="件数" label="件数" value="件数"> </el-option>
+                <el-option v-for="item in meteragetype" v-bind:key="item.value" :label="item.label" :value="item.value"></el-option>
               </el-select>
             </el-form-item>
           </el-row>
@@ -150,7 +142,7 @@
       </div>
       <el-row :gutter="20" class="el-row-button-save">
         <el-col :span="1" :offset="15">
-          <el-button @click="alterVisible = false">取 消</el-button>
+          <el-button @click="editVisible = false">取 消</el-button>
         </el-col>
         <el-col :span="1" :offset="4">
           <el-button type="primary" @click="saveEdit">确 定</el-button>
@@ -161,7 +153,7 @@
 </template>
 
 <script>
-import {postAPI} from '../../api/api'
+import {postAPI, getAPI} from '../../api/api'
 export default {
   name: 'test',
   data () {
@@ -170,13 +162,33 @@ export default {
         pageIndex: 1,
         pageSize: 5
       },
+      meteragetype: [
+        {
+          value: 0,
+          label: '重量'
+        },
+        {
+          value: 1,
+          label: '长度'
+        },
+        {
+          value: 2,
+          label: '面积'
+        },
+        {
+          value: 3,
+          label: '体积'
+        },
+        {
+          value: 4,
+          label: '件数'
+        }
+      ],
       search: '',
       form: {
         meterage_iden: '',
         meterage_name: '',
-        meterage_dimension: '',
-        meterage_remarks: '',
-        meterage_area: ''
+        meterage_dimension: ''
       },
       meterage_iden: '',
       meterage_nameSet: [],
@@ -186,8 +198,7 @@ export default {
         meterage_iden: '',
         meterage_name: '',
         meterage_dimension: '',
-        meterage_remarks: '',
-        meterage_area: ''
+        id: ''
       },
       tableData: [],
       tableDataNew: [],
@@ -204,9 +215,12 @@ export default {
   methods: {
     getData () {
       let _this = this
-      postAPI('/meterage').then(function (res) {
-        _this.tableData = res.data.list
-        _this.tableDataNew = _this.tableData
+      getAPI('/base/meterages').then(function (res) {
+        if (res.data.message) {
+          return
+        }
+        _this.tableData = res.data.meterages
+        _this.find()
         let nameset = new Set()
         let dimset = new Set()
         let creatorset = new Set()
@@ -233,7 +247,7 @@ export default {
             value: i
           })
         }
-        _this.pageTotal = res.data.list.length
+        _this.pageTotal = res.data.meterages.length
       }).catch(function (err) {
         console.log(err)
       })
@@ -258,8 +272,13 @@ export default {
     handleAlter () {
       this.alterVisible = true
       let _this = this
-      postAPI('/meterage').then(function (res) {
-        let maxiden = String(parseInt(res.data.max_iden) + 1)
+      getAPI('/base/meterages').then(function (res) {
+        let maxiden
+        if (res.data.message) {
+          maxiden = '000001'
+        } else {
+          maxiden = String(parseInt(res.data.max_iden) + 1)
+        }
         _this.form.meterage_iden = maxiden
         for (let i = 0; i < 6 - maxiden.length; i++) {
           _this.form.meterage_iden = '0' + _this.form.meterage_iden
@@ -268,28 +287,63 @@ export default {
     },
     // 一键清除新增表单
     clearform () {
-      this.form.meterage_area = ''
       this.form.meterage_dimension = ''
       this.form.meterage_iden = ''
       this.form.meterage_name = ''
-      this.form.meterage_remarks = ''
-      this.form.material_meterage = ''
     },
     // 启用
     handleStart (row) {
-      postAPI('/meterage', {data: row, meterage_status: 1}).then(function (res) {
-        console.log(res)
-      }).catch(function (err) {
-        console.log(err)
+      this.$confirm('确定要启用吗？', '提示', {
+        type: 'warning'
       })
+        .then(() => {
+          let _this = this
+          row.meterage_status = 1
+          postAPI('/base/meterageUpdate', row).then(function (res) {
+            if (res.data.signal === 0) {
+              _this.$message.success(`启用成功`)
+              _this.getData()
+            } else {
+              _this.$message.error(res.data.message)
+            }
+          }).catch(function (err) {
+            console.log(err)
+            _this.$message.error(`启用失败`)
+          })
+        })
+        .catch(() => {
+          this.$message({
+            type: 'info',
+            message: '取消启用'
+          })
+        })
     },
     // 停用操作
     handleStop (row) {
-      postAPI('/meterage', {data: row, meterage_status: 0}).then(function (res) {
-        console.log(res)
-      }).catch(function (err) {
-        console.log(err)
+      this.$confirm('确定要停用吗？', '提示', {
+        type: 'warning'
       })
+        .then(() => {
+          let _this = this
+          row.meterage_status = 1
+          postAPI('/base/meterageUpdate', row).then(function (res) {
+            if (res.data.signal === 0) {
+              _this.$message.success(`停用成功`)
+              _this.getData()
+            } else {
+              _this.$message.error(res.data.message)
+            }
+          }).catch(function (err) {
+            console.log(err)
+            _this.$message.error(`停用失败`)
+          })
+        })
+        .catch(() => {
+          this.$message({
+            type: 'info',
+            message: '取消停用'
+          })
+        })
     },
     // 查询
     find () {
@@ -305,28 +359,57 @@ export default {
       this.editform.meterage_iden = row.meterage_iden
       this.editform.meterage_name = row.meterage_name
       this.editform.meterage_dimension = row.meterage_dimension
-      this.editform.meterage_remarks = row.meterage_remarks
-      this.meterage_iden = row.meterage_iden
+      this.editform.id = row.id
+      this.editform.meterage_status = row.meterage_status
       this.editVisible = true
     },
     // 保存编辑
     saveEdit () {
-      this.editVisible = false
-      this.$message.success(`修改成功`)
-      postAPI('/meterage', {data: this.editform, meterage_name: this.meterage_name}).then(function (res) {
-        console.log(res)
+      let _this = this
+      if (_this.editform.meterage_iden === '') {
+        _this.$message.error(`编码不能为空`)
+        return
+      }
+      if (_this.editform.meterage_name === '') {
+        _this.$message.error(`名称不能为空`)
+        return
+      }
+      postAPI('/base/meterageUpdate', _this.editform).then(function (res) {
+        if (res.data.signal === 0) {
+          _this.editVisible = false
+          _this.$message.success(`修改成功`)
+          _this.getData()
+        } else {
+          _this.$message.error(res.data.message)
+        }
       }).catch(function (err) {
+        _this.$message.error(`修改失败`)
         console.log(err)
       })
     },
     // 保存新增
     saveAlter () {
-      this.alterVisible = false
-      this.$message.success(`新增成功`)
-      this.clearform()
-      postAPI('/meterage', {data: this.form, table: 'meterage'}).then(function (res) {
-        console.log(res)
+      let _this = this
+      if (_this.form.meterage_iden === '') {
+        _this.$message.error(`编码不能为空`)
+        return
+      }
+      if (_this.form.meterage_name === '') {
+        _this.$message.error(`名称不能为空`)
+        return
+      }
+      _this.form.meterage_status = 0
+      postAPI('/base/meterageAdd', _this.form).then(function (res) {
+        if (res.data.signal === 0) {
+          _this.$message.success(`新增成功`)
+          _this.alterVisible = false
+          _this.getData()
+          _this.clearform()
+        } else {
+          _this.$message.error(res.data.message)
+        }
       }).catch(function (err) {
+        _this.$message.error(`新增失败`)
         console.log(err)
       })
     },

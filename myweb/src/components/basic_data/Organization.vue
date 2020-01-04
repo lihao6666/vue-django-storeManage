@@ -153,13 +153,7 @@
           </el-row>
           <el-row>
             <el-form-item label="区域"  align="left">
-              <el-select v-model="editform.orga_area" placeholder="请选择区域"  class="option" >
-                <el-option
-                  v-for="item in area_options"
-                  :key="item"
-                  :label="item"
-                  :value="item">
-                </el-option>
+              <el-select v-model="editform.orga_area" placeholder="请选择区域" disabled class="option" >
               </el-select>
             </el-form-item>
           </el-row>
@@ -173,7 +167,7 @@
       </div>
       <el-row :gutter="20" class="el-row-button-save">
         <el-col :span="1" :offset="15">
-          <el-button @click="alterVisible = false">取 消</el-button>
+          <el-button @click="editVisible = false">取 消</el-button>
         </el-col>
         <el-col :span="1" :offset="4">
           <el-button type="primary" @click="saveEdit">确 定</el-button>
@@ -184,7 +178,7 @@
 </template>
 
 <script>
-import {postAPI} from '../../api/api'
+import {getAPI, postAPI} from '../../api/api'
 export default {
   name: 'test',
   data () {
@@ -211,6 +205,7 @@ export default {
         orga_remarks: '',
         orga_area: ''
       },
+      username: '',
       tableData: [],
       tableDataNew: [],
       multipleSelection: [],
@@ -225,11 +220,16 @@ export default {
   },
   methods: {
     getData () {
-      this.getlist()
       let _this = this
-      postAPI('/organization').then(function (res) {
-        _this.tableData = res.data.list
-        _this.tableDataNew = _this.tableData
+      getAPI('/base/organizations').then(function (res) {
+        _this.tableData = res.data.organizations
+        let n = res.data.max_iden.length
+        let num = parseInt(res.data.max_iden) + 1
+        _this.username = String(Array(n > num ? (n - ('' + num).length + 1) : 0).join(0) + num)
+        _this.find()
+        if (!res.data.organizations) {
+          return
+        }
         let nameset = new Set()
         let areaset = new Set()
         let creatorset = new Set()
@@ -256,7 +256,7 @@ export default {
             value: i
           })
         }
-        _this.pageTotal = res.data.list.length
+        _this.pageTotal = res.data.organizations.length
       }).catch(function (err) {
         console.log(err)
       })
@@ -279,15 +279,9 @@ export default {
     },
     // 新增
     handleAlter () {
-      let _this = this
-      postAPI('/organization').then(function (res) {
-        let maxiden = String(parseInt(res.data.max_iden) + 1)
-        _this.form.orga_iden = maxiden
-        _this.alterVisible = true
-        for (let i = 0; i < 6 - maxiden.length; i++) {
-          _this.form.orga_iden = '0' + _this.form.orga_iden
-        }
-      })
+      this.getlist()
+      this.alterVisible = true
+      this.form.orga_name = this.username
     },
     // 一键清除新增表单
     clearform () {
@@ -298,11 +292,32 @@ export default {
     },
     // 停用操作
     handleStop (row) {
-      postAPI('/organization', {data: row, orga_status: 0}).then(function (res) {
-        console.log(res)
-      }).catch(function (err) {
-        console.log(err)
+      this.$confirm('确定要停用吗？', '提示', {
+        type: 'warning'
       })
+        .then(() => {
+          let _this = this
+          row.orga_status = 0
+          postAPI('/base/organizationStatus', row).then(function (res) {
+            if (res.data.signal === 0) {
+              _this.$message.success(`停用成功`)
+              _this.getData()
+            } else {
+              _this.$message.error(res.data.message)
+              row.orga_status = 1
+            }
+          }).catch(function (err) {
+            console.log(err)
+            _this.$message.error(`停用失败`)
+            row.orga_status = 1
+          })
+        })
+        .catch(() => {
+          this.$message({
+            type: 'info',
+            message: '取消停用'
+          })
+        })
     },
     // 查询
     find () {
@@ -317,23 +332,38 @@ export default {
     },
     // 启用
     handleStart (row) {
-      postAPI('/organization', {data: row, orga_status: 1}).then(function (res) {
-        console.log(res)
-      }).catch(function (err) {
-        console.log(err)
+      this.$confirm('确定要启用吗？', '提示', {
+        type: 'warning'
       })
+        .then(() => {
+          let _this = this
+          row.orga_status = 1
+          postAPI('/base/organizationStatus', row).then(function (res) {
+            if (res.data.signal === 0) {
+              _this.$message.success(`启用成功`)
+              _this.getData()
+            } else {
+              _this.$message.error(res.data.message)
+              row.orga_status = 0
+            }
+          }).catch(function (err) {
+            console.log(err)
+            _this.$message.error(`启用失败`)
+            row.orga_status = 0
+          })
+        })
+        .catch(() => {
+          this.$message({
+            type: 'info',
+            message: '取消启用'
+          })
+        })
     },
     // 获取列表
     getlist () {
       let _this = this
-      postAPI('/area').then(function (res) {
-        let alterarea = new Set()
-        for (let i in res.data.list) {
-          alterarea.add(res.data.list[i]['area_name'])
-        }
-        for (let j of alterarea) {
-          _this.area_options.push(j)
-        }
+      getAPI('/base/organizationNew').then(function (res) {
+        _this.area_options = res.data.areas
       }).catch(function (err) {
         console.log(err)
       })
@@ -344,27 +374,49 @@ export default {
       this.editform.orga_name = row.orga_name
       this.editform.orga_area = row.orga_area
       this.editform.orga_remarks = row.orga_remarks
-      this.orga_iden = row.orga_iden
+      this.editform.orga_status = row.orga_status
+      this.editform.id = row.id
       this.editVisible = true
     },
     // 保存编辑
     saveEdit () {
-      this.editVisible = false
-      this.$message.success(`修改成功`)
-      postAPI('/organization', {data: this.editform, orga_iden: this.orga_iden}).then(function (res) {
-        console.log(res)
+      if (!this.editform.orga_iden || !this.editform.orga_name || !this.editform.orga_area) {
+        this.$message.error(`请填写完信息`)
+        return
+      }
+      let _this = this
+      postAPI('/base/organizationUpdate', _this.editform).then(function (res) {
+        if (res.data.signal === 0) {
+          _this.editVisible = false
+          _this.$message.success(`修改成功`)
+          _this.getData()
+          _this.clearform()
+        } else {
+          _this.$message.error(res.data.message)
+        }
       }).catch(function (err) {
+        _this.$message.error(`修改失败`)
         console.log(err)
       })
     },
     // 保存新增
     saveAlter () {
-      this.alterVisible = false
-      this.$message.success(`新增成功`)
-      this.clearform()
-      postAPI('/organization', {data: this.form, table: 'organization'}).then(function (res) {
-        console.log(res)
+      if (!this.editform.orga_iden || !this.editform.orga_name || !this.editform.orga_area) {
+        this.$message.error(`请填写完信息`)
+        return
+      }
+      let _this = this
+      _this.form.orga_status = 0
+      postAPI('/base/centerAdd', _this.form).then(function (res) {
+        if (res.data.signal === 0) {
+          _this.$message.success(`新增成功`)
+          _this.alterVisible = false
+          _this.getData()
+        } else {
+          _this.$message.error(res.data.message)
+        }
       }).catch(function (err) {
+        _this.$message.error(`新增失败`)
         console.log(err)
       })
     },

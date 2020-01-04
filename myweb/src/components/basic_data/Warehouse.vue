@@ -39,6 +39,8 @@
         <el-table-column prop="total_name" sortable label="仓库编码"  align="center"></el-table-column>
         <el-table-column prop="total_belong_orga" sortable label="所属组织" :filters="total_orgaSet"
                          :filter-method="filter" align="center"></el-table-column>
+        <el-table-column prop="total_belong_center" sortable label="所属中心" :filters="total_centerSet"
+                         :filter-method="filter" align="center"></el-table-column>
         <el-table-column prop="total_name" sortable label="仓库名称" :filters="total_nameSet"
                          :filter-method="filter" align="center"></el-table-column>
         <el-table-column prop="total_belong_brand" sortable label="所属品牌" :filters="total_brandSet"
@@ -96,6 +98,19 @@
               <el-select v-model="form.total_belong_orga" placeholder="请选择区域"  class="option" >
                 <el-option
                   v-for="item in orga_options"
+                  :key="item"
+                  :label="item"
+                  :value="item">
+                </el-option>
+              </el-select>
+            </el-form-item>
+          </el-row>
+          <el-row>
+            <el-form-item label="所属中心"  align="left">
+              <el-select v-model="form.total_belong_center" placeholder="请选择区域"  class="option" >
+                <el-option key="无" label="无" value="无"> </el-option>
+                <el-option
+                  v-for="item in center_options"
                   :key="item"
                   :label="item"
                   :value="item">
@@ -164,6 +179,19 @@
             </el-form-item>
           </el-row>
           <el-row>
+            <el-form-item label="所属中心"  align="left">
+              <el-select v-model="editform.total_belong_center" placeholder="请选择区域"  class="option" >
+                <el-option key="无" label="无" value=''> </el-option>
+                <el-option
+                  v-for="item in center_options"
+                  :key="item"
+                  :label="item"
+                  :value="item">
+                </el-option>
+              </el-select>
+            </el-form-item>
+          </el-row>
+          <el-row>
             <el-form-item label="仓库编码" class="inputs" align="left">
               <el-col :span="10">
                 <el-input v-model="editform.total_iden" ></el-input>
@@ -199,10 +227,10 @@
       </div>
       <el-row :gutter="20" class="el-row-button-save">
         <el-col :span="1" :offset="15">
-          <el-button @click="alterVisible = false">取 消</el-button>
+          <el-button @click="editVisible = false">取 消</el-button>
         </el-col>
         <el-col :span="1" :offset="4">
-          <el-button type="primary" @click="saveAlter">确 定</el-button>
+          <el-button type="primary" @click="saveEdit">确 定</el-button>
         </el-col>
       </el-row>
     </el-dialog>
@@ -228,6 +256,7 @@ export default {
         total_remarks: '',
         total_iden: '',
         total_belong_orga: '',
+        total_belong_center: '',
         total_belong_brand: ''
       },
       total_iden: '',
@@ -240,6 +269,7 @@ export default {
         total_remarks: '',
         total_iden: '',
         total_belong_orga: '',
+        total_belong_center: '',
         total_belong_brand: ''
       },
       tableData: [],
@@ -264,11 +294,13 @@ export default {
         let nameset = new Set()
         let orgaset = new Set()
         let brandset = new Set()
+        let centerset = new Set()
         let creatorset = new Set()
         for (let i in _this.tableData) {
           nameset.add(_this.tableData[i]['total_name'])
           orgaset.add(_this.tableData[i]['total_belong_orga'])
           brandset.add(_this.tableData[i]['total_belong_brand'])
+          centerset.add(_this.tableData[i]['total_belong_center'])
           creatorset.add(_this.tableData[i]['total_creator'])
         }
         for (let i of nameset) {
@@ -279,6 +311,12 @@ export default {
         }
         for (let i of orgaset) {
           _this.total_orgaSet.push({
+            text: i,
+            value: i
+          })
+        }
+        for (let i of centerset) {
+          _this.total_centerSet.push({
             text: i,
             value: i
           })
@@ -332,6 +370,7 @@ export default {
     clearform () {
       this.form.total_belong_brand = ''
       this.form.total_belong_orga = ''
+      this.form.total_belong_center = ''
       this.form.total_iden = ''
       this.form.total_name = ''
       this.form.total_remarks = ''
@@ -351,7 +390,7 @@ export default {
           String(data.total_name).toLowerCase().includes(this.search.toLowerCase()) ||
           String(data.total_belong_orga).toLowerCase().includes(this.search.toLowerCase()) ||
           String(data.total_belong_brand).toLowerCase().includes(this.search.toLowerCase()) ||
-          String(data.total_createDate).toLowerCase().includes(this.search.toLowerCase()) ||
+          String(data.total_belong_center).toLowerCase().includes(this.search.toLowerCase()) ||
           String(data.total_remarks).toLowerCase().includes(this.search.toLowerCase()) ||
           String(data.total_creator).toLowerCase().includes(this.search.toLowerCase()))
     },
@@ -488,6 +527,6 @@ export default {
     color: GREEN;
   }
   .inputs {
-    width: 590px;
+    width: 635px;
   }
 </style>

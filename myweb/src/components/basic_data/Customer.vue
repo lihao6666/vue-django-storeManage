@@ -165,10 +165,10 @@
       </div>
       <el-row :gutter="20" class="el-row-button-save">
         <el-col :span="1" :offset="15">
-          <el-button @click="alterVisible = false">取 消</el-button>
+          <el-button @click="editVisible = false">取 消</el-button>
         </el-col>
         <el-col :span="1" :offset="4">
-          <el-button type="primary" @click="saveAlter">确 定</el-button>
+          <el-button type="primary" @click="saveEdit">确 定</el-button>
         </el-col>
       </el-row>
     </el-dialog>

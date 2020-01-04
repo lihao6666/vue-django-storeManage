@@ -133,7 +133,7 @@
       </div>
       <el-row :gutter="20" class="el-row-button-save">
         <el-col :span="1" :offset="15">
-          <el-button @click="alterVisible = false">取 消</el-button>
+          <el-button @click="editVisible = false">取 消</el-button>
         </el-col>
         <el-col :span="1" :offset="4">
           <el-button type="primary" @click="saveEdit">确 定</el-button>
@@ -182,8 +182,11 @@ export default {
     getData () {
       let _this = this
       getAPI('/base/brands').then(function (res) {
+        if (res.data.message) {
+          return
+        }
         _this.tableData = res.data.brands
-        _this.tableDataNew = _this.tableData
+        _this.find()
         let nameset = new Set()
         let creatorset = new Set()
         for (let i in _this.tableData) {

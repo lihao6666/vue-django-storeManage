@@ -30,6 +30,12 @@ class RoleSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
+class DepartmentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Department
+        fields = "__all__"
+
+
 class CustomerSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Customer
