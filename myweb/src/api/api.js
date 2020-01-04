@@ -11,9 +11,9 @@ if (httpUrl.indexOf('.com') !== -1) {
 } else if (httpUrl.indexOf('.net') !== -1) {
   console.log('测试环境', httpUrl)
   axios.defaults.baseURL = 'http://www.test.com' // 这是调用数据接口,公共接口url+调用接口名
-} else if (httpUrl.indexOf('localhost:8088') !== -1) {
+} else if (httpUrl.indexOf('localhost:8080') !== -1) {
   console.log('指定开发环境', httpUrl)
-  axios.defaults.baseURL = 'http://localhost:8088/'
+  axios.defaults.baseURL = 'http://localhost:8090/'
 } else {
   console.log('开发环境', httpUrl)
   axios.defaults.baseURL = 'http://localhost:8090/' // 这是调用数据接口,公共接口url+调用接口名

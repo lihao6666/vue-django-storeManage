@@ -107,7 +107,7 @@ export default new Router({
         {
           path: '/stockrequisition',
           component: () => import(/* webpackChunkName: "donate" */ '../components/store/stock_adjustment/TransferRequest.vue'),
-          meta: {title: '库存量查询'}
+          meta: {title: '转库申请单'}
         }
       ]
     },

@@ -427,33 +427,12 @@ export default {
     getroles () {
       let _this = this
       getAPI('/base/userNew').then(function (res) {
-        _this.role_options = []
         let n = res.data.max_iden.length
         let num = parseInt(res.data.max_iden) + 1
         _this.username = String(Array(n > num ? (n - ('' + num).length + 1) : 0).join(0) + num)
-        let alterrole = new Set()
-        for (let i in res.data.roles) {
-          alterrole.add(res.data.roles[i])
-        }
-        for (let j of alterrole) {
-          _this.role_options.push(j)
-        }
-        _this.area_options = []
-        let alterarea = new Set()
-        for (let i in res.data.areas) {
-          alterarea.add(res.data.areas[i])
-        }
-        for (let j of alterarea) {
-          _this.area_options.push(j)
-        }
-        _this.dpm_options = []
-        let alterdpm = new Set()
-        for (let i in res.data.departments) {
-          alterdpm.add(res.data.departments[i])
-        }
-        for (let j of alterdpm) {
-          _this.dpm_options.push(j)
-        }
+        _this.role_options = res.data.roles
+        _this.area_options = res.data.areas
+        _this.dpm_options = res.data.departments
       }).catch(function (err) {
         console.log(err)
       })
@@ -486,7 +465,7 @@ export default {
             if (res.data.signal === 0) {
               _this.$message.success(`停用成功`)
             } else {
-              _this.$message.error(`停用失败`)
+              _this.$message.error(res.data.message)
               row.is_active = true
             }
           }).catch(function (err) {
@@ -515,7 +494,7 @@ export default {
             if (res.data.signal === 0) {
               _this.$message.success(`启用成功`)
             } else {
-              _this.$message.error(`启用失败`)
+              _this.$message.error(res.data.message)
               row.is_active = false
             }
           }).catch(function (err) {
@@ -565,11 +544,13 @@ export default {
       let _this = this
       console.log(this.editform)
       postAPI('/base/userUpdate', this.editform).then(function (res) {
+        console.log(res.data)
         if (res.data.signal === 0) {
           _this.$message.success(`修改成功`)
+          _this.getData()
           _this.editVisible = false
         } else {
-          _this.$message.error(`修改失败`)
+          _this.$message.error(res.data.message)
         }
       }).catch(function (err) {
         console.log(err)
@@ -589,16 +570,17 @@ export default {
         return
       }
       this.form.role_power = ''
-      this.form.role_status = 0
+      this.form.password = this.form.username
       console.log(this.form)
       let _this = this
-      postAPI('/base/userUpdate', this.form).then(function (res) {
+      postAPI('/base/userAdd', this.form).then(function (res) {
         if (res.data.signal === 0) {
           _this.$message.success(`新增成功`)
           _this.alterVisible = false
+          _this.getData()
           _this.clearform()
         } else {
-          _this.$message.error(`新增失败`)
+          _this.$message.error(res.data.message)
         }
       }).catch(function (err) {
         console.log(err)

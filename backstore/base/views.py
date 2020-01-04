@@ -1,4 +1,5 @@
 from django.db.models import Max
+from django.db.models import Q
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from rest_framework.views import APIView
@@ -18,7 +19,7 @@ from django.http import HttpResponse
 def departmentToList(departments_name_list):
     dpm_list = []
     for department_name in departments_name_list:
-        id = models.Department.objects.get(dpm_name=department_name).id
+        id = str(models.Department.objects.get(dpm_name=department_name).id)
         dpm_list.append(id)
     dpm_name = "-".join(dpm_list)
 
@@ -28,7 +29,7 @@ def departmentToList(departments_name_list):
 def roleToList(roles_name_list):
     role_list = []
     for role_name in roles_name_list:
-        id = models.Role.objects.get(role_name=role_name).id
+        id = str(models.Role.objects.get(role_name=role_name).id)
         role_list.append(id)
     role_name = "-".join(role_list)
 
@@ -116,7 +117,7 @@ class UserNewView(APIView):
         roles = models.Role.objects.filter(role_status=1).values_list('role', flat=True)
         areas = models.Area.objects.filter(area_status=1).values_list('area_name', flat=True)
 
-        return Response({"max_id": max_id, "departments": departments, "roles": roles, "areas": areas})
+        return Response({"max_iden": max_id, "departments": departments, "roles": roles, "areas": areas})
 
 
 class UserAddView(APIView):
@@ -220,9 +221,9 @@ class UserUpdateView(APIView):
         area_name = json_data['area_name']
         # area = models.Area.objects.filter(area_name=area_name).first()
         user = models.UserProfile.objects.filter(id=id)
-        if self.idCheck(self.user_iden):
-            if self.phoneCheck(user_phone_number):
-                if self.emailCheck(user_mailbox):
+        if self.idCheck(self.user_iden, id):
+            if self.phoneCheck(user_phone_number, id):
+                if self.emailCheck(user_mailbox, id):
                     if user:
                         user.update(user_iden=self.user_iden, user_name=user_name, user_phone_number=user_phone_number,
                                     email=user_mailbox,
@@ -234,9 +235,9 @@ class UserUpdateView(APIView):
 
         return Response({'message': self.message, 'signal': self.signal})
 
-    def idCheck(self, user_iden):
+    def idCheck(self, user_iden, id):
         try:
-            user = models.UserProfile.objects.get(username=user_iden)
+            user = models.UserProfile.objects.filter(~Q(id=id), username=user_iden)
         except models.UserProfile.DoesNotExist:
             return True
         else:
@@ -244,9 +245,9 @@ class UserUpdateView(APIView):
             self.signal = 1
             return False
 
-    def phoneCheck(self, phone):
+    def phoneCheck(self, phone, id):
         try:
-            user = models.UserProfile.objects.get(user_phone_number=phone)
+            user = models.UserProfile.objects.get(~Q(id=id), user_phone_number=phone)
         except models.UserProfile.DoesNotExist:
             return True
         else:
@@ -257,9 +258,9 @@ class UserUpdateView(APIView):
                 self.signal = 2
                 return False
 
-    def emailCheck(self, email):
+    def emailCheck(self, email, id):
         try:
-            user = models.UserProfile.objects.get(email=email)
+            user = models.UserProfile.objects.get(~Q(id=id), email=email)
         except models.UserProfile.DoesNotExist:
             return True
         else:
@@ -274,12 +275,12 @@ class UserUpdateView(APIView):
 class UserStatusView(APIView):
     def post(self):
         json_data = json.loads(self.request.body.decode("utf-8"))
-        user_status = json_data['user_status']
-        user_iden = json_data['user_iden']
-        user = models.UserProfile.objects.filter(username=user_iden)
+        is_active = json_data['is_active']
+        username = json_data['username']
+        user = models.UserProfile.objects.filter(username=username)
         if user:
-            user.update(is_active=user_status, )
-            return Response({"message": "状态更改成功"})
+            user.update(is_active=is_active, )
+            return Response({"message": "状态更改成功", "signal": 0})
         else:
             return Response({"message": "未查询到用户,状态更改失败"})
 
@@ -298,10 +299,12 @@ class UsersView(APIView):
                 role_list = []
                 departments = user.user_departments.split("-")
                 roles = user.user_roles.split("-")
-                for department in departments:
-                    department_list.append(models.Department.objects.get(id=department).dpm_name)
-                for role in roles:
-                    role_list.append(models.Role.objects.get(id=role).role)
+                if user.user_departments:
+                    for department in departments:
+                        department_list.append(models.Department.objects.get(id=department).dpm_name)
+                if user.user_roles:
+                    for role in roles:
+                        role_list.append(models.Role.objects.get(id=role).role)
                 departments_list.append(department_list)
                 roles_list.append(role_list)
             return Response({"users": users_serializer.data, "departments": departments_list, "roles": roles_list})
@@ -313,7 +316,6 @@ class UsersView(APIView):
 
 
 class AreasView(APIView):
-
     def get(self, request):
         areas = models.Area.objects.filter(area_status=1).all()
         if areas:
@@ -368,7 +370,7 @@ class RoleAddView(APIView):
                 models.Role.objects.create(role=role, role_power=role_power, role_description=role_description,
                                            role_status=0,
                                            role_creator=self.user_now_name,
-                                           creator_iden=user_now_iden)
+                                           role_creator_iden=user_now_iden)
         else:
             self.message = "用户未登录"
             self.signal = 2
@@ -400,7 +402,7 @@ class RoleUpdateView(APIView):
 
         # role_status = json_data['role_status']
         role_description = json_data['role_description']
-        if self.nameCheck(role):
+        if self.nameCheck(role, id):
             try:
                 models.Role.objects.filter(id=id).update(role_power=role_power, role=role,
                                                          role_description=role_description)
@@ -410,9 +412,9 @@ class RoleUpdateView(APIView):
 
         return Response({'message': self.message, 'signal': self.signal})
 
-    def nameCheck(self, name):
+    def nameCheck(self, name, id):
         try:
-            user = models.Role.objects.get(role=name)
+            user = models.Role.objects.get(~Q(id=id), role=name)
         except models.Role.DoesNotExist:
             return True
         else:
@@ -480,12 +482,23 @@ class CustomerAddView(APIView):
         customer_type = json_data['customer_type']
         customer_remarks = json_data['customer_remarks']
 
-        models.Customer.objects.create(customer_iden=customer_iden, customer_name=customer_name,
-                                       customer_type=customer_type,
-                                       customer_remarks=customer_remarks, customer_status=0,
-                                       customer_creator=self.user_now_name,
-                                       customer_creator_iden=user_now_iden)
+        if self.idCheck(customer_iden, id):
+            models.Customer.objects.create(customer_iden=customer_iden, customer_name=customer_name,
+                                           customer_type=customer_type,
+                                           customer_remarks=customer_remarks, customer_status=0,
+                                           customer_creator=self.user_now_name,
+                                           customer_creator_iden=user_now_iden)
         return Response({'message': self.message, 'signal': self.signal})
+
+    def idCheck(self, customer_iden, id):
+        try:
+            user = models.Customer.objects.get(~Q(id=id), customer_iden=customer_iden)
+        except models.Customer.DoesNotExist:
+            return True
+        else:
+            self.message = "客户id已存在"
+            self.signal = 1
+            return False
 
 
 class CustomerUpdateView(APIView):
@@ -503,7 +516,7 @@ class CustomerUpdateView(APIView):
         customer_remarks = json_data['customer_remarks']
         # customer_status = json_data['customer_status']
         # customer_creator = json_data['customer_creator']
-        if self.idCheck(customer_iden):
+        if self.idCheck(customer_iden, id):
             try:
                 models.Customer.objects.filter(id=id).update(customer_name=customer_name, customer_iden=customer_iden,
                                                              customer_type=customer_type,
@@ -513,9 +526,9 @@ class CustomerUpdateView(APIView):
                 self.signal = 2
         return Response({'message': self.message, 'signal': self.signal})
 
-    def idCheck(self, customer_iden):
+    def idCheck(self, customer_iden, id):
         try:
-            user = models.Customer.objects.get(customer_iden=customer_iden)
+            user = models.Customer.objects.get(~Q(id=id), customer_iden=customer_iden)
         except models.Customer.DoesNotExist:
             return True
         else:
@@ -576,6 +589,7 @@ class OrganizationAddView(APIView):
 
     def post(self, request):
         json_data = json.loads(self.request.body.decode("utf-8"))
+        id = json_data["id"]
         user_now_iden = json_data['user_now_iden']
         user_now = models.UserNow.objects.get(user_iden=user_now_iden)
         if user_now:
@@ -585,13 +599,24 @@ class OrganizationAddView(APIView):
         area_name = json_data['area_name']
         orga_remarks = json_data['orga_remarks']
 
-        models.Organization.objects.create(orga_iden=orga_iden, orga_name=orga_name,
-                                           area_name=area_name,
-                                           orga_remarks=orga_remarks,
-                                           orga_status=0,
-                                           orga_creator=self.user_now_name,
-                                           orga_creator_iden=user_now_iden)
+        if self.idCheck(orga_iden, id):
+            models.Organization.objects.create(orga_iden=orga_iden, orga_name=orga_name,
+                                               area_name=area_name,
+                                               orga_remarks=orga_remarks,
+                                               orga_status=0,
+                                               orga_creator=self.user_now_name,
+                                               orga_creator_iden=user_now_iden)
         return Response({'message': self.message, 'signal': self.signal})
+
+    def idCheck(self, orga_iden, id):
+        try:
+            user = models.Organization.objects.get(~Q(id=id), orga_iden=orga_iden)
+        except models.Organization.DoesNotExist:
+            return True
+        else:
+            self.message = "组织id已存在"
+            self.signal = 1
+            return False
 
 
 class OrganizationUpdateView(APIView):
@@ -607,7 +632,7 @@ class OrganizationUpdateView(APIView):
         orga_name = json_data['orga_name']
         orga_remarks = json_data['orga_remarks']
         # orga_creator = json_data['orga_creator']
-        if self.idCheck(orga_iden):
+        if self.idCheck(orga_iden, id):
             try:
                 models.Organization.objects.filter(id=id).update(
                     orga_iden=orga_iden,
@@ -618,9 +643,9 @@ class OrganizationUpdateView(APIView):
                 self.signal = 2
         return Response({'message': self.message, 'signal': self.signal})
 
-    def idCheck(self, orga_iden):
+    def idCheck(self, orga_iden, id):
         try:
-            user = models.Organization.objects.get(orga_iden=orga_iden)
+            user = models.Organization.objects.get(~Q(id=id), orga_iden=orga_iden)
         except models.Organization.DoesNotExist:
             return True
         else:
@@ -719,7 +744,7 @@ class DepartmentUpdateView(APIView):
         dpm_name = json_data['dpm_name']
 
         # dpm_status = json_data['dpm_status']
-        if self.nameCheck(dpm_name):
+        if self.nameCheck(dpm_name, id):
             try:
                 models.Department.objects.filter(id=id).update(dpm_name=dpm_name, dpm_remarks=dpm_remarks)
             except:
@@ -728,9 +753,9 @@ class DepartmentUpdateView(APIView):
 
         return Response({'message': self.message, 'signal': self.signal})
 
-    def nameCheck(self, name):
+    def nameCheck(self, name, id):
         try:
-            user = models.Department.objects.get(dpm_name=name)
+            user = models.Department.objects.get(~Q(id=id), dpm_name=name)
         except models.Department.DoesNotExist:
             return True
         else:
@@ -822,7 +847,7 @@ class BrandUpdateView(APIView):
         brand_description = json_data['brand_description']
         # brand_status = json_data['brand_status']
         # brand_creator = json_data['brand_creator']
-        if self.nameCheck(brand_name):
+        if self.nameCheck(brand_name, id):
             try:
                 models.Brand.objects.filter(id=id).update(
                     brand_name=brand_name,
@@ -832,9 +857,9 @@ class BrandUpdateView(APIView):
                 self.signal = 1
         return Response({'message': self.message, 'signal': self.signal})
 
-    def nameCheck(self, name):
+    def nameCheck(self, name, id):
         try:
-            user = models.Brand.objects.get(brand_name=name)
+            user = models.Brand.objects.get(~Q(id=id), brand_name=name)
         except models.Brand.DoesNotExist:
             return True
         else:
@@ -884,12 +909,16 @@ class TotalWareHouseNewView(APIView):
     def get(self, request):
         brands = models.Brand.objects.filter(brand_status=1).values_list('brand_name', flat=True)
         organizations = {}
+        centers = {}
         areas_name = models.Area.objects.filter(area_status=1).values_list('area_name', flat=True)
         for area_name in areas_name:
             organization = models.Organization.objects.filter(area_name=area_name, orga_status=1).values_list(
                 'orga_name', flat=True)
+            center = models.Center.objects.filter(area_name=area_name, center_status=1).values_list('center_name',
+                                                                                                    flat=True)
             organizations[area_name] = organization
-        return Response({"brands": brands, "organizations": organizations})
+            centers[area_name] = center
+        return Response({"brands": brands, "organizations": organizations, "centers": centers, "areas": areas_name})
 
 
 class TotalWareHouseAddView(APIView):
@@ -902,26 +931,47 @@ class TotalWareHouseAddView(APIView):
         super().__init__(**kwargs)
         self.message = "添加成功"
         self.signal = 0
+        self.user_now_name = ""
 
     def post(self, request):
         json_data = json.loads(self.request.body.decode("utf-8"))
+        user_now_iden = json_data['user_now_iden']
+        user_now = models.UserNow.objects.get(user_iden=user_now_iden)
+        if user_now:
+            self.user_now_name = user_now.user_name
+
         total_iden = json_data['total_iden']
         total_name = json_data['total_name']
         area_name = json_data['area_name']
         orga_name = json_data['orga_name']
         brand_name = json_data['brand_name']
         total_belong_center = json_data['total_belong_center']
+        total_belong_center_iden = json_data['total_belong_center_iden']
+
         total_remarks = json_data['total_remarks']
-        total_status = json_data['total_status']
-        total_creator = json_data['total_creator']
+
         organization = models.Organization.objects.get(area_name=area_name, orga_name=orga_name)
-        models.TotalWareHouse.objects.create(total_iden=total_iden, total_name=total_name,
-                                             brand_name=brand_name,
-                                             organization=organization,
-                                             total_remarks=total_remarks,
-                                             total_status=total_status,
-                                             total_creator=total_creator)
+        if self.idCheck(total_iden):
+            models.TotalWareHouse.objects.create(total_iden=total_iden, total_name=total_name,
+                                                 total_belong_center=total_belong_center,
+                                                 total_belong_center_iden=total_belong_center_iden,
+                                                 brand_name=brand_name,
+                                                 organization=organization,
+                                                 total_remarks=total_remarks,
+                                                 total_status=0,
+                                                 total_creator=self.user_now_name,
+                                                 total_creator_iden=user_now_iden)
         return Response({'message': self.message, 'signal': self.signal})
+
+    def idCheck(self, total_iden):
+        try:
+            user = models.TotalWareHouse.objects.get(total_iden=total_iden)
+        except models.TotalWareHouse.DoesNotExist:
+            return True
+        else:
+            self.message = "仓库id已存在"
+            self.signal = 1
+            return False
 
 
 class TotalWareHouseUpdateView(APIView):
@@ -932,20 +982,35 @@ class TotalWareHouseUpdateView(APIView):
 
     def post(self, request):
         json_data = json.loads(self.request.body.decode("utf-8"))
+        id = json_data['id']
+
         total_iden = json_data['total_iden']
-        # total_name = json_data['total_name']
+        total_name = json_data['total_name']
+        # total_belong_center = json_data['total_belong_center']
+
+        brand_name = json_data['brand_name']
+
         total_remarks = json_data['total_remarks']
-        total_status = json_data['total_status']
-        # total_creator = json_data['total_creator']
-        try:
-            models.TotalWareHouse.objects.filter(total_iden=total_iden).update(
-                # total_name=total_name,
-                total_remarks=total_remarks,
-                total_status=total_status, )
-        except:
-            self.message = "更新失败"
-            self.signal = 1
+        # total_status = json_data['total_status']
+        if self.idCheck(total_iden, id):
+            try:
+                models.TotalWareHouse.objects.filter(total_iden=total_iden).update(
+                    # total_name=total_name,
+                    total_remarks=total_remarks)
+            except:
+                self.message = "更新失败"
+                self.signal = 1
         return Response({'message': self.message, 'signal': self.signal})
+
+    def idCheck(self, total_iden):
+        try:
+            user = models.TotalWareHouse.objects.get(total_iden=total_iden)
+        except models.TotalWareHouse.DoesNotExist:
+            return True
+        else:
+            self.message = "仓库id已存在"
+            self.signal = 1
+            return False
 
 
 """
