@@ -38,7 +38,6 @@
 						    <view>现存量：{{ item.total_present_num }}</view>
 					</uni-card>
 				</view>
-			
 			</view>
 			<view v-if="current === 1">
 				<view v-for="item in tecList" :key="item.id" class="card-set">
