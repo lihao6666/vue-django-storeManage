@@ -38,7 +38,7 @@
         <el-table-column type="index" width="50"></el-table-column>
         <el-table-column prop="center_name" sortable label="名称" :filters="center_nameSet"
                          :filter-method="filter" align="center"></el-table-column>
-        <el-table-column prop="center_area" sortable label="区域" :filters="center_areaSet"
+        <el-table-column prop="area_name" sortable label="区域" :filters="area_nameSet"
                          :filter-method="filter" align="center"></el-table-column>
         <el-table-column prop="center_creator" sortable label="创建人" :filters="center_creatorSet"
                          :filter-method="filter" align="center"></el-table-column>
@@ -97,7 +97,7 @@
           </el-row>
           <el-row>
             <el-form-item label="区域"  align="left">
-              <el-select v-model="form.center_area" placeholder="请选择区域"  class="option" >
+              <el-select v-model="form.area_name" placeholder="请选择区域"  class="option" >
                 <el-option
                   v-for="item in area_options"
                   :key="item"
@@ -138,13 +138,7 @@
           </el-row>
           <el-row>
             <el-form-item label="区域"  align="left">
-              <el-select v-model="editform.center_area" placeholder="请选择区域"  class="option" >
-                <el-option
-                  v-for="item in area_options"
-                  :key="item"
-                  :label="item"
-                  :value="item">
-                </el-option>
+              <el-select v-model="editform.area_name" placeholder="请选择区域" disabled class="option" >
               </el-select>
             </el-form-item>
           </el-row>
@@ -169,7 +163,7 @@
 </template>
 
 <script>
-import {postAPI} from '../../api/api'
+import {postAPI, getAPI} from '../../api/api'
 export default {
   name: 'test',
   data () {
@@ -183,16 +177,17 @@ export default {
       form: {
         center_name: '',
         center_remarks: '',
-        center_area: ''
+        area_name: ''
       },
-      center_name: '',
+      center_oldname: '',
+      center_oldstatus: '',
       center_nameSet: [],
-      center_areaSet: [],
+      area_nameSet: [],
       center_creatorSet: [],
       editform: {
         center_name: '',
         center_remarks: '',
-        center_area: ''
+        area_name: ''
       },
       tableData: [],
       tableDataNew: [],
@@ -208,17 +203,16 @@ export default {
   },
   methods: {
     getData () {
-      this.getlist()
       let _this = this
-      postAPI('/center').then(function (res) {
-        _this.tableData = res.data.list
+      getAPI('/base/centers').then(function (res) {
+        _this.tableData = res.data.centers
         _this.tableDataNew = _this.tableData
         let nameset = new Set()
         let areaset = new Set()
         let creatorset = new Set()
         for (let i in _this.tableData) {
           nameset.add(_this.tableData[i]['center_name'])
-          areaset.add(_this.tableData[i]['center_area'])
+          areaset.add(_this.tableData[i]['area_name'])
           creatorset.add(_this.tableData[i]['center_creator'])
         }
         for (let i of nameset) {
@@ -228,7 +222,7 @@ export default {
           })
         }
         for (let i of areaset) {
-          _this.center_areaSet.push({
+          _this.area_nameSet.push({
             text: i,
             value: i
           })
@@ -239,7 +233,7 @@ export default {
             value: i
           })
         }
-        _this.pageTotal = res.data.list.length
+        _this.pageTotal = res.data.centers.length
       }).catch(function (err) {
         console.log(err)
       })
@@ -263,48 +257,95 @@ export default {
     // 新增
     handleAlter () {
       this.alterVisible = true
+      this.getlist()
     },
     // 一键清除新增表单
     clearform () {
       this.form.center_name = ''
-      this.form.center_area = ''
+      this.form.area_name = ''
       this.form.center_remarks = ''
-    },
-    // 停用操作
-    handleStop (row) {
-      postAPI('/center', {data: row, center_status: 0}).then(function (res) {
-        console.log(res)
-      }).catch(function (err) {
-        console.log(err)
-      })
     },
     // 查询
     find () {
       this.pageTotal = 0
       this.tableDataNew = this.tableData.filter(data => !this.search ||
           String(data.center_name).toLowerCase().includes(this.search.toLowerCase()) ||
-          String(data.center_area).toLowerCase().includes(this.search.toLowerCase()) ||
-          String(data.center_createDate).toLowerCase().includes(this.search.toLowerCase()) ||
+          String(data.area_name).toLowerCase().includes(this.search.toLowerCase()) ||
           String(data.center_remarks).toLowerCase().includes(this.search.toLowerCase()) ||
           String(data.center_creator).toLowerCase().includes(this.search.toLowerCase()))
     },
     // 启用
     handleStart (row) {
-      postAPI('/center', {data: row, center_status: 1}).then(function (res) {
-        console.log(res)
-      }).catch(function (err) {
-        console.log(err)
+      this.$confirm('确定要启用吗？', '提示', {
+        type: 'warning'
       })
+        .then(() => {
+          let _this = this
+          let data = {
+            'center_name': row.center_name,
+            'area_name': row.area_name,
+            'center_remarks': row.center_remarks,
+            'center_status': 1,
+            'center_new_name': row.center_name
+          }
+          postAPI('/base/centerUpdate', data).then(function (res) {
+            if (res.data.signal === 0) {
+              _this.$message.success(`启用成功`)
+              _this.getData()
+            } else {
+              _this.$message.error(res.data.message)
+            }
+          }).catch(function (err) {
+            console.log(err)
+            _this.$message.error(`启用失败`)
+          })
+        })
+        .catch(() => {
+          this.$message({
+            type: 'info',
+            message: '取消启用'
+          })
+        })
+    },
+    // 停用操作
+    handleStop (row) {
+      this.$confirm('确定要停用吗？', '提示', {
+        type: 'warning'
+      })
+        .then(() => {
+          let _this = this
+          let data = {
+            'center_name': row.center_name,
+            'area_name': row.area_name,
+            'center_remarks': row.center_remarks,
+            'center_status': 0,
+            'center_new_name': row.center_name
+          }
+          postAPI('/base/centerUpdate', data).then(function (res) {
+            if (res.data.signal === 0) {
+              _this.$message.success(`停用成功`)
+              _this.getData()
+            } else {
+              _this.$message.error(res.data.message)
+            }
+          }).catch(function (err) {
+            console.log(err)
+            _this.$message.error(`停用失败`)
+          })
+        })
+        .catch(() => {
+          this.$message({
+            type: 'info',
+            message: '取消停用'
+          })
+        })
     },
     // 获取列表
     getlist () {
       let _this = this
-      postAPI('/area').then(function (res) {
-        let alterarea = new Set()
-        for (let i in res.data.list) {
-          alterarea.add(res.data.list[i]['area_name'])
-        }
-        for (let j of alterarea) {
+      getAPI('/base/centerNew').then(function (res) {
+        _this.area_options = []
+        for (let j of res.data.areas) {
           _this.area_options.push(j)
         }
       }).catch(function (err) {
@@ -315,28 +356,65 @@ export default {
     handleEdit (row) {
       this.editform.center_name = row.center_name
       this.editform.center_name = row.center_name
-      this.editform.center_area = row.center_area
+      this.editform.area_name = row.area_name
       this.editform.center_remarks = row.center_remarks
-      this.center_name = row.center_name
+      this.center_oldname = row.center_name
+      this.center_oldstatus = row.center_status
       this.editVisible = true
     },
     // 保存编辑
     saveEdit () {
-      this.editVisible = false
-      this.$message.success(`修改成功`)
+      let _this = this
+      if (_this.editform.center_name === '') {
+        _this.$message.error(`名称不能为空`)
+        return
+      }
+      let data = {
+        'center_name': _this.center_oldname,
+        'area_name': _this.editform.area_name,
+        'center_remarks': _this.editform.center_remarks,
+        'center_status': _this.center_oldstatus,
+        'center_new_name': _this.editform.center_name
+      }
       this.clearform()
-      postAPI('/center', {data: this.editform, center_name: this.center_name}).then(function (res) {
-        console.log(res)
+      postAPI('/base/centerUpdate', data).then(function (res) {
+        if (res.data.signal === 0) {
+          _this.editVisible = false
+          _this.$message.success(`修改成功`)
+          _this.getData()
+        } else {
+          _this.$message.error(res.data.message)
+        }
       }).catch(function (err) {
+        _this.$message.error(`修改失败`)
         console.log(err)
       })
     },
     // 保存新增
     saveAlter () {
       let _this = this
-      postAPI('/center', {data: this.form, table: 'organization'}).then(function (res) {
-        _this.$message.success(`新增成功`)
-        _this.alterVisible = false
+      if (this.form.center_name === '') {
+        _this.$message.error(`名称不能为空`)
+        return
+      }
+      if (this.form.area_name === '') {
+        _this.$message.error(`所属中心不能为空`)
+        return
+      }
+      let data = {
+        'center_name': _this.form.center_name,
+        'area_name': _this.form.area_name,
+        'center_remarks': _this.form.center_remarks,
+        'center_status': 0
+      }
+      postAPI('/base/centerAdd', data).then(function (res) {
+        if (res.data.signal === 0) {
+          _this.$message.success(`新增成功`)
+          _this.alterVisible = false
+          _this.getData()
+        } else {
+          _this.$message.error(`信息已存在`)
+        }
       }).catch(function (err) {
         console.log(err)
       })
@@ -398,6 +476,6 @@ export default {
     color: GREEN;
   }
   .inputs {
-    width: 590px;
+    width: 105%;
   }
 </style>
