@@ -376,7 +376,6 @@ export default {
         'center_status': _this.center_oldstatus,
         'center_new_name': _this.editform.center_name
       }
-      this.clearform()
       postAPI('/base/centerUpdate', data).then(function (res) {
         if (res.data.signal === 0) {
           _this.editVisible = false
@@ -412,11 +411,13 @@ export default {
           _this.$message.success(`新增成功`)
           _this.alterVisible = false
           _this.getData()
+          _this.clearform()
         } else {
           _this.$message.error(`信息已存在`)
         }
       }).catch(function (err) {
         console.log(err)
+        _this.$message.error(`新增失败`)
       })
     },
     // 分页导航
