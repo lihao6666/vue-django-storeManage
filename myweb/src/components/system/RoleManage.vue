@@ -312,6 +312,7 @@ export default {
       this.editform.role = row.role
       this.editform.role_status = row.role_status
       this.editform.role_power = row.role_power
+      this.editform.id = row.id
       this.editVisible = true
     },
     // 保存编辑
