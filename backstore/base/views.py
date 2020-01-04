@@ -1106,10 +1106,9 @@ class CenterUpdateView(APIView):
         area_name = json_data['area_name']
         center_remarks = json_data['center_remarks']
         # center_creator = json_data['center_creator']
-        if self.idCheck(center_iden, id):
+        if self.isLegal(center_name, area_name, id):
             try:
-                models.Center.objects.filter(center_name=center_name, area_name=area_name).update(
-                    center_iden=center_iden,
+                models.Center.objects.filter(id=id).update(
                     center_name=center_name,
                     center_remarks=center_remarks)
             except:
@@ -1117,13 +1116,13 @@ class CenterUpdateView(APIView):
                 self.signal = 1
         return Response({'message': self.message, 'signal': self.signal})
 
-    def idCheck(self, center_iden, id):
+    def isLegal(self, center_name, area_name, id):
         try:
-            user = models.Center.objects.get(~Q(id=id), center_iden=center_iden)
+            center = models.Center.objects.get(~Q(id=id), center_name=center_name, area_name=area_name)
         except models.Center.DoesNotExist:
             return True
         else:
-            self.message = "中心id已存在"
+            self.message = "中心名字和区域重复"
             self.signal = 1
             return False
 
