@@ -153,13 +153,7 @@
           </el-row>
           <el-row>
             <el-form-item label="区域"  align="left">
-              <el-select v-model="editform.orga_area" placeholder="请选择区域"  class="option" >
-                <el-option
-                  v-for="item in area_options"
-                  :key="item"
-                  :label="item"
-                  :value="item">
-                </el-option>
+              <el-select v-model="editform.orga_area" placeholder="请选择区域" disabled class="option" >
               </el-select>
             </el-form-item>
           </el-row>
@@ -173,7 +167,7 @@
       </div>
       <el-row :gutter="20" class="el-row-button-save">
         <el-col :span="1" :offset="15">
-          <el-button @click="alterVisible = false">取 消</el-button>
+          <el-button @click="editVisible = false">取 消</el-button>
         </el-col>
         <el-col :span="1" :offset="4">
           <el-button type="primary" @click="saveEdit">确 定</el-button>
