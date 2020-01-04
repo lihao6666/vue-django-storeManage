@@ -73,7 +73,9 @@ class TotalWareHouseSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.TotalWareHouse
         fields = (
-            'id', 'total_iden', 'total_name', 'area_name', 'orga_name', 'total_status', 'brand_name', 'total_remarks',
+            'id', 'total_iden', 'total_name', 'area_name', 'orga_name', 'total_status','total_belong_center',
+            'total_belong_center_iden',
+            'brand_name', 'total_remarks',
             'total_creator', 'total_createDate')
 
 
