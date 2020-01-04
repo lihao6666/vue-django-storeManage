@@ -37,7 +37,11 @@
         <el-table-column prop="material_meterage" sortable label="计量单位" :filters="material_meterageSet"
                          :filter-method="filter" align="center"></el-table-column>
         <el-table-column prop="material_attr" sortable label="存货属性" :filters="material_attrSet"
-                         :filter-method="filter" align="center"></el-table-column>
+                         :filter-method="filter" align="center">
+          <template slot-scope="scope">
+            <el-tag :type="scope.row.material_attr===0?'success':(scope.row.material_attr===1?'info':'')">{{materialattr[scope.row.material_attr].label}}</el-tag>
+          </template>
+        </el-table-column>
         <el-table-column prop="material_creator" sortable label="创建人" :filters="material_creatorSet"
                          :filter-method="filter" align="center"></el-table-column>
         <el-table-column prop="material_createDate" sortable label="创建日期" align="center"></el-table-column>
@@ -121,7 +125,7 @@
           </el-row>
           <el-row>
             <el-form-item label="计量单位"  align="left">
-              <el-select v-model="form.material_meterage" placeholder="请选择区域"  class="option" >
+              <el-select v-model="form.material_meterage" placeholder="请选择计量单位"  class="option" >
                 <el-option
                   v-for="item in meterage_options"
                   :key="item"
@@ -134,9 +138,7 @@
           <el-row>
           <el-form-item label="存货属性"  align="left">
             <el-select v-model="form.material_attr" placeholder="请选择"  class="option" >
-              <el-option key="存货" label="存货" value="存货"> </el-option>
-              <el-option key="固定资产" label="固定资产" value="固定资产"> </el-option>
-              <el-option key="费用" label="费用" value="费用"> </el-option>
+                <el-option v-for="item in materialattr" v-bind:key="item.value" :label="item.label" :value="item.value"></el-option>
             </el-select>
           </el-form-item>
           </el-row>
@@ -202,9 +204,7 @@
           <el-row>
             <el-form-item label="存货属性"  align="left">
               <el-select v-model="editform.material_attr" placeholder="请选择"  class="option" >
-                <el-option key="存货" label="存货" value="存货"> </el-option>
-                <el-option key="固定资产" label="固定资产" value="固定资产"> </el-option>
-                <el-option key="费用" label="费用" value="费用"> </el-option>
+                <el-option v-for="item in materialattr" v-bind:key="item.value" :label="item.label" :value="item.value"></el-option>
               </el-select>
             </el-form-item>
           </el-row>
@@ -228,6 +228,20 @@ export default {
   name: 'test',
   data () {
     return {
+      materialattr: [
+        {
+          value: 0,
+          label: '存货'
+        },
+        {
+          value: 1,
+          label: '固定资产'
+        },
+        {
+          value: 2,
+          label: '费用'
+        }
+      ],
       options: [],
       meterage_options: [],
       query: {
@@ -277,7 +291,7 @@ export default {
       let _this = this
       postAPI('/material').then(function (res) {
         _this.tableData = res.data.list
-        _this.tableDataNew = _this.tableData
+        _this.find()
         let nameset = new Set()
         let specset = new Set()
         let modelset = new Set()
@@ -318,7 +332,7 @@ export default {
         }
         for (let i of attrset) {
           _this.material_attrSet.push({
-            text: i,
+            text: _this.materialattr[i],
             value: i
           })
         }
@@ -364,11 +378,32 @@ export default {
     },
     // 停用操作
     handleStop (row) {
-      postAPI('/material', {data: row, material_status: 0}).then(function (res) {
-        console.log(res)
-      }).catch(function (err) {
-        console.log(err)
+      this.$confirm('确定要停用吗？', '提示', {
+        type: 'warning'
       })
+        .then(() => {
+          let _this = this
+          row.material_status = 0
+          postAPI('/base/materialStatus', row).then(function (res) {
+            if (res.data.signal === 0) {
+              _this.$message.success(`停用成功`)
+              _this.getData()
+            } else {
+              _this.$message.error(res.data.message)
+              row.material_status = 1
+            }
+          }).catch(function (err) {
+            console.log(err)
+            _this.$message.error(`停用失败`)
+            row.material_status = 1
+          })
+        })
+        .catch(() => {
+          this.$message({
+            type: 'info',
+            message: '取消停用'
+          })
+        })
     },
     // 查询
     find () {
@@ -385,11 +420,32 @@ export default {
     },
     // 启用
     handleStart (row) {
-      postAPI('/material', {data: row, material_status: 1}).then(function (res) {
-        console.log(res)
-      }).catch(function (err) {
-        console.log(err)
+      this.$confirm('确定要启用吗？', '提示', {
+        type: 'warning'
       })
+        .then(() => {
+          let _this = this
+          row.material_status = 1
+          postAPI('/base/materialStatus', row).then(function (res) {
+            if (res.data.signal === 0) {
+              _this.$message.success(`启用成功`)
+              _this.getData()
+            } else {
+              _this.$message.error(res.data.message)
+              row.material_status = 0
+            }
+          }).catch(function (err) {
+            console.log(err)
+            _this.$message.error(`启用失败`)
+            row.material_status = 0
+          })
+        })
+        .catch(() => {
+          this.$message({
+            type: 'info',
+            message: '取消启用'
+          })
+        })
     },
     // 获取级联选择器
     optionsAdd (parent, child, length, end) {
