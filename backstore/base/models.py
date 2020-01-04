@@ -8,6 +8,7 @@ class UserNow(models.Model):
     """
     定义当前登录用户的信息用于全局使用，只存一条信息，同时可以修改
     """
+    user_id = models.IntegerField(verbose_name='人员id')
     user_iden = models.CharField(max_length=20, verbose_name='登录工号')
     user_name = models.CharField(max_length=20, verbose_name='登录人名字')
     area_name = models.CharField(max_length=20, verbose_name='登录人区域')
@@ -26,7 +27,7 @@ class UserProfile(AbstractUser):
     #     (0, '停用'),
     #     (1, '启用')
     # )
-
+    id = models.AutoField(primary_key=True)
     # user_id = models.CharField(max_length=20, verbose_name='工号')
     # user_passwd = models.CharField(max_length=80, default=user_id, verbose_name='用户密码')
     user_name = models.CharField(max_length=20, verbose_name='姓名')
@@ -37,8 +38,10 @@ class UserProfile(AbstractUser):
     # user_status = models.IntegerField(choices=USER_STATUS_CHOICES, default=0, verbose_name='用户状态')
     user_departments = models.CharField(max_length=50, null=True, verbose_name='部门')
     user_roles = models.CharField(max_length=50, null=True, verbose_name='角色')
-    user_creator = models.CharField(max_length=20, verbose_name='员工创建人工号')
-    user_creator_name = models.CharField(max_length=20, verbose_name='员工创建人名字')
+    user_creator = models.CharField(max_length=20, verbose_name='员工创建人名字')
+    user_creator_iden = models.CharField(max_length=20, verbose_name='员工创建人工号')
+
+    # user_creator = models.ForeignKey('UserProfile',verbose_name='用户',on_delete=models.CASCADE)
 
     # user_createDate = models.DateTimeField(auto_now_add=True, verbose_name='员工创建时间')
 
@@ -66,7 +69,8 @@ class Department(models.Model):
     dpm_status = models.IntegerField(choices=DP_STATUS_CHOICES, default=1, verbose_name='部门状态')
     dpm_remarks = models.TextField(max_length=400, verbose_name='部门备注', null=True)
     dpm_center = models.IntegerField(choices=DP_CHOICES, default=0, verbose_name='是否中心')
-    dpm_creator = models.CharField(max_length=20, verbose_name='部门创建人')
+    dpm_creator = models.CharField(max_length=20, verbose_name='部门创建人名字')
+    dpm_creator_iden = models.CharField(max_length=20, verbose_name='部门创建人工号')
     dpm_createDate = models.DateTimeField(auto_now_add=True, verbose_name='部门创建时间')
 
     class Meta:
@@ -89,7 +93,8 @@ class Role(models.Model):
     role_status = models.IntegerField(choices=ROLE_STATUS_CHOICES, default=1, verbose_name='角色状态')
     role_power = models.CharField(max_length=60, verbose_name='角色权限', null=True)
     role_description = models.TextField(max_length=400, verbose_name='角色描述', null=True)
-    role_creator = models.CharField(max_length=20, verbose_name='角色创建人')
+    role_creator = models.CharField(max_length=20, verbose_name='角色创建人名字')
+    role_creator_iden = models.CharField(max_length=20, verbose_name='角色创建人工号')
     role_createDate = models.DateTimeField(auto_now_add=True, verbose_name="创建角色时间")
 
     class Meta:
@@ -114,7 +119,8 @@ class Organization(models.Model):
     orga_status = models.IntegerField(choices=ORGA_STATUS_CHOICES, default=1, verbose_name='组织状态')
     # area = models.ForeignKey('Area', verbose_name='区域', related_name='area_orga', on_delete=models.CASCADE)
     orga_remarks = models.TextField(max_length=400, verbose_name='组织备注', null=True)
-    orga_creator = models.CharField(max_length=20, verbose_name='组织创建者')
+    orga_creator = models.CharField(max_length=20, verbose_name='组织创建者名字')
+    orga_creator_iden = models.CharField(max_length=20, verbose_name='组织创建者工号')
     orga_createDate = models.DateTimeField(auto_now_add=True, verbose_name="组织创建时间")
 
     class Meta:
@@ -155,7 +161,8 @@ class Brand(models.Model):
     brand_name = models.CharField(max_length=20, verbose_name='品牌名称')
     brand_status = models.IntegerField(choices=BRAND_STATUS_CHOICES, default=1, verbose_name='品牌状态')
     brand_description = models.TextField(max_length=400, verbose_name='品牌描述', null=True)
-    brand_creator = models.CharField(max_length=20, verbose_name='品牌创建者')
+    brand_creator = models.CharField(max_length=20, verbose_name='品牌创建者名字')
+    brand_creator_iden = models.CharField(max_length=20, verbose_name='品牌创建者工号')
     brand_createDate = models.DateTimeField(auto_now_add=True, verbose_name='品牌创建时间')
 
     class Meta:
@@ -180,9 +187,10 @@ class TotalWareHouse(models.Model):
     total_status = models.IntegerField(choices=TOTAL_STATUS_CHOICES, default=1, verbose_name='总仓状态')
     total_belong_center = models.CharField(max_length=20, verbose_name='所属中心编号', null=True)
     # brand = models.ForeignKey('Brand', verbose_name='品牌', on_delete=models.CASCADE)
-    brand_name = models.CharField(max_length=20, verbose_name='品牌名称')
+    brand_name = models.CharField(max_length=20, verbose_name='品牌名称', null=True)
     total_remarks = models.TextField(max_length=400, verbose_name='总仓备注')
-    total_creator = models.CharField(max_length=20, verbose_name="总仓创建者")
+    total_creator = models.CharField(max_length=20, verbose_name="总仓创建者名字")
+    total_creator_iden = models.CharField(max_length=20, verbose_name="总仓创建者工号")
     total_createDate = models.DateTimeField(auto_now_add=True, verbose_name='总仓创建时间')
 
     class Meta:
@@ -239,7 +247,8 @@ class Supplier(models.Model):
     supply_type = models.IntegerField(choices=SUPPLY_TYPE_CHOICES, default=0, verbose_name="供应商类型")
     supply_remarks = models.TextField(max_length=400, verbose_name='供应商备注', null=True)
     supply_status = models.IntegerField(choices=SUPPLY_STATUS_CHOICES, default=1, verbose_name='供应商状态')
-    supply_creator = models.CharField(max_length=20, verbose_name='供应商创建者')
+    supply_creator = models.CharField(max_length=20, verbose_name='供应商创建者名字')
+    supply_creator_iden = models.CharField(max_length=20, verbose_name='供应商创建者工号')
     supply_createDate = models.DateTimeField(auto_now_add=True, verbose_name='供应商创建时间')
 
     class Meta:
@@ -263,7 +272,8 @@ class Center(models.Model):
     # area = models.ForeignKey('Area', verbose_name='区域', related_name='area_center', on_delete=models.CASCADE)
     center_remarks = models.TextField(max_length=400, verbose_name='中心备注', null=True)
     center_status = models.IntegerField(choices=CENTER_STATUS_CHOICES, default=1, verbose_name='中心状态')
-    center_creator = models.CharField(max_length=20, verbose_name='中心创建者')
+    center_creator = models.CharField(max_length=20, verbose_name='中心创建者名字')
+    center_creator_iden = models.CharField(max_length=20, verbose_name='中心创建者工号')
     center_createDate = models.DateTimeField(auto_now_add=True, verbose_name='中心创建时间')
 
     class Meta:
@@ -292,7 +302,8 @@ class Customer(models.Model):
     customer_type = models.IntegerField(choices=CUSTOMER_TYPE_CHOICES, default=0, verbose_name="客户类型")
     customer_remarks = models.TextField(max_length=400, verbose_name='客户备注', null=True)
     customer_status = models.IntegerField(choices=CUSTOMER_STATUS_CHOICES, default=1, verbose_name='客户状态')
-    customer_creator = models.CharField(max_length=20, verbose_name='客户创建者')
+    customer_creator = models.CharField(max_length=20, verbose_name='客户创建者名字')
+    customer_creator_iden = models.CharField(max_length=20, verbose_name='客户创建者工号')
     customer_createDate = models.DateTimeField(auto_now_add=True, verbose_name='客户创建时间')
 
     class Meta:
@@ -322,7 +333,8 @@ class Meterage(models.Model):
     meterage_name = models.CharField(max_length=20, verbose_name='计量单位名称')
     meterage_dimension = models.IntegerField(choices=METERAGE_DIMENSION_CHOICES, verbose_name="计量单位量纲")
     meterage_status = models.IntegerField(choices=METERAGE_STATUS_CHOICES, default=1, verbose_name='计量单位状态')
-    meterage_creator = models.CharField(max_length=20, verbose_name='计量单位创建者')
+    meterage_creator = models.CharField(max_length=20, verbose_name='计量单位创建者名字')
+    meterage_creator_iden = models.CharField(max_length=20, verbose_name='计量单位创建者工号')
     meterage_createDate = models.DateTimeField(auto_now_add=True, verbose_name='计量单位创建时间')
 
     class Meta:
@@ -344,7 +356,8 @@ class MaterialType(models.Model):
     type_iden = models.CharField(max_length=30, unique=True, verbose_name='物料类别编码')
     type_name = models.CharField(max_length=20, verbose_name='物料类别名称')
     type_status = models.IntegerField(choices=TYPE_STATUS_CHOICES, default=1, verbose_name='物料类别状态')
-    type_creator = models.CharField(max_length=20, verbose_name='物料类别创建者')
+    type_creator = models.CharField(max_length=20, verbose_name='物料类别创建者名字')
+    type_creator_iden = models.CharField(max_length=20, verbose_name='物料类别创建者工号')
     type_createDate = models.DateTimeField(auto_now_add=True, verbose_name='物料创建时间')
 
     class Meta:
@@ -379,7 +392,8 @@ class Material(models.Model):
     #                              on_delete=models.CASCADE)
     material_attr = models.IntegerField(choices=MATERIAL_DIMENSION_CHOICES, verbose_name='存货属性')
     material_status = models.IntegerField(choices=MATERIAL_STATUS_CHOICES, default=1, verbose_name='物料状态')
-    material_creator = models.CharField(max_length=20, verbose_name='物料创建者')
+    material_creator = models.CharField(max_length=20, verbose_name='物料创建者名字')
+    material_creator_iden = models.CharField(max_length=20, verbose_name='物料创建者工号')
     material_createDate = models.DateTimeField(auto_now_add=True, verbose_name='物料创建时间')
 
     class Meta:
