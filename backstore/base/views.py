@@ -1132,7 +1132,6 @@ class CenterStatusView(APIView):
         json_data = json.loads(self.request.body.decode("utf-8"))
 
         center_status = json_data['center_status']
-        center_iden = json_data['center_iden']
         id = json_data["id"]
         # dpm_iden = json_data['dpm_iden']
 
@@ -1142,7 +1141,7 @@ class CenterStatusView(APIView):
             center.update(center_status=center_status)
             return Response({"message": "状态更改成功", "signal": 0})
         else:
-            return Response({"message": "未查询到仓库,状态更改失败"})
+            return Response({"message": "未查询到中心,状态更改失败"})
 
 
 """
