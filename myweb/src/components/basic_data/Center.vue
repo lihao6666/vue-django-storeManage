@@ -161,7 +161,7 @@
           <el-button @click="editVisible = false">取 消</el-button>
         </el-col>
         <el-col :span="1" :offset="4">
-          <el-button type="primary" @click="saveAlter">确 定</el-button>
+          <el-button type="primary" @click="saveEdit">确 定</el-button>
         </el-col>
       </el-row>
     </el-dialog>
@@ -333,10 +333,10 @@ export default {
     },
     // 保存新增
     saveAlter () {
-      this.alterVisible = false
-      this.$message.success(`新增成功`)
+      let _this = this
       postAPI('/center', {data: this.form, table: 'organization'}).then(function (res) {
-        console.log(res)
+        _this.$message.success(`新增成功`)
+        _this.alterVisible = false
       }).catch(function (err) {
         console.log(err)
       })

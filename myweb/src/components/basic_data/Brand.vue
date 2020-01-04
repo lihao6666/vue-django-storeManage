@@ -84,7 +84,7 @@
     </div>
 
     <!-- 新增弹出框 -->
-    <el-dialog title="新增" :visible.sync="alterVisible" width="35%" >
+    <el-dialog title="新增" :visible.sync="alterVisible" width="35%" :close-on-click-modal="false">
       <div class="container">
         <el-form ref="form" :model="form" label-width="70px"  class="form" >
           <el-row>
@@ -113,7 +113,7 @@
     </el-dialog>
 
     <!-- 编辑弹出框 -->
-    <el-dialog title="编辑" :visible.sync="editVisible" width="35%">
+    <el-dialog title="编辑" :visible.sync="editVisible" width="35%" :close-on-click-modal="false">
       <div class="container">
         <el-form ref="form" :model="editform" label-width="70px">
           <el-row>
@@ -181,7 +181,6 @@ export default {
   methods: {
     getData () {
       let _this = this
-      console.log(getAPI('/base/brands'))
       getAPI('/base/brands').then(function (res) {
         _this.tableData = res.data.brands
         _this.tableDataNew = _this.tableData
@@ -235,48 +234,75 @@ export default {
     },
     // 停用操作
     handleStop (row) {
-      let data = {
-        'brand_name': row.brand_name,
-        'brand_description': row.brand_description,
-        'brand_status': 0,
-        'brand_oldname': row.brand_name
-      }
-      postAPI('/base/brandUpdate', {data: data}).then(function (res) {
-        if (res.signal === 0) {
-          this.$message.success(`停用成功`)
-        } else {
-          this.$message.error(`停用失败`)
-        }
-      }).catch(function (err) {
-        console.log(err)
+      this.$confirm('确定要停用吗？', '提示', {
+        type: 'warning'
       })
+        .then(() => {
+          let _this = this
+          let data = {
+            'brand_new_name': row.brand_name,
+            'brand_description': row.brand_description,
+            'brand_status': 0,
+            'brand_name': row.brand_name
+          }
+          postAPI('/base/brandUpdate', data).then(function (res) {
+            if (res.data.signal === 0) {
+              _this.$message.success(`停用成功`)
+              _this.getData()
+            } else {
+              _this.$message.error(res.data.message)
+            }
+          }).catch(function (err) {
+            _this.$message.error(`停用失败`)
+            console.log(err)
+          })
+        })
+        .catch(() => {
+          this.$message({
+            type: 'info',
+            message: '取消停用'
+          })
+        })
     },
     // 查询
     find () {
       this.pageTotal = 0
       this.tableDataNew = this.tableData.filter(data => !this.search ||
           String(data.brand_name).toLowerCase().includes(this.search.toLowerCase()) ||
-          String(data.brand_name).toLowerCase().includes(this.search.toLowerCase()) ||
-          String(data.brand_createDate).toLowerCase().includes(this.search.toLowerCase()) ||
+          String(data.brand_creator).toLowerCase().includes(this.search.toLowerCase()) ||
           String(data.brand_description).toLowerCase().includes(this.search.toLowerCase()))
     },
     // 启用
     handleStart (row) {
-      let data = {
-        'brand_name': row.brand_name,
-        'brand_description': row.brand_description,
-        'brand_status': 1,
-        'brand_oldname': row.brand_name
-      }
-      postAPI('/base/brandUpdate', {data: data}).then(function (res) {
-        if (res.signal === 0) {
-          this.$message.success(`启用成功`)
-        } else {
-          this.$message.error(`启用失败`)
-        }
-      }).catch(function (err) {
-        console.log(err)
+      this.$confirm('确定要启用吗？', '提示', {
+        type: 'warning'
       })
+        .then(() => {
+          let _this = this
+          let data = {
+            'brand_new_name': row.brand_name,
+            'brand_description': row.brand_description,
+            'brand_status': 1,
+            'brand_name': row.brand_name
+          }
+          postAPI('/base/brandUpdate', data).then(function (res) {
+            if (res.data.signal === 0) {
+              _this.$message.success(`启用成功`)
+              _this.getData()
+            } else {
+              _this.$message.error(res.data.message)
+            }
+          }).catch(function (err) {
+            _this.$message.error(`启用失败`)
+            console.log(err)
+          })
+        })
+        .catch(() => {
+          this.$message({
+            type: 'info',
+            message: '取消启用'
+          })
+        })
     },
     // 编辑操作
     handleEdit (row) {
@@ -289,11 +315,15 @@ export default {
     // 保存编辑
     saveEdit () {
       let _this = this
+      if (_this.editform.brand_name === '') {
+        _this.$message.error(`名称不能为空`)
+        return
+      }
       let data = {
-        'brand_name': this.editform.brand_name,
+        'brand_new_name': this.editform.brand_name,
         'brand_description': this.editform.brand_description,
         'brand_status': this.oldbrand_status,
-        'brand_oldname': this.oldbrand_name// 改之前的名字
+        'brand_name': this.oldbrand_name
       }
       postAPI('/base/brandUpdate', data).then(function (res) {
         if (res.data.signal === 0) {
@@ -301,15 +331,20 @@ export default {
           _this.$message.success(`修改成功`)
           _this.getData()
         } else {
-          _this.$message.error(`修改失败`)
+          _this.$message.error(res.data.self.message)
         }
       }).catch(function (err) {
+        _this.$message.error(`修改失败`)
         console.log(err)
       })
     },
     // 保存新增
     saveAlter () {
       let _this = this
+      if (this.form.brand_name === '') {
+        _this.$message.error(`名称不能为空`)
+        return
+      }
       let data = {
         'brand_name': this.form.brand_name,
         'brand_description': this.form.brand_description,
@@ -325,6 +360,7 @@ export default {
           _this.$message.error(`信息已存在`)
         }
       }).catch(function (err) {
+        _this.$message.error(`新增失败`)
         console.log(err)
       })
     },

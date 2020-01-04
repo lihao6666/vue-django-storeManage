@@ -1,4 +1,7 @@
 {
   "navigationBarTitleText": "我的信息",
-  "usingComponents": {}
+  "usingComponents": {
+    "cmd-avatar": "/components/cmd-avatar/cmd-avatar",
+    "cmd-cell-item": "/components/cmd-cell-item/cmd-cell-item"
+  }
 }

@@ -1,0 +1,25 @@
+
+.content {
+	padding: 0;
+}
+.person-head {
+	display: -webkit-box;
+	display: -webkit-flex;
+	display: flex;
+	-webkit-box-orient: horizontal;
+	-webkit-box-direction: normal;
+	-webkit-flex-direction: row;
+	        flex-direction: row;
+	-webkit-box-align: center;
+	-webkit-align-items: center;
+	        align-items: center;
+	height: 170rpx;
+	padding-left: 44%;
+	background: -webkit-linear-gradient(bottom, #365fff, #0faeff);
+	background: linear-gradient(to top, #365fff, #0faeff);
+	border-top: 0;
+}
+.person-list {
+	background: #FFFFFF;
+}
+
