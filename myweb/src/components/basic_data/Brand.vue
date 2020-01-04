@@ -182,8 +182,11 @@ export default {
     getData () {
       let _this = this
       getAPI('/base/brands').then(function (res) {
+        if (res.data.message) {
+          return
+        }
         _this.tableData = res.data.brands
-        _this.tableDataNew = _this.tableData
+        _this.find()
         let nameset = new Set()
         let creatorset = new Set()
         for (let i in _this.tableData) {

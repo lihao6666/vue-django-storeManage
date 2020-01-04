@@ -232,8 +232,11 @@ export default {
     getData () {
       let _this = this
       getAPI('/base/suppliers').then(function (res) {
+        if (res.data.message) {
+          return
+        }
         _this.tableData = res.data.suppliers
-        _this.tableDataNew = _this.tableData
+        _this.find()
         let nameset = new Set()
         let typeset = new Set()
         let creatorset = new Set()
@@ -286,7 +289,12 @@ export default {
       this.alterVisible = true
       let _this = this
       getAPI('/base/suppliers').then(function (res) {
-        let maxiden = String(parseInt(res.data.max_iden) + 1)
+        let maxiden
+        if (res.data.message) {
+          maxiden = '0100001'
+        } else {
+          maxiden = String(parseInt(res.data.max_iden) + 1)
+        }
         _this.form.supply_iden = maxiden
         for (let i = 0; i < 7 - maxiden.length; i++) {
           _this.form.supply_iden = '0' + _this.form.supply_iden
@@ -440,7 +448,7 @@ export default {
           _this.getData()
           _this.clearform()
         } else {
-          _this.$message.error(`信息已存在`)
+          _this.$message.error(res.data.message)
         }
       }).catch(function (err) {
         _this.$message.error(`新增失败`)
