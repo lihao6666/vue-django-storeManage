@@ -3,8 +3,9 @@
   <component name="ChangeListManager">
     <list default="true" id="34c6b5b4-0631-4a35-9482-5f8673ee1af7" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/storeManage/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/storeManage/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/storeManage/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/storeManage/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backstore/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/backstore/settings.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/base/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/base/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/base/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/base/views.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -55,7 +56,7 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/purchase" />
-    <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
+    <property name="settings.editor.selected.configurable" value="editor.preferences.tabs" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
@@ -116,7 +117,7 @@
       <workItem from="1577343592625" duration="52968000" />
       <workItem from="1577513181545" duration="6382000" />
       <workItem from="1577528753842" duration="577000" />
-      <workItem from="1577593027609" duration="130898000" />
+      <workItem from="1577593027609" duration="144596000" />
     </task>
     <task id="LOCAL-00001" summary="&quot;Add requirements.txt&quot;">
       <created>1578018842973</created>
@@ -148,9 +149,10 @@
       <screen x="0" y="23" width="1920" height="988" />
     </state>
     <state x="100" y="100" width="1720" height="880" key="DiffContextDialog/1920.242.1440.877/0.23.1920.988@0.23.1920.988" timestamp="1577529573352" />
-    <state x="566" y="184" key="SettingsEditor" timestamp="1577504419495">
-      <screen x="0" y="23" width="1920" height="989" />
+    <state x="425" y="147" key="SettingsEditor" timestamp="1578108378400">
+      <screen x="0" y="0" width="1440" height="900" />
     </state>
+    <state x="425" y="147" key="SettingsEditor/0.0.1440.900@0.0.1440.900" timestamp="1578108378400" />
     <state x="566" y="184" key="SettingsEditor/1920.242.1440.877/0.23.1920.989@0.23.1920.989" timestamp="1577504419495" />
     <state x="473" y="153" width="660" height="595" key="find.popup" timestamp="1578034307099">
       <screen x="0" y="0" width="1440" height="900" />

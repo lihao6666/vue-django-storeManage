@@ -48,28 +48,33 @@ def roleToList(roles_name_list):
 class LoginView(APIView):
 
     def post(self, request):
-        user_id = self.request.data.get('user_id')
-        user_passwd = self.request.data.get('user_passwd')
-        print(user_id)
-        print(user_passwd)
+        json_data = json.loads(self.request.body.decode("utf-8"))
+        user_now = models.UserNow.objects.get()
+        if user_now:
+            return Response({"message": "老子已经在线了，你还想挤掉我"})
+        user_iden = json_data['user_iden']
+        user_passwd = json_data['user_passwd']
+        # user_iden = self.request.data.get('user_iden')
+        # user_passwd = self.request.data.get('user_passwd')
         try:
-            user = authenticate(username=user_id, password=user_passwd)
+            user = authenticate(username=user_iden, password=user_passwd)
         except models.UserProfile.DoesNotExist:
             return Response({'message': '登录异常', 'signal': '3'})
         else:
             if user:
                 if user.is_active == 1:
                     login(request, user)
-                    user = models.UserProfile.objects.get(username=user_id)
-
+                    user = models.UserProfile.objects.get(username=user_iden)
+                    user_id = user.id
                     username = user.username
                     user_name = user.user_name
                     area_name = user.area_name
                     user_departments = user.user_departments
                     user_roles = user.user_roles
 
-                    models.UserNow.objects.create(user_iden=username,user_name=user_name,area_name=area_name,
-                                                  user_departments=user_departments,user_roles=user_roles)
+                    models.UserNow.objects.create(user_id=user_id, user_iden=username, user_name=user_name,
+                                                  area_name=area_name,
+                                                  user_departments=user_departments, user_roles=user_roles)
 
                     return Response({'message': '登录成功', 'signal': '0'})
                 elif user.is_active == 0:
@@ -79,8 +84,10 @@ class LoginView(APIView):
 
 
 class LoginExitView(APIView):
-    def get(self, request):
-        models.UserNow.objects.get().delete() #删除当前用户表信息
+    def post(self, request):
+        json_data = json.loads(self.request.body.decode("utf-8"))
+        user_iden = json_data['user_iden']
+        models.UserNow.objects.get(user_iden=user_iden).delete()  # 删除当前用户表信息
         logout(request)
         return Response({"message": "退出登录成功"})
 
@@ -88,14 +95,18 @@ class LoginExitView(APIView):
 class UserView(APIView):
 
     def post(self, request):
-        user_id = self.request.data.get('user_id')
-        try:
-            user = models.UserProfile.objects.get(username=user_id)
-        except models.UserProfile.DoesNotExist:
-            return Response({'message': '查询不到用户信息'})
-        else:
-            user_serializer = UserProfileSerializer(user)
-            return Response({"user": user_serializer.data})
+        json_data = json.loads(self.request.body.decode("utf-8"))
+        user_iden = json_data['user_iden']
+        user = models.UserNow.objects.get(user_iden=user_iden)
+        if user_iden:
+            try:
+                user = models.UserProfile.objects.get(username=user.user_iden)
+            except models.UserProfile.DoesNotExist:
+                return Response({'message': '查询不到用户信息'})
+            else:
+                user_serializer = UserProfileSerializer(user)
+                return Response({"user": user_serializer.data})
+        return Response({"message": "用户未登录"})
 
 
 class UserNewView(APIView):
@@ -115,34 +126,45 @@ class UserAddView(APIView):
 
     def post(self, request):
         json_data = json.loads(self.request.body.decode("utf-8"))
-        user_id = json_data['user_id']
+
+        creator_iden = json_data['creator_iden']
+
+        user_iden = json_data['user_iden']
         user_passwd = json_data['user_passwd']
         user_name = json_data['user_name']
         user_phone_number = json_data['user_phone_number']
         user_mailbox = json_data['user_mailbox']
-        user_status = json_data['user_status']
-        user_departments = json_data['user_departments']
-        user_roles = json_data['user_roles']
-        user_creator = json_data['user_creator']
+
+        # max_id = models.UserProfile.objects.all().aggregate(Max('username'))['username__max']
+        # user_iden = str(int(max_id) + 1)  # 编号后台处理过了
+
+        user_departments = departmentToList(json_data['departments'])  # 传过来的是名字列表
+        user_roles = roleToList(json_data['roles'])  # 传过来的是角色列表
+
         area_name = json_data['area_name']
+
+        user_now = models.UserNow.objects.get(user_iden=creator_iden)
+        user_creator = user_now.user_name
+        user_creator_iden = user_now.user_iden
 
         # area = models.Area.objects.filter(area_name=area_name).first()
         # user_createDate = json_data['user_createDate']
-        if self.idCheck(user_id):
+        if self.idCheck(user_iden):
             if self.phoneCheck(user_phone_number):
                 if self.emailCheck(user_mailbox):
-                    models.UserProfile.objects.create_user(username=user_id, password=user_passwd,
+                    models.UserProfile.objects.create_user(username=user_iden, password=user_passwd,
                                                            user_name=user_name, user_phone_number=user_phone_number,
-                                                           email=user_mailbox, is_active=user_status,
+                                                           email=user_mailbox, is_active=0,
                                                            user_departments=user_departments, user_roles=user_roles,
                                                            user_creator=user_creator,
+                                                           user_creator_iden=user_creator_iden,
                                                            area_name=area_name)
                     # pass
         return Response({'message': self.message, 'signal': self.signal})
 
-    def idCheck(self, user_id):
+    def idCheck(self, user_iden):
         try:
-            user = models.UserProfile.objects.get(username=user_id)
+            user = models.UserProfile.objects.get(username=user_iden)
         except models.UserProfile.DoesNotExist:
             return True
         else:
@@ -176,30 +198,35 @@ class UserUpdateView(APIView):
         super().__init__(**kwargs)
         self.message = "修改成功"
         self.signal = 0
-        self.user_id = ""
+        self.user_iden = ""
 
     def post(self, request):
         json_data = json.loads(self.request.body.decode("utf-8"))
-        self.user_id = json_data['user_id']
+        self.user_iden = json_data['user_iden']  # 需要传过来要修改用户的id
         # user_passwd = json_data['user_passwd']
-        # user_name = json_data['user_name']
+        user_name = json_data['user_name']
 
         user_phone_number = json_data['user_phone_number']
         user_mailbox = json_data['user_mailbox']
         user_status = json_data['user_status']
-        user_departments = json_data['user_departments']
-        user_roles = json_data['user_roles']
+        user_departments = departmentToList(json_data['departments'])  # 传过来的是名字列表
+        user_roles = roleToList(json_data['roles'])  # 传过来的是角色列表
         # user_creator = json_data['user_creator']
         area_name = json_data['area_name']
         # area = models.Area.objects.filter(area_name=area_name).first()
-        user = models.UserProfile.objects.filter(username=self.user_id)
+        user = models.UserProfile.objects.filter(username=self.user_iden)
 
         if self.phoneCheck(user_phone_number):
             if self.emailCheck(user_mailbox):
-                user.update(user_phone_number=user_phone_number,
-                            email=user_mailbox, is_active=user_status,
-                            user_departments=user_departments, user_roles=user_roles,
-                            area_name=area_name)
+                if user:
+                    user.update(user_name=user_name, user_phone_number=user_phone_number,
+                                email=user_mailbox, is_active=user_status,
+                                user_departments=user_departments, user_roles=user_roles,
+                                area_name=area_name)
+                else:
+                    self.message = "员工查询出错"
+                    self.signal = 4
+
         return Response({'message': self.message, 'signal': self.signal})
 
     def phoneCheck(self, phone):
@@ -208,7 +235,7 @@ class UserUpdateView(APIView):
         except models.UserProfile.DoesNotExist:
             return True
         else:
-            if user.username == self.user_id:
+            if user.username == self.user_iden:
                 return True
             else:
                 self.message = "员工电话号码已存在"
@@ -221,7 +248,7 @@ class UserUpdateView(APIView):
         except models.UserProfile.DoesNotExist:
             return True
         else:
-            if user.username == self.user_id:
+            if user.username == self.user_iden:
                 return True
             else:
                 self.message = "员工email已存在"
@@ -229,15 +256,27 @@ class UserUpdateView(APIView):
                 return False
 
 
+class UserStatusView(APIView):
+    def post(self):
+        json_data = json.loads(self.request.body.decode("utf-8"))
+        user_status = json_data['user_status']
+        user_iden = json_data['user_iden']
+        user = models.UserProfile.objects.filter(username=user_iden)
+        if user:
+            user.update(is_active=user_status, )
+            return Response({"message": "状态更改成功"})
+        else:
+            return Response({"message": "未查询到用户,状态更改失败"})
+
+
 class UsersView(APIView):
 
     # @login_required
     def get(self, request):
-        max_id = models.UserProfile.objects.all().aggregate(Max('username'))['username__max']
         users = models.UserProfile.objects.all()
         if users:
             users_serializer = UserProfileSerializer(users, many=True)
-            return Response({"max_iden": max_id, "users": users_serializer.data})
+            return Response({"users": users_serializer.data})
 
 
 """
@@ -252,6 +291,8 @@ class AreasView(APIView):
         if areas:
             area_serializer = AreaSerializer(areas, many=True)
             return Response({"areas": area_serializer.data})
+        else:
+            return Response({"message": "未查询到信息"})
 
 
 """
@@ -283,15 +324,23 @@ class RoleAddView(APIView):
 
     def post(self, request):
         json_data = json.loads(self.request.body.decode("utf-8"))
-        role = json_data['role']
-        role_power = json_data['role_power']
-        role_description = json_data['role_description']
-        role_status = json_data['role_status']
-        role_creator = json_data['role_creator']
-        if self.nameCheck(role):
-            models.Role.objects.create(role=role, role_power=role_power, role_description=role_description,
-                                       role_status=role_status,
-                                       role_creator=role_creator)
+        user_iden = json_data['user_iden']
+        role = json_data['role']  # 角色名字
+        role_power = json_data['role_power']  # 角色权限
+        role_description = json_data['role_description']  # 角色描述
+        user_now = models.UserNow.objects.get(user_iden=user_iden)
+        if user_now:
+            creator = user_now.user_name
+            creator_iden = user_now.user_iden
+            if self.nameCheck(role):
+                models.Role.objects.create(role=role, role_power=role_power, role_description=role_description,
+                                           role_status=0,
+                                           role_creator=creator,
+                                           creator_iden=creator_iden)
+        else:
+            self.message = "用户未登录"
+            self.signal = 2
+
         return Response({'message': self.message, 'signal': self.signal})
 
     def nameCheck(self, name):
@@ -316,10 +365,10 @@ class RoleUpdateView(APIView):
         role_power = json_data['role_power']
         role = json_data['role']
         role_status = json_data['role_status']
-        role_remarks = json_data['role_remarks']
+        role_description = json_data['role_description']
         try:
             models.Role.objects.filter(role=role).update(role_power=role_power, role_status=role_status,
-                                                         role_remarks=role_remarks)
+                                                         role_description=role_description)
         except:
             self.message = "更新失败"
             self.signal = 1
@@ -337,11 +386,11 @@ class RoleUpdateView(APIView):
 class CustomersView(APIView):
 
     def get(self, request):
-        max_id = models.Customer.objects.all().aggregate(Max('customer_iden'))['customer_iden__max']
+        # max_id = models.Customer.objects.all().aggregate(Max('customer_iden'))['customer_iden__max']
         customers = models.Customer.objects.all()
         if customers:
             customers_serializer = CustomerSerializer(customers, many=True)
-            return Response({"max_iden": max_id, "customers": customers_serializer.data})
+            return Response({"customers": customers_serializer.data})
         else:
             return Response({"message": "未查询到信息"})
 
@@ -355,16 +404,20 @@ class CustomerAddView(APIView):
 
     def post(self, request):
         json_data = json.loads(self.request.body.decode("utf-8"))
-        customer_iden = json_data['customer_iden']
+        max_id = models.Customer.objects.all().aggregate(Max('customer_iden'))['customer_iden__max']
+        customer_iden = str(int(max_id) + 1)  # 编号后台处理过了
         customer_name = json_data['customer_name']
         customer_type = json_data['customer_type']
         customer_remarks = json_data['customer_remarks']
-        customer_status = json_data['customer_status']
-        customer_creator = json_data['customer_creator']
-        models.Customer.objects.create(customer_iden=customer_iden, customer_name=customer_name,
-                                       customer_type=customer_type,
-                                       customer_remarks=customer_remarks, customer_status=customer_status,
-                                       customer_creator=customer_creator)
+        user_id = json_data['id']
+        user_now = models.UserNow.objects.get(user_iden=user_iden)
+        if user_now:
+            creator = user_now.user_name
+            creator_iden = user_now.user_iden
+            models.Customer.objects.create(customer_iden=customer_iden, customer_name=customer_name,
+                                           customer_type=customer_type,
+                                           customer_remarks=customer_remarks, customer_status=customer_status,
+                                           customer_creator=customer_creator)
         return Response({'message': self.message, 'signal': self.signal})
 
 

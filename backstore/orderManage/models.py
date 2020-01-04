@@ -215,7 +215,7 @@ class SellOrder(models.Model):
     )
     id = models.AutoField(primary_key=True)
     so_iden = models.CharField(max_length=15, verbose_name='销售订单编号')
-    organization = models.ForeignKey('base.Origanization', verbose_name='组织', related_name='orga_so',
+    organization = models.ForeignKey('base.Organization', verbose_name='组织', related_name='orga_so',
                                      on_delete=models.CASCADE)
     so_type = models.IntegerField(choices=SELL_ORDER_CHOICES, verbose_name='订单类型')
     customer = models.ForeignKey('base.Customer', verbose_name='客户', related_name='customer_so',
