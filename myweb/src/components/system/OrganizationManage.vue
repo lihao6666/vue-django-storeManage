@@ -55,7 +55,7 @@
               icon="el-icon-unlock"
               class="red"
               @click="handleStop(scope.row)"
-              v-if="scope.row.dpm_status==='启用'"
+              v-if="scope.row.dpm_status===1"
             >停用
             </el-button>
             <el-button
@@ -63,7 +63,7 @@
               icon="el-icon-lock"
               class="green"
               @click="handleStart(scope.row)"
-              v-if="scope.row.dpm_status==='停用'"
+              v-if="scope.row.dpm_status===0"
             >启用
             </el-button>
           </template>
@@ -165,7 +165,7 @@
 <script>
 import {postAPI} from '../../api/api'
 export default {
-  name: 'test',
+  name: 'OrganizationManage',
   data () {
     return {
       query: {
@@ -202,6 +202,8 @@ export default {
       let _this = this
       postAPI('/base/departments').then(function (res) {
         _this.tableData = res.data.departments
+        _this.dpm_orgaSet = []
+        _this.dpm_creatorSet = []
         _this.find()
         let orgaset = new Set()
         let creatorset = new Set()
@@ -254,7 +256,7 @@ export default {
     },
     // 停用操作
     handleStop (row) {
-      postAPI('/base/departments', {data: row, status: '停用'}).then(function (res) {
+      postAPI('/base/departments', {data: row, status: 0}).then(function (res) {
         console.log(res)
       }).catch(function (err) {
         console.log(err)
@@ -272,7 +274,7 @@ export default {
     },
     // 启用
     handleStart (row) {
-      postAPI('/base/departments', {data: row, status: '启用'}).then(function (res) {
+      postAPI('/base/departments', {data: row, status: 1}).then(function (res) {
         console.log(res)
       }).catch(function (err) {
         console.log(err)
@@ -349,7 +351,6 @@ export default {
     margin-bottom: 20px;
     position: relative;
   }
-
   .input-search {
     width: 50%;
   }
@@ -357,7 +358,6 @@ export default {
     position: absolute;
     right:0;
   }
-
   .table {
     width: 100%;
     font-size: 14px;

@@ -1,4 +1,6 @@
 {
   "navigationBarTitleText": "系统设置",
-  "usingComponents": {}
+  "usingComponents": {
+    "w-button": "/components/watch-login/watch-button"
+  }
 }

@@ -1,5 +1,5 @@
 import axios from 'axios'
-import qs from 'qs'
+// import qs from 'qs'
 // import router from '@/router'
 // import {Message, MessageBox} from 'element-ui'
 
@@ -85,7 +85,7 @@ export function postAPI (url, params = null) {
     method: 'post',
     baseURL: 'http://127.0.0.1:8090',
     url,
-    data: qs.stringify(params),
+    data: params,
     timeout: 10000,
     headers: {
       'X-Requested-With': 'XMLHttpRequest',
