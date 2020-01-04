@@ -29,7 +29,6 @@
         <el-button v-if="ifchange && formadd.po_contractFrom" type="primary" icon="el-icon-plus" class="button-save" @click="add">选择合同</el-button>
       </div>
       <el-table
-        max-height="580"
         :data="tableDataNew"
         class="table"
         ref="multipleTable"
@@ -128,7 +127,7 @@
             </el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="od_rp_iden" sortable label="请购单号" :filters="od_rp_idenset"
+        <el-table-column prop="od_rp_iden" sortable label="请购单号" :filters="od_rp_idenSet"
       :filter-method="filter" align="center"></el-table-column>
         <el-table-column label="操作" align="center" v-if="ifchange">
           <template slot-scope="scope">
@@ -190,7 +189,7 @@ export default {
       od_specificationSet: [],
       od_modelSet: [],
       od_meterageSet: [],
-      od_rp_idenset: [],
+      od_rp_idenSet: [],
       addVisible: false,
       ifhasorga: false,
       pageTotal: 0
@@ -210,7 +209,7 @@ export default {
         return
       }
       let _this = this
-      postAPI('/po_od', this.formadd).then(function (res) {
+      postAPI('/purchase/po_od', this.formadd).then(function (res) {
         _this.tableData = res.data.list
         _this.find()
         let nameset = new Set()
@@ -246,7 +245,7 @@ export default {
           })
         }
         for (let i of rpidenset) {
-          _this.od_rp_idenset.push({
+          _this.od_rp_idenSet.push({
             text: i,
             value: i
           })
@@ -392,7 +391,7 @@ export default {
           this.tableData.splice(index, 1)
           let pageIndexNew = Math.ceil((this.pageTotal - 1) / this.query.pageSize) // 新的页面数量
           this.query.pageIndex = (this.query.pageIndex > pageIndexNew) ? pageIndexNew : this.query.pageIndex
-          this.query.pageIndex = (this.query.pageIndex === 0) ? 1 : 0
+          this.query.pageIndex = (this.query.pageIndex === 0) ? 1 : this.query.pageIndex
           this.find()
         })
         .catch(() => {
@@ -425,7 +424,7 @@ export default {
         .then(() => {
           let pageIndexNew = Math.ceil((this.pageTotal - this.multipleSelection.length) / this.query.pageSize) // 新的页面数量
           this.query.pageIndex = (this.query.pageIndex > pageIndexNew) ? pageIndexNew : this.query.pageIndex
-          this.query.pageIndex = (this.query.pageIndex === 0) ? 1 : 0
+          this.query.pageIndex = (this.query.pageIndex === 0) ? 1 : this.query.pageIndex
           for (let i in this.multipleSelection) {
             let x = this.tableData.valueOf(this.multipleSelection[i])
             this.tableData.splice(x, 1)

@@ -20,7 +20,6 @@
         <el-button type="primary" icon="el-icon-plus" @click="handleAlter" class="alter-button">新增</el-button>
       </div>
       <el-table
-        max-height="580"
         :data="tableDataNew"
         class="table"
         ref="multipleTable"
@@ -90,7 +89,7 @@
     </div>
 
     <!-- 新增弹出框 -->
-    <el-dialog title="新增" :visible.sync="alterVisible" width="40%" >
+    <el-dialog title="新增" :visible.sync="alterVisible" width="40%" :close-on-click-modal="false">
       <div class="container">
         <el-form ref="form" :model="form" label-width="80px" >
           <el-row>
@@ -118,7 +117,7 @@
       </el-row>
     </el-dialog>
     <!-- 编辑弹出框 -->
-    <el-dialog title="编辑" :visible.sync="editVisible" width="40%">
+    <el-dialog title="编辑" :visible.sync="editVisible" width="40%" :close-on-click-modal="false">
       <div class="container">
         <el-form ref="form" :model="editform" label-width="80px">
           <el-form-item label="角色">
@@ -132,10 +131,10 @@
       </div>
       <el-row :gutter="20" class="el-row-button-save">
         <el-col :span="1" :offset="16">
-          <el-button @click="alterVisible = false">取 消</el-button>
+          <el-button @click="editVisible = false">取 消</el-button>
         </el-col>
         <el-col :span="1" :offset="3">
-          <el-button type="primary" @click="saveAlter">确 定</el-button>
+          <el-button type="primary" @click="saveEdit">确 定</el-button>
         </el-col>
       </el-row>
     </el-dialog>
@@ -143,7 +142,7 @@
 </template>
 
 <script>
-import {postAPI} from '../../api/api'
+import {getAPI, postAPI} from '../../api/api'
 export default {
   name: 'test',
   data () {
@@ -160,7 +159,8 @@ export default {
       },
       editform: {
         role_description: '',
-        role: ''
+        role: '',
+        role_status: ''
       },
       tableData: [],
       tableDataNew: [],
@@ -180,9 +180,14 @@ export default {
   methods: {
     getData () {
       let _this = this
-      postAPI('/role').then(function (res) {
-        _this.tableData = res.data.list
+      console.log(getAPI('/base/roles'))
+      getAPI('/base/roles').then(function (res) {
+        if (!res.data.roles) {
+          return
+        }
+        _this.tableData = res.data.roles
         _this.tableDataNew = _this.tableData
+        console.log(res.data)
         let roleset = new Set()
         let creatorset = new Set()
         for (let i in _this.tableData) {
@@ -201,7 +206,7 @@ export default {
             value: i
           })
         }
-        _this.pageTotal = res.data.list.length
+        _this.pageTotal = res.data.roles.length
       }).catch(function (err) {
         console.log(err)
       })
@@ -240,47 +245,118 @@ export default {
       this.form.role = ''
       this.form.role_description = ''
     },
-    // 禁用操作
+    // 停用操作
     handleStop (row) {
-      postAPI('/role', {data: row, status: '停用'}).then(function (res) {
-        console.log(res)
-      }).catch(function (err) {
-        console.log(err)
+      this.$confirm('确定要停用吗？', '提示', {
+        type: 'warning'
       })
+        .then(() => {
+          row.user_status = '停用'
+          console.log(row)
+          let _this = this
+          postAPI('/base/roleUpdate', row).then(function (res) {
+            console.log(res.data)
+            if (res.data.signal === 0) {
+              _this.$message.success(`停用成功`)
+            } else {
+              _this.$message.error(res.data.message)
+              row.user_status = '启用'
+            }
+          }).catch(function (err) {
+            console.log(err)
+            _this.$message.error(`停用失败`)
+            row.user_status = '启用'
+          })
+        })
+        .catch(() => {
+          this.$message({
+            type: 'info',
+            message: '取消停用'
+          })
+        })
     },
     // 启用
     handleStart (row) {
-      postAPI('/role', {data: row, status: '启用'}).then(function (res) {
-        console.log(res)
-      }).catch(function (err) {
-        console.log(err)
+      this.$confirm('确定要启用吗？', '提示', {
+        type: 'warning'
       })
+        .then(() => {
+          row.user_status = '启用'
+          console.log(row)
+          let _this = this
+          postAPI('/base/roleUpdate', row).then(function (res) {
+            if (res.data.signal === 0) {
+              _this.$message.success(`启用`)
+            } else {
+              _this.$message.error(res.data.message)
+              row.user_status = '停用'
+            }
+          }).catch(function (err) {
+            console.log(err)
+            _this.$message.error(`启用失败`)
+            row.user_status = '停用'
+          })
+        })
+        .catch(() => {
+          this.$message({
+            type: 'info',
+            message: '取消启用'
+          })
+        })
     },
     // 编辑操作
     handleEdit (row) {
       this.editform.role_description = row.role_description
       this.editform.role = row.role
+      this.editform.role_status = row.role_status
       this.editVisible = true
     },
     // 保存编辑
     saveEdit () {
-      this.editVisible = false
-      this.$message.success(`修改成功`)
-      postAPI('/role', {data: this.editform, role: this.role}).then(function (res) {
-        console.log(res)
+      if (!this.editform.role || !this.editform.role_description) {
+        this.$message.error(`请填写完信息`)
+        return
+      }
+      let _this = this
+      postAPI('/base/roleUpdate', this.editform).then(function (res) {
+        if (res.data.signal === 0) {
+          _this.$message.success(`修改成功`)
+          _this.editVisible = false
+        } else {
+          _this.$message.error(res.data.message)
+        }
       }).catch(function (err) {
         console.log(err)
+        _this.$message.error(`修改失败`)
       })
     },
     // 保存新增
     saveAlter () {
-      this.alterVisible = false
-      this.$message.success(`新增成功`)
-      this.clearform()
-      postAPI('/role', {data: this.form, table: 'role'}).then(function (res) {
-        console.log(res)
+      if (!this.form.role || !this.form.role_description) {
+        this.$message.error(`请填写完信息`)
+        return
+      }
+      let data = {
+        'role': this.form.role,
+        'role_power': '',
+        'role_description': this.form.role_description,
+        'role_status': '禁用',
+        'role_creator': 'yq'
+      }
+      console.log(data)
+      let _this = this
+      postAPI('/base/roleAdd', data).then(function (res) {
+        if (res.data.signal === 0) {
+          _this.$message.success(`新增成功`)
+          _this.alterVisible = false
+          _this.clearform()
+          _this.getData()
+        } else {
+          _this.$message.error(res.data.message)
+        }
       }).catch(function (err) {
         console.log(err)
+        _this.$message.error(`新增失败`)
       })
     },
     // 分页导航

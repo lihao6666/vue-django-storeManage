@@ -1,0 +1,160 @@
+{
+  "list": [
+    {
+      "bis_iden": "1",
+      "bis_orga": "合肥工业大学",
+      "bis_warehouse": "物品",
+      "bis_supply": "软件学院",
+      "bis_date": "2019-01-01 12:00:00",
+      "bis_sum": "100",
+      "bis_remarks": "很多东西扫地机杀掉了卡简历库的境外旅客就是领导进来撒是肯定骄傲三十六就看撒的",
+      "bis_status": "草稿",
+      "bis_creator": "yq",
+      "bis_createDate": "2019-01-01 12:00:00"
+    },
+    {
+      "bis_iden": "1",
+      "bis_orga": "合肥工业大学",
+      "bis_warehouse": "物品",
+      "bis_supply": "软件学院",
+      "bis_date": "2019-01-01 12:00:00",
+      "bis_remarks": "很多东西扫地机杀掉了卡简历库的境外旅客就是领导进来撒是肯定骄傲三十六就看撒的",
+      "bis_status": "草稿",
+      "bis_creator": "yq",
+      "bis_createDate": "2019-01-01 12:00:00",
+      "bis_sum": "100"
+    },
+    {
+      "bis_iden": "1",
+      "bis_orga": "合肥工业大学",
+      "bis_warehouse": "物品",
+      "bis_supply": "软件学院",
+      "bis_date": "2019-01-01 12:00:00",
+      "bis_remarks": "很多东西扫地机杀掉了卡简历库的境外旅客就是领导进来撒是肯定骄傲三十六就看撒的",
+      "bis_status": "已审批",
+      "bis_creator": "yq",
+      "bis_createDate": "2019-01-01 12:00:00",
+      "bis_sum": "100"
+    },
+    {
+      "bis_iden": "1",
+      "bis_orga": "合肥工业大学",
+      "bis_warehouse": "物品",
+      "bis_supply": "软件学院",
+      "bis_date": "2019-01-01 12:00:00",
+      "bis_remarks": "很多东西",
+      "bis_status": "已审批",
+      "bis_creator": "yq",
+      "bis_createDate": "2019-01-01 12:00:00",
+      "bis_sum": "100"
+    },
+    {
+      "bis_iden": "1",
+      "bis_orga": "合肥工业大学",
+      "bis_warehouse": "物品",
+      "bis_supply": "软件学院",
+      "bis_date": "2019-01-01 12:00:00",
+      "bis_remarks": "很多东西",
+      "bis_status": "已审批",
+      "bis_creator": "yq",
+      "bis_createDate": "2019-01-01 12:00:00",
+      "bis_sum": "100"
+    },
+    {
+      "bis_iden": "1",
+      "bis_orga": "合肥工业大学",
+      "bis_warehouse": "物品",
+      "bis_supply": "软件学院",
+      "bis_date": "2019-01-01 12:00:00",
+      "bis_remarks": "很多东西",
+      "bis_status": "已审批",
+      "bis_creator": "yq",
+      "bis_createDate": "2019-01-01 12:00:00",
+      "bis_sum": "100"
+    },
+    {
+      "bis_iden": "2",
+      "bis_orga": "北京大学",
+      "bis_warehouse": "物品",
+      "bis_supply": "软件学院",
+      "bis_date": "2019-01-01 12:00:00",
+      "bis_remarks": "很多东西很多东西扫地机杀掉了卡简历库的境外旅客就是领导进来撒是肯定骄傲三十六就看撒的很多东西扫地机杀掉了卡简历库的境外旅客就是领导进来撒是肯定骄傲三十六就看撒的",
+      "bis_status": "已审批",
+      "bis_creator": "zep",
+      "bis_createDate": "2019-01-01 12:00:00",
+      "bis_sum": "100"
+    },
+    {
+      "bis_iden": "2",
+      "bis_orga": "北京大学",
+      "bis_warehouse": "物品",
+      "bis_supply": "软件学院",
+      "bis_date": "2019-01-01 12:00:00",
+      "bis_remarks": "很多东西",
+      "bis_status": "已审批",
+      "bis_creator": "zep",
+      "bis_createDate": "2019-01-01 12:00:00",
+      "bis_sum": "100"
+    },
+    {
+      "bis_iden": "2",
+      "bis_orga": "北京大学",
+      "bis_warehouse": "物品",
+      "bis_supply": "软件学院",
+      "bis_date": "2019-01-01 12:00:00",
+      "bis_remarks": "很多东西",
+      "bis_status": "已审批",
+      "bis_creator": "zep",
+      "bis_createDate": "2019-01-01 12:00:00",
+      "bis_sum": "100"
+    },
+    {
+      "bis_iden": "2",
+      "bis_orga": "北京大学",
+      "bis_warehouse": "物品",
+      "bis_supply": "软件学院",
+      "bis_date": "2019-01-01 12:00:00",
+      "bis_remarks": "很多东西",
+      "bis_status": "已审批",
+      "bis_creator": "zep",
+      "bis_createDate": "2019-01-01 12:00:00",
+      "bis_sum": "100"
+    },
+    {
+      "bis_iden": "2",
+      "bis_orga": "北京大学",
+      "bis_warehouse": "物品",
+      "bis_supply": "物理学院",
+      "bis_date": "2019-01-01 12:00:00",
+      "bis_remarks": "很多东西",
+      "bis_status": "已审批",
+      "bis_creator": "zep",
+      "bis_createDate": "2019-01-01 12:00:00",
+      "bis_sum": "100"
+    },
+    {
+      "bis_iden": "2",
+      "bis_orga": "北京大学",
+      "bis_warehouse": "物品",
+      "bis_supply": "物理学院",
+      "bis_date": "2019-01-01 12:00:00",
+      "bis_remarks": "很多东西",
+      "bis_status": "已审批",
+      "bis_creator": "zep",
+      "bis_createDate": "2019-01-01 12:00:00",
+      "bis_sum": "100"
+    },
+    {
+      "bis_iden": "2",
+      "bis_orga": "北京大学",
+      "bis_warehouse": "物品",
+      "bis_supply": "物理学院",
+      "bis_date": "2019-01-01 12:00:00",
+      "bis_remarks": "很多东西",
+      "bis_status": "已审批",
+      "bis_creator": "zep",
+      "bis_createDate": "2019-01-01 12:00:00",
+      "bis_sum": "100"
+    }
+  ]
+}

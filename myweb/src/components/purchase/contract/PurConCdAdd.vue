@@ -29,7 +29,6 @@
         <el-button type="primary" class="button-save" @click="save">添 加</el-button>
       </div>
       <el-table
-        max-height="580"
         :data="tableDataNew"
         class="table"
         ref="multipleTable"
@@ -123,7 +122,7 @@ export default {
   methods: {
     getData () {
       let _this = this
-      postAPI('/pc_cd_add', this.formadd.po_orga).then(function (res) {
+      postAPI('/base/pc_cd_add', this.formadd.po_orga).then(function (res) {
         _this.tableData = res.data.list
         _this.find()
         let nameset = new Set()

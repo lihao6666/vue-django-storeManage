@@ -21,6 +21,8 @@
 </template>
 
 <script>
+/* import {postAPI} from '../api/api' */
+
 export default {
   data () {
     return {
@@ -42,10 +44,26 @@ export default {
   },
   methods: {
     handleSubmit () {
-      if (this.loginData.checkName) {
-        this.$message.success('登录成功')
-        localStorage.setItem('ms_username', this.loginData.checkName)
-        this.$router.push('/')
+      if (this.loginData.checkName && this.loginData.checkPass) {
+        // let data = {
+        //   'user_id': this.loginData.checkName,
+        //   'user_passwd': this.loginData.checkPass
+        // }
+        let _this = this
+        localStorage.setItem('ms_username', _this.loginData.checkName)
+        _this.$router.push('/')
+        // postAPI('/base/login', data).then(function (res) {
+        //   if (res.data.signal === '0') {
+        //     _this.$message.success(res.data.message)
+        //     localStorage.setItem('ms_username', _this.loginData.checkName)
+        //     _this.$router.push('/')
+        //   } else {
+        //     _this.$message.error(res.data.message)
+        //   }
+        // }).catch(function (err) {
+        //   console.log(err)
+        //   _this.$message.error('登录失败')
+        // })
       } else {
         this.$message.error('请输入账号和密码')
       }

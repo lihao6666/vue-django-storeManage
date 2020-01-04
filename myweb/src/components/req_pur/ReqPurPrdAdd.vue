@@ -29,7 +29,6 @@
         <el-button type="primary" class="button-save" @click="save">添 加</el-button>
       </div>
       <el-table
-        max-height="580"
         :data="tableDataNew"
         class="table"
         ref="multipleTable"
@@ -219,30 +218,16 @@ export default {
   .tableRowDisplay {
     display: none;
   }
-  .demo-table-expand {
-    font-size: 0;
-  }
-  .demo-table-expand label {
-    width: 90px;
-    color: #99a9bf;
-  }
-  .demo-table-expand .el-form-item {
-    margin-right: 0;
-    margin-bottom: 0;
-    width: 100%;
-  }
 </style>
 
 <style scoped>
   .handle-box {
     margin-bottom: 20px;
   }
-
   .table {
     width: 100%;
     font-size: 14px;
   }
-
   .input-search {
     width: 40%;
   }

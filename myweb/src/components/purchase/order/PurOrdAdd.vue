@@ -91,11 +91,6 @@ export default {
         po_date: this.editform.po_date,
         po_sum: this.editform.po_sum
       },
-      form_po_orga: [
-        '礼品',
-        '教学用品',
-        '销售商品'
-      ],
       form_po_supply: [
         '礼品',
         '教学用品',

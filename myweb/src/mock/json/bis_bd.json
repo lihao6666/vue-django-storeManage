@@ -1,0 +1,48 @@
+{
+  "list": [
+    {
+      "bd_iden": "01",
+      "bd_name": "笔",
+      "bd_specification": "2B",
+      "bd_model": "2*2",
+      "bd_meterage": "根",
+      "bd_num": "10",
+      "bd_taxRate": "10",
+      "bd_tax_unitPrice": "10.5",
+      "bd_remarks": "10"
+    },
+    {
+      "bd_iden": "01",
+      "bd_name": "笔",
+      "bd_specification": "2B",
+      "bd_model": "2*2",
+      "bd_meterage": "根",
+      "bd_num": "10",
+      "bd_taxRate": "10",
+      "bd_tax_unitPrice": "10.5",
+      "bd_remarks": "10"
+    },
+    {
+      "bd_iden": "01",
+      "bd_name": "笔",
+      "bd_specification": "2B",
+      "bd_model": "2*2",
+      "bd_meterage": "根",
+      "bd_num": "10",
+      "bd_taxRate": "10",
+      "bd_tax_unitPrice": "10.5",
+      "bd_remarks": "10"
+    },
+    {
+      "bd_iden": "01",
+      "bd_name": "笔",
+      "bd_specification": "2B",
+      "bd_model": "2*2",
+      "bd_meterage": "根",
+      "bd_num": "10",
+      "bd_taxRate": "10",
+      "bd_tax_unitPrice": "10.5",
+      "bd_remarks": "10"
+    }
+  ]
+}

@@ -155,7 +155,7 @@ export default {
         return
       }
       let _this = this
-      postAPI('/pc_pay', this.formadd).then(function (res) {
+      postAPI('/base/pc_pay', this.formadd).then(function (res) {
         _this.tableData = res.data.list
         _this.pageTotal = res.data.list.length
       }).catch(function (err) {
@@ -249,7 +249,7 @@ export default {
           this.tableData.splice(index, 1)
           let pageIndexNew = Math.ceil((this.pageTotal - 1) / this.query.pageSize) // 新的页面数量
           this.query.pageIndex = (this.query.pageIndex > pageIndexNew) ? pageIndexNew : this.query.pageIndex
-          this.query.pageIndex = (this.query.pageIndex === 0) ? 1 : 0
+          this.query.pageIndex = (this.query.pageIndex === 0) ? 1 : this.query.pageIndex
           this.find()
         })
         .catch(() => {
@@ -282,7 +282,7 @@ export default {
         .then(() => {
           let pageIndexNew = Math.ceil((this.pageTotal - this.multipleSelection.length) / this.query.pageSize) // 新的页面数量
           this.query.pageIndex = (this.query.pageIndex > pageIndexNew) ? pageIndexNew : this.query.pageIndex
-          this.query.pageIndex = (this.query.pageIndex === 0) ? 1 : 0
+          this.query.pageIndex = (this.query.pageIndex === 0) ? 1 : this.query.pageIndex
           for (let i in this.multipleSelection) {
             let x = this.tableData.valueOf(this.multipleSelection[i])
             this.tableData.splice(x, 1)
@@ -330,10 +330,6 @@ export default {
 
   .red {
     color: #ff0000;
-  }
-  .input-search {
-    margin-left: 20px;
-    width: 40%;
   }
   .button-save {
     float: right;

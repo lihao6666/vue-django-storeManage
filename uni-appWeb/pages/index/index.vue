@@ -38,13 +38,7 @@
 						    <view>现存量：{{ item.total_present_num }}</view>
 					</uni-card>
 				</view>
-				<view>
-					<drag-button
-						:isDock="true"
-						:existTabBar="true"
-						@btnClick="newOrder(current)">
-					</drag-button>
-				</view>
+			
 			</view>
 			<view v-if="current === 1">
 				<view v-for="item in tecList" :key="item.id" class="card-set">
@@ -61,13 +55,6 @@
 							<view>存货属性：{{ item.total_attr }}</view>
 						    <view>现存量：{{ item.total_present_num }}</view>
 					</uni-card>
-				</view>
-				<view>
-					<drag-button
-						:isDock="true"
-						:existTabBar="true"
-						@btnClick="newOrder(current)">
-					</drag-button>
 				</view>
 			</view>
 			<view v-if="current === 2">
@@ -86,13 +73,6 @@
 						    <view>现存量：{{ item.total_present_num }}</view>
 					</uni-card>
 				</view>
-				<view>
-					<drag-button
-						:isDock="true"
-						:existTabBar="true"
-						@btnClick="newOrder(current)">
-					</drag-button>
-				</view>
 			</view>
 			<view v-if="current === 3">
 				<view v-for="item in spoList" :key="item.id" class="card-set">
@@ -110,13 +90,7 @@
 						    <view>现存量：{{ item.total_present_num }}</view>
 					</uni-card>
 				</view>>
-				<view>
-					<drag-button
-						:isDock="true"
-						:existTabBar="true"
-						@btnClick="newOrder(current)">
-					</drag-button>
-				</view>
+
 			</view>
 		</view>
     </view>
@@ -126,7 +100,6 @@
 import xflSelect from '../../components/xfl-select/xfl-select.vue';
 import uniSegmentedControl from '../../components/uni-segmented-control/uni-segmented-control.vue'
 import uniCard from '../../components/uni-card/uni-card.vue'
-import dragButton from '../../components/drag-button/drag-button.vue'
 import cmdIcon from "../../components/cmd-icon/cmd-icon.vue"
 import engData from '../../data/English.js'
 import tecData from '../../data/technology.js'
@@ -138,7 +111,6 @@ export default {
 		xflSelect,
 		uniSegmentedControl,
 		uniCard,
-		dragButton,
 		cmdIcon
 	},
 	data() {

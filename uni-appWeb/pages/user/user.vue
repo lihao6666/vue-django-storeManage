@@ -2,17 +2,17 @@
     <view class="content">
 		<view class="person-head">
 			<cmd-avatar src="https://avatar.bbs.miui.com/images/noavatar_small.gif" @click="mydetail" size="md" :make="{'background-color': '#fff', 'margin-right': '10upx'}"></cmd-avatar>
-			<view class="person-head-box">
-				<view class="user-name">俞浩然</view>
-				<view class="user-id">ID：123456789</view>
+			<view class="person-head-box" @click="mydetail(info)" v-for="info in myInfo" :key="info.id">
+				<view class="user-name">{{ info.user_name }}</view>
+				<view class="user-id">ID：{{ info.user_id }}</view>
 			</view>
 		</view>
 		<view class="person-list">
 			<cmd-cell-item title="联系我们" slot-left arrow @click="phone">
-			  <cmd-icon type="phone" size="24" color="#368dff"></cmd-icon>
+			    <cmd-icon type="phone" size="24" color="#368dff"></cmd-icon>
 			</cmd-cell-item>
 			<cmd-cell-item title="系统设置" slot-left arrow @click="setting">
-			  <cmd-icon type="settings" size="24" color="#368dff"></cmd-icon>
+			    <cmd-icon type="settings" size="24" color="#368dff"></cmd-icon>
 			</cmd-cell-item>
 		</view>
     </view>
@@ -22,6 +22,7 @@
 	import cmdAvatar from "../../components/cmd-avatar/cmd-avatar.vue"
 	import cmdIcon from "../../components/cmd-icon/cmd-icon.vue"
 	import cmdCellItem from "../../components/cmd-cell-item/cmd-cell-item.vue"
+	import myData from '../../data/userinfo.js'
 
     export default {
 		components: {
@@ -29,8 +30,19 @@
 			cmdIcon,
 			cmdCellItem
 		},
+		data() {
+			return {
+				//将data文件夹中的数据读入
+				myInfo: myData.data
+			}
+		},
         methods: {
-			mydetail() {
+			mydetail(info) {
+				try {
+				    uni.setStorageSync('userInfo', info);
+				} catch (e) {
+				    console.log("传用户信息失败")
+				}
 				uni.navigateTo({
 				    url: 'myinfo',
 				});

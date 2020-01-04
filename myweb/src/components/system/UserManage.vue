@@ -20,7 +20,6 @@
         <el-button type="primary" icon="el-icon-plus" @click="handleAlter" class="alter-button">新增</el-button>
       </div>
       <el-table
-        max-height="580"
         :data="tableDataNew"
         class="table"
         ref="multipleTable"
@@ -32,12 +31,20 @@
         <el-table-column prop="user_id" sortable label="工号" align="center"></el-table-column>
         <el-table-column prop="user_phone_number" sortable label="手机号" align="center"></el-table-column>
         <el-table-column prop="user_mailbox" sortable label="邮箱" align="center"></el-table-column>
-        <el-table-column prop="user_area" sortable label="区域" :filters="user_areaSet"
+        <el-table-column prop="area_name" sortable label="区域" :filters="area_nameSet"
                          :filter-method="filter" align="center"></el-table-column>
-        <el-table-column prop="user_department" sortable label="部门" :filters="user_dpmSet"
-                         :filter-method="filter" align="center"></el-table-column>
-        <el-table-column prop="user_role" sortable label="角色" :filters="user_roleSet"
-                         :filter-method="filter" align="center"></el-table-column>
+        <el-table-column prop="user_departments" sortable label="部门" :filters="user_dpmSet"
+                         :filter-method="filterMore" align="center">
+          <template slot-scope="scope">
+            <el-tag v-for="item in scope.row.user_departments" v-bind:key="item" :type="'success'">{{item}}</el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column prop="user_roles" sortable label="角色" :filters="user_rolesSet"
+                         :filter-method="filterMore" align="center">
+          <template slot-scope="scope">
+            <el-tag v-for="item in scope.row.user_roles" v-bind:key="item" :type="'success'">{{item}}</el-tag>
+          </template>
+        </el-table-column>
         <el-table-column prop="user_creator" sortable label="创建人" :filters="user_creatorSet"
                          :filter-method="filter" align="center"></el-table-column>
         <el-table-column prop="user_createDate" sortable label="创建日期" align="center"></el-table-column>
@@ -83,7 +90,7 @@
     </div>
 
     <!-- 新增弹出框 -->
-    <el-dialog title="新增" :visible.sync="alterVisible" width="30%" >
+    <el-dialog title="新增" :visible.sync="alterVisible" width="30%" :close-on-click-modal="false">
       <div class="container">
         <el-form ref="form" :rules="rules" :model="form" label-width="80px"  class="form" >
           <el-row>
@@ -116,7 +123,7 @@
           </el-row>
           <el-row>
             <el-form-item label="区域"  align="left">
-              <el-select v-model="form.user_area" placeholder="请选择区域"  class="option" >
+              <el-select v-model="form.area_name" placeholder="请选择区域"  class="option" >
                 <el-option
                   v-for="item in area_options"
                   :key="item"
@@ -128,7 +135,7 @@
           </el-row>
           <el-row>
             <el-form-item label="部门"  align="left">
-              <el-select v-model="form.user_department" multiple placeholder="请选择部门" class="option" >
+              <el-select v-model="form.user_departments" multiple placeholder="请选择部门" class="option" >
                 <el-option
                   v-for="item in dpm_options"
                   :key="item"
@@ -140,7 +147,7 @@
           </el-row>
           <el-row>
             <el-form-item label="角色"  align="left">
-              <el-select v-model="form.user_role" multiple placeholder="请选择角色" class="option">
+              <el-select v-model="form.user_roles" multiple placeholder="请选择角色" class="option">
                 <el-option
                   v-for="item in role_options"
                   :key="item"
@@ -162,7 +169,7 @@
       </el-row>
     </el-dialog>
     <!-- 编辑弹出框 -->
-    <el-dialog title="编辑" :visible.sync="editVisible" width="30%">
+    <el-dialog title="编辑" :visible.sync="editVisible" width="30%" :close-on-click-modal="false">
       <div class="container">
         <el-form ref="form" :model="editform" label-width="80px"  class="form" :rules="rules">
           <el-row>
@@ -195,7 +202,7 @@
           </el-row>
           <el-row>
             <el-form-item label="区域"  align="left">
-              <el-select v-model="editform.user_area" placeholder="请选择区域"  class="option" >
+              <el-select v-model="editform.area_name" placeholder="请选择区域"  class="option" >
                 <el-option
                   v-for="item in area_options"
                   :key="item"
@@ -207,7 +214,7 @@
           </el-row>
           <el-row>
             <el-form-item label="部门"  align="left">
-              <el-select v-model="editform.user_department" multiple placeholder="请选择部门" class="option" >
+              <el-select v-model="editform.user_departments" multiple placeholder="请选择部门" class="option" >
                 <el-option
                   v-for="item in dpm_options"
                   :key="item"
@@ -219,7 +226,7 @@
           </el-row>
           <el-row>
             <el-form-item label="角色"  align="left">
-              <el-select v-model="editform.user_role" multiple placeholder="请选择角色">
+              <el-select v-model="editform.user_roles" multiple placeholder="请选择角色">
                 <el-option
                   v-for="item in role_options"
                   :key="item"
@@ -233,10 +240,10 @@
       </div>
       <el-row :gutter="20" class="el-row-button-save">
         <el-col :span="1" :offset="13">
-          <el-button @click="alterVisible = false">取 消</el-button>
+          <el-button @click="editVisible = false">取 消</el-button>
         </el-col>
-        <el-col :span="1" :offset="5">
-          <el-button type="primary" @click="saveAlter">确 定</el-button>
+        <el-col :span="1" :offset="4">
+          <el-button type="primary" @click="saveEdit">确 定</el-button>
         </el-col>
       </el-row>
     </el-dialog>
@@ -244,13 +251,11 @@
 </template>
 
 <script>
-import moment from 'moment'
-import {postAPI} from '../../api/api'
+import {getAPI, postAPI} from '../../api/api'
 export default {
   name: 'test',
   data () {
     return {
-      time: moment(new Date()).format('YYYY-MM-DD hh:mm:ss'),
       query: {
         pageIndex: 1,
         pageSize: 5
@@ -291,29 +296,29 @@ export default {
         user_name: '',
         user_id: '',
         user_mailbox: '',
-        user_area: '',
+        area_name: '',
         user_phone_number: '',
-        user_department: '',
-        user_role: ''
+        user_departments: '',
+        user_roles: ''
       },
       user_id: '',
       editform: {
         user_name: '',
         user_id: '',
         user_mailbox: '',
-        user_area: '',
+        area_name: '',
         user_phone_number: '',
-        user_department: '',
-        user_role: ''
+        user_departments: '',
+        user_roles: ''
       },
       tableData: [],
       tableDataNew: [],
-      user_roleSet: [],
-      user_areaSet: [],
+      user_rolesSet: [],
+      area_nameSet: [],
       user_dpmSet: [],
       user_creatorSet: [],
       multipleSelection: [],
-      delList: [],
+      delroles: [],
       alterVisible: false,
       editVisible: false,
       pageTotal: 0
@@ -324,23 +329,30 @@ export default {
   },
   methods: {
     getData () {
-      this.getlist()
+      this.getroles()
       let _this = this
-      postAPI('/users').then(function (res) {
-        _this.tableData = res.data.list
+      getAPI('/base/users').then(function (res) {
+        _this.tableData = res.data.users
         _this.tableDataNew = _this.tableData
+        let n = res.data.max_iden.length
+        let num = parseInt(res.data.max_iden) + 1
+        _this.user_id = String(Array(n > num ? (n - ('' + num).length + 1) : 0).join(0) + num)
         let areaset = new Set()
         let creatorset = new Set()
         let dpmset = new Set()
         let roleset = new Set()
         for (let i in _this.tableData) {
-          areaset.add(_this.tableData[i]['user_area'])
-          dpmset.add(_this.tableData[i]['user_department'])
-          roleset.add(_this.tableData[i]['user_role'])
+          areaset.add(_this.tableData[i]['area_name'])
+          for (let j in _this.tableData[i]['user_departments']) {
+            dpmset.add(_this.tableData[i]['user_departments'][j])
+          }
+          for (let j in _this.tableData[i]['user_roles']) {
+            roleset.add(_this.tableData[i]['user_roles'][j])
+          }
           creatorset.add(_this.tableData[i]['user_creator'])
         }
         for (let i of areaset) {
-          _this.user_areaSet.push({
+          _this.area_nameSet.push({
             text: i,
             value: i
           })
@@ -358,12 +370,12 @@ export default {
           })
         }
         for (let i of roleset) {
-          _this.user_roleSet.push({
+          _this.user_rolesSet.push({
             text: i,
             value: i
           })
         }
-        _this.pageTotal = res.data.list.length
+        _this.pageTotal = res.data.users.length
       }).catch(function (err) {
         console.log(err)
       })
@@ -389,6 +401,13 @@ export default {
       }
       return false
     },
+    filterMore (value, row, column) {
+      const property = column['property']
+      if (row[property].indexOf(value) >= 0) {
+        return true
+      }
+      return false
+    },
     // 查询
     find () {
       this.pageTotal = 0
@@ -396,20 +415,20 @@ export default {
         String(data.user_name).toLowerCase().includes(this.search.toLowerCase()) ||
         String(data.user_id).toLowerCase().includes(this.search.toLowerCase()) ||
         String(data.user_phone_number).toLowerCase().includes(this.search.toLowerCase()) ||
-        String(data.user_area).toLowerCase().includes(this.search.toLowerCase()) ||
-        String(data.user_department).toLowerCase().includes(this.search.toLowerCase()) ||
-        String(data.user_role).toLowerCase().includes(this.search.toLowerCase()) ||
+        String(data.area_name).toLowerCase().includes(this.search.toLowerCase()) ||
+        String(data.user_departments).toLowerCase().includes(this.search.toLowerCase()) ||
+        String(data.user_roles).toLowerCase().includes(this.search.toLowerCase()) ||
         String(data.user_mailbox).toLowerCase().includes(this.search.toLowerCase()) ||
         String(data.user_createDate).toLowerCase().includes(this.search.toLowerCase()) ||
         String(data.user_creator).toLowerCase().includes(this.search.toLowerCase()))
     },
     // 获取列表
-    getlist () {
+    getroles () {
       let _this = this
-      postAPI('/role').then(function (res) {
+      getAPI('/base/roles').then(function (res) {
         let alterrole = new Set()
-        for (let i in res.data.list) {
-          alterrole.add(res.data.list[i]['role'])
+        for (let i in res.data.roles) {
+          alterrole.add(res.data.roles[i]['role'])
         }
         for (let j of alterrole) {
           _this.role_options.push(j)
@@ -417,10 +436,10 @@ export default {
       }).catch(function (err) {
         console.log(err)
       })
-      postAPI('/area').then(function (res) {
+      postAPI('/base/areas').then(function (res) {
         let alterarea = new Set()
-        for (let i in res.data.list) {
-          alterarea.add(res.data.list[i]['area_name'])
+        for (let i in res.data.areas) {
+          alterarea.add(res.data.areas[i]['area_name'])
         }
         for (let j of alterarea) {
           _this.area_options.push(j)
@@ -428,10 +447,10 @@ export default {
       }).catch(function (err) {
         console.log(err)
       })
-      postAPI('/department').then(function (res) {
+      postAPI('/base/departments').then(function (res) {
         let alterdpm = new Set()
-        for (let i in res.data.list) {
-          alterdpm.add(res.data.list[i]['dpm_name'])
+        for (let i in res.data.departments) {
+          alterdpm.add(res.data.departments[i]['dpm_name'])
         }
         for (let j of alterdpm) {
           _this.dpm_options.push(j)
@@ -443,72 +462,152 @@ export default {
     // 新增
     handleAlter () {
       this.alterVisible = true
+      this.form.user_id = this.user_id
     },
     // 一键清除新增表单
     clearform () {
       this.form.user_name = ''
       this.form.user_id = ''
       this.form.user_mailbox = ''
-      this.form.user_area = ''
+      this.form.area_name = ''
       this.form.user_phone_number = ''
-      this.form.user_department = ''
-      this.form.user_role = ''
+      this.form.user_departments = ''
+      this.form.user_roles = ''
     },
-    // 禁用操作
-    handleStop (index, row) {
-      postAPI('/users', {data: row, status: '停用'}).then(function (res) {
-        console.log(res)
-      }).catch(function (err) {
-        console.log(err)
+    // 停用操作
+    handleStop (row) {
+      this.$confirm('确定要停用吗？', '提示', {
+        type: 'warning'
       })
+        .then(() => {
+          let _this = this
+          row.user_status = '停用'
+          console.log(row)
+          postAPI('/base/userUpdate', row).then(function (res) {
+            if (res.data.signal === 0) {
+              _this.$message.success(`停用成功`)
+            } else {
+              _this.$message.error(`停用失败`)
+              row.user_status = '启用'
+            }
+          }).catch(function (err) {
+            console.log(err)
+            _this.$message.error(`停用失败`)
+            row.user_status = '启用'
+          })
+        })
+        .catch(() => {
+          this.$message({
+            type: 'info',
+            message: '取消停用'
+          })
+        })
     },
     // 启用
-    handleStart (index, row) {
-      postAPI('/users', {data: row, status: '启用'}).then(function (res) {
-        console.log(res)
-      }).catch(function (err) {
-        console.log(err)
+    handleStart (row) {
+      this.$confirm('确定要启用吗？', '提示', {
+        type: 'warning'
       })
+        .then(() => {
+          let _this = this
+          row.user_status = '启用'
+          console.log(row)
+          postAPI('/base/userUpdate', row).then(function (res) {
+            if (res.data.signal === 0) {
+              _this.$message.success(`启用成功`)
+            } else {
+              _this.$message.error(`启用失败`)
+              row.user_status = '停用'
+            }
+          }).catch(function (err) {
+            console.log(err)
+            _this.$message.error(`启用失败`)
+            row.user_status = '停用'
+          })
+        })
+        .catch(() => {
+          this.$message({
+            type: 'info',
+            message: '取消启用'
+          })
+        })
     },
     // 编辑操作
     handleEdit (row) {
       this.editform.user_name = row.user_name
       this.editform.user_id = row.user_id
+      this.editform.old_user_id = row.user_id
       this.editform.user_mailbox = row.user_mailbox
-      this.editform.user_area = row.user_area
+      this.editform.area_name = row.area_name
       let role = []
-      for (let i in row.user_role) {
-        role.push(row.user_role[i])
+      for (let i in row.user_roles) {
+        role.push(row.user_roles[i])
       }
-      this.editform.user_role = role
+      this.editform.user_roles = role
       this.editform.user_phone_number = row.user_phone_number
       let dpm = []
-      for (let i in row.user_department) {
-        dpm.push(row.user_department[i])
+      for (let i in row.user_departments) {
+        dpm.push(row.user_departments[i])
       }
-      this.editform.user_department = dpm
-      this.user_id = row.user_id
+      this.editform.user_departments = dpm
       this.editVisible = true
     },
     // 保存编辑
     saveEdit () {
-      this.editVisible = false
-      this.$message.success(`修改成功`)
-      postAPI('/users', {data: this.editform, user_id: this.user_id}).then(function (res) {
-        console.log(res)
+      if (!this.editform.user_name || !this.editform.user_id || !this.editform.user_mailbox || !this.editform.area_name || !this.editform.user_phone_number ||
+        (!this.editform.user_roles || this.editform.user_roles.length <= 0) ||
+        (!this.editform.user_departments || this.editform.user_departments.length <= 0)) {
+        this.$message.error(`请填写完信息`)
+        return
+      }
+      let email = /^(\w-*\.*)+@(\w-?)+(\.\w{2,})+$/
+      if (!this.rules.user_phone_number[1].pattern.test(this.editform.user_phone_number) || !email.test(this.editform.user_mailbox)) {
+        this.$message.error(`请填写正确格式`)
+        return
+      }
+      let _this = this
+      console.log(this.editform)
+      postAPI('/base/userUpdate', this.editform).then(function (res) {
+        if (res.data.signal === 0) {
+          _this.$message.success(`修改成功`)
+          _this.editVisible = false
+        } else {
+          _this.$message.error(`修改失败`)
+        }
       }).catch(function (err) {
         console.log(err)
+        _this.$message.error(`修改失败`)
       })
     },
     // 保存新增
     saveAlter () {
-      this.alterVisible = false
-      this.$message.success(`新增成功`)
-      this.clearform()
-      postAPI('/users', {data: this.form, table: 'users'}).then(function (res) {
-        console.log(res)
+      console.log(this.form.user_roles)
+      if (!this.form.user_name || !this.form.user_id || !this.form.user_mailbox || !this.form.area_name || !this.form.user_phone_number ||
+        (!this.form.user_roles || this.form.user_roles.length <= 0) ||
+        (!this.form.user_departments || this.form.user_departments.length <= 0)) {
+        this.$message.error(`请填写完信息`)
+        return
+      }
+      let email = /^(\w-*\.*)+@(\w-?)+(\.\w{2,})+$/
+      if (!this.rules.user_phone_number[1].pattern.test(this.form.user_phone_number) || !email.test(this.form.user_mailbox)) {
+        this.$message.error(`请填写正确格式`)
+        return
+      }
+      this.form.role_power = ''
+      this.form.role_status = '停用'
+      console.log(this.form)
+      let _this = this
+      postAPI('/base/userUpdate', this.form).then(function (res) {
+        if (res.data.signal === 0) {
+          _this.$message.success(`新增成功`)
+          _this.alterVisible = false
+          _this.clearform()
+        } else {
+          _this.$message.error(`新增失败`)
+        }
       }).catch(function (err) {
         console.log(err)
+        _this.$message.error(`新增失败`)
       })
     },
     // 分页导航

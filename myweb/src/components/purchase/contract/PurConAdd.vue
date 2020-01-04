@@ -131,12 +131,6 @@ export default {
     float: right;
     margin-top: 20px;
   }
-  .null {
-    width: 70%;
-  }
-  .button-save {
-    margin-left: 30px;
-  }
   .el-row-button {
     top: 15px;
   }

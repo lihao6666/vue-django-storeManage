@@ -1,6 +1,7 @@
 {
   "navigationBarTitleText": "登录",
   "usingComponents": {
-    "m-input": "/components/m-input"
+    "w-input": "/components/watch-login/watch-input",
+    "w-button": "/components/watch-login/watch-button"
   }
 }
