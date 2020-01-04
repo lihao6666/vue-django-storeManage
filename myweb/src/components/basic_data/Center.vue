@@ -390,12 +390,14 @@ export default {
           _this.$message.success(`新增成功`)
           _this.alterVisible = false
           _this.getData()
+          _this.clearform()
         } else {
           _this.$message.error(res.data.message)
         }
       }).catch(function (err) {
         _this.$message.error(`新增失败`)
         console.log(err)
+        _this.$message.error(`新增失败`)
       })
     },
     // 分页导航
