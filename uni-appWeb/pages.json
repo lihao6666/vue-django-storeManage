@@ -1,6 +1,11 @@
 {
     "pages": [ //pages数组中第一项表示应用启动页,
         {
+            "path": "pages/login/login",
+            "style": {
+                "navigationBarTitleText": "登录"
+            }
+        },{
             "path": "pages/main/main",
             "style": {
                 "navigationBarTitleText": "主页"
@@ -14,11 +19,6 @@
             "path": "pages/user/user",
             "style": {
                 "navigationBarTitleText": "我的"
-            }
-        },{
-            "path": "pages/login/login",
-            "style": {
-                "navigationBarTitleText": "登录"
             }
         },{
             "path": "pages/reg/reg",

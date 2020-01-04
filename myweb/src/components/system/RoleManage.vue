@@ -54,7 +54,7 @@
               icon="el-icon-unlock"
               class="red"
               @click="handleStop(scope.row)"
-             v-if="scope.row.role_status==='启用'"
+             v-if="scope.row.role_status===1"
             >停用
             </el-button>
             <el-button
@@ -62,7 +62,7 @@
               icon="el-icon-lock"
               class="green"
               @click="handleStart(scope.row)"
-              v-if="scope.row.role_status==='停用'"
+              v-if="scope.row.role_status===0"
             >启用
             </el-button>
             <el-button
@@ -159,8 +159,7 @@ export default {
       },
       editform: {
         role_description: '',
-        role: '',
-        role_status: ''
+        role: ''
       },
       tableData: [],
       tableDataNew: [],
@@ -182,17 +181,19 @@ export default {
       let _this = this
       console.log(getAPI('/base/roles'))
       getAPI('/base/roles').then(function (res) {
-        if (res.data.roles) {
+        if (!res.data.roles) {
           return
         }
+        _this.role_creatorSet = []
+        _this.role_roleSet = []
         _this.tableData = res.data.roles
-        _this.tableDataNew = _this.tableData
+        _this.find()
         console.log(res.data)
         let roleset = new Set()
         let creatorset = new Set()
         for (let i in _this.tableData) {
           roleset.add(_this.tableData[i]['role'])
-          creatorset.add(_this.tableData[i]['role_createDate'])
+          creatorset.add(_this.tableData[i]['role_creator'])
         }
         for (let i of roleset) {
           _this.role_roleSet.push({
@@ -251,21 +252,22 @@ export default {
         type: 'warning'
       })
         .then(() => {
-          row.user_status = '停用'
+          row.role_status = 0
           console.log(row)
           let _this = this
           postAPI('/base/roleUpdate', row).then(function (res) {
             console.log(res.data)
             if (res.data.signal === 0) {
               _this.$message.success(`停用成功`)
+              _this.getData()
             } else {
-              _this.$message.error(`停用失败`)
-              row.user_status = '启用'
+              _this.$message.error(res.data.message)
+              row.role_status = 1
             }
           }).catch(function (err) {
             console.log(err)
             _this.$message.error(`停用失败`)
-            row.user_status = '启用'
+            row.role_status = 1
           })
         })
         .catch(() => {
@@ -281,20 +283,20 @@ export default {
         type: 'warning'
       })
         .then(() => {
-          row.user_status = '启用'
-          console.log(row)
+          row.role_status = 1
           let _this = this
           postAPI('/base/roleUpdate', row).then(function (res) {
             if (res.data.signal === 0) {
-              _this.$message.success(`启用`)
+              _this.$message.success(`启用成功`)
+              _this.getData()
             } else {
-              _this.$message.error(`启用失败`)
-              row.user_status = '停用'
+              _this.$message.error(res.data.message)
+              row.role_status = 0
             }
           }).catch(function (err) {
             console.log(err)
             _this.$message.error(`启用失败`)
-            row.user_status = '停用'
+            row.role_status = 0
           })
         })
         .catch(() => {
@@ -309,6 +311,8 @@ export default {
       this.editform.role_description = row.role_description
       this.editform.role = row.role
       this.editform.role_status = row.role_status
+      this.editform.role_power = row.role_power
+      this.editform.id = row.id
       this.editVisible = true
     },
     // 保存编辑
@@ -317,18 +321,14 @@ export default {
         this.$message.error(`请填写完信息`)
         return
       }
-      let data = {
-        'role': this.editform.role,
-        'role_description': this.editform.role_description,
-        'role_status': this.editform.role_status
-      }
       let _this = this
-      postAPI('/base/roleUpdate', data).then(function (res) {
+      postAPI('/base/roleUpdate', this.editform).then(function (res) {
         if (res.data.signal === 0) {
           _this.$message.success(`修改成功`)
           _this.editVisible = false
+          _this.getData()
         } else {
-          _this.$message.error(`修改失败`)
+          _this.$message.error(res.data.message)
         }
       }).catch(function (err) {
         console.log(err)
@@ -341,22 +341,23 @@ export default {
         this.$message.error(`请填写完信息`)
         return
       }
-      let creator = localStorage.getItem('ms_username')
       let data = {
         'role': this.form.role,
-        'role_power': '',
+        'role_power': '1',
         'role_description': this.form.role_description,
-        'role_status': '停用',
-        'role_creator': creator
+        'role_status': 0,
+        'role_creator': 'yq'
       }
+      console.log(data)
       let _this = this
       postAPI('/base/roleAdd', data).then(function (res) {
         if (res.data.signal === 0) {
           _this.$message.success(`新增成功`)
           _this.alterVisible = false
           _this.clearform()
+          _this.getData()
         } else {
-          _this.$message.error(`新增失败`)
+          _this.$message.error(res.data.message)
         }
       }).catch(function (err) {
         console.log(err)
@@ -400,7 +401,6 @@ export default {
     margin-bottom: 20px;
     position: relative;
   }
-
   .input-search {
     width: 50%;
   }
@@ -408,7 +408,6 @@ export default {
     position: absolute;
     right:0;
   }
-
   .table {
     width: 100%;
     font-size: 14px;
