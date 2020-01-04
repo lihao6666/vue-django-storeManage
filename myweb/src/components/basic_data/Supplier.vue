@@ -165,7 +165,7 @@
       </div>
       <el-row :gutter="20" class="el-row-button-save">
         <el-col :span="1" :offset="15">
-          <el-button @click="alterVisible = false">取 消</el-button>
+          <el-button @click="editVisible = false">取 消</el-button>
         </el-col>
         <el-col :span="1" :offset="4">
           <el-button type="primary" @click="saveEdit">确 定</el-button>
@@ -289,6 +289,14 @@ export default {
       this.form.supply_remarks = ''
       this.form.supply_type = ''
     },
+    // 启用
+    handleStart (row) {
+      postAPI('/supplier', {data: row, supply_status: 1}).then(function (res) {
+        console.log(res)
+      }).catch(function (err) {
+        console.log(err)
+      })
+    },
     // 停用操作
     handleStop (row) {
       postAPI('/supplier', {data: row, supply_status: 0}).then(function (res) {
@@ -306,14 +314,6 @@ export default {
           String(data.supply_createDate).toLowerCase().includes(this.search.toLowerCase()) ||
           String(data.supply_remarks).toLowerCase().includes(this.search.toLowerCase()) ||
           String(data.supply_creator).toLowerCase().includes(this.search.toLowerCase()))
-    },
-    // 启用
-    handleStart (row) {
-      postAPI('/supplier', {data: row, supply_status: 1}).then(function (res) {
-        console.log(res)
-      }).catch(function (err) {
-        console.log(err)
-      })
     },
     // 编辑操作
     handleEdit (row) {
