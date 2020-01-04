@@ -33,8 +33,8 @@
       {
         "pagePath": "pages/index/index",
         "text": "仓库",
-        "iconPath": "static/img/home.png",
-        "selectedIconPath": "static/img/homeHL.png"
+        "iconPath": "static/img/all.png",
+        "selectedIconPath": "static/img/allHL.png"
       },
       {
         "pagePath": "pages/user/user",
@@ -44,6 +44,5 @@
       }
     ]
   },
-  "usingComponents": {},
-  "sitemapLocation": "sitemap79.json"
+  "usingComponents": {}
 }

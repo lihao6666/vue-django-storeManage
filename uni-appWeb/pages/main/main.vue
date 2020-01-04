@@ -192,7 +192,7 @@ export default {
 			outFilterText: '',
 			purchaseFilterText: '',
 			sellFilterText: '',
-			exchangeFilterText: ''
+			exchangeFilterText: '' 
 		}
 	},
 	computed: {
