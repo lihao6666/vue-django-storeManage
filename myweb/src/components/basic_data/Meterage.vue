@@ -48,7 +48,7 @@
               icon="el-icon-unlock"
               class="red"
               @click="handleStop(scope.row)"
-              v-if="scope.row.meterage_status==='启用'"
+              v-if="scope.row.meterage_status===1"
             >停用
             </el-button>
             <el-button
@@ -56,7 +56,7 @@
               icon="el-icon-lock"
               class="green"
               @click="handleStart(scope.row)"
-              v-if="scope.row.meterage_status==='停用'"
+              v-if="scope.row.meterage_status===0"
             >启用
             </el-button>
           </template>
@@ -275,9 +275,17 @@ export default {
       this.form.meterage_remarks = ''
       this.form.material_meterage = ''
     },
+    // 启用
+    handleStart (row) {
+      postAPI('/meterage', {data: row, meterage_status: 1}).then(function (res) {
+        console.log(res)
+      }).catch(function (err) {
+        console.log(err)
+      })
+    },
     // 停用操作
     handleStop (row) {
-      postAPI('/meterage', {data: row, meterage_status: '停用'}).then(function (res) {
+      postAPI('/meterage', {data: row, meterage_status: 0}).then(function (res) {
         console.log(res)
       }).catch(function (err) {
         console.log(err)
@@ -289,17 +297,8 @@ export default {
       this.tableDataNew = this.tableData.filter(data => !this.search ||
           String(data.meterage_name).toLowerCase().includes(this.search.toLowerCase()) ||
           String(data.meterage_iden).toLowerCase().includes(this.search.toLowerCase()) ||
-          String(data.meterage_createDate).toLowerCase().includes(this.search.toLowerCase()) ||
           String(data.meterage_remarks).toLowerCase().includes(this.search.toLowerCase()) ||
           String(data.meterage_creator).toLowerCase().includes(this.search.toLowerCase()))
-    },
-    // 启用
-    handleStart (row) {
-      postAPI('/meterage', {data: row, meterage_status: '启用'}).then(function (res) {
-        console.log(res)
-      }).catch(function (err) {
-        console.log(err)
-      })
     },
     // 编辑操作
     handleEdit (row) {
