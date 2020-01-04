@@ -36,14 +36,14 @@
           </template>
         </el-table-column>
         <el-table-column type="index" width="50"></el-table-column>
-        <el-table-column prop="total_name" sortable label="仓库编码"  align="center"></el-table-column>
-        <el-table-column prop="total_belong_orga" sortable label="所属组织" :filters="total_orgaSet"
+        <el-table-column prop="total_iden" sortable label="仓库编码"  align="center"></el-table-column>
+        <el-table-column prop="orga_name" sortable label="所属组织" :filters="total_orgaSet"
                          :filter-method="filter" align="center"></el-table-column>
         <el-table-column prop="total_belong_center" sortable label="所属中心" :filters="total_centerSet"
                          :filter-method="filter" align="center"></el-table-column>
         <el-table-column prop="total_name" sortable label="仓库名称" :filters="total_nameSet"
                          :filter-method="filter" align="center"></el-table-column>
-        <el-table-column prop="total_belong_brand" sortable label="所属品牌" :filters="total_brandSet"
+        <el-table-column prop="brand_name" sortable label="所属品牌" :filters="total_brandSet"
                          :filter-method="filter" align="center"></el-table-column>
         <el-table-column prop="total_creator" sortable label="创建人" :filters="total_creatorSet"
                          :filter-method="filter" align="center"></el-table-column>
@@ -94,8 +94,20 @@
       <div class="container">
         <el-form ref="form" :model="form" label-width="100px"  class="form" >
           <el-row>
+            <el-form-item label="所属区域"  align="left">
+              <el-select v-model="form.area_name" placeholder="请选择区域"  class="option" >
+                <el-option
+                  v-for="item in area_options"
+                  :key="item"
+                  :label="item"
+                  :value="item">
+                </el-option>
+              </el-select>
+            </el-form-item>
+          </el-row>
+          <el-row>
             <el-form-item label="所属组织"  align="left">
-              <el-select v-model="form.total_belong_orga" placeholder="请选择区域"  class="option" >
+              <el-select v-model="form.orga_name" placeholder="请选择组织"  class="option" >
                 <el-option
                   v-for="item in orga_options"
                   :key="item"
@@ -107,7 +119,7 @@
           </el-row>
           <el-row>
             <el-form-item label="所属中心"  align="left">
-              <el-select v-model="form.total_belong_center" placeholder="请选择区域"  class="option" >
+              <el-select v-model="form.total_belong_center" placeholder="请选择中心"  class="option" >
                 <el-option key="无" label="无" value="无"> </el-option>
                 <el-option
                   v-for="item in center_options"
@@ -134,7 +146,7 @@
           </el-row>
           <el-row>
             <el-form-item label="所属品牌"  align="left">
-              <el-select v-model="form.total_belong_brand" placeholder="请选择区域"  class="option" >
+              <el-select v-model="form.brand_name" placeholder="请选择品牌"  class="option" >
                 <el-option
                   v-for="item in brand_options"
                   :key="item"
@@ -167,31 +179,6 @@
       <div class="container">
         <el-form ref="form" :model="editform" label-width="100px"  class="form" >
           <el-row>
-            <el-form-item label="所属组织"  align="left">
-              <el-select v-model="editform.total_belong_orga" placeholder="请选择区域"  class="option" >
-                <el-option
-                  v-for="item in orga_options"
-                  :key="item"
-                  :label="item"
-                  :value="item">
-                </el-option>
-              </el-select>
-            </el-form-item>
-          </el-row>
-          <el-row>
-            <el-form-item label="所属中心"  align="left">
-              <el-select v-model="editform.total_belong_center" placeholder="请选择区域"  class="option" >
-                <el-option key="无" label="无" value=''> </el-option>
-                <el-option
-                  v-for="item in center_options"
-                  :key="item"
-                  :label="item"
-                  :value="item">
-                </el-option>
-              </el-select>
-            </el-form-item>
-          </el-row>
-          <el-row>
             <el-form-item label="仓库编码" class="inputs" align="left">
               <el-col :span="10">
                 <el-input v-model="editform.total_iden" ></el-input>
@@ -207,7 +194,7 @@
           </el-row>
           <el-row>
             <el-form-item label="所属品牌"  align="left">
-              <el-select v-model="editform.total_belong_brand" placeholder="请选择区域"  class="option" >
+              <el-select v-model="editform.brand_name" placeholder="请选择品牌"  class="option" >
                 <el-option
                   v-for="item in brand_options"
                   :key="item"
@@ -243,6 +230,7 @@ export default {
   name: 'test',
   data () {
     return {
+      area_options: [],
       orga_options: [],
       center_options: [],
       brand_options: [],
@@ -255,22 +243,21 @@ export default {
         total_name: '',
         total_remarks: '',
         total_iden: '',
-        total_belong_orga: '',
+        orga_name: '',
         total_belong_center: '',
-        total_belong_brand: ''
+        brand_name: ''
       },
       total_iden: '',
       total_nameSet: [],
       total_orgaSet: [],
       total_brandSet: [],
       total_creatorSet: [],
+      total_centerSet: [],
       editform: {
         total_name: '',
         total_remarks: '',
         total_iden: '',
-        total_belong_orga: '',
-        total_belong_center: '',
-        total_belong_brand: ''
+        brand_name: ''
       },
       tableData: [],
       tableDataNew: [],
@@ -288,8 +275,16 @@ export default {
     getData () {
       this.getlist()
       let _this = this
-      postAPI('/warehouse').then(function (res) {
-        _this.tableData = res.data.list
+      postAPI('/base/totalWareHouses').then(function (res) {
+        let n = res.data.max_iden.length
+        let num = parseInt(res.data.max_iden) + 1
+        _this.username = String(Array(n > num ? (n - ('' + num).length + 1) : 0).join(0) + num)
+        _this.total_nameSet = []
+        _this.total_orgaSet = []
+        _this.total_brandSet = []
+        _this.total_creatorSet = []
+        _this.total_centerSet = []
+        _this.tableData = res.data.totalWareHouses
         _this.tableDataNew = _this.tableData
         let nameset = new Set()
         let orgaset = new Set()
@@ -298,8 +293,8 @@ export default {
         let creatorset = new Set()
         for (let i in _this.tableData) {
           nameset.add(_this.tableData[i]['total_name'])
-          orgaset.add(_this.tableData[i]['total_belong_orga'])
-          brandset.add(_this.tableData[i]['total_belong_brand'])
+          orgaset.add(_this.tableData[i]['orga_name'])
+          brandset.add(_this.tableData[i]['brand_name'])
           centerset.add(_this.tableData[i]['total_belong_center'])
           creatorset.add(_this.tableData[i]['total_creator'])
         }
@@ -333,7 +328,7 @@ export default {
             value: i
           })
         }
-        _this.pageTotal = res.data.list.length
+        _this.pageTotal = res.data.totalWareHouses.length
       }).catch(function (err) {
         console.log(err)
       })
@@ -358,7 +353,7 @@ export default {
     handleAlter () {
       this.alterVisible = true
       let _this = this
-      postAPI('/warehouse').then(function (res) {
+      postAPI('/base/totalWareHousesNew').then(function (res) {
         let maxiden = String(parseInt(res.data.max_iden) + 1)
         _this.form.total_iden = maxiden
         for (let i = 0; i < 6 - maxiden.length; i++) {
@@ -368,8 +363,8 @@ export default {
     },
     // 一键清除新增表单
     clearform () {
-      this.form.total_belong_brand = ''
-      this.form.total_belong_orga = ''
+      this.form.brand_name = ''
+      this.form.orga_name = ''
       this.form.total_belong_center = ''
       this.form.total_iden = ''
       this.form.total_name = ''
@@ -388,8 +383,8 @@ export default {
       this.pageTotal = 0
       this.tableDataNew = this.tableData.filter(data => !this.search ||
           String(data.total_name).toLowerCase().includes(this.search.toLowerCase()) ||
-          String(data.total_belong_orga).toLowerCase().includes(this.search.toLowerCase()) ||
-          String(data.total_belong_brand).toLowerCase().includes(this.search.toLowerCase()) ||
+          String(data.orga_name).toLowerCase().includes(this.search.toLowerCase()) ||
+          String(data.brand_name).toLowerCase().includes(this.search.toLowerCase()) ||
           String(data.total_belong_center).toLowerCase().includes(this.search.toLowerCase()) ||
           String(data.total_remarks).toLowerCase().includes(this.search.toLowerCase()) ||
           String(data.total_creator).toLowerCase().includes(this.search.toLowerCase()))
@@ -443,8 +438,8 @@ export default {
     handleEdit (row) {
       this.editform.total_iden = row.total_iden
       this.editform.total_name = row.total_name
-      this.editform.total_belong_orga = row.total_belong_orga
-      this.editform.total_belong_brand = row.total_belong_brand
+      this.editform.orga_name = row.orga_name
+      this.editform.brand_name = row.brand_name
       this.editform.total_belong_center = row.total_belong_center
       this.editform.total_remarks = row.total_remarks
       this.total_iden = row.total_iden
