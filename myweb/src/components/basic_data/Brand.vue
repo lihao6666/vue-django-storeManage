@@ -236,10 +236,10 @@ export default {
     // 停用操作
     handleStop (row) {
       let data = {
-        'brand_name': row.brand_name,
+        'brand_new_name': row.brand_name,
         'brand_description': row.brand_description,
         'brand_status': '停用',
-        'brand_oldname': row.brand_name
+        'brand_name': row.brand_name
       }
       postAPI('/base/brandUpdate', {data: data}).then(function (res) {
         if (res.signal === 0) {
@@ -263,10 +263,10 @@ export default {
     // 启用
     handleStart (row) {
       let data = {
-        'brand_name': row.brand_name,
+        'brand_new_name': row.brand_name,
         'brand_description': row.brand_description,
         'brand_status': '启用',
-        'brand_oldname': row.brand_name
+        'brand_name': row.brand_name
       }
       postAPI('/base/brandUpdate', {data: data}).then(function (res) {
         if (res.signal === 0) {
@@ -289,11 +289,15 @@ export default {
     // 保存编辑
     saveEdit () {
       let _this = this
+      if (this.editform.brand_name === '') {
+        _this.$message.error(`名称不能为空`)
+        return
+      }
       let data = {
-        'brand_name': this.editform.brand_name,
+        'brand_new_name': this.editform.brand_name,
         'brand_description': this.editform.brand_description,
         'brand_status': this.oldbrand_status,
-        'brand_oldname': this.oldbrand_name// 改之前的名字
+        'brand_name': this.oldbrand_name
       }
       postAPI('/base/brandUpdate', data).then(function (res) {
         if (res.data.signal === 0) {
@@ -310,6 +314,10 @@ export default {
     // 保存新增
     saveAlter () {
       let _this = this
+      if (this.form.brand_name === '') {
+        _this.$message.error(`名称不能为空`)
+        return
+      }
       let data = {
         'brand_name': this.form.brand_name,
         'brand_description': this.form.brand_description,
