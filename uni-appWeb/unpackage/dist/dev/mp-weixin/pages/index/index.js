@@ -235,7 +235,6 @@ Object.defineProperty(exports, "__esModule", { value: true });exports.default = 
 
 
 
-
 var _English = _interopRequireDefault(__webpack_require__(/*! ../../data/English.js */ 44));
 var _technology = _interopRequireDefault(__webpack_require__(/*! ../../data/technology.js */ 45));
 var _art = _interopRequireDefault(__webpack_require__(/*! ../../data/art.js */ 46));
