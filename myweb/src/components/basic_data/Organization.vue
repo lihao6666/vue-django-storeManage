@@ -39,7 +39,7 @@
         <el-table-column prop="orga_iden" sortable label="编码"  align="center"></el-table-column>
         <el-table-column prop="orga_name" sortable label="名称" :filters="orga_nameSet"
                          :filter-method="filter" align="center"></el-table-column>
-        <el-table-column prop="orga_area" sortable label="区域" :filters="orga_areaSet"
+        <el-table-column prop="area_name" sortable label="区域" :filters="area_nameSet"
                          :filter-method="filter" align="center"></el-table-column>
         <el-table-column prop="orga_creator" sortable label="创建人" :filters="orga_creatorSet"
                          :filter-method="filter" align="center"></el-table-column>
@@ -105,7 +105,7 @@
           </el-row>
           <el-row>
             <el-form-item label="区域"  align="left">
-              <el-select v-model="form.orga_area" placeholder="请选择区域"  class="option" >
+              <el-select v-model="form.area_name" placeholder="请选择区域"  class="option" >
                 <el-option
                   v-for="item in area_options"
                   :key="item"
@@ -153,7 +153,7 @@
           </el-row>
           <el-row>
             <el-form-item label="区域"  align="left">
-              <el-select v-model="editform.orga_area" placeholder="请选择区域" disabled class="option" >
+              <el-select v-model="editform.area_name" placeholder="请选择区域" disabled class="option" >
               </el-select>
             </el-form-item>
           </el-row>
@@ -193,17 +193,17 @@ export default {
         orga_iden: '',
         orga_name: '',
         orga_remarks: '',
-        orga_area: ''
+        area_name: ''
       },
       orga_iden: '',
       orga_nameSet: [],
-      orga_areaSet: [],
+      area_nameSet: [],
       orga_creatorSet: [],
       editform: {
         orga_iden: '',
         orga_name: '',
         orga_remarks: '',
-        orga_area: ''
+        area_name: ''
       },
       username: '',
       tableData: [],
@@ -235,7 +235,7 @@ export default {
         let creatorset = new Set()
         for (let i in _this.tableData) {
           nameset.add(_this.tableData[i]['orga_name'])
-          areaset.add(_this.tableData[i]['orga_area'])
+          areaset.add(_this.tableData[i]['area_name'])
           creatorset.add(_this.tableData[i]['orga_creator'])
         }
         for (let i of nameset) {
@@ -245,7 +245,7 @@ export default {
           })
         }
         for (let i of areaset) {
-          _this.orga_areaSet.push({
+          _this.area_nameSet.push({
             text: i,
             value: i
           })
@@ -281,11 +281,11 @@ export default {
     handleAlter () {
       this.getlist()
       this.alterVisible = true
-      this.form.orga_name = this.username
+      this.form.orga_iden = this.username
     },
     // 一键清除新增表单
     clearform () {
-      this.form.orga_area = ''
+      this.form.area_name = ''
       this.form.orga_iden = ''
       this.form.orga_name = ''
       this.form.orga_remarks = ''
@@ -325,7 +325,7 @@ export default {
       this.tableDataNew = this.tableData.filter(data => !this.search ||
           String(data.orga_name).toLowerCase().includes(this.search.toLowerCase()) ||
           String(data.orga_iden).toLowerCase().includes(this.search.toLowerCase()) ||
-          String(data.orga_area).toLowerCase().includes(this.search.toLowerCase()) ||
+          String(data.area_name).toLowerCase().includes(this.search.toLowerCase()) ||
           String(data.orga_createDate).toLowerCase().includes(this.search.toLowerCase()) ||
           String(data.orga_remarks).toLowerCase().includes(this.search.toLowerCase()) ||
           String(data.orga_creator).toLowerCase().includes(this.search.toLowerCase()))
@@ -372,7 +372,7 @@ export default {
     handleEdit (row) {
       this.editform.orga_iden = row.orga_iden
       this.editform.orga_name = row.orga_name
-      this.editform.orga_area = row.orga_area
+      this.editform.area_name = row.area_name
       this.editform.orga_remarks = row.orga_remarks
       this.editform.orga_status = row.orga_status
       this.editform.id = row.id
@@ -380,7 +380,7 @@ export default {
     },
     // 保存编辑
     saveEdit () {
-      if (!this.editform.orga_iden || !this.editform.orga_name || !this.editform.orga_area) {
+      if (!this.editform.orga_iden || !this.editform.orga_name || !this.editform.area_name) {
         this.$message.error(`请填写完信息`)
         return
       }
@@ -401,13 +401,13 @@ export default {
     },
     // 保存新增
     saveAlter () {
-      if (!this.editform.orga_iden || !this.editform.orga_name || !this.editform.orga_area) {
+      if (!this.form.orga_iden || !this.form.orga_name || !this.form.area_name) {
         this.$message.error(`请填写完信息`)
         return
       }
       let _this = this
       _this.form.orga_status = 0
-      postAPI('/base/centerAdd', _this.form).then(function (res) {
+      postAPI('/base/organizationAdd', _this.form).then(function (res) {
         if (res.data.signal === 0) {
           _this.$message.success(`新增成功`)
           _this.alterVisible = false

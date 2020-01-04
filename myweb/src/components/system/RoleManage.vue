@@ -255,7 +255,7 @@ export default {
           row.role_status = 0
           console.log(row)
           let _this = this
-          postAPI('/base/roleUpdate', row).then(function (res) {
+          postAPI('/base/roleStatus', row).then(function (res) {
             console.log(res.data)
             if (res.data.signal === 0) {
               _this.$message.success(`停用成功`)
@@ -285,7 +285,7 @@ export default {
         .then(() => {
           row.role_status = 1
           let _this = this
-          postAPI('/base/roleUpdate', row).then(function (res) {
+          postAPI('/base/roleStatus', row).then(function (res) {
             if (res.data.signal === 0) {
               _this.$message.success(`启用成功`)
               _this.getData()
@@ -317,7 +317,7 @@ export default {
     },
     // 保存编辑
     saveEdit () {
-      if (!this.editform.role || !this.editform.role_description) {
+      if (!this.editform.role) {
         this.$message.error(`请填写完信息`)
         return
       }
@@ -337,7 +337,7 @@ export default {
     },
     // 保存新增
     saveAlter () {
-      if (!this.form.role || !this.form.role_description) {
+      if (!this.form.role) {
         this.$message.error(`请填写完信息`)
         return
       }
