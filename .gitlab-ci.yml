@@ -12,3 +12,4 @@ build_all:
   script:
     - echo "build successful!"
     - echo "build stage finish"
+    
