@@ -5,11 +5,12 @@ stages:
 test_all:
   stage: test
   script: 
-    - echo "test successful!"
+    - cd /ci
+    - bash test.sh
+    - echo "enviroment test successful!"
 
 build_all:
   stage: build
   script:
     - echo "build successful!"
     - echo "build stage finish"
-    
