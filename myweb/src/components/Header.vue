@@ -29,6 +29,7 @@
 </template>
 <script>
 import bus from './bus'
+import {postAPI} from '../api/api'
 export default {
   data () {
     return {
@@ -40,7 +41,7 @@ export default {
   },
   computed: {
     username () {
-      let username = localStorage.getItem('ms_username')
+      let username = localStorage.getItem('user_now_iden')
       if (username) {
         return username
       }
@@ -51,8 +52,14 @@ export default {
     // 用户名下拉菜单选择事件
     handleCommand (command) {
       if (command === 'loginout') {
-        localStorage.removeItem('ms_username')
-        this.$router.push('/login')
+        let _this = this
+        postAPI('/base/loginExit', {}).then(function (res) {
+          _this.$message.success(res.data.message)
+          localStorage.removeItem('user_now_iden')
+          _this.$router.push('/login')
+        }).catch(function (err) {
+          console.log(err)
+        })
       }
     },
     // 侧边栏折叠

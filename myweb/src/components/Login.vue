@@ -2,13 +2,13 @@
   <div>
     <el-form :model="loginData" :rules="loginRules" ref="loginData" label-position="left" label-width="0px" class="login-container">
       <h3 class="title">系统登录</h3>
-      <el-form-item prop="checkName">
-        <el-input type="text" v-model="loginData.checkName" auto-complete="off" placeholder="账号" clearable >
+      <el-form-item prop="user_iden">
+        <el-input type="text" v-model="loginData.user_iden" auto-complete="off" placeholder="账号" clearable >
           <template slot="prepend"><i class="el-icon-user" aria-hidden="true"></i></template>
         </el-input>
       </el-form-item>
-      <el-form-item prop="checkPass">
-        <el-input type="password" v-model="loginData.checkPass" auto-complete="off" placeholder="密码" @keyup.enter.native="handleSubmit" clearable>
+      <el-form-item prop="user_passwd">
+        <el-input type="password" v-model="loginData.user_passwd" auto-complete="off" placeholder="密码" @keyup.enter.native="handleSubmit" clearable>
           <template slot="prepend"><i class="el-icon-key" aria-hidden="true"></i></template>
         </el-input>
       </el-form-item>
@@ -21,21 +21,21 @@
 </template>
 
 <script>
-/* import {postAPI} from '../api/api' */
+import {postAPI} from '../api/api'
 
 export default {
   data () {
     return {
       isLogin: false,
       loginData: {
-        checkName: '',
-        checkPass: ''
+        user_iden: '',
+        user_passwd: ''
       },
       loginRules: {
-        checkName: [
+        user_iden: [
           { required: true, message: '请输入账号', trigger: 'blur' }
         ],
-        checkPass: [
+        user_passwd: [
           { required: true, message: '请输入密码', trigger: 'blur' }
         ]
       },
@@ -44,26 +44,50 @@ export default {
   },
   methods: {
     handleSubmit () {
-      if (this.loginData.checkName && this.loginData.checkPass) {
+      if (this.loginData.user_iden && this.loginData.user_passwd) {
         // let data = {
-        //   'user_id': this.loginData.checkName,
-        //   'user_passwd': this.loginData.checkPass
+        //   'user_id': this.loginData.user_iden,
+        //   'user_passwd': this.loginData.user_passwd
         // }
         let _this = this
-        localStorage.setItem('ms_username', _this.loginData.checkName)
-        _this.$router.push('/')
-        // postAPI('/base/login', data).then(function (res) {
-        //   if (res.data.signal === '0') {
-        //     _this.$message.success(res.data.message)
-        //     localStorage.setItem('ms_username', _this.loginData.checkName)
-        //     _this.$router.push('/')
-        //   } else {
-        //     _this.$message.error(res.data.message)
-        //   }
-        // }).catch(function (err) {
-        //   console.log(err)
-        //   _this.$message.error('登录失败')
-        // })
+        this.isLogin = true
+        // let data = {
+        //   user_iden: '2017214876',
+        //   user_passwd: '2017214876',
+        //   user_name: 'yq',
+        //   user_phone_number: '15155905038',
+        //   user_mailbox: '306594076@qq.com',
+        //   user_creator_iden: '2017214876',
+        //   user_creator: 'yq',
+        //   departments: [],
+        //   roles: [],
+        //   area_name: '合肥'
+        // }
+        // console.log(data)
+        // postAPI('/base/userAdd', data)
+        // localStorage.setItem('user_now_iden', _this.loginData.user_iden)
+        // _this.$router.push('/')
+        let iden = localStorage.getItem('user_now_iden')
+        if (iden) {
+          this.$message.error('已经有用户登录了')
+          this.isLogin = false
+          return
+        }
+        postAPI('/base/login', this.loginData).then(function (res) {
+          if (res.data.signal === '0') {
+            _this.$message.success(res.data.message)
+            localStorage.setItem('user_now_iden', _this.loginData.user_iden)
+            _this.$router.push('/')
+            _this.isLogin = false
+          } else {
+            _this.$message.error(res.data.message)
+            _this.isLogin = false
+          }
+        }).catch(function (err) {
+          console.log(err)
+          _this.$message.error('登录失败')
+          _this.isLogin = false
+        })
       } else {
         this.$message.error('请输入账号和密码')
       }
