@@ -5,7 +5,12 @@
 		</view>
 		<view class="current-content">
 			<view v-if="current === 0">
-				<!-- <input v-model="filterText" type="text" placeholder="设备编号,设备名称" ></input> -->
+				<view class='searchInput'>
+					<view class='searchBox'>
+					    <icon @click="search" type="search" size="16"></icon>
+					</view>
+					<input class='input' placeholder="输入出库单信息"></input>
+				</view>
 				<view v-for="item in outList" :key="item.id" class="card-set">
 					<uni-card
 					    :title="item.mso_iden"
@@ -437,6 +442,35 @@ export default {
 		font-size: 28rpx;
 		line-height: inherit;
 	}
+	.searchInput {
+			margin-top: 1vw;
+			margin-left: 20rpx;
+			margin-right: 20rpx;
+			background: white;
+			border-radius: 30upx;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			height: 70rpx;
+		}
+		
+		.search {
+			width: 32upx;
+			height: 32upx;
+		}
+		
+		.searchBox {
+			width: 56upx;
+			height: 56upx;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+		}
+		
+		.input {
+			color: #999;
+			width: 90%;
+		}
 	.content {
 		padding: 0;
 	}
@@ -455,7 +489,7 @@ export default {
 	.button-box {
 		display: flex;
 		justify-content: space-between;
-		padding-top: 40upx;
+		padding-top: 1vw;
 	}
 	.delete {
 		width: 60upx;

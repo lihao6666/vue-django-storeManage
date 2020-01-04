@@ -89,7 +89,7 @@
 		flex: 1;
 		box-shadow: 0 0 0 rgba(0, 0, 0, 0);
 		/* #endif */
-		margin: 12px;
+		margin: 12rpx 20rpx;
 		background-color: $uni-bg-color;
 		position: relative;
 		flex-direction: column;
