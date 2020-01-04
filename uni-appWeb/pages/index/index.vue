@@ -1,7 +1,7 @@
 <template>
     <view class="content">
 		<view class="learning-center">
-							<text class="learning-center-title">学习中心</text>
+							<!-- <text class="learning-center-title">学习中心</text>
 								<view style="width: 80%; margin: auto; margin-bottom: 20px;">
 								        <xfl-select 
 								            :list="list1"
@@ -16,7 +16,7 @@
 								        >
 								        </xfl-select>
 								</view>
-							</text>
+							</text> -->
 		</view>
 		<view class="content-control">
 			<uni-segmented-control :current="current" :values="items" @clickItem="onClickItem" style-type="button" active-color="#0faeff"></uni-segmented-control>
@@ -97,7 +97,7 @@
 </template>
 
 <script>
-import xflSelect from '../../components/xfl-select/xfl-select.vue';
+// import xflSelect from '../../components/xfl-select/xfl-select.vue';
 import uniSegmentedControl from '../../components/uni-segmented-control/uni-segmented-control.vue'
 import uniCard from '../../components/uni-card/uni-card.vue'
 import cmdIcon from "../../components/cmd-icon/cmd-icon.vue"
@@ -108,7 +108,7 @@ import spoData from '../../data/sports.js'
 
 export default {
 	components: {
-		xflSelect,
+		// xflSelect,
 		uniSegmentedControl,
 		uniCard,
 		cmdIcon
