@@ -205,8 +205,11 @@ export default {
     getData () {
       let _this = this
       getAPI('/base/centers').then(function (res) {
+        if (!res.data.centers) {
+          return
+        }
         _this.tableData = res.data.centers
-        _this.tableDataNew = _this.tableData
+        _this.find()
         let nameset = new Set()
         let areaset = new Set()
         let creatorset = new Set()
@@ -281,23 +284,19 @@ export default {
       })
         .then(() => {
           let _this = this
-          let data = {
-            'center_name': row.center_name,
-            'area_name': row.area_name,
-            'center_remarks': row.center_remarks,
-            'center_status': 1,
-            'center_new_name': row.center_name
-          }
-          postAPI('/base/centerUpdate', data).then(function (res) {
+          row.center_status = 1
+          postAPI('/base/centerStatus', row).then(function (res) {
             if (res.data.signal === 0) {
               _this.$message.success(`启用成功`)
               _this.getData()
             } else {
               _this.$message.error(res.data.message)
+              row.center_status = 0
             }
           }).catch(function (err) {
             console.log(err)
             _this.$message.error(`启用失败`)
+            row.center_status = 0
           })
         })
         .catch(() => {
@@ -314,23 +313,19 @@ export default {
       })
         .then(() => {
           let _this = this
-          let data = {
-            'center_name': row.center_name,
-            'area_name': row.area_name,
-            'center_remarks': row.center_remarks,
-            'center_status': 0,
-            'center_new_name': row.center_name
-          }
-          postAPI('/base/centerUpdate', data).then(function (res) {
+          row.center_status = 0
+          postAPI('/base/centerStatus', row).then(function (res) {
             if (res.data.signal === 0) {
               _this.$message.success(`停用成功`)
               _this.getData()
             } else {
               _this.$message.error(res.data.message)
+              row.center_status = 1
             }
           }).catch(function (err) {
             console.log(err)
             _this.$message.error(`停用失败`)
+            row.center_status = 1
           })
         })
         .catch(() => {
@@ -344,10 +339,7 @@ export default {
     getlist () {
       let _this = this
       getAPI('/base/centerNew').then(function (res) {
-        _this.area_options = []
-        for (let j of res.data.areas) {
-          _this.area_options.push(j)
-        }
+        _this.area_options = res.data.areas
       }).catch(function (err) {
         console.log(err)
       })
@@ -355,11 +347,9 @@ export default {
     // 编辑操作
     handleEdit (row) {
       this.editform.center_name = row.center_name
-      this.editform.center_name = row.center_name
       this.editform.area_name = row.area_name
       this.editform.center_remarks = row.center_remarks
-      this.center_oldname = row.center_name
-      this.center_oldstatus = row.center_status
+      this.editform.id = row.id
       this.editVisible = true
     },
     // 保存编辑
@@ -369,18 +359,12 @@ export default {
         _this.$message.error(`名称不能为空`)
         return
       }
-      let data = {
-        'center_name': _this.center_oldname,
-        'area_name': _this.editform.area_name,
-        'center_remarks': _this.editform.center_remarks,
-        'center_status': _this.center_oldstatus,
-        'center_new_name': _this.editform.center_name
-      }
-      postAPI('/base/centerUpdate', data).then(function (res) {
+      postAPI('/base/centerUpdate', _this.editform).then(function (res) {
         if (res.data.signal === 0) {
           _this.editVisible = false
           _this.$message.success(`修改成功`)
           _this.getData()
+          _this.clearform()
         } else {
           _this.$message.error(res.data.message)
         }
@@ -397,25 +381,21 @@ export default {
         return
       }
       if (this.form.area_name === '') {
-        _this.$message.error(`所属中心不能为空`)
+        _this.$message.error(`所属区域不能为空`)
         return
       }
-      let data = {
-        'center_name': _this.form.center_name,
-        'area_name': _this.form.area_name,
-        'center_remarks': _this.form.center_remarks,
-        'center_status': 0
-      }
-      postAPI('/base/centerAdd', data).then(function (res) {
+      _this.form.center_status = 0
+      postAPI('/base/centerAdd', _this.form).then(function (res) {
         if (res.data.signal === 0) {
           _this.$message.success(`新增成功`)
           _this.alterVisible = false
           _this.getData()
           _this.clearform()
         } else {
-          _this.$message.error(`信息已存在`)
+          _this.$message.error(res.data.message)
         }
       }).catch(function (err) {
+        _this.$message.error(`新增失败`)
         console.log(err)
         _this.$message.error(`新增失败`)
       })
