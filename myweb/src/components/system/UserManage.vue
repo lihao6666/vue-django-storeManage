@@ -61,7 +61,7 @@
               icon="el-icon-unlock"
               class="red"
               @click="handleStop(scope.row)"
-              v-if="scope.row.user_status==='启用'"
+              v-if="scope.row.user_status===1"
             >停用
             </el-button>
             <el-button
@@ -69,7 +69,7 @@
               icon="el-icon-lock"
               class="green"
               @click="handleStart( scope.row)"
-              v-if="scope.row.user_status==='停用'"
+              v-if="scope.row.user_status===0"
             >启用
             </el-button>
           </template>
@@ -481,19 +481,19 @@ export default {
       })
         .then(() => {
           let _this = this
-          row.user_status = '停用'
+          row.user_status = 0
           console.log(row)
           postAPI('/base/userUpdate', row).then(function (res) {
             if (res.data.signal === 0) {
               _this.$message.success(`停用成功`)
             } else {
               _this.$message.error(`停用失败`)
-              row.user_status = '启用'
+              row.user_status = 1
             }
           }).catch(function (err) {
             console.log(err)
             _this.$message.error(`停用失败`)
-            row.user_status = '启用'
+            row.user_status = 1
           })
         })
         .catch(() => {
@@ -510,19 +510,19 @@ export default {
       })
         .then(() => {
           let _this = this
-          row.user_status = '启用'
+          row.user_status = 1
           console.log(row)
           postAPI('/base/userUpdate', row).then(function (res) {
             if (res.data.signal === 0) {
               _this.$message.success(`启用成功`)
             } else {
               _this.$message.error(`启用失败`)
-              row.user_status = '停用'
+              row.user_status = 0
             }
           }).catch(function (err) {
             console.log(err)
             _this.$message.error(`启用失败`)
-            row.user_status = '停用'
+            row.user_status = 0
           })
         })
         .catch(() => {
@@ -594,7 +594,7 @@ export default {
         return
       }
       this.form.role_power = ''
-      this.form.role_status = '停用'
+      this.form.role_status = 0
       console.log(this.form)
       let _this = this
       postAPI('/base/userUpdate', this.form).then(function (res) {

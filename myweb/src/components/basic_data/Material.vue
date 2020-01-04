@@ -54,7 +54,7 @@
               icon="el-icon-unlock"
               class="red"
               @click="handleStop(scope.row)"
-              v-if="scope.row.material_status==='启用'"
+              v-if="scope.row.material_status===1"
             >停用
             </el-button>
             <el-button
@@ -62,7 +62,7 @@
               icon="el-icon-lock"
               class="green"
               @click="handleStart(scope.row)"
-              v-if="scope.row.material_status==='停用'"
+              v-if="scope.row.material_status===0"
             >启用
             </el-button>
           </template>
@@ -364,7 +364,7 @@ export default {
     },
     // 停用操作
     handleStop (row) {
-      postAPI('/material', {data: row, material_status: '停用'}).then(function (res) {
+      postAPI('/material', {data: row, material_status: 0}).then(function (res) {
         console.log(res)
       }).catch(function (err) {
         console.log(err)
@@ -385,7 +385,7 @@ export default {
     },
     // 启用
     handleStart (row) {
-      postAPI('/material', {data: row, material_status: '启用'}).then(function (res) {
+      postAPI('/material', {data: row, material_status: 1}).then(function (res) {
         console.log(res)
       }).catch(function (err) {
         console.log(err)

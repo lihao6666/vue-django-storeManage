@@ -55,7 +55,7 @@
               icon="el-icon-unlock"
               class="red"
               @click="handleStop(scope.row)"
-              v-if="scope.row.brand_status==='启用'"
+              v-if="scope.row.brand_status===1"
             >停用
             </el-button>
             <el-button
@@ -63,7 +63,7 @@
               icon="el-icon-lock"
               class="green"
               @click="handleStart(scope.row)"
-              v-if="scope.row.brand_status==='停用'"
+              v-if="scope.row.brand_status===0"
             >启用
             </el-button>
           </template>
@@ -238,7 +238,7 @@ export default {
       let data = {
         'brand_name': row.brand_name,
         'brand_description': row.brand_description,
-        'brand_status': '停用',
+        'brand_status': 0,
         'brand_oldname': row.brand_name
       }
       postAPI('/base/brandUpdate', {data: data}).then(function (res) {
@@ -265,7 +265,7 @@ export default {
       let data = {
         'brand_name': row.brand_name,
         'brand_description': row.brand_description,
-        'brand_status': '启用',
+        'brand_status': 1,
         'brand_oldname': row.brand_name
       }
       postAPI('/base/brandUpdate', {data: data}).then(function (res) {
@@ -313,7 +313,7 @@ export default {
       let data = {
         'brand_name': this.form.brand_name,
         'brand_description': this.form.brand_description,
-        'brand_status': '停用'
+        'brand_status': 0
       }
       postAPI('/base/brandAdd', data).then(function (res) {
         if (res.data.signal === 0) {
