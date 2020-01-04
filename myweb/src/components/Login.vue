@@ -56,7 +56,7 @@ export default {
         //   user_passwd: '2017214876',
         //   user_name: 'yq',
         //   user_phone_number: '15155905038',
-        //   user_mailbox: '306594076@qq.com',
+        //   email: '306594076@qq.com',
         //   user_creator_iden: '2017214876',
         //   user_creator: 'yq',
         //   departments: [],
