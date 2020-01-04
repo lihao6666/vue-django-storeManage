@@ -28,9 +28,9 @@
       >
         <el-table-column type="index" width="50"></el-table-column>
         <el-table-column prop="user_name" sortable label="姓名" align="center"></el-table-column>
-        <el-table-column prop="user_id" sortable label="工号" align="center"></el-table-column>
+        <el-table-column prop="username" sortable label="工号" align="center"></el-table-column>
         <el-table-column prop="user_phone_number" sortable label="手机号" align="center"></el-table-column>
-        <el-table-column prop="user_mailbox" sortable label="邮箱" align="center"></el-table-column>
+        <el-table-column prop="email" sortable label="邮箱" align="center"></el-table-column>
         <el-table-column prop="area_name" sortable label="区域" :filters="area_nameSet"
                          :filter-method="filter" align="center"></el-table-column>
         <el-table-column prop="user_departments" sortable label="部门" :filters="user_dpmSet"
@@ -47,7 +47,7 @@
         </el-table-column>
         <el-table-column prop="user_creator" sortable label="创建人" :filters="user_creatorSet"
                          :filter-method="filter" align="center"></el-table-column>
-        <el-table-column prop="user_createDate" sortable label="创建日期" align="center"></el-table-column>
+        <el-table-column prop="date_joined" sortable label="创建日期" align="center"></el-table-column>
         <el-table-column label="操作" align="center">
           <template slot-scope="scope">
             <el-button
@@ -61,7 +61,7 @@
               icon="el-icon-unlock"
               class="red"
               @click="handleStop(scope.row)"
-              v-if="scope.row.user_status===1"
+              v-if="scope.row.is_active"
             >停用
             </el-button>
             <el-button
@@ -69,7 +69,7 @@
               icon="el-icon-lock"
               class="green"
               @click="handleStart( scope.row)"
-              v-if="scope.row.user_status===0"
+              v-else
             >启用
             </el-button>
           </template>
@@ -101,9 +101,9 @@
             </el-form-item>
           </el-row>
           <el-row>
-            <el-form-item label="工号" class="inputs" align="left" prop="user_id">
+            <el-form-item label="工号" class="inputs" align="left" prop="username">
               <el-col :span="10">
-                <el-input v-model="form.user_id" @input="form.user_id=inputnum(form.user_id)"></el-input>
+                <el-input v-model="form.username" @input="form.username=inputnum(form.username)"></el-input>
               </el-col>
             </el-form-item>
           </el-row>
@@ -115,9 +115,9 @@
             </el-form-item>
           </el-row>
           <el-row>
-            <el-form-item label="邮箱" class="inputs" align="left" prop="user_mailbox">
+            <el-form-item label="邮箱" class="inputs" align="left" prop="email">
               <el-col :span="10">
-                <el-input v-model="form.user_mailbox"></el-input>
+                <el-input v-model="form.email"></el-input>
               </el-col>
             </el-form-item>
           </el-row>
@@ -180,9 +180,9 @@
             </el-form-item>
           </el-row>
           <el-row>
-            <el-form-item label="工号" class="inputs" align="left" prop="user_id" >
+            <el-form-item label="工号" class="inputs" align="left" prop="username" >
               <el-col :span="10">
-                <el-input v-model="editform.user_id" @input="editform.user_id=inputnum(editform.user_id)"></el-input>
+                <el-input v-model="editform.username" @input="editform.username=inputnum(editform.username)"></el-input>
               </el-col>
             </el-form-item>
           </el-row>
@@ -194,9 +194,9 @@
             </el-form-item>
           </el-row>
           <el-row>
-            <el-form-item label="邮箱" class="inputs" align="left" prop="user_mailbox">
+            <el-form-item label="邮箱" class="inputs" align="left" prop="email">
               <el-col :span="10">
-                <el-input v-model="editform.user_mailbox"></el-input>
+                <el-input v-model="editform.email"></el-input>
               </el-col>
             </el-form-item>
           </el-row>
@@ -261,7 +261,7 @@ export default {
         pageSize: 5
       },
       rules: {
-        user_mailbox: [{
+        email: [{
           required: true,
           message: '请输入邮箱地址',
           trigger: 'blur'
@@ -282,7 +282,7 @@ export default {
           pattern: /^1[34578]\d{9}$/,
           trigger: ['blur', 'change']
         }],
-        user_id: [{
+        username: [{
           required: true,
           message: '请输入工号',
           trigger: 'blur'
@@ -294,22 +294,22 @@ export default {
       search: '',
       form: {
         user_name: '',
-        user_id: '',
-        user_mailbox: '',
+        username: '',
+        email: '',
         area_name: '',
         user_phone_number: '',
-        user_departments: '',
-        user_roles: ''
+        user_departments: [],
+        user_roles: []
       },
-      user_id: '',
+      username: '',
       editform: {
         user_name: '',
-        user_id: '',
-        user_mailbox: '',
+        username: '',
+        email: '',
         area_name: '',
         user_phone_number: '',
-        user_departments: '',
-        user_roles: ''
+        user_departments: [],
+        user_roles: []
       },
       tableData: [],
       tableDataNew: [],
@@ -337,15 +337,13 @@ export default {
         _this.user_dpmSet = []
         _this.user_creatorSet = []
         _this.tableData = res.data.users
-        _this.find()
-        let n = res.data.max_iden.length
-        let num = parseInt(res.data.max_iden) + 1
-        _this.user_id = String(Array(n > num ? (n - ('' + num).length + 1) : 0).join(0) + num)
         let areaset = new Set()
         let creatorset = new Set()
         let dpmset = new Set()
         let roleset = new Set()
         for (let i in _this.tableData) {
+          _this.tableData[i].user_roles = res.data.roles[i]
+          _this.tableData[i].user_departments = res.data.departments[i]
           areaset.add(_this.tableData[i]['area_name'])
           for (let j in _this.tableData[i]['user_departments']) {
             dpmset.add(_this.tableData[i]['user_departments'][j])
@@ -355,6 +353,8 @@ export default {
           }
           creatorset.add(_this.tableData[i]['user_creator'])
         }
+        console.log(_this.tableData)
+        _this.find()
         for (let i of areaset) {
           _this.area_nameSet.push({
             text: i,
@@ -417,47 +417,39 @@ export default {
       this.pageTotal = 0
       this.tableDataNew = this.tableData.filter(data => !this.search ||
         String(data.user_name).toLowerCase().includes(this.search.toLowerCase()) ||
-        String(data.user_id).toLowerCase().includes(this.search.toLowerCase()) ||
+        String(data.username).toLowerCase().includes(this.search.toLowerCase()) ||
         String(data.user_phone_number).toLowerCase().includes(this.search.toLowerCase()) ||
         String(data.area_name).toLowerCase().includes(this.search.toLowerCase()) ||
-        String(data.user_departments).toLowerCase().includes(this.search.toLowerCase()) ||
-        String(data.user_roles).toLowerCase().includes(this.search.toLowerCase()) ||
-        String(data.user_mailbox).toLowerCase().includes(this.search.toLowerCase()) ||
-        String(data.user_createDate).toLowerCase().includes(this.search.toLowerCase()) ||
+        String(data.email).toLowerCase().includes(this.search.toLowerCase()) ||
         String(data.user_creator).toLowerCase().includes(this.search.toLowerCase()))
     },
     // 获取列表
     getroles () {
       let _this = this
-      getAPI('/base/roles').then(function (res) {
+      getAPI('/base/userNew').then(function (res) {
         _this.role_options = []
+        let n = res.data.max_iden.length
+        let num = parseInt(res.data.max_iden) + 1
+        _this.username = String(Array(n > num ? (n - ('' + num).length + 1) : 0).join(0) + num)
         let alterrole = new Set()
         for (let i in res.data.roles) {
-          alterrole.add(res.data.roles[i]['role'])
+          alterrole.add(res.data.roles[i])
         }
         for (let j of alterrole) {
           _this.role_options.push(j)
         }
-      }).catch(function (err) {
-        console.log(err)
-      })
-      postAPI('/base/areas').then(function (res) {
         _this.area_options = []
         let alterarea = new Set()
         for (let i in res.data.areas) {
-          alterarea.add(res.data.areas[i]['area_name'])
+          alterarea.add(res.data.areas[i])
         }
         for (let j of alterarea) {
           _this.area_options.push(j)
         }
-      }).catch(function (err) {
-        console.log(err)
-      })
-      postAPI('/base/departments').then(function (res) {
         _this.dpm_options = []
         let alterdpm = new Set()
         for (let i in res.data.departments) {
-          alterdpm.add(res.data.departments[i]['dpm_name'])
+          alterdpm.add(res.data.departments[i])
         }
         for (let j of alterdpm) {
           _this.dpm_options.push(j)
@@ -469,17 +461,17 @@ export default {
     // 新增
     handleAlter () {
       this.alterVisible = true
-      this.form.user_id = this.user_id
+      this.form.username = this.username
     },
     // 一键清除新增表单
     clearform () {
       this.form.user_name = ''
-      this.form.user_id = ''
-      this.form.user_mailbox = ''
+      this.form.username = ''
+      this.form.email = ''
       this.form.area_name = ''
       this.form.user_phone_number = ''
-      this.form.user_departments = ''
-      this.form.user_roles = ''
+      this.form.user_departments = []
+      this.form.user_roles = []
     },
     // 停用操作
     handleStop (row) {
@@ -488,19 +480,19 @@ export default {
       })
         .then(() => {
           let _this = this
-          row.user_status = 0
+          row.is_active = false
           console.log(row)
-          postAPI('/base/userUpdate', row).then(function (res) {
+          postAPI('/base/userStatus', row).then(function (res) {
             if (res.data.signal === 0) {
               _this.$message.success(`停用成功`)
             } else {
               _this.$message.error(`停用失败`)
-              row.user_status = 1
+              row.is_active = true
             }
           }).catch(function (err) {
             console.log(err)
             _this.$message.error(`停用失败`)
-            row.user_status = 1
+            row.is_active = true
           })
         })
         .catch(() => {
@@ -517,19 +509,19 @@ export default {
       })
         .then(() => {
           let _this = this
-          row.user_status = 1
+          row.is_active = true
           console.log(row)
-          postAPI('/base/userUpdate', row).then(function (res) {
+          postAPI('/base/userStatus', row).then(function (res) {
             if (res.data.signal === 0) {
               _this.$message.success(`启用成功`)
             } else {
               _this.$message.error(`启用失败`)
-              row.user_status = 0
+              row.is_active = false
             }
           }).catch(function (err) {
             console.log(err)
             _this.$message.error(`启用失败`)
-            row.user_status = 0
+            row.is_active = false
           })
         })
         .catch(() => {
@@ -542,9 +534,9 @@ export default {
     // 编辑操作
     handleEdit (row) {
       this.editform.user_name = row.user_name
-      this.editform.user_id = row.user_id
+      this.editform.username = row.username
       this.editform.id = row.id
-      this.editform.user_mailbox = row.user_mailbox
+      this.editform.email = row.email
       this.editform.area_name = row.area_name
       let role = []
       for (let i in row.user_roles) {
@@ -561,14 +553,12 @@ export default {
     },
     // 保存编辑
     saveEdit () {
-      if (!this.editform.user_name || !this.editform.user_id || !this.editform.user_mailbox || !this.editform.area_name || !this.editform.user_phone_number ||
-        (!this.editform.user_roles || this.editform.user_roles.length <= 0) ||
-        (!this.editform.user_departments || this.editform.user_departments.length <= 0)) {
+      if (!this.editform.user_name || !this.editform.username || !this.editform.email || !this.editform.area_name || !this.editform.user_phone_number) {
         this.$message.error(`请填写完信息`)
         return
       }
       let email = /^(\w-*\.*)+@(\w-?)+(\.\w{2,})+$/
-      if (!this.rules.user_phone_number[1].pattern.test(this.editform.user_phone_number) || !email.test(this.editform.user_mailbox)) {
+      if (!this.rules.user_phone_number[1].pattern.test(this.editform.user_phone_number) || !email.test(this.editform.email)) {
         this.$message.error(`请填写正确格式`)
         return
       }
@@ -589,14 +579,12 @@ export default {
     // 保存新增
     saveAlter () {
       console.log(this.form.user_roles)
-      if (!this.form.user_name || !this.form.user_id || !this.form.user_mailbox || !this.form.area_name || !this.form.user_phone_number ||
-        (!this.form.user_roles || this.form.user_roles.length <= 0) ||
-        (!this.form.user_departments || this.form.user_departments.length <= 0)) {
+      if (!this.form.user_name || !this.form.username || !this.form.email || !this.form.area_name || !this.form.user_phone_number) {
         this.$message.error(`请填写完信息`)
         return
       }
       let email = /^(\w-*\.*)+@(\w-?)+(\.\w{2,})+$/
-      if (!this.rules.user_phone_number[1].pattern.test(this.form.user_phone_number) || !email.test(this.form.user_mailbox)) {
+      if (!this.rules.user_phone_number[1].pattern.test(this.form.user_phone_number) || !email.test(this.form.email)) {
         this.$message.error(`请填写正确格式`)
         return
       }
