@@ -1132,17 +1132,15 @@ class CenterStatusView(APIView):
         json_data = json.loads(self.request.body.decode("utf-8"))
 
         center_status = json_data['center_status']
-        center_iden = json_data['center_iden']
         id = json_data["id"]
         # dpm_iden = json_data['dpm_iden']
 
         center = models.Center.objects.filter(id=id)
-
         if center:
             center.update(center_status=center_status)
             return Response({"message": "状态更改成功", "signal": 0})
         else:
-            return Response({"message": "未查询到仓库,状态更改失败"})
+            return Response({"message": "未查询到中心,状态更改失败"})
 
 
 """
@@ -1264,7 +1262,7 @@ class SupplierAddView(APIView):
         user_now = models.UserNow.objects.get(user_iden=user_now_iden)
         if user_now:
             self.user_now_name = user_now.user_name
-        supply_iden = json_data['supply_iden']
+        supply_iden = json_data['supply_iden']  # 这个是不用手动录入的信息，不需要判断
         supply_name = json_data['supply_name']
         supply_type = json_data['supply_type']
         supply_remarks = json_data['supply_remarks']
@@ -1284,20 +1282,39 @@ class SupplierUpdateView(APIView):
 
     def post(self, request):
         json_data = json.loads(self.request.body.decode("utf-8"))
-        supply_iden = json_data['supply_iden']
+
+        id = json_data['id']
+        # supply_iden = json_data['supply_iden']
         supply_name = json_data['supply_name']
         supply_type = json_data['supply_type']
         supply_remarks = json_data['supply_remarks']
         # supply_status = json_data['supply_status']
         # supply_creator = json_data['supply_creator']
         try:
-            models.Supplier.objects.filter(supply_iden=supply_iden).update(supply_name=supply_name,
-                                                                           supply_type=supply_type,
-                                                                           supply_remarks=supply_remarks)
+            models.Supplier.objects.filter(id=id).update(supply_name=supply_name,
+                                                         supply_type=supply_type,
+                                                         supply_remarks=supply_remarks)
         except:
             self.message = "更新失败"
             self.signal = 1
         return Response({'message': self.message, 'signal': self.signal})
+
+
+class SupplierStatusView(APIView):
+    def post(self, request):
+        json_data = json.loads(self.request.body.decode("utf-8"))
+
+        supply_status = json_data['supply_status']
+        id = json_data["id"]
+        # dpm_iden = json_data['dpm_iden']
+
+        supplier = models.Supplier.objects.filter(id=id)
+
+        if supplier:
+            supplier.update(supply_status=supply_status)
+            return Response({"message": "状态更改成功", "signal": 0})
+        else:
+            return Response({"message": "未查询到供应商,状态更改失败"})
 
 
 """

@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="34c6b5b4-0631-4a35-9482-5f8673ee1af7" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/base/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/base/views.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -114,7 +115,7 @@
       <workItem from="1577343592625" duration="52968000" />
       <workItem from="1577513181545" duration="6382000" />
       <workItem from="1577528753842" duration="577000" />
-      <workItem from="1577593027609" duration="174468000" />
+      <workItem from="1577593027609" duration="175682000" />
     </task>
     <task id="LOCAL-00001" summary="&quot;Add requirements.txt&quot;">
       <created>1578018842973</created>
