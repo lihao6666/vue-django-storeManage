@@ -18,16 +18,22 @@ urlpatterns = [
     path('roles', views.RolesView.as_view(), name='roles'),
     path('roleAdd', views.RoleAddView.as_view(), name='roleAdd'),
     path('roleUpdate', views.RoleUpdateView.as_view(), name='roleUpdate'),
+    path('roleStatus', views.RoleStatusView.as_view(), name='roleStatus'),
+
 
 
     path('customers', views.CustomersView.as_view(), name='customers'),
     path('customerAdd', views.CustomerAddView.as_view(), name='customerAdd'),
     path('customerUpdate', views.CustomerUpdateView.as_view(), name='customerUpdate'),
+    path('customerStatus', views.CustomerStatusView.as_view(), name='customerStatus'),
+
 
     path('organizations', views.OrganizationsView.as_view(), name='organizations'),
     path('organizationNew', views.OrganizationNewView.as_view(), name='organizationNew'),
     path('organizationAdd', views.OrganizationAddView.as_view(), name='organizationAdd'),
     path('organizationUpdate', views.OrganizationUpdateView.as_view(), name='organizationUpdate'),
+    path('organizationStatus', views.OrganizationStatusView.as_view(), name='organizationStatus'),
+
 
     path('brands', views.BrandsView.as_view(), name='brands'),
     path('brandAdd', views.BrandAddView.as_view(), name='brandAdd'),
