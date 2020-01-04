@@ -1,1 +1,1 @@
-<view class="content"><view class="btn-row"><block wx:if="{{!hasLogin}}"><button class="primary" type="primary" data-event-opts="{{[['tap',[['bindLogin',['$event']]]]]}}" bindtap="__e">登录</button></block><block wx:if="{{hasLogin}}"><button type="default" data-event-opts="{{[['tap',[['bindLogout',['$event']]]]]}}" bindtap="__e">退出登录</button></block></view></view>
+<view class="content"><view class="btn-row"><w-button vue-id="1" text="退 出 登 录" data-event-opts="{{[['tap',[['logout']]]]}}" bindtap="__e" bind:__l="__l"></w-button></view></view>
