@@ -20,6 +20,11 @@ urlpatterns = [
     path('roleUpdate', views.RoleUpdateView.as_view(), name='roleUpdate'),
     path('roleStatus', views.RoleStatusView.as_view(), name='roleStatus'),
 
+    path('departments', views.DepartmentsView.as_view(), name='departments'),
+    path('departmentAdd', views.DepartmentAddView.as_view(), name='departmentAdd'),
+    path('departmentUpdate', views.DepartmentUpdateView.as_view(), name='departmentUpdate'),
+    path('departmentStatus', views.DepartmentStatusView.as_view(), name='departmentStatus'),
+
 
 
     path('customers', views.CustomersView.as_view(), name='customers'),
@@ -38,11 +43,13 @@ urlpatterns = [
     path('brands', views.BrandsView.as_view(), name='brands'),
     path('brandAdd', views.BrandAddView.as_view(), name='brandAdd'),
     path('brandUpdate', views.BrandUpdateView.as_view(), name='brandUpdate'),
+    path('brandStatus', views.BrandStatusView.as_view(), name='brandStatus'),
 
     path('totalWareHouses', views.TotalWareHousesView.as_view(), name='totalWareHouses'),
     path('totalWareHouseNew', views.TotalWareHouseNewView.as_view(), name='totalWareHouseNew'),
     path('totalWareHouseAdd', views.TotalWareHouseAddView.as_view(), name='totalWareHouseAdd'),
     path('totalWareHouseUpdate', views.TotalWareHouseUpdateView.as_view(), name='totalWareHouseUpdate'),
+    path('totalWareHouseStatus', views.TotalWareHouseStatusView.as_view(), name='totalWareHouseUpdate'),
 
     path('centers', views.CentersView.as_view(), name='centers'),
     path('centerNew', views.CenterNewView.as_view(), name='centerNew'),

@@ -29,7 +29,7 @@ def departmentToList(departments_name_list):
 def roleToList(roles_name_list):
     role_list = []
     for role_name in roles_name_list:
-        id = str(models.Role.objects.get(role_name=role_name).id)
+        id = str(models.Role.objects.get(role=role_name).id)
         role_list.append(id)
     role_name = "-".join(role_list)
 
@@ -204,29 +204,28 @@ class UserUpdateView(APIView):
         super().__init__(**kwargs)
         self.message = "修改成功"
         self.signal = 0
-        self.user_iden = ""
 
     def post(self, request):
         json_data = json.loads(self.request.body.decode("utf-8"))
         id = json_data["id"]
-        self.user_iden = json_data['user_iden']  # 需要传过来要修改用户的id
+        username = json_data['username']  # 需要传过来要修改用户的id
         # user_passwd = json_data['user_passwd']
         user_name = json_data['user_name']
 
         user_phone_number = json_data['user_phone_number']
-        user_mailbox = json_data['user_mailbox']
-        user_departments = departmentToList(json_data['departments'])  # 传过来的是名字列表
-        user_roles = roleToList(json_data['roles'])  # 传过来的是角色列表
+        email = json_data['email']
+        user_departments = departmentToList(json_data['user_departments'])  # 传过来的是名字列表
+        user_roles = roleToList(json_data['user_roles'])  # 传过来的是角色列表
         # user_creator = json_data['user_creator']
         area_name = json_data['area_name']
         # area = models.Area.objects.filter(area_name=area_name).first()
         user = models.UserProfile.objects.filter(id=id)
-        if self.idCheck(self.user_iden, id):
+        if self.idCheck(username, id):
             if self.phoneCheck(user_phone_number, id):
-                if self.emailCheck(user_mailbox, id):
+                if self.emailCheck(email, id):
                     if user:
-                        user.update(user_iden=self.user_iden, user_name=user_name, user_phone_number=user_phone_number,
-                                    email=user_mailbox,
+                        user.update(username=username, user_name=user_name, user_phone_number=user_phone_number,
+                                    email=email,
                                     user_departments=user_departments, user_roles=user_roles,
                                     area_name=area_name)
                     else:
@@ -237,7 +236,7 @@ class UserUpdateView(APIView):
 
     def idCheck(self, user_iden, id):
         try:
-            user = models.UserProfile.objects.filter(~Q(id=id), username=user_iden)
+            user = models.UserProfile.objects.get(~Q(id=id), username=user_iden)
         except models.UserProfile.DoesNotExist:
             return True
         else:
@@ -435,7 +434,7 @@ class RoleStatusView(APIView):
 
         if role:
             role.update(role_status=role_status)
-            return Response({"message": "状态更改成功"})
+            return Response({"message": "状态更改成功", "signal": 0})
         else:
             return Response({"message": "未查询到角色,状态更改失败"})
 
@@ -548,7 +547,7 @@ class CustomerStatusView(APIView):
 
         if customer:
             customer.update(customer_status=customer_status)
-            return Response({"message": "状态更改成功"})
+            return Response({"message": "状态更改成功", "signal": 0})
         else:
             return Response({"message": "未查询到客户,状态更改失败"})
 
@@ -589,7 +588,6 @@ class OrganizationAddView(APIView):
 
     def post(self, request):
         json_data = json.loads(self.request.body.decode("utf-8"))
-        id = json_data["id"]
         user_now_iden = json_data['user_now_iden']
         user_now = models.UserNow.objects.get(user_iden=user_now_iden)
         if user_now:
@@ -599,7 +597,7 @@ class OrganizationAddView(APIView):
         area_name = json_data['area_name']
         orga_remarks = json_data['orga_remarks']
 
-        if self.idCheck(orga_iden, id):
+        if self.idCheck(orga_iden):
             models.Organization.objects.create(orga_iden=orga_iden, orga_name=orga_name,
                                                area_name=area_name,
                                                orga_remarks=orga_remarks,
@@ -608,9 +606,9 @@ class OrganizationAddView(APIView):
                                                orga_creator_iden=user_now_iden)
         return Response({'message': self.message, 'signal': self.signal})
 
-    def idCheck(self, orga_iden, id):
+    def idCheck(self, orga_iden):
         try:
-            user = models.Organization.objects.get(~Q(id=id), orga_iden=orga_iden)
+            user = models.Organization.objects.get(orga_iden=orga_iden)
         except models.Organization.DoesNotExist:
             return True
         else:
@@ -665,7 +663,7 @@ class OrganizationStatusView(APIView):
 
         if organization:
             organization.update(orga_status=orga_status)
-            return Response({"message": "状态更改成功"})
+            return Response({"message": "状态更改成功", "signal": 0})
         else:
             return Response({"message": "未查询到组织,状态更改失败"})
 
@@ -776,7 +774,7 @@ class DepartmentStatusView(APIView):
 
         if dpm:
             dpm.update(dpm_status=dpm_status)
-            return Response({"message": "状态更改成功"})
+            return Response({"message": "状态更改成功", "signal": 0})
         else:
             return Response({"message": "未查询到部门,状态更改失败"})
 
@@ -880,7 +878,7 @@ class BrandStatusView(APIView):
 
         if brand:
             brand.update(brand_status=brand_status)
-            return Response({"message": "状态更改成功"})
+            return Response({"message": "状态更改成功", "signal": 0})
         else:
             return Response({"message": "未查询到品牌,状态更改失败"})
 
@@ -983,7 +981,6 @@ class TotalWareHouseUpdateView(APIView):
     def post(self, request):
         json_data = json.loads(self.request.body.decode("utf-8"))
         id = json_data['id']
-
         total_iden = json_data['total_iden']
         total_name = json_data['total_name']
         # total_belong_center = json_data['total_belong_center']
@@ -995,22 +992,40 @@ class TotalWareHouseUpdateView(APIView):
         if self.idCheck(total_iden, id):
             try:
                 models.TotalWareHouse.objects.filter(total_iden=total_iden).update(
-                    # total_name=total_name,
+                    total_name=total_name,
+                    brand_name=brand_name,
                     total_remarks=total_remarks)
             except:
                 self.message = "更新失败"
                 self.signal = 1
         return Response({'message': self.message, 'signal': self.signal})
 
-    def idCheck(self, total_iden):
+    def idCheck(self, total_iden, id):
         try:
-            user = models.TotalWareHouse.objects.get(total_iden=total_iden)
+            user = models.TotalWareHouse.objects.get(~Q(id=id), total_iden=total_iden)
         except models.TotalWareHouse.DoesNotExist:
             return True
         else:
             self.message = "仓库id已存在"
             self.signal = 1
             return False
+
+
+class TotalWareHouseStatusView(APIView):
+    def post(self, request):
+        json_data = json.loads(self.request.body.decode("utf-8"))
+
+        total_status = json_data['total_status']
+        id = json_data["id"]
+        # dpm_iden = json_data['dpm_iden']
+
+        total = models.TotalWareHouse.objects.filter(id=id)
+
+        if total:
+            total.update(brand_status=total_status)
+            return Response({"message": "状态更改成功", "signal": 0})
+        else:
+            return Response({"message": "未查询到仓库,状态更改失败"})
 
 
 """
@@ -1044,19 +1059,36 @@ class CenterAddView(APIView):
         super().__init__(**kwargs)
         self.message = "添加成功"
         self.signal = 0
+        self.user_now_name = ""
 
     def post(self, request):
         json_data = json.loads(self.request.body.decode("utf-8"))
+        user_now_iden = json_data['user_now_iden']
+        user_now = models.UserNow.objects.get(user_iden=user_now_iden)
+        if user_now:
+            self.user_now_name = user_now.user_name
+        # center_iden = json_data['center_iden']
         center_name = json_data['center_name']
         area_name = json_data['area_name']
         center_remarks = json_data['center_remarks']
-        center_status = json_data['center_status']
-        center_creator = json_data['center_creator']
-        models.Center.objects.create(center_name=center_name,
-                                     area_name=area_name,
-                                     center_remarks=center_remarks, center_status=center_status,
-                                     center_creator=center_creator)
+        if self.isLegal(center_name, area_name):
+            models.Center.objects.create(
+                center_name=center_name,
+                area_name=area_name,
+                center_remarks=center_remarks, center_status=0,
+                center_creator=self.user_now_name,
+                center_creator_iden=user_now_iden)
         return Response({'message': self.message, 'signal': self.signal})
+
+    def isLegal(self, center_name, area_name):
+        try:
+            center = models.Center.objects.get(center_name=center_name, area_name=area_name)
+        except models.Center.DoesNotExist:
+            return True
+        else:
+            self.message = "中心名字和区域重复"
+            self.signal = 1
+            return False
 
 
 class CenterUpdateView(APIView):
@@ -1067,19 +1099,51 @@ class CenterUpdateView(APIView):
 
     def post(self, request):
         json_data = json.loads(self.request.body.decode("utf-8"))
+        id = json_data['id']
+
+        # center_iden = json_data['center_iden']
         center_name = json_data['center_name']
         area_name = json_data['area_name']
         center_remarks = json_data['center_remarks']
-        center_status = json_data['center_status']
         # center_creator = json_data['center_creator']
-        try:
-            models.Center.objects.filter(center_name=center_name, area_name=area_name).update(center_name=center_name,
-                                                                                              center_remarks=center_remarks,
-                                                                                              center_status=center_status, )
-        except:
-            self.message = "更新失败"
-            self.signal = 1
+        if self.idCheck(center_iden, id):
+            try:
+                models.Center.objects.filter(center_name=center_name, area_name=area_name).update(
+                    center_iden=center_iden,
+                    center_name=center_name,
+                    center_remarks=center_remarks)
+            except:
+                self.message = "更新失败"
+                self.signal = 1
         return Response({'message': self.message, 'signal': self.signal})
+
+    def idCheck(self, center_iden, id):
+        try:
+            user = models.Center.objects.get(~Q(id=id), center_iden=center_iden)
+        except models.Center.DoesNotExist:
+            return True
+        else:
+            self.message = "中心id已存在"
+            self.signal = 1
+            return False
+
+
+class CenterStatusView(APIView):
+    def post(self, request):
+        json_data = json.loads(self.request.body.decode("utf-8"))
+
+        center_status = json_data['center_status']
+        center_iden = json_data['center_iden']
+        id = json_data["id"]
+        # dpm_iden = json_data['dpm_iden']
+
+        center = models.Center.objects.filter(id=id)
+
+        if center:
+            center.update(center_status=center_status)
+            return Response({"message": "状态更改成功", "signal": 0})
+        else:
+            return Response({"message": "未查询到仓库,状态更改失败"})
 
 
 """
@@ -1193,19 +1257,23 @@ class SupplierAddView(APIView):
         super().__init__(**kwargs)
         self.message = "添加成功"
         self.signal = 0
+        self.user_now_name = ""
 
     def post(self, request):
         json_data = json.loads(self.request.body.decode("utf-8"))
+        user_now_iden = json_data['user_now_iden']
+        user_now = models.UserNow.objects.get(user_iden=user_now_iden)
+        if user_now:
+            self.user_now_name = user_now.user_name
         supply_iden = json_data['supply_iden']
         supply_name = json_data['supply_name']
         supply_type = json_data['supply_type']
         supply_remarks = json_data['supply_remarks']
-        supply_status = json_data['supply_status']
-        supply_creator = json_data['supply_creator']
         models.Supplier.objects.create(supply_iden=supply_iden, supply_name=supply_name,
                                        supply_type=supply_type,
-                                       supply_remarks=supply_remarks, supply_status=supply_status,
-                                       supply_creator=supply_creator)
+                                       supply_remarks=supply_remarks,
+                                       supply_creator=self.user_now_name,
+                                       supply_creator_iden=user_now_iden)
         return Response({'message': self.message, 'signal': self.signal})
 
 
@@ -1221,13 +1289,12 @@ class SupplierUpdateView(APIView):
         supply_name = json_data['supply_name']
         supply_type = json_data['supply_type']
         supply_remarks = json_data['supply_remarks']
-        supply_status = json_data['supply_status']
+        # supply_status = json_data['supply_status']
         # supply_creator = json_data['supply_creator']
         try:
             models.Supplier.objects.filter(supply_iden=supply_iden).update(supply_name=supply_name,
                                                                            supply_type=supply_type,
-                                                                           supply_remarks=supply_remarks,
-                                                                           supply_status=supply_status, )
+                                                                           supply_remarks=supply_remarks)
         except:
             self.message = "更新失败"
             self.signal = 1

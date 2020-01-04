@@ -268,6 +268,7 @@ class Center(models.Model):
         (1, '启用')
     )
     id = models.AutoField(primary_key=True)
+    # center_iden = models.CharField(max_length=8,verbose_name='中心编号')
     center_name = models.CharField(max_length=20, verbose_name='中心名称')
     area_name = models.CharField(max_length=20, verbose_name='区域')
     # area = models.ForeignKey('Area', verbose_name='区域', related_name='area_center', on_delete=models.CASCADE)
