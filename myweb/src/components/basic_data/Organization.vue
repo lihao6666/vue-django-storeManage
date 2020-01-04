@@ -221,7 +221,7 @@ export default {
   methods: {
     getData () {
       let _this = this
-      getAPI('/base/organization').then(function (res) {
+      getAPI('/base/organizations').then(function (res) {
         _this.tableData = res.data.organizations
         let n = res.data.max_iden.length
         let num = parseInt(res.data.max_iden) + 1
