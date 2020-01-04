@@ -57,7 +57,7 @@
               icon="el-icon-unlock"
               class="red"
               @click="handleStop(scope.row)"
-              v-if="scope.row.customer_status==='启用'"
+              v-if="scope.row.customer_status===1"
             >停用
             </el-button>
             <el-button
@@ -65,7 +65,7 @@
               icon="el-icon-lock"
               class="green"
               @click="handleStart(scope.row)"
-              v-if="scope.row.customer_status==='停用'"
+              v-if="scope.row.customer_status===0"
             >启用
             </el-button>
           </template>
@@ -165,10 +165,10 @@
       </div>
       <el-row :gutter="20" class="el-row-button-save">
         <el-col :span="1" :offset="15">
-          <el-button @click="alterVisible = false">取 消</el-button>
+          <el-button @click="editVisible = false">取 消</el-button>
         </el-col>
         <el-col :span="1" :offset="4">
-          <el-button type="primary" @click="saveAlter">确 定</el-button>
+          <el-button type="primary" @click="saveEdit">确 定</el-button>
         </el-col>
       </el-row>
     </el-dialog>
@@ -291,7 +291,7 @@ export default {
     },
     // 停用操作
     handleStop (row) {
-      postAPI('/customer', {data: row, customer_status: '停用'}).then(function (res) {
+      postAPI('/customer', {data: row, customer_status: 0}).then(function (res) {
         console.log(res)
       }).catch(function (err) {
         console.log(err)
@@ -309,7 +309,7 @@ export default {
     },
     // 启用
     handleStart (row) {
-      postAPI('/customer', {data: row, customer_status: '启用'}).then(function (res) {
+      postAPI('/customer', {data: row, customer_status: 1}).then(function (res) {
         console.log(res)
       }).catch(function (err) {
         console.log(err)
