@@ -72,11 +72,6 @@ export default new Router({
         {
           path: '/warehouse',
           component: () => import(/* webpackChunkName: "donate" */ '../components/basic_data/warehouse.vue'),
-          meta: {title: '总仓维护'}
-        },
-        {
-          path: '/store',
-          component: () => import(/* webpackChunkName: "donate" */ '../components/basic_data/Store.vue'),
           meta: {title: '仓库维护'}
         },
         {

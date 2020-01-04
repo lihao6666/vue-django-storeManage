@@ -199,10 +199,6 @@ export default {
             },
             {
               index: 'warehouse',
-              title: '总仓维护'
-            },
-            {
-              index: 'store',
               title: '仓库维护'
             },
             {
