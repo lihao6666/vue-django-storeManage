@@ -100,7 +100,7 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  var l0 = _vm.__map(_vm.outList, function(item, __i0__) {
+  var l0 = _vm.__map(_vm.outFilterList, function(item, __i0__) {
     var m0 = _vm.judgeStatus(item.mso_status)
     var m1 = _vm.judgeStatus(item.mso_status)
     return {
@@ -110,7 +110,7 @@ var render = function() {
     }
   })
 
-  var l1 = _vm.__map(_vm.purchaseList, function(item, __i1__) {
+  var l1 = _vm.__map(_vm.purchaseFilterList, function(item, __i1__) {
     var m2 = _vm.judgeStatus(item.rp_status)
     var m3 = _vm.judgeStatus(item.rp_status)
     var m4 = _vm.judgeStatus(item.rp_status)
@@ -122,7 +122,7 @@ var render = function() {
     }
   })
 
-  var l2 = _vm.__map(_vm.sellList, function(item, __i2__) {
+  var l2 = _vm.__map(_vm.sellFilterList, function(item, __i2__) {
     var m5 = _vm.judgeStatus(item.so_status)
     var m6 = _vm.judgeStatus(item.so_status)
     return {
@@ -132,7 +132,7 @@ var render = function() {
     }
   })
 
-  var l3 = _vm.__map(_vm.exchangeList, function(item, __i3__) {
+  var l3 = _vm.__map(_vm.exchangeFilterList, function(item, __i3__) {
     var m7 = _vm.judgeStatus(item.str_status)
     var m8 = _vm.judgeStatus(item.str_status)
     return {
@@ -345,6 +345,17 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 var _outStore = _interopRequireDefault(__webpack_require__(/*! ../../data/outStore.js */ 32));
 var _purchase = _interopRequireDefault(__webpack_require__(/*! ../../data/purchase.js */ 33));
 var _sell = _interopRequireDefault(__webpack_require__(/*! ../../data/sell.js */ 34));
@@ -365,20 +376,114 @@ var _exchange = _interopRequireDefault(__webpack_require__(/*! ../../data/exchan
       outList: _outStore.default.data,
       purchaseList: _purchase.default.data,
       sellList: _sell.default.data,
-      exchangeList: _exchange.default.data
-      // filterText: ''
-    };
+      exchangeList: _exchange.default.data,
+      outFilterText: '',
+      purchaseFilterText: '',
+      sellFilterText: '',
+      exchangeFilterText: '' };
+
   },
-  // computed:{
-  // 	filterList () {
-  // 		var arr = []
-  // 		this.outList.forEach((item) => arr.push(item))
-  // 		if (this.filterText) {
-  // 			arr = this.outList.filter(item => item.mso_status.includes(this.filterText))
-  // 		}
-  // 		return arr
-  // 	}
-  // },
+  computed: {
+    // 单据列表
+    outFilterList: function outFilterList() {var _this = this;
+      var arr = [];
+      this.outList.forEach(function (item) {return arr.push(item);});
+      if (this.outFilterText) {
+        arr = this.outList.filter(function (item) {return item.mso_orga.includes(_this.outFilterText);});
+        if (arr.length === 0) {
+          arr = this.outList.filter(function (item) {return item.mso_iden.includes(_this.outFilterText);});
+        }
+        if (arr.length === 0) {
+          arr = this.outList.filter(function (item) {return item.mso_remarks.includes(_this.outFilterText);});
+        }
+        if (arr.length === 0) {
+          arr = this.outList.filter(function (item) {return item.mso_warehouse.includes(_this.outFilterText);});
+        }
+        if (arr.length === 0) {
+          arr = this.outList.filter(function (item) {return item.mso_req_department.includes(_this.outFilterText);});
+        }
+        if (arr.length === 0) {
+          arr = this.outList.filter(function (item) {return item.mso_creator.includes(_this.outFilterText);});
+        }
+      }
+      return arr;
+    },
+    purchaseFilterList: function purchaseFilterList() {var _this2 = this;
+      var arr = [];
+      this.purchaseList.forEach(function (item) {return arr.push(item);});
+      if (this.purchaseFilterText) {
+        arr = this.purchaseList.filter(function (item) {return item.rp_orga.includes(_this2.purchaseFilterText);});
+        if (arr.length === 0) {
+          arr = this.purchaseList.filter(function (item) {return item.rp_iden.includes(_this2.purchaseFilterText);});
+        }
+        if (arr.length === 0) {
+          arr = this.purchaseList.filter(function (item) {return item.rp_remarks.includes(_this2.purchaseFilterText);});
+        }
+        if (arr.length === 0) {
+          arr = this.purchaseList.filter(function (item) {return item.rp_type.includes(_this2.purchaseFilterText);});
+        }
+        if (arr.length === 0) {
+          arr = this.purchaseList.filter(function (item) {return item.rp_req_department.includes(_this2.purchaseFilterText);});
+        }
+        if (arr.length === 0) {
+          arr = this.purchaseList.filter(function (item) {return item.rp_creator.includes(_this2.purchaseFilterText);});
+        }
+      }
+      return arr;
+    },
+    sellFilterList: function sellFilterList() {var _this3 = this;
+      var arr = [];
+      this.sellList.forEach(function (item) {return arr.push(item);});
+      if (this.sellFilterText) {
+        arr = this.sellList.filter(function (item) {return item.so_orga.includes(_this3.sellFilterText);});
+        if (arr.length === 0) {
+          arr = this.sellList.filter(function (item) {return item.so_remarks.includes(_this3.sellFilterText);});
+        }
+        if (arr.length === 0) {
+          arr = this.sellList.filter(function (item) {return item.so_iden.includes(_this3.sellFilterText);});
+        }
+        if (arr.length === 0) {
+          arr = this.sellList.filter(function (item) {return item.so_warehouse.includes(_this3.sellFilterText);});
+        }
+        if (arr.length === 0) {
+          arr = this.sellList.filter(function (item) {return item.so_type.includes(_this3.selFilterText);});
+        }
+        if (arr.length === 0) {
+          arr = this.sellList.filter(function (item) {return item.so_creator.includes(_this3.sellFilterText);});
+        }
+        if (arr.length === 0) {
+          arr = this.sellList.filter(function (item) {return item.so_custom.includes(_this3.sellFilterText);});
+        }
+      }
+      return arr;
+    },
+    exchangeFilterList: function exchangeFilterList() {var _this4 = this;
+      var arr = [];
+      this.exchangeList.forEach(function (item) {return arr.push(item);});
+      if (this.exchangeFilterText) {
+        arr = this.exchangeList.filter(function (item) {return item.str_orga.includes(_this4.exchangeFilterText);});
+        if (arr.length === 0) {
+          arr = this.exchangeList.filter(function (item) {return item.str_remarks.includes(_this4.exchangeFilterText);});
+        }
+        if (arr.length === 0) {
+          arr = this.exchangeList.filter(function (item) {return item.str_iden.includes(_this4.exchangeFilterText);});
+        }
+        if (arr.length === 0) {
+          arr = this.exchangeList.filter(function (item) {return item.str_to.includes(_this4.exchangeFilterText);});
+        }
+        if (arr.length === 0) {
+          arr = this.exchangeList.filter(function (item) {return item.str_from.includes(_this4.exchangeFilterText);});
+        }
+        if (arr.length === 0) {
+          arr = this.exchangeList.filter(function (item) {return item.str_req_department.includes(_this4.exchangeFilterText);});
+        }
+        if (arr.length === 0) {
+          arr = this.exchangeList.filter(function (item) {return item.str_creator.includes(_this4.exchangeFilterText);});
+        }
+      }
+      return arr;
+    } },
+
   methods: {
     //切换tab
     onClickItem: function onClickItem(e) {

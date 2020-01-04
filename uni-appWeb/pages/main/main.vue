@@ -6,12 +6,9 @@
 		<view class="current-content">
 			<view v-if="current === 0">
 				<view class='searchInput'>
-					<view class='searchBox'>
-					    <icon @click="search" type="search" size="16"></icon>
-					</view>
-					<input class='input' placeholder="输入出库单信息"></input>
+					<input class='input' v-model="outFilterText" placeholder="输入出库单信息"></input>
 				</view>
-				<view v-for="item in outList" :key="item.id" class="card-set">
+				<view v-for="item in outFilterList" :key="item.id" class="card-set">
 					<uni-card
 					    :title="item.mso_iden"
 					    mode="basic" 
@@ -46,7 +43,10 @@
 				</view>
 			</view>
 			<view v-if="current === 1">
-				<view v-for="item in purchaseList" :key="item.id" class="card-set">
+				<view class='searchInput'>
+					<input class='input' v-model="purchaseFilterText" placeholder="输入请购单信息"></input>
+				</view>
+				<view v-for="item in purchaseFilterList" :key="item.id" class="card-set">
 					<uni-card
 					    :title="item.rp_iden"
 					    mode="basic" 
@@ -84,7 +84,10 @@
 				</view>
 			</view>
 			<view v-if="current === 2">
-				<view v-for="item in sellList" :key="item.id" class="card-set">
+				<view class='searchInput'>
+					<input class='input' v-model="sellFilterText" placeholder="输入销售单信息"></input>
+				</view>
+				<view v-for="item in sellFilterList" :key="item.id" class="card-set">
 					<uni-card
 					    :title="item.so_iden"
 					    mode="basic" 
@@ -119,7 +122,10 @@
 				</view>
 			</view>
 			<view v-if="current === 3">
-				<view v-for="item in exchangeList" :key="item.id" class="card-set">
+				<view class='searchInput'>
+					<input class='input' v-model="exchangeFilterText" placeholder="输入转库申请单信息"></input>
+				</view>
+				<view v-for="item in exchangeFilterList" :key="item.id" class="card-set">
 					<uni-card
 					    :title="item.str_iden"
 					    mode="basic" 
@@ -183,19 +189,113 @@ export default {
 			purchaseList: purchaseData.data,
 			sellList: sellData.data,
 			exchangeList: exchangeData.data,
-			// filterText: ''
+			outFilterText: '',
+			purchaseFilterText: '',
+			sellFilterText: '',
+			exchangeFilterText: ''
 		}
 	},
-	// computed:{
-	// 	filterList () {
-	// 		var arr = []
-	// 		this.outList.forEach((item) => arr.push(item))
-	// 		if (this.filterText) {
-	// 			arr = this.outList.filter(item => item.mso_status.includes(this.filterText))
-	// 		}
-	// 		return arr
-	// 	}
-	// },
+	computed: {
+		// 单据列表
+		outFilterList () {
+			var arr = []
+			this.outList.forEach((item) => arr.push(item))
+			if (this.outFilterText) {
+				arr = this.outList.filter(item => item.mso_orga.includes(this.outFilterText))
+				if(arr.length === 0) {
+					arr = this.outList.filter(item => item.mso_iden.includes(this.outFilterText))
+				} 
+				if(arr.length === 0) {
+					arr = this.outList.filter(item => item.mso_remarks.includes(this.outFilterText))
+				} 
+				if(arr.length === 0) {
+					arr = this.outList.filter(item => item.mso_warehouse.includes(this.outFilterText))
+				} 
+				if(arr.length === 0) {
+					arr = this.outList.filter(item => item.mso_req_department.includes(this.outFilterText))
+				}
+				if(arr.length === 0) {
+					arr = this.outList.filter(item => item.mso_creator.includes(this.outFilterText))
+				}
+			}
+			return arr
+		},
+		purchaseFilterList () {
+			var arr = []
+			this.purchaseList.forEach((item) => arr.push(item))
+			if (this.purchaseFilterText) {
+				arr = this.purchaseList.filter(item => item.rp_orga.includes(this.purchaseFilterText))
+				if(arr.length === 0) {
+					arr = this.purchaseList.filter(item => item.rp_iden.includes(this.purchaseFilterText))
+				} 
+				if(arr.length === 0) {
+					arr = this.purchaseList.filter(item => item.rp_remarks.includes(this.purchaseFilterText))
+				} 
+				if(arr.length === 0) {
+					arr = this.purchaseList.filter(item => item.rp_type.includes(this.purchaseFilterText))
+				} 
+				if(arr.length === 0) {
+					arr = this.purchaseList.filter(item => item.rp_req_department.includes(this.purchaseFilterText))
+				}
+				if(arr.length === 0) {
+					arr = this.purchaseList.filter(item => item.rp_creator.includes(this.purchaseFilterText))
+				}
+			}
+			return arr
+		},
+		sellFilterList () {
+			var arr = []
+			this.sellList.forEach((item) => arr.push(item))
+			if (this.sellFilterText) {
+				arr = this.sellList.filter(item => item.so_orga.includes(this.sellFilterText))
+				if(arr.length === 0) {
+					arr = this.sellList.filter(item => item.so_remarks.includes(this.sellFilterText))
+				} 
+				if(arr.length === 0) {
+					arr = this.sellList.filter(item => item.so_iden.includes(this.sellFilterText))
+				} 
+				if(arr.length === 0) {
+					arr = this.sellList.filter(item => item.so_warehouse.includes(this.sellFilterText))
+				} 
+				if(arr.length === 0) {
+					arr = this.sellList.filter(item => item.so_type.includes(this.selFilterText))
+				}
+				if(arr.length === 0) {
+					arr = this.sellList.filter(item => item.so_creator.includes(this.sellFilterText))
+				}
+				if(arr.length === 0) {
+					arr = this.sellList.filter(item => item.so_custom.includes(this.sellFilterText))
+				}
+			}
+			return arr
+		},
+		exchangeFilterList () {
+			var arr = []
+			this.exchangeList.forEach((item) => arr.push(item))
+			if (this.exchangeFilterText) {
+				arr = this.exchangeList.filter(item => item.str_orga.includes(this.exchangeFilterText))
+				if(arr.length === 0) {
+					arr = this.exchangeList.filter(item => item.str_remarks.includes(this.exchangeFilterText))
+				} 
+				if(arr.length === 0) {
+					arr = this.exchangeList.filter(item => item.str_iden.includes(this.exchangeFilterText))
+				} 
+				if(arr.length === 0) {
+					arr = this.exchangeList.filter(item => item.str_to.includes(this.exchangeFilterText))
+				} 
+				if(arr.length === 0) {
+					arr = this.exchangeList.filter(item => item.str_from.includes(this.exchangeFilterText))
+				} 
+				if(arr.length === 0) {
+					arr = this.exchangeList.filter(item => item.str_req_department.includes(this.exchangeFilterText))
+				}
+				if(arr.length === 0) {
+					arr = this.exchangeList.filter(item => item.str_creator.includes(this.exchangeFilterText))
+				}
+			}
+			return arr
+		}
+	},
 	methods: {
 		//切换tab
 		onClickItem(e) {

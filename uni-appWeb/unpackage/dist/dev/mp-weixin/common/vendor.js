@@ -22972,10 +22972,10 @@ var data = [
   mso_warehouse: '合工大中心仓库03',
   mso_type: '材料出库',
   mso_date: '2020-1-2 15:00:00',
-  mso_req_department: '非中心',
+  mso_req_department: '合工大中心',
   mso_remarks: '上音乐课借用器材',
   mso_status: '已审批',
-  mso_creator: '张恩普',
+  mso_creator: '钟小林',
   mso_createDate: '2020-1-2 12:03:00' },
 {
   id: 3,
@@ -22987,7 +22987,7 @@ var data = [
   mso_req_department: '非中心',
   mso_remarks: '上美术课借用器材',
   mso_status: '草稿',
-  mso_creator: '张恩普',
+  mso_creator: '董新宇',
   mso_createDate: '2020-1-2 12:09:00' },
 {
   id: 4,
@@ -22999,7 +22999,7 @@ var data = [
   mso_req_department: '非中心',
   mso_remarks: '上体育课借用器材',
   mso_status: '草稿',
-  mso_creator: '张恩普',
+  mso_creator: '李浩',
   mso_createDate: '2020-1-2 12:04:00' },
 {
   id: 5,
