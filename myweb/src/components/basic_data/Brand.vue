@@ -158,8 +158,6 @@ export default {
         brand_name: '',
         brand_description: ''
       },
-      oldbrand_name: '',
-      oldbrand_status: '',
       brand_nameSet: [],
       brand_creatorSet: [],
       editform: {
@@ -243,12 +241,12 @@ export default {
         .then(() => {
           let _this = this
           let data = {
-            'brand_new_name': row.brand_name,
+            'brand_name': row.brand_name,
             'brand_description': row.brand_description,
             'brand_status': 0,
-            'brand_name': row.brand_name
+            'id': row.id
           }
-          postAPI('/base/brandUpdate', data).then(function (res) {
+          postAPI('/base/brandStatus', data).then(function (res) {
             if (res.data.signal === 0) {
               _this.$message.success(`停用成功`)
               _this.getData()
@@ -283,12 +281,12 @@ export default {
         .then(() => {
           let _this = this
           let data = {
-            'brand_new_name': row.brand_name,
+            'brand_name': row.brand_name,
             'brand_description': row.brand_description,
             'brand_status': 1,
-            'brand_name': row.brand_name
+            'id': row.id
           }
-          postAPI('/base/brandUpdate', data).then(function (res) {
+          postAPI('/base/brandStatus', data).then(function (res) {
             if (res.data.signal === 0) {
               _this.$message.success(`启用成功`)
               _this.getData()
@@ -311,8 +309,8 @@ export default {
     handleEdit (row) {
       this.editform.brand_name = row.brand_name
       this.editform.brand_description = row.brand_description
-      this.oldbrand_name = row.brand_name
-      this.oldbrand_status = row.brand_status
+      this.brand_status = row.brand_status
+      this.editform.id = row.id
       this.editVisible = true
     },
     // 保存编辑
@@ -323,10 +321,10 @@ export default {
         return
       }
       let data = {
-        'brand_new_name': this.editform.brand_name,
+        'id': this.editform.id,
         'brand_description': this.editform.brand_description,
-        'brand_status': this.oldbrand_status,
-        'brand_name': this.oldbrand_name
+        'brand_status': this.editform.brand_status,
+        'brand_name': this.editform.brand_name
       }
       postAPI('/base/brandUpdate', data).then(function (res) {
         if (res.data.signal === 0) {
@@ -334,7 +332,7 @@ export default {
           _this.$message.success(`修改成功`)
           _this.getData()
         } else {
-          _this.$message.error(res.data.self.message)
+          _this.$message.error(`名称重复，修改失败`)
         }
       }).catch(function (err) {
         _this.$message.error(`修改失败`)

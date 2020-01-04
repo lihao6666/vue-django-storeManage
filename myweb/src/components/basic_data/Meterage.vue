@@ -299,7 +299,7 @@ export default {
         .then(() => {
           let _this = this
           row.meterage_status = 1
-          postAPI('/base/meterageUpdate', row).then(function (res) {
+          postAPI('/base/meterageStatus', row).then(function (res) {
             if (res.data.signal === 0) {
               _this.$message.success(`启用成功`)
               _this.getData()
@@ -325,8 +325,8 @@ export default {
       })
         .then(() => {
           let _this = this
-          row.meterage_status = 1
-          postAPI('/base/meterageUpdate', row).then(function (res) {
+          row.meterage_status = 0
+          postAPI('/base/meterageStatus', row).then(function (res) {
             if (res.data.signal === 0) {
               _this.$message.success(`停用成功`)
               _this.getData()
