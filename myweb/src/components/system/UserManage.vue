@@ -544,12 +544,13 @@ export default {
       let _this = this
       console.log(this.editform)
       postAPI('/base/userUpdate', this.editform).then(function (res) {
+        console.log(res.data)
         if (res.data.signal === 0) {
           _this.$message.success(`修改成功`)
           _this.getData()
           _this.editVisible = false
         } else {
-          _this.$message.error(`修改失败`)
+          _this.$message.error(res.data.message)
         }
       }).catch(function (err) {
         console.log(err)
@@ -579,7 +580,7 @@ export default {
           _this.getData()
           _this.clearform()
         } else {
-          _this.$message.error(`新增失败`)
+          _this.$message.error(res.data.message)
         }
       }).catch(function (err) {
         console.log(err)
