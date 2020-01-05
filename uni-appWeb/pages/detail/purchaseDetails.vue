@@ -3,18 +3,18 @@
 		<view class="content-content">
 			<view v-for="item in detailList" :key="item.id" class="card-set">
 				<uni-card
-					:title="item.msod_name"
+					:title="item.prd_name"
 					mode="basic" 
 					:is-shadow="true" 
-					:extra="item.msod_iden"
+					:extra="item.prd_iden"
 				>
 					<view>
-						<view>出库数量：{{ item.msod_num }}</view>
-						<view>现存量：{{ item.msod_present_num }}</view>
-						<view>规格：{{ item.msod_specification }}</view>
-						<view>型号：{{ item.msod_model }}</view>
-						<view>单位：{{ item.msod_meterage }}</view>
-						<view>备注：{{ item.msod_remarks }}</view>
+						<view>请购数量：{{ item.prd_num }}</view>
+						<view>现存量：{{ item.prd_present_num }}</view>
+						<view>规格：{{ item.prd_specification }}</view>
+						<view>型号：{{ item.prd_model }}</view>
+						<view>单位：{{ item.prd_meterage }}</view>
+						<view>备注：{{ item.prd_remarks }}</view>
 					</view>
 				</uni-card>
 			</view>
@@ -24,7 +24,7 @@
 
 <script>
 import uniCard from '../../components/uni-card/uni-card.vue'
-import detailData from '../../data/outDetails.js'
+import detailData from '../../data/purchaseDetails.js'
 
 
 export default {
