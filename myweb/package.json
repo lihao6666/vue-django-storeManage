@@ -12,9 +12,21 @@
     "lint": "eslint --ext .js,.vue src test/unit",
     "build": "node build/build.js"
   },
+  "lint-staged": {
+    "src/**/*.{js, vue}": [
+      "./node_modules/.bin/eslint --fix",
+      "git add"
+    ],
+    "tests/**/*.js": [
+      "./node_modules/.bin/eslint --fix",
+      "git add"
+    ]
+  },
   "dependencies": {
     "axios": "^0.19.0",
     "element-ui": "^2.13.0",
+    "husky": "^3.1.0",
+    "lint-staged": "^9.5.0",
     "moment": "^2.24.0",
     "vue": "^2.5.2",
     "vue-router": "^3.0.1"
@@ -36,7 +48,7 @@
     "chalk": "^2.0.1",
     "copy-webpack-plugin": "^4.0.1",
     "css-loader": "^0.28.0",
-    "eslint": "^4.15.0",
+    "eslint": "^4.19.1",
     "eslint-config-standard": "^10.2.1",
     "eslint-friendly-formatter": "^3.0.0",
     "eslint-loader": "^1.7.1",
@@ -81,5 +93,10 @@
     "> 1%",
     "last 2 versions",
     "not ie <= 8"
-  ]
+  ],
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  }
 }
