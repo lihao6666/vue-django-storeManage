@@ -1,7 +1,7 @@
 <template>
 	<view class="page">
 		
-		<sl-filter :independence="true" :color="titleColor" :themeColor="themeColor" :menuList.sync="menuList" @result="result"></sl-filter>
+		<!-- <sl-filter :independence="true" :color="titleColor" :themeColor="themeColor" :menuList.sync="menuList" @result="result"></sl-filter> -->
 		
 		<view v-for="item in materialList" :key="item.id" class="card-set">
 			<uni-card
@@ -36,7 +36,7 @@
 	import uniSegmentedControl from '../../components/uni-segmented-control/uni-segmented-control.vue'
 	import uniCard from '../../components/uni-card/uni-card.vue'
 	import uniSection from '../../components/uni-section/uni-section.vue'
-	import slFilter from '@/components/sl-filter/sl-filter.vue'
+	// import slFilter from '@/components/sl-filter/sl-filter.vue'
 	import materialData from '../../data/materialData.js'
 	import dragButton from '../../components/drag-button/anotherButton.vue'
 	import ypNumberBox from '@/components/yp-number-box/yp-number-box.vue'
@@ -47,7 +47,7 @@
 			uniCard,
 			uniSection,
 			uniSegmentedControl,
-			slFilter,
+			// slFilter,
 			dragButton,
 			ypNumberBox
 		},
