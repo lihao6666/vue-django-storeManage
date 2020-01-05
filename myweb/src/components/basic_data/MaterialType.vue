@@ -125,9 +125,7 @@
           <el-row>
             <el-form-item label="编码" class="inputs" align="left">
               <el-col :span="10">
-                <el-input v-model="input_iden2" @input="editform.type_iden = option_iden2 + (input_iden2 = inputIden(input_iden2))">
-                  <template slot="prepend">{{option_iden2}}</template>
-                </el-input>
+                <span>{{editform.type_iden}}</span>
               </el-col>
             </el-form-item>
           </el-row>
@@ -160,9 +158,7 @@ export default {
     return {
       options: [],
       option_iden: '',
-      option_iden2: '',
       input_iden: '',
-      input_iden2: '',
       query: {
         pageIndex: 1,
         pageSize: 5
@@ -196,18 +192,70 @@ export default {
     this.getData()
   },
   methods: {
+    // 获取级联选择器
+    optionsAdd (parent, child, length, end) {
+      if (length === end) {
+        parent.push({
+          value: child[0],
+          label: child[1],
+          children: []
+        })
+        return
+      }
+      let pub = child[0].substring(0, length)
+      for (let i in parent) {
+        if (parent[i].value === pub) {
+          this.optionsAdd(parent[i].children, child, length + 2, end)
+          return
+        }
+      }
+      parent.push({
+        value: child[0],
+        label: child[1],
+        children: []
+      })
+    },
+    // 获取列表
+    getlist () {
+      let _this = this
+      getAPI('/base/materialNew').then(function (res) {
+        console.log(res.data)
+        _this.options = []
+        let length = 2
+        while (res.data.material_types.length > 0) {
+          for (let i = 0; i < res.data.material_types.length; i++) {
+            if (res.data.material_types[i][0].length === length) {
+              _this.optionsAdd(_this.options, res.data.material_types[i], 2, length)
+              res.data.material_types.splice(i, 1)
+              i -= 1
+            }
+          }
+          length += 2
+        }
+        _this.meterage_options = res.data.meterages
+      }).catch(function (err) {
+        console.log(err)
+      })
+    },
     getData () {
-      this.getoptions()
       let _this = this
       getAPI('/base/materialTypes').then(function (res) {
-        _this.tableData = res.data.meterial_types
+        console.log(res.data)
+        let n = res.data.max_iden.length
+        let num = parseInt(res.data.max_iden) + 1
+        _this.username = String(Array(n > num ? (n - ('' + num).length + 1) : 0).join(0) + num)
+        _this.tableData = res.data.material_types
+        _this.pageTotal = _this.tableData.length
         _this.find()
+        _this.type_nameSet = []
+        _this.type_creatorSet = []
         let nameset = new Set()
         let creatorset = new Set()
         for (let i in _this.tableData) {
           nameset.add(_this.tableData[i]['type_name'])
           creatorset.add(_this.tableData[i]['type_creator'])
         }
+        console.log(_this.options)
         for (let i of nameset) {
           _this.type_nameSet.push({
             text: i,
@@ -220,7 +268,6 @@ export default {
             value: i
           })
         }
-        _this.pageTotal = res.data.meterial_types.length
       }).catch(function (err) {
         console.log(err)
       })
@@ -255,47 +302,7 @@ export default {
     // 新增
     handleAlter () {
       this.alterVisible = true
-    },
-    // 获取级联选择器
-    optionsAdd (parent, child, length, end) {
-      if (length === end) {
-        parent.push({
-          value: child.type_iden,
-          label: child.type_name,
-          children: []
-        })
-        return
-      }
-      let pub = child.type_iden.substring(0, length)
-      for (let i in parent) {
-        if (parent[i].value === pub) {
-          this.optionsAdd(parent[i].children, child, length + 2, end)
-          return
-        }
-      }
-      parent.push({
-        value: child.type_iden,
-        label: child.type_name,
-        children: []
-      })
-    },
-    getoptions () {
-      let _this = this
-      getAPI('/base/materialTypes').then(function (res) {
-        let length = 2
-        while (res.data.meterial_types.length > 0) {
-          for (let i = 0; i < res.data.meterial_types.length; i++) {
-            if (res.data.meterial_types[i].type_iden.length === length) {
-              _this.optionsAdd(_this.options, res.data.meterial_types[i], 2, length)
-              res.data.meterial_types.splice(i, 1)
-              i -= 1
-            }
-          }
-          length += 2
-        }
-      }).catch(function (err) {
-        console.log(err)
-      })
+      this.getlist()
     },
     // 一键清除新增表单
     clearform () {
@@ -303,6 +310,8 @@ export default {
       this.form.type_iden = ''
       this.form.type_name = ''
       this.form.type_remarks = ''
+      this.option_iden = ''
+      this.input_iden = ''
     },
     // 停用操作
     handleStop (row) {
@@ -375,24 +384,36 @@ export default {
       this.editform.type_remarks = row.type_remarks
       this.editform.id = row.id
       this.editVisible = true
-      this.input_iden2 = this.editform.type_iden.substring(this.editform.type_iden.length - 2)
-      this.option_iden2 = this.editform.type_iden.substring(0, this.editform.type_iden.length - 2)
     },
     // 保存编辑
     saveEdit () {
-      this.editVisible = false
-      this.$message.success(`修改成功`)
-      postAPI('/material_type', this.editform).then(function (res) {
-        console.log(res)
+      let _this = this
+      if (_this.editform.type_name === '') {
+        _this.$message.error(`名称不能为空`)
+        return
+      }
+      postAPI('/base/materialTypeUpdate', this.editform).then(function (res) {
+        if (res.data.signal === 0) {
+          _this.$message.success(`修改成功`)
+          _this.editVisible = false
+          _this.getData()
+        } else {
+          _this.$message.error(res.data.message)
+        }
       }).catch(function (err) {
         console.log(err)
+        _this.$message.error(`修改失败`)
       })
     },
     // 保存新增
     saveAlter () {
       let _this = this
-      if (_this.form.type_iden === '') {
+      if (!_this.form.type_iden) {
         _this.$message.error(`编码不能为空`)
+        return
+      }
+      if (_this.input_iden.length < 2) {
+        _this.$message.error(`编码必须为两位`)
         return
       }
       if (_this.form.type_name === '') {
@@ -401,6 +422,7 @@ export default {
       }
       _this.form.type_status = 0
       postAPI('/base/materialTypeAdd', _this.form).then(function (res) {
+        console.log(res.data)
         if (res.data.signal === 0) {
           _this.$message.success(`新增成功`)
           _this.alterVisible = false
@@ -430,18 +452,6 @@ export default {
   }
   .el-row-button-save {
     top: 15px;
-  }
-  .demo-table-expand {
-    font-size: 0;
-  }
-  .demo-table-expand label {
-    width: 90px;
-    color: #99a9bf;
-  }
-  .demo-table-expand .el-form-item {
-    margin-right: 0;
-    margin-bottom: 0;
-    width: 100%;
   }
 </style>
 
