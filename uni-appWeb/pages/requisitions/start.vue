@@ -1,133 +1,159 @@
 <template>
+  <view class="content">
+	<view class="address-item ">
+		<text class="address-item-title">库存组织</text>	
+		<text class="address-item-input" @tap="handleTap('picker1')">{{label1}}</text>
+		  <lb-picker ref="picker1"
+		    v-model="label1"
+		   mode="selector"
+		   :list="list1"
+		    @change="handleChange"
+		    @confirm="handleConfirmWithAdd"
+		    @cancle="handleCancle">
+			</lb-picker>
+	</view> 
+	 
+	<view class="address-item ">
+		<text class="address-item-title">需求类型</text>	
+		<text class="address-item-input" @tap="handleTap('picker2')">{{label2}}</text>
+		  <lb-picker ref="picker2"
+		    v-model="label2"
+		    mode="selector"
+		    :list="list2"
+		    @change="handleChange"
+		    @confirm="handleConfirmWithType"
+		    @cancle="handleCancle">
+			</lb-picker>
+	</view> 
 	
-	<view class="content">
-		<view class="address-item " @click="showCityPicker">
-			<text class="address-item-title">库存组织</text>
-			<text class="address-item-input">
-				{{addressData.organization}}
-			</text>
-		</view>
-		<view class="address-item " >
-			<text class="address-item-title">需求类型</text>
-			
-		</view>
-		<view class="address-item " @click="showCityPicker">
-			<text class="address-item-title">申请部门</text>
-			<text class="address-item-input">
-				{{addressData.department}}
-			</text>
-		</view>
-		<view class="address-item ">
-			<text class="address-item-title">电话</text>
-			<input class="address-item-input" type="number" v-model="addressData.mobile" placeholder="收货人手机号"  />
-		</view>
-		<view class="address-item " @click="showCityPicker">
-			<text class="address-item-title">地区</text>
-			<text class="address-item-input">
-				{{addressData.label}}
-			</text>
-		</view>
-		
-		<view class="address-item ">
-			<text class="address-item-title">邮政编码</text>
-			<input class="address-item-input" type="text" v-model="addressData.postcode" placeholder="邮政编码"  />
-		</view>
-
-		<view class="address-item default-item">
-			<text class="address-item-title">设为默认</text>
-			<switch :checked="addressData.default==1" color='#d81e06' @change="switchChange" />
-		</view>
-		
-		<button class="address-add-btn" @click="confirm">保存</button>
-		<button class="address-add-btn" @click="cancel">取消</button>
-		<mpvue-city-picker :themeColor="themeColor" ref="mpvueCityPicker" :pickerValueDefault="cityPickerValueDefault"
-		 @onCancel="onCancel" @onConfirm="onConfirm"></mpvue-city-picker>
-	</view>
+	<view class="address-item ">
+		<text class="address-item-title">申请部门</text>	
+		<text class="address-item-input" @tap="handleTap('picker3')">{{label3}}</text>
+		  <lb-picker ref="picker3"
+		    v-model="label3"
+		    mode="selector"
+		    :list="list3"
+		    @change="handleChange"
+		    @confirm="handelConfirmWithDepartment"
+		    @cancle="handleCancle">
+			</lb-picker>
+	</view> 
+	
+	<view class="address-item ">
+		<text class="address-item-title">创建时间</text>	
+		<text class="address-item-input" @tap="toggleTab('date')">{{label4}}</text>
+		  <w-picker
+		  	mode="date" 
+		  	startYear="2000" 
+		  	endYear="2030"
+		  	defaultVal="2020-01-01"
+		  	:current="false" 
+		  	@confirm="handleConfirmWithDate"
+		  	:disabledAfter="false"
+		  	ref="date" 
+		  	themeColor="#f00"
+		  ></w-picker>
+	</view> 
+	
+	
+	
+	<view class="remarks">
+		<text class="remarks_text">备注</text>	
+		<textarea class="remarks_input" maxlength="200" v-model="remarks" placeholder="请输入,限制200字" auto-height="true"></textarea>
+	</view> 
+	
+	<button class="address-add-btn" @click="confirm">保存</button>
+</view>
 </template>
 
 <script>
-	import mpvueCityPicker from '../../components/mpvue-citypicker/mpvueCityPicker.vue'
-	
-	
+	import {formateDate} from "../../common/catUtil.js"
+	import wPicker from "@/components/w-picker/w-picker.vue";
 	export default {
-		components: {
-			mpvueCityPicker
+		components:{
+			wPicker
 		},
-		data() {
+		data(){
 			return {
-				addressData: {
-					name: '',
-					mobile: '',
-					organization:'请选择库存组织',
-					type:'选择需求类型',
-					label: '选择省/市/区',
-					department:'选择部门',
-					address: '',
-					default: false,
-					remarks:'不超过200字'
-				}
-		}
-		},onLoad(option){
-			
+				value: '',
+				label1: '点击选择',
+				label2: '点击选择',
+				label3: '点击选择',
+				label4: formateDate(new Date(),"Y-M-D"),
+				remarks: '',
+				list1: [
+					{
+						label: '合肥',
+						value: 'A'
+					},
+					{
+						label: '南京',
+						value: 'B'
+					}
+				],list2:[
+					{
+						label: '礼品',
+						
+					},
+					{
+						label: '教学用品',
+						
+					},
+					{
+						label:'销售商品',
+						
+					},
+					{
+						label:'办公用品',
+						
+					},
+					{
+						label:'市场物资',
+						
+					}
+				],list3:[
+					{
+						label: '学习中心',
+						
+					},
+					{
+						label: '其他部门',
+						
+					}
+				]
+			}
 		},
+		
 		methods: {
-			switchChange(e) {
-				this.addressData.default = e.detail.value?1:0;
+			toggleTab(str){
+				this.$refs[str].show();
 			},
-
-			//提交
-			confirm() {
-				let data = this.addressData;
-				if (!data.name) {
-					this.$msg('请填写收货人姓名');
-					return;
-				}
-				if (!/(^1[0-9]{10}$)/.test(data.mobile)) {
-					this.$msg('请输入正确的手机号');
-					return;
-				}
-				if (!data.label) {
-					this.$msg('请选择地区信息');
-					return;
-				}
-				if (!data.address) {
-					this.$msg('请输入详细地址');
-					return;
-				}
-				this.$msg('保存成功')
+			handleTap (picker) {
+				this.$refs[picker].show()
 			},
-			// 三级联动选择
-			showCityPicker() {
-				this.$refs.mpvueCityPicker.show()
-				console.log('showpicker')
+			handleChange (item) {
+				console.log('change::', item)
 			},
-			onConfirm(e) {
-				console.log(e)
-				this.addressData.label=e.label
-
+			handleConfirmWithAdd(item) {
+				this.label1 = item.item.label
+				console.log(item)
+				console.log('confirm::', item)
 			},
-			onCancel(){
-				
+			handleConfirmWithType(item) {
+				this.label2 = item.item.label
+				console.log(item.item.label)
+				console.log('confirm::', item)
 			},
-			showTypePicker(){
-				this.$refs.mpvuetypepicker.show()
-				console.log('showpicker')
+			handelConfirmWithDepartment(item){
+				this.label3 = item.item.label
+				console.log(item.item.label)
+				console.log('confirm::', item)
+			},handleConfirmWithDate(item){
+				console.log(item);
+				this.label4 = item.result
 			},
-			onTypePickerConfirm(e){
-				console.log(e)
-				this.addressData.type=e.type
-			}
-			
-		},
-		onBackPress() {
-			if (this.$refs.mpvueCityPicker.showPicker) {
-				this.$refs.mpvueCityPicker.pickerCancel();
-				return true;
-			}
-		},
-		onUnload() {
-			if (this.$refs.mpvueCityPicker.showPicker) {
-				this.$refs.mpvueCityPicker.pickerCancel()
+			handleCancle (item) {
+				console.log('cancle::', item)
 			}
 		}
 	}
@@ -143,7 +169,7 @@
 		align-items: center;
 		position: relative;
 		padding: 0 30upx;
-		height: 100upx;
+		height: 100rpx;
 		background: #fff;
 		border-bottom:1upx solid #F8F8F8;
 
@@ -162,6 +188,29 @@
 
 		
 	}
+	
+	.remarks{
+		display: flex;
+		align-items: center;
+		position: relative;
+		padding: 0 30upx;
+		background: #fff;
+		border-bottom:1upx solid #F8F8F8;
+		
+		.remarks-text{
+			flex-shrink: 0;
+			width: 200upx;
+			font-size: 32upx;
+			color: black;
+			align-items: center;
+		}
+		
+		.remarks-input{
+			flex: 1;
+			font-size: 32upx;
+			color: black;
+		}
+	}
 
 	.default-item {
 		.address-item-title {
@@ -179,7 +228,7 @@
 		justify-content: center;
 		width: 690upx;
 		height: 80upx;
-		margin: 10rpx;
+		margin: 60upx auto;
 		font-size: 32upx;
 		color: #fff;
 		background-color: #DD524D;

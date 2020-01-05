@@ -82,6 +82,7 @@ class LoginView(APIView):
                                                     area_name=area_name,
                                                     user_departments=user_departments, user_roles=user_roles)
 
+
                         return Response({'message': '登录成功', 'signal': '0'})
                     elif user.is_active == 0:
                         return Response({'message': '账号已关闭,请联系管理员开启', 'signal': '1'})
@@ -107,7 +108,7 @@ class UserView(APIView):
     def post(self, request):
         json_data = json.loads(self.request.body.decode("utf-8"))
         user_now_iden = json_data['user_now_iden']
-        user_now = models.UserNow.objects.get(user_iden=user_now_iden)
+        user_now = models.UserNow.objects.filter(user_iden=user_now_iden)
         if user_now:
             try:
                 user = models.UserProfile.objects.get(username=user_now.user_iden)
@@ -1346,19 +1347,36 @@ class MeterageAddView(APIView):
         super().__init__(**kwargs)
         self.message = "添加成功"
         self.signal = 0
+        self.user_now_name = ""
 
     def post(self, request):
         json_data = json.loads(self.request.body.decode("utf-8"))
+        user_now_iden = json_data['user_now_iden']
+        user_now = models.UserNow.objects.get(user_iden=user_now_iden)
+        if user_now:
+            self.user_now_name = user_now.user_name
+
         meterage_iden = json_data['meterage_iden']
         meterage_name = json_data['meterage_name']
         meterage_dimension = json_data['meterage_dimension']
-        meterage_status = json_data['meterage_status']
-        meterage_creator = json_data['meterage_creator']
+
+        if self.idCheck(meterage_iden):
         models.Meterage.objects.create(meterage_iden=meterage_iden, meterage_name=meterage_name,
-                                       meterage_dimension=meterage_dimension,
-                                       meterage_status=meterage_status,
-                                       meterage_creator=meterage_creator)
+                                       meterage_dimension=meterage_dimension,meterage_status=0,
+                                       meterage_creator=self.user_now_name,
+                                       meterage_creator_iden=user_now_iden)
+
         return Response({'message': self.message, 'signal': self.signal})
+
+    def idCheck(self, meterage_iden, id):
+        try:
+            meterage = models.Meterage.objects.get(~Q(id=id), meterage_iden=meterage_iden)
+        except models.Meterage.DoesNotExist:
+            return True
+        else:
+            self.message = "计量单位id已存在"
+            self.signal = 1
+            return False
 
 
 class MeterageUpdateView(APIView):
@@ -1382,6 +1400,15 @@ class MeterageUpdateView(APIView):
             self.message = "更新失败"
             self.signal = 1
         return Response({'message': self.message, 'signal': self.signal})
+    def idCheck(self, meterage_iden, id):
+        try:
+            meterage = models.Meterage.objects.get(~Q(id=id), meterage_iden=meterage_iden)
+        except models.Meterage.DoesNotExist:
+            return True
+        else:
+            self.message = "计量单位id已存在"
+            self.signal = 1
+            return False
 
 
 """
