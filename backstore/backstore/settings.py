@@ -25,7 +25,8 @@ SECRET_KEY = 'r0fb3&#d8j9$6e6y4si8iu#3pperc*!oh048)@1-%om9p8v!n)'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOW_HOSTS=['*',]
+ALLOWED_HOSTS=['49.234.123.211']
 
 # 重载系统的用户，让UserProfile生效
 AUTH_USER_MODEL = 'base.UserProfile'
@@ -133,7 +134,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'store',  # 数据库名字
         'USER': 'root',  # 账号
-        'PASSWORD': 'lh19990507',  # 密码
+        'PASSWORD': 'HyLh@617',  # 密码
         # 'HOST': '47.93.198.159',     #IP
         'HOST': '127.0.0.1',  # IP
         'PORT': '3306',  # 端口

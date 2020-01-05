@@ -57,40 +57,49 @@ class LoginView(APIView):
         user_passwd = json_data['user_passwd']
         # user_iden = self.request.data.get('user_iden')
         # user_passwd = self.request.data.get('user_passwd')
-        try:
-            user = authenticate(username=user_iden, password=user_passwd)
-        except models.UserProfile.DoesNotExist:
-            return Response({'message': '登录异常', 'signal': '3'})
+        user_now = models.UserNow.objects.filter(user_iden=user_iden)
+        print(user_now)
+        if user_now:
+            return Response({"message": "用户已在别处登录，请稍后再试"})
         else:
-            if user:
-                if user.is_active == 1:
-                    login(request, user)
-                    user = models.UserProfile.objects.get(username=user_iden)
-                    user_id = user.id
-                    username = user.username
-                    user_name = user.user_name
-                    area_name = user.area_name
-                    user_departments = user.user_departments
-                    user_roles = user.user_roles
-
-                    models.UserNow.objects.create(user_id=user_id, user_iden=username, user_name=user_name,
-                                                  area_name=area_name,
-                                                  user_departments=user_departments, user_roles=user_roles)
-
-                    return Response({'message': '登录成功', 'signal': '0'})
-                elif user.is_active == 0:
-                    return Response({'message': '账号已关闭,请联系管理员开启', 'signal': '1'})
+            try:
+                user = authenticate(username=user_iden, password=user_passwd)
+            except models.UserProfile.DoesNotExist:
+                return Response({'message': '登录异常', 'signal': '3'})
             else:
-                return Response({'message': '用户名或密码错误', 'signal': '2'})
+                if user:
+                    if user.is_active == 1:
+                        login(request, user)
+                        user = models.UserProfile.objects.get(username=user_iden)
+                        user_id = user.id
+                        username = user.username
+                        user_name = user.user_name
+                        area_name = user.area_name
+                        user_departments = user.user_departments
+                        user_roles = user.user_roles
+
+                        models.UserNow.objects.create(user_id=user_id, user_iden=username, user_name=user_name,
+                                                    area_name=area_name,
+                                                    user_departments=user_departments, user_roles=user_roles)
+
+                        return Response({'message': '登录成功', 'signal': '0'})
+                    elif user.is_active == 0:
+                        return Response({'message': '账号已关闭,请联系管理员开启', 'signal': '1'})
+                else:
+                    return Response({'message': '用户名或密码错误', 'signal': '2'})
 
 
 class LoginExitView(APIView):
     def post(self, request):
         json_data = json.loads(self.request.body.decode("utf-8"))
         user_now_iden = json_data['user_now_iden']
-        models.UserNow.objects.get(user_iden=user_now_iden).delete()  # 删除当前用户表信息
-        logout(request)
-        return Response({"message": "退出登录成功"})
+        user_now = models.UserNow.objects.get(user_iden=user_now_iden)  # 删除当前用户表信息
+        if user_now:
+            logout(request)
+            user_now.delete()
+            return Response({"message": "退出登录成功","signal":0})
+        else:
+            return Response({"message": "未登录","signal":1})
 
 
 class UserView(APIView):
@@ -250,12 +259,9 @@ class UserUpdateView(APIView):
         except models.UserProfile.DoesNotExist:
             return True
         else:
-            if user.username == self.user_iden:
-                return True
-            else:
-                self.message = "员工电话号码已存在"
-                self.signal = 2
-                return False
+            self.message = "员工电话号码已存在"
+            self.signal = 2
+            return False
 
     def emailCheck(self, email, id):
         try:
@@ -263,16 +269,13 @@ class UserUpdateView(APIView):
         except models.UserProfile.DoesNotExist:
             return True
         else:
-            if user.username == self.user_iden:
-                return True
-            else:
-                self.message = "员工email已存在"
-                self.signal = 3
-                return False
+            self.message = "员工email已存在"
+            self.signal = 3
+            return False
 
 
 class UserStatusView(APIView):
-    def post(self):
+    def post(self, request):
         json_data = json.loads(self.request.body.decode("utf-8"))
         is_active = json_data['is_active']
         username = json_data['username']
