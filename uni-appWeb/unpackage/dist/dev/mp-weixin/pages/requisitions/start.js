@@ -133,7 +133,7 @@ __webpack_require__.r(__webpack_exports__);
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var mpvueCityPicker = function mpvueCityPicker() {return Promise.all(/*! import() | components/mpvue-citypicker/mpvueCityPicker */[__webpack_require__.e("common/vendor"), __webpack_require__.e("components/mpvue-citypicker/mpvueCityPicker")]).then(__webpack_require__.bind(null, /*! ../../components/mpvue-citypicker/mpvueCityPicker.vue */ 188));};var _default =
+Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;
 
 
 
@@ -184,87 +184,114 @@ Object.defineProperty(exports, "__esModule", { value: true });exports.default = 
 
 
 
-{
-  components: {
-    mpvueCityPicker: mpvueCityPicker },
-
-  data: function data() {
-    return {
-      addressData: {
-        name: '',
-        mobile: '',
-        organization: '请选择库存组织',
-        type: '选择需求类型',
-        label: '选择省/市/区',
-        department: '选择部门',
-        address: '',
-        default: false,
-        remarks: '不超过200字' } };
 
 
-  }, onLoad: function onLoad(option) {
 
-  },
-  methods: {
-    switchChange: function switchChange(e) {
-      this.addressData.default = e.detail.value ? 1 : 0;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+var _catUtil = __webpack_require__(/*! ../../common/catUtil.js */ 232); //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+var wPicker = function wPicker() {return Promise.all(/*! import() | components/w-picker/w-picker */[__webpack_require__.e("common/vendor"), __webpack_require__.e("components/w-picker/w-picker")]).then(__webpack_require__.bind(null, /*! @/components/w-picker/w-picker.vue */ 234));};var lbPicker = function lbPicker() {return Promise.all(/*! import() | components/lb-picker/index */[__webpack_require__.e("common/vendor"), __webpack_require__.e("components/lb-picker/index")]).then(__webpack_require__.bind(null, /*! @/components/lb-picker */ 246));};var _default = { components: { wPicker: wPicker, lbPicker: lbPicker }, data: function data() {return { value: '', label1: '点击选择', label2: '点击选择', label3: '点击选择', label4: (0, _catUtil.formateDate)(new Date(), "Y-M-D"), remarks: '', list1: [{ label: '合肥', value: 'A' }, { label: '南京', value: 'B' }], list2: [{ label: '礼品' }, { label: '教学用品' }, { label: '销售商品' }, { label: '办公用品' }, { label: '市场物资' }], list3: [{ label: '学习中心' }, { label: '其他部门' }] };}, methods: { toggleTab: function toggleTab(str) {this.$refs[str].show();}, handleTap: function handleTap(picker) {this.$refs[picker].show();}, handleChange: function handleChange(item) {console.log('change::', item);},
+    handleConfirmWithAdd: function handleConfirmWithAdd(item) {
+      this.label1 = item.item.label;
+      console.log(item);
+      console.log('confirm::', item);
     },
-
-    //提交
-    confirm: function confirm() {
-      var data = this.addressData;
-      if (!data.name) {
-        this.$msg('请填写收货人姓名');
-        return;
-      }
-      if (!/(^1[0-9]{10}$)/.test(data.mobile)) {
-        this.$msg('请输入正确的手机号');
-        return;
-      }
-      if (!data.label) {
-        this.$msg('请选择地区信息');
-        return;
-      }
-      if (!data.address) {
-        this.$msg('请输入详细地址');
-        return;
-      }
-      this.$msg('保存成功');
+    handleConfirmWithType: function handleConfirmWithType(item) {
+      this.label2 = item.item.label;
+      console.log(item.item.label);
+      console.log('confirm::', item);
     },
-    // 三级联动选择
-    showCityPicker: function showCityPicker() {
-      this.$refs.mpvueCityPicker.show();
-      console.log('showpicker');
+    handelConfirmWithDepartment: function handelConfirmWithDepartment(item) {
+      this.label3 = item.item.label;
+      console.log(item.item.label);
+      console.log('confirm::', item);
+    }, handleConfirmWithDate: function handleConfirmWithDate(item) {
+      console.log(item);
+      this.label4 = item.result;
     },
-    onConfirm: function onConfirm(e) {
-      console.log(e);
-      this.addressData.label = e.label;
-
-    },
-    onCancel: function onCancel() {
-
-    },
-    showTypePicker: function showTypePicker() {
-      this.$refs.mpvuetypepicker.show();
-      console.log('showpicker');
-    },
-    onTypePickerConfirm: function onTypePickerConfirm(e) {
-      console.log(e);
-      this.addressData.type = e.type;
-    } },
-
-
-  onBackPress: function onBackPress() {
-    if (this.$refs.mpvueCityPicker.showPicker) {
-      this.$refs.mpvueCityPicker.pickerCancel();
-      return true;
-    }
-  },
-  onUnload: function onUnload() {
-    if (this.$refs.mpvueCityPicker.showPicker) {
-      this.$refs.mpvueCityPicker.pickerCancel();
-    }
-  } };exports.default = _default;
+    handleCancle: function handleCancle(item) {
+      console.log('cancle::', item);
+    } } };exports.default = _default;
 
 /***/ }),
 

@@ -344,7 +344,7 @@ export default {
 				});
 			} else if(page === 1) {
 				uni.navigateTo({
-				    url: '../user/myinfo',
+				    url: '../requisitions/requisitions',
 				});
 			} else if(page === 2) {
 				uni.navigateTo({
