@@ -82,7 +82,7 @@ class LoginView(APIView):
                                                     area_name=area_name,
                                                     user_departments=user_departments, user_roles=user_roles)
 
-
+                        print("登录成功")
                         return Response({'message': '登录成功', 'signal': '0'})
                     elif user.is_active == 0:
                         return Response({'message': '账号已关闭,请联系管理员开启', 'signal': '1'})
@@ -94,14 +94,14 @@ class LoginExitView(APIView):
     def post(self, request):
         json_data = json.loads(self.request.body.decode("utf-8"))
         user_now_iden = json_data['user_now_iden']
-        user_now = models.UserNow.objects.get(user_iden=user_now_iden)  # 删除当前用户表信息
-        if user_now:
+        try:
+            user_now = models.UserNow.objects.get(user_iden=user_now_iden)  # 删除当前用户表信息
+        except models.UserNow.DoesNotExist:
+            return Response({"message": "未登录","signal":1})
+        else:
             logout(request)
             user_now.delete()
             return Response({"message": "退出登录成功","signal":0})
-        else:
-            return Response({"message": "未登录","signal":1})
-
 
 class UserView(APIView):
 
@@ -916,8 +916,7 @@ class TotalWareHouseNewView(APIView):
         for area_name in areas_name:
             organization = models.Organization.objects.filter(area_name=area_name, orga_status=1).values_list(
                 'orga_name', flat=True)
-            center = models.Center.objects.filter(area_name=area_name, center_status=1).values_list('center_name',
-                                                                                                    flat=True)
+            center = models.Center.objects.filter(area_name=area_name, center_status=1).values_list('center_name',flat=True)
             organizations[area_name] = organization
             centers[area_name] = center
         return Response({"brands": brands, "organizations": organizations, "centers": centers, "areas": areas_name})
@@ -948,7 +947,13 @@ class TotalWareHouseAddView(APIView):
         orga_name = json_data['orga_name']
         brand_name = json_data['brand_name']
         total_belong_center = json_data['total_belong_center']
-        total_belong_center_iden = json_data['total_belong_center_iden']
+        try:
+            total_belong_center_iden = models.Center.objects.get(center_name=total_belong_center,area_name=area_name)
+        except models.Center.DoesNotExist:
+            total_belong_center_iden = ""
+        else:
+            total_belong_center_iden=total_belong_center_iden.id
+        
 
         total_remarks = json_data['total_remarks']
 
@@ -1026,7 +1031,7 @@ class TotalWareHouseStatusView(APIView):
         total = models.TotalWareHouse.objects.filter(id=id)
 
         if total:
-            total.update(brand_status=total_status)
+            total.update(total_status=total_status)
             return Response({"message": "状态更改成功", "signal": 0})
         else:
             return Response({"message": "未查询到仓库,状态更改失败"})
@@ -1361,16 +1366,16 @@ class MeterageAddView(APIView):
         meterage_dimension = json_data['meterage_dimension']
 
         if self.idCheck(meterage_iden):
-        models.Meterage.objects.create(meterage_iden=meterage_iden, meterage_name=meterage_name,
-                                       meterage_dimension=meterage_dimension,meterage_status=0,
-                                       meterage_creator=self.user_now_name,
-                                       meterage_creator_iden=user_now_iden)
+            models.Meterage.objects.create(meterage_iden=meterage_iden, meterage_name=meterage_name,
+                                        meterage_dimension=meterage_dimension,meterage_status=0,
+                                        meterage_creator=self.user_now_name,
+                                        meterage_creator_iden=user_now_iden)
 
         return Response({'message': self.message, 'signal': self.signal})
 
-    def idCheck(self, meterage_iden, id):
+    def idCheck(self, meterage_iden):
         try:
-            meterage = models.Meterage.objects.get(~Q(id=id), meterage_iden=meterage_iden)
+            meterage = models.Meterage.objects.get(meterage_iden=meterage_iden)
         except models.Meterage.DoesNotExist:
             return True
         else:
@@ -1387,19 +1392,20 @@ class MeterageUpdateView(APIView):
 
     def post(self, request):
         json_data = json.loads(self.request.body.decode("utf-8"))
+        id = json_data['id']
         meterage_iden = json_data['meterage_iden']
         meterage_name = json_data['meterage_name']
         meterage_dimension = json_data['meterage_dimension']
-        meterage_status = json_data['meterage_status']
 
-        try:
-            models.Meterage.objects.filter(meterage_iden=meterage_iden).update(meterage_name=meterage_name,
-                                                                               meterage_dimension=meterage_dimension,
-                                                                               meterage_status=meterage_status, )
-        except:
-            self.message = "更新失败"
-            self.signal = 1
+        if self.idCheck(self,meterage_iden,id):
+            try:
+                models.Meterage.objects.filter(id=id).update(meterage_name=meterage_name,
+                                                                                meterage_dimension=meterage_dimension)
+            except:
+                self.message = "更新失败"
+                self.signal = 1
         return Response({'message': self.message, 'signal': self.signal})
+
     def idCheck(self, meterage_iden, id):
         try:
             meterage = models.Meterage.objects.get(~Q(id=id), meterage_iden=meterage_iden)
@@ -1437,16 +1443,20 @@ class MaterialTypeAddView(APIView):
         super().__init__(**kwargs)
         self.massage = "添加成功"
         self.signal = 0
+        self.user_now_name = ""
 
     def post(self, request):
         json_data = json.loads(self.request.body.decode("utf-8"))
+        user_now_iden = json_data['user_now_iden']
+        user_now = models.UserNow.objects.get(user_iden=user_now_iden)
+        if user_now:
+            self.user_now_name = user_now.user_name
         type_iden = json_data['type_iden']
         type_name = json_data['type_name']
-        type_status = json_data['type_status']
-        type_creator = json_data['type_creator']
         models.MaterialType.objects.create(type_iden=type_iden, type_name=type_name,
-                                           type_status=type_status,
-                                           type_creator=type_creator)
+                                           type_status=0,
+                                           type_creator=self.user_now_name,
+                                           type_creator_iden=user_now_iden)
         return Response({'massage': self.massage, 'signal': self.signal})
 
 
