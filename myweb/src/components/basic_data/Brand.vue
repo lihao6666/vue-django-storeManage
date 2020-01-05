@@ -185,6 +185,8 @@ export default {
         }
         _this.tableData = res.data.brands
         _this.find()
+        _this.brand_nameSet = []
+        _this.brand_creatorSet = []
         let nameset = new Set()
         let creatorset = new Set()
         for (let i in _this.tableData) {
