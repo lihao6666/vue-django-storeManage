@@ -13,7 +13,7 @@
 						<view>规格：{{ item.sod_specification }}</view>
 						<view>型号：{{ item.sod_model }}</view>
 						<view>单位：{{ item.sod_meterage }}</view>
-						<view>税率：{{ item.sod_taxRate }}</view>
+						<view>税率：{{ item.sod_taxRate }}%</view>
 						<view>含税单价：{{ item.sod_tax_unitPrice }}</view>
 						<view>无税单价：{{ item.sod_unitPrice }}</view>
 						<view>含税金额：{{ item.sod_tax_sum }}</view>
