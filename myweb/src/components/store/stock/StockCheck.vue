@@ -39,7 +39,7 @@
                          :filter-method="filter" align="center"></el-table-column>
         <el-table-column prop="material_model" sortable label="型号" :filters="stock_modelSet"
                          :filter-method="filter" align="center"></el-table-column>
-        <el-table-column prop="material_meterage" sortable label="单位" :filters="stock_meterageSet"
+        <el-table-column prop="meterage_name" sortable label="单位" :filters="stock_meterageSet"
                          :filter-method="filter" align="center"></el-table-column>
         <el-table-column prop="present_num" sortable label="现存量" align="center"></el-table-column>
         <el-table-column prop="present_price" sortable label="库存单价"  align="center"></el-table-column>
@@ -112,7 +112,7 @@ export default {
           nameSet.add(_this.tableData[i]['material_name'])
           specSet.add(_this.tableData[i]['material_specification'])
           modelSet.add(_this.tableData[i]['material_model'])
-          meterageSet.add(_this.tableData[i]['material_meterage'])
+          meterageSet.add(_this.tableData[i]['meterage_name'])
         }
         for (let i of orgaSet) {
           _this.stock_orgaSet.push({
