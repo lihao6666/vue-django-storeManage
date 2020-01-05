@@ -410,7 +410,9 @@ export default {
     position: absolute;
     right:0;
   }
-
+  .inputs {
+    width: 590px;
+  }
   .table {
     width: 100%;
     font-size: 14px;
@@ -420,8 +422,5 @@ export default {
   }
   .green {
     color: GREEN;
-  }
-  .inputs {
-    width: 590px;
   }
 </style>
