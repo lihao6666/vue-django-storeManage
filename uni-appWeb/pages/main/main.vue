@@ -137,7 +137,6 @@
 							<view>转入仓库：{{ item.str_to }}</view>
 							<view>转出仓库：{{ item.str_from }}</view>
 							<view>申请部门：{{ item.str_req_department }}</view>
-							<view>备注：{{ item.str_remarks }}</view>
 							<view>创建人：{{ item.str_creator }}</view>
 							<view>创建日期：{{ item.str_createDate }}</view>
 						</view>
@@ -274,9 +273,6 @@ export default {
 			this.exchangeList.forEach((item) => arr.push(item))
 			if (this.exchangeFilterText) {
 				arr = this.exchangeList.filter(item => item.str_orga.includes(this.exchangeFilterText))
-				if(arr.length === 0) {
-					arr = this.exchangeList.filter(item => item.str_remarks.includes(this.exchangeFilterText))
-				} 
 				if(arr.length === 0) {
 					arr = this.exchangeList.filter(item => item.str_iden.includes(this.exchangeFilterText))
 				} 
