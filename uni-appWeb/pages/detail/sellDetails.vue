@@ -9,7 +9,7 @@
 					:extra="item.sod_iden"
 				>
 					<view>
-						<view>请购数量：{{ item.sod_num }}</view>
+						<view>数量：{{ item.sod_num }}</view>
 						<view>规格：{{ item.sod_specification }}</view>
 						<view>型号：{{ item.sod_model }}</view>
 						<view>单位：{{ item.sod_meterage }}</view>
