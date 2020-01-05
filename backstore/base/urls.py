@@ -55,6 +55,7 @@ urlpatterns = [
     path('centerNew', views.CenterNewView.as_view(), name='centerNew'),
     path('centerAdd', views.CenterAddView.as_view(), name='centerAdd'),
     path('centerUpdate', views.CenterUpdateView.as_view(), name='centerUpdate'),
+    path('centerStatus', views.CenterStatusView.as_view(), name='centerStatus'),
 
     # path('centerWareHouses', views.CenterWareHousesView.as_view(), name='centerWareHouses'),
     # path('centerWareHouseNew', views.CenterWareHouseNewView.as_view(), name='centerWareHouseNew'),
@@ -64,6 +65,8 @@ urlpatterns = [
     path('suppliers', views.SuppliersView.as_view(), name='suppliers'),
     path('supplierAdd', views.SupplierAddView.as_view(), name='supplierAdd'),
     path('supplierUpdate', views.SupplierUpdateView.as_view(), name='supplierUpdate'),
+    path('supplierStatus', views.SupplierStatusView.as_view(), name='supplierStatus'),
+
 
     path('meterages', views.MeteragesView.as_view(), name='meterages'),
     path('meterageAdd', views.MeterageAddView.as_view(), name='meterageAdd'),
