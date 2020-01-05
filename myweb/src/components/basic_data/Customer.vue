@@ -40,7 +40,11 @@
         <el-table-column prop="customer_name" sortable label="名称" :filters="customer_nameSet"
                          :filter-method="filter" align="center"></el-table-column>
         <el-table-column prop="customer_type" sortable label="类型" :filters="customer_typeSet"
-                         :filter-method="filter" align="center"></el-table-column>
+                         :filter-method="filter" align="center">
+          <template slot-scope="scope">
+            <el-tag :type="'success'">{{scope.row.customer_type==0?'内部单位':'外部单位'}}</el-tag>
+          </template>
+        </el-table-column>
         <el-table-column prop="customer_creator" sortable label="创建人" :filters="customer_creatorSet"
                          :filter-method="filter" align="center"></el-table-column>
         <el-table-column prop="customer_createDate" sortable label="创建日期" align="center"></el-table-column>
@@ -105,9 +109,8 @@
           </el-row>
           <el-row>
             <el-form-item label="类型"  align="left">
-              <el-select v-model="form.customer_type" placeholder="请选择区域"  class="option" >
-                <el-option key="内部单位" label="内部单位" value="内部单位"> </el-option>
-                <el-option key="外部单位" label="外部单位" value="外部单位"> </el-option>
+              <el-select v-model="form.customer_type" placeholder="请选择类型"  class="option" >
+                <el-option v-for="item in customertype" v-bind:key="item.value" :label="item.label" :value="item.value"></el-option>
               </el-select>
             </el-form-item>
           </el-row>
@@ -149,9 +152,8 @@
           </el-row>
           <el-row>
             <el-form-item label="类型"  align="left">
-              <el-select v-model="editform.customer_type" placeholder="请选择区域"  class="option" >
-                <el-option key="内部单位" label="内部单位" value="内部单位"> </el-option>
-                <el-option key="外部单位" label="外部单位" value="外部单位"> </el-option>
+              <el-select v-model="editform.customer_type" placeholder="请选择类型"  class="option" >
+                <el-option v-for="item in customertype" v-bind:key="item.value" :label="item.label" :value="item.value"></el-option>
               </el-select>
             </el-form-item>
           </el-row>
@@ -176,7 +178,7 @@
 </template>
 
 <script>
-import {postAPI} from '../../api/api'
+import {getAPI, postAPI} from '../../api/api'
 export default {
   name: 'test',
   data () {
@@ -185,6 +187,16 @@ export default {
         pageIndex: 1,
         pageSize: 5
       },
+      customertype: [
+        {
+          value: 0,
+          label: '内部单位'
+        },
+        {
+          value: 1,
+          label: '外部单位'
+        }
+      ],
       search: '',
       form: {
         customer_iden: '',
@@ -219,9 +231,15 @@ export default {
   methods: {
     getData () {
       let _this = this
-      postAPI('/customer').then(function (res) {
-        _this.tableData = res.data.list
-        _this.tableDataNew = _this.tableData
+      getAPI('/base/customers').then(function (res) {
+        if (res.data.message) {
+          return
+        }
+        _this.tableData = res.data.customers
+        _this.find()
+        _this.customer_nameSet = []
+        _this.customer_typeSet = []
+        _this.customer_creatorSet = []
         let nameset = new Set()
         let typeset = new Set()
         let creatorset = new Set()
@@ -238,7 +256,7 @@ export default {
         }
         for (let i of typeset) {
           _this.customer_typeSet.push({
-            text: i,
+            text: _this.customertype[i].label,
             value: i
           })
         }
@@ -248,7 +266,7 @@ export default {
             value: i
           })
         }
-        _this.pageTotal = res.data.list.length
+        _this.pageTotal = res.data.customers.length
       }).catch(function (err) {
         console.log(err)
       })
@@ -281,21 +299,45 @@ export default {
     handleAlter () {
       this.alterVisible = true
       let _this = this
-      postAPI('/customer').then(function (res) {
-        let maxiden = String(parseInt(res.data.max_iden) + 1)
+      getAPI('/base/customers').then(function (res) {
+        let maxiden
+        if (res.data.message) {
+          maxiden = '0000001'
+        } else {
+          maxiden = String(parseInt(res.data.max_id) + 1)
+        }
         _this.form.customer_iden = maxiden
-        for (let i = 0; i < 6 - maxiden.length; i++) {
+        for (let i = 0; i < 7 - maxiden.length; i++) {
           _this.form.customer_iden = '0' + _this.form.customer_iden
         }
       })
     },
     // 停用操作
     handleStop (row) {
-      postAPI('/customer', {data: row, customer_status: 0}).then(function (res) {
-        console.log(res)
-      }).catch(function (err) {
-        console.log(err)
+      this.$confirm('确定要停用吗？', '提示', {
+        type: 'warning'
       })
+        .then(() => {
+          let _this = this
+          row.customer_status = 0
+          postAPI('/base/customerStatus', row).then(function (res) {
+            if (res.data.signal === 0) {
+              _this.$message.success(`停用成功`)
+              _this.getData()
+            } else {
+              _this.$message.error(res.data.message)
+            }
+          }).catch(function (err) {
+            console.log(err)
+            _this.$message.error(`停用失败`)
+          })
+        })
+        .catch(() => {
+          this.$message({
+            type: 'info',
+            message: '取消停用'
+          })
+        })
     },
     // 查询
     find () {
@@ -303,17 +345,36 @@ export default {
       this.tableDataNew = this.tableData.filter(data => !this.search ||
           String(data.customer_name).toLowerCase().includes(this.search.toLowerCase()) ||
           String(data.customer_iden).toLowerCase().includes(this.search.toLowerCase()) ||
-          String(data.customer_createDate).toLowerCase().includes(this.search.toLowerCase()) ||
+          String(data.customer_type).toLowerCase().includes(this.search.toLowerCase()) ||
           String(data.customer_remarks).toLowerCase().includes(this.search.toLowerCase()) ||
           String(data.customer_creator).toLowerCase().includes(this.search.toLowerCase()))
     },
     // 启用
     handleStart (row) {
-      postAPI('/customer', {data: row, customer_status: 1}).then(function (res) {
-        console.log(res)
-      }).catch(function (err) {
-        console.log(err)
+      this.$confirm('确定要启用吗？', '提示', {
+        type: 'warning'
       })
+        .then(() => {
+          let _this = this
+          row.customer_status = 1
+          postAPI('/base/customerStatus', row).then(function (res) {
+            if (res.data.signal === 0) {
+              _this.$message.success(`启用成功`)
+              _this.getData()
+            } else {
+              _this.$message.error(res.data.message)
+            }
+          }).catch(function (err) {
+            console.log(err)
+            _this.$message.error(`启用失败`)
+          })
+        })
+        .catch(() => {
+          this.$message({
+            type: 'info',
+            message: '取消启用'
+          })
+        })
     },
     // 编辑操作
     handleEdit (row) {
@@ -322,26 +383,72 @@ export default {
       this.editform.customer_type = row.customer_type
       this.editform.customer_remarks = row.customer_remarks
       this.customer_iden = row.customer_iden
+      this.editform.id = row.id
       this.editVisible = true
     },
     // 保存编辑
     saveEdit () {
-      this.editVisible = false
-      this.$message.success(`修改成功`)
-      postAPI('/customer', {data: this.editform, customer_name: this.customer_name}).then(function (res) {
-        console.log(res)
+      let _this = this
+      if (_this.editform.customer_iden === '') {
+        _this.$message.error(`编码不能为空`)
+        return
+      }
+      if (_this.editform.customer_iden.length > 7) {
+        _this.$message.error(`编码最长为7位`)
+        return
+      }
+      if (_this.editform.customer_name === '') {
+        _this.$message.error(`名称不能为空`)
+        return
+      }
+      if (_this.editform.customer_type === '') {
+        _this.$message.error(`请选择类型`)
+        return
+      }
+      postAPI('/base/customerUpdate', _this.editform).then(function (res) {
+        if (res.data.signal === 0) {
+          _this.editVisible = false
+          _this.$message.success(`修改成功`)
+          _this.getData()
+        } else {
+          _this.$message.error(res.data.message)
+        }
       }).catch(function (err) {
+        _this.$message.error(`修改失败`)
         console.log(err)
       })
     },
     // 保存新增
     saveAlter () {
-      this.alterVisible = false
-      this.$message.success(`新增成功`)
-      this.clearform()
-      postAPI('/customer', {data: this.form, table: 'organization'}).then(function (res) {
-        console.log(res)
+      let _this = this
+      if (_this.form.customer_iden === '') {
+        _this.$message.error(`编码不能为空`)
+        return
+      }
+      if (_this.form.customer_iden.length > 7) {
+        _this.$message.error(`编码最长为7位`)
+        return
+      }
+      if (_this.form.customer_name === '') {
+        _this.$message.error(`名称不能为空`)
+        return
+      }
+      if (_this.form.customer_type === '') {
+        _this.$message.error(`请选择类型`)
+        return
+      }
+      _this.form.customer_status = 0
+      postAPI('/base/customerAdd', _this.form).then(function (res) {
+        if (res.data.signal === 0) {
+          _this.$message.success(`新增成功`)
+          _this.alterVisible = false
+          _this.getData()
+          _this.clearform()
+        } else {
+          _this.$message.error(res.data.message)
+        }
       }).catch(function (err) {
+        _this.$message.error(`新增失败`)
         console.log(err)
       })
     },
