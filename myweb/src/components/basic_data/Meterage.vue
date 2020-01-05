@@ -31,7 +31,11 @@
         <el-table-column prop="meterage_name" sortable label="名称" :filters="meterage_nameSet"
                          :filter-method="filter" align="center"></el-table-column>
         <el-table-column prop="meterage_dimension" sortable label="量纲" :filters="meterage_dimSet"
-                         :filter-method="filter" align="center"></el-table-column>
+                         :filter-method="filter" align="center">
+          <template slot-scope="scope">
+            <span>{{meteragetype[scope.row.meterage_dimension].label}}</span>
+          </template>
+        </el-table-column>
         <el-table-column prop="meterage_creator" sortable label="创建人" :filters="meterage_creatorSet"
                          :filter-method="filter" align="center"></el-table-column>
         <el-table-column prop="meterage_createDate" sortable label="创建日期" align="center"></el-table-column>
@@ -221,6 +225,9 @@ export default {
         }
         _this.tableData = res.data.meterages
         _this.find()
+        _this.meterage_nameSet = []
+        _this.meterage_dimSet = []
+        _this.meterage_creatorSet = []
         let nameset = new Set()
         let dimset = new Set()
         let creatorset = new Set()
@@ -237,7 +244,7 @@ export default {
         }
         for (let i of dimset) {
           _this.meterage_dimSet.push({
-            text: i,
+            text: _this.meteragetype[i].label,
             value: i
           })
         }
@@ -370,6 +377,10 @@ export default {
         _this.$message.error(`编码不能为空`)
         return
       }
+      if (_this.editform.meterage_iden.length > 6) {
+        _this.$message.error(`编码最长为6位`)
+        return
+      }
       if (_this.editform.meterage_name === '') {
         _this.$message.error(`名称不能为空`)
         return
@@ -392,6 +403,10 @@ export default {
       let _this = this
       if (_this.form.meterage_iden === '') {
         _this.$message.error(`编码不能为空`)
+        return
+      }
+      if (_this.form.meterage_iden.length > 6) {
+        _this.$message.error(`编码最长为6位`)
         return
       }
       if (_this.form.meterage_name === '') {

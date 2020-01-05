@@ -210,6 +210,9 @@ export default {
         }
         _this.tableData = res.data.centers
         _this.find()
+        _this.center_nameSet = []
+        _this.area_nameSet = []
+        _this.center_creatorSet = []
         let nameset = new Set()
         let areaset = new Set()
         let creatorset = new Set()

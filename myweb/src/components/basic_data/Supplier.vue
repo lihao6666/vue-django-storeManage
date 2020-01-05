@@ -42,7 +42,7 @@
         <el-table-column prop="supply_type" sortable label="类型" :filters="supply_typeSet"
                          :filter-method="filter" align="center">
           <template slot-scope="scope">
-            <el-tag :type="'success'">{{scope.row.supply_type==0?'内部单位':'外部单位'}}</el-tag>
+            <el-tag :type=supplytype[scope.row.supply_type].type>{{scope.row.supply_type==0?'内部单位':'外部单位'}}</el-tag>
           </template>
         </el-table-column>
         <el-table-column prop="supply_creator" sortable label="创建人" :filters="supply_creatorSet"
@@ -109,7 +109,7 @@
           </el-row>
           <el-row>
             <el-form-item label="类型"  align="left">
-              <el-select v-model="form.supply_type" placeholder="请选择区域"  class="option" >
+              <el-select v-model="form.supply_type" placeholder="请选择类型"  class="option" >
                 <el-option v-for="item in supplytype" v-bind:key="item.value" :label="item.label" :value="item.value"></el-option>
               </el-select>
             </el-form-item>
@@ -152,7 +152,7 @@
           </el-row>
           <el-row>
             <el-form-item label="类型"  align="left">
-            <el-select v-model="editform.supply_type" placeholder="请选择区域"  class="option" >
+            <el-select v-model="editform.supply_type" placeholder="请选择类型"  class="option" >
               <el-option v-for="item in supplytype" v-bind:key="item.value" :label="item.label" :value="item.value"></el-option>
             </el-select>
           </el-form-item>
@@ -189,12 +189,14 @@ export default {
       },
       supplytype: [
         {
-          value: 1,
-          label: '外部单位'
+          value: 0,
+          label: '内部单位',
+          type: 'success'
         },
         {
-          value: 0,
-          label: '内部单位'
+          value: 1,
+          label: '外部单位',
+          type: ''
         }
       ],
       search: '',
@@ -237,6 +239,9 @@ export default {
         }
         _this.tableData = res.data.suppliers
         _this.find()
+        _this.supply_nameSet = []
+        _this.supply_typeSet = []
+        _this.supply_creatorSet = []
         let nameset = new Set()
         let typeset = new Set()
         let creatorset = new Set()
@@ -253,7 +258,7 @@ export default {
         }
         for (let i of typeset) {
           _this.supply_typeSet.push({
-            text: i,
+            text: _this.supplytype[i].label,
             value: i
           })
         }
@@ -324,7 +329,7 @@ export default {
             'supply_status': 1,
             'supply_remarks': row.supply_remarks
           }
-          postAPI('/base/supplierUpdate', data).then(function (res) {
+          postAPI('/base/supplierStatus', data).then(function (res) {
             if (res.data.signal === 0) {
               _this.$message.success(`启用成功`)
               _this.getData()
@@ -358,7 +363,7 @@ export default {
             'supply_status': 0,
             'supply_remarks': row.supply_remarks
           }
-          postAPI('/base/supplierUpdate', data).then(function (res) {
+          postAPI('/base/supplierStatus', data).then(function (res) {
             if (res.data.signal === 0) {
               _this.$message.success(`停用成功`)
               _this.getData()
@@ -393,18 +398,18 @@ export default {
       this.editform.supply_name = row.supply_name
       this.editform.supply_type = row.supply_type
       this.editform.supply_remarks = row.supply_remarks
-      this.supply_status = row.supply_status
+      this.editform.supply_status = row.supply_status
       this.editVisible = true
     },
     // 保存编辑
     saveEdit () {
       let _this = this
-      if (_this.editform.supply_iden === '') {
-        _this.$message.error(`编码不能为空`)
-        return
-      }
       if (_this.editform.supply_name === '') {
         _this.$message.error(`名称不能为空`)
+        return
+      }
+      if (_this.editform.supply_type === '') {
+        _this.$message.error(`请选择类型`)
         return
       }
       let data = {
@@ -412,7 +417,7 @@ export default {
         'supply_name': _this.editform.supply_name,
         'supply_type': _this.editform.supply_type,
         'supply_remarks': _this.editform.supply_remarks,
-        'supply_status': _this.supply_status
+        'supply_status': _this.editform.supply_status
       }
       postAPI('/base/supplierUpdate', data).then(function (res) {
         if (res.data.signal === 0) {
@@ -432,6 +437,10 @@ export default {
       let _this = this
       if (this.form.supply_name === '') {
         _this.$message.error(`名称不能为空`)
+        return
+      }
+      if (_this.form.supply_type === '') {
+        _this.$message.error(`请选择类型`)
         return
       }
       let data = {
