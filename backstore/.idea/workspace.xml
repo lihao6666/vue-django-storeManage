@@ -3,8 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="34c6b5b4-0631-4a35-9482-5f8673ee1af7" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backstore/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/backstore/settings.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/base/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/base/views.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -53,7 +51,12 @@
   <component name="PropertiesComponent">
     <property name="DatabaseDriversLRU" value="mysql" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
-    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="WebServerToolWindowFactoryState" value="true" />
+    <property name="WebServerToolWindowPanel.toolwindow.highlight.mappings" value="true" />
+    <property name="WebServerToolWindowPanel.toolwindow.highlight.symlinks" value="true" />
+    <property name="WebServerToolWindowPanel.toolwindow.show.date" value="false" />
+    <property name="WebServerToolWindowPanel.toolwindow.show.permissions" value="false" />
+    <property name="WebServerToolWindowPanel.toolwindow.show.size" value="false" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/purchase" />
     <property name="settings.editor.selected.configurable" value="editor.preferences.tabs" />
   </component>
@@ -116,7 +119,8 @@
       <workItem from="1577343592625" duration="52968000" />
       <workItem from="1577513181545" duration="6382000" />
       <workItem from="1577528753842" duration="577000" />
-      <workItem from="1577593027609" duration="181778000" />
+      <workItem from="1577593027609" duration="182541000" />
+      <workItem from="1578211152476" duration="655000" />
     </task>
     <task id="LOCAL-00001" summary="&quot;Add requirements.txt&quot;">
       <created>1578018842973</created>
@@ -136,6 +140,14 @@
     <option name="LAST_COMMIT_MESSAGE" value="&quot;Add requirements.txt&quot;" />
   </component>
   <component name="WindowStateProjectService">
+    <state x="2240" y="334" key="#Deployment" timestamp="1578210935700">
+      <screen x="1920" y="219" width="1440" height="900" />
+    </state>
+    <state x="2240" y="334" key="#Deployment/1920.219.1440.900/0.0.1920.1080@1920.219.1440.900" timestamp="1578210935700" />
+    <state x="2240" y="334" key="#Options" timestamp="1578211162922">
+      <screen x="1920" y="219" width="1440" height="900" />
+    </state>
+    <state x="2240" y="334" key="#Options/1920.219.1440.900/0.0.1920.1080@1920.219.1440.900" timestamp="1578211162922" />
     <state x="560" y="205" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1577513163152">
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
@@ -158,6 +170,10 @@
     </state>
     <state x="473" y="153" width="660" height="595" key="find.popup/0.0.1440.900@0.0.1440.900" timestamp="1578034307099" />
     <state x="630" y="183" width="660" height="714" key="find.popup/1920.219.1440.900/0.0.1920.1080@0.0.1920.1080" timestamp="1577427173380" />
+    <state x="2547" y="406" key="ftp.server.browser" timestamp="1578210934525">
+      <screen x="1920" y="219" width="1440" height="900" />
+    </state>
+    <state x="2547" y="406" key="ftp.server.browser/1920.219.1440.900/0.0.1920.1080@1920.219.1440.900" timestamp="1578210934525" />
     <state x="665" y="338" key="git4idea.merge.GitPullDialog" timestamp="1578018876224">
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
