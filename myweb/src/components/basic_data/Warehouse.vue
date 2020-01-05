@@ -120,7 +120,6 @@
           <el-row>
             <el-form-item v-if="form.area_name" label="所属中心"  align="left">
               <el-select v-model="form.total_belong_center" placeholder="请选择中心"  class="option" >
-                <el-option key="无" label="无" value="无"> </el-option>
                 <el-option
                   v-for="item in center_options[form.area_name]"
                   :key="item"
@@ -440,6 +439,7 @@ export default {
         console.log(res.data)
         _this.orga_options = res.data.organizations
         _this.center_options = res.data.centers
+        console.log(res.data.centers['合肥'][0])
         _this.brand_options = res.data.brands
         _this.area_options = res.data.areas
       }).catch(function (err) {

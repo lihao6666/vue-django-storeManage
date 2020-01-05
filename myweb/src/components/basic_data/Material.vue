@@ -125,7 +125,7 @@
           </el-row>
           <el-row>
             <el-form-item label="计量单位"  align="left">
-              <el-select v-model="form.material_meterage" placeholder="请选择计量单位"  class="option" >
+              <el-select v-model="form.material_meterage" placeholder="请选择"  class="option" >
                 <el-option
                   v-for="item in meterage_options"
                   :key="item"
@@ -191,7 +191,7 @@
           </el-row>
           <el-row>
             <el-form-item label="计量单位"  align="left">
-              <el-select v-model="editform.material_meterage" placeholder="请选择区域"  class="option" >
+              <el-select v-model="editform.material_meterage" placeholder="请选择"  class="option" >
                 <el-option
                   v-for="item in meterage_options"
                   :key="item"
@@ -292,6 +292,12 @@ export default {
       postAPI('/material').then(function (res) {
         _this.tableData = res.data.list
         _this.find()
+        _this.material_specSet = []
+        _this.material_nameSet = []
+        _this.material_modelSet = []
+        _this.material_meterageSet = []
+        _this.material_attrSet = []
+        _this.material_creatorSet = []
         let nameset = new Set()
         let specset = new Set()
         let modelset = new Set()
@@ -555,18 +561,6 @@ export default {
   }
   .el-row-button-save {
     top: 15px;
-  }
-  .demo-table-expand {
-    font-size: 0;
-  }
-  .demo-table-expand label {
-    width: 90px;
-    color: #99a9bf;
-  }
-  .demo-table-expand .el-form-item {
-    margin-right: 0;
-    margin-bottom: 0;
-    width: 100%;
   }
 </style>
 
