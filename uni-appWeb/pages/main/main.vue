@@ -319,20 +319,40 @@ export default {
 		viewDetail(iden) {
 			var diff = iden[0]+iden[1]
 			if(diff === "MS") {
+				try {
+				    uni.setStorageSync('viewout', iden);
+				} catch (e) {
+				    console.log("传出库单单号失败")
+				}
 				uni.navigateTo({
-				    url: '../user/myinfo',
+				    url: '../detail/outDetails',
 				});
 			} else if(diff === "PR") {
+				try {
+				    uni.setStorageSync('viewpurchase', iden);
+				} catch (e) {
+				    console.log("传请购单单号失败")
+				}
 				uni.navigateTo({
-				    url: '../user/myinfo',
+				    url: '../detail/purchaseDetails',
 				});
 			} else if(diff === "SO") {
+				try {
+				    uni.setStorageSync('viewsell', iden);
+				} catch (e) {
+				    console.log("传销售单单号失败")
+				}
 				uni.navigateTo({
-				    url: '../user/myinfo',
+				    url: '../detail/sellDetails',
 				});
 			} else if(diff === "ST") {
+				try {
+				    uni.setStorageSync('viewexchange', iden);
+				} catch (e) {
+				    console.log("传转库申请单单号失败")
+				}
 				uni.navigateTo({
-				    url: '../user/myinfo',
+				    url: '../detail/exchangeDetails',
 				});
 			}
 		},
@@ -516,14 +536,20 @@ export default {
 			});
 		},
 
-	}
+	},
 	
-	// onLoad: function() {   //登录检查函数
-	// 	loginMsg = this.checkLogin('../pages/main/main', 'switchTab');
-	// 	if(!loginMsg){
-	// 		return;
-	// 	}
-	// }
+	onLoad: function() {   
+		//登录检查函数
+		// loginMsg = this.checkLogin('../pages/main/main', 'switchTab');
+		// if(!loginMsg){
+		// 	return;
+		// }
+		uni.removeStorageSync('viewout');
+		uni.removeStorageSync('viewpurchase');
+		uni.removeStorageSync('viewsell');
+		uni.removeStorageSync('viewexchange');
+		var test = uni.getStorageSync('viewout');
+	}
 }
 
 </script>
@@ -542,35 +568,6 @@ export default {
 		font-size: 28rpx;
 		line-height: inherit;
 	}
-	.searchInput {
-			margin-top: 1vw;
-			margin-left: 20rpx;
-			margin-right: 20rpx;
-			background: white;
-			border-radius: 30upx;
-			display: flex;
-			align-items: center;
-			justify-content: center;
-			height: 70rpx;
-		}
-		
-		.search {
-			width: 32upx;
-			height: 32upx;
-		}
-		
-		.searchBox {
-			width: 56upx;
-			height: 56upx;
-			display: flex;
-			justify-content: center;
-			align-items: center;
-		}
-		
-		.input {
-			color: #999;
-			width: 90%;
-		}
 	.content {
 		padding: 0;
 	}
@@ -604,5 +601,22 @@ export default {
 	.commit {
 		width: 60upx;
 		color: green;
+	}
+	
+	.searchInput {
+		margin-top: 1vw;
+		margin-left: 20rpx;
+		margin-right: 20rpx;
+		background: white;
+		border-radius: 30upx;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		height: 70rpx;
+	}
+	
+	.input {
+		color: #999;
+		width: 90%;
 	}
 </style>
