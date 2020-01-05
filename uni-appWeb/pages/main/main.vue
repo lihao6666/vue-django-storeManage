@@ -30,6 +30,10 @@
 							<view class="commit" @click="commitOrder(item.mso_iden)">提交</view>
 						</view>
 						<view v-if="judgeStatus(item.mso_status) === 1" class="button-box">
+							<view class="delete" @click="closeOrder(item.mso_iden)">关闭</view>
+							<view class="detail" @click="viewDetail(item.mso_iden)">详情</view>
+						</view>
+						<view v-if="judgeStatus(item.mso_status) === 2" class="button-box">
 							<view class="detail" @click="viewDetail(item.mso_iden)">详情</view>
 						</view>
 					</uni-card>
@@ -381,11 +385,9 @@ export default {
 				    content: '确认删除草稿：'+iden+" ?",
 				    success: function (res) {
 				        if (res.confirm) {
-				            uni.navigateTo({
-				                url: '../user/myinfo',
-				            });
+				            
 				        } else if (res.cancel) {
-				            console.log('用户点击取消');
+				           
 				        }
 				    }
 				});
@@ -395,9 +397,7 @@ export default {
 				    content: '确认删除草稿：'+iden+" ?",
 				    success: function (res) {
 				        if (res.confirm) {
-							uni.navigateTo({
-								url: '../user/myinfo',
-							});
+							
 				        } else if (res.cancel) {
 				            
 				        }
@@ -409,9 +409,7 @@ export default {
 				    content: '确认删除草稿：'+iden+" ?",
 				    success: function (res) {
 				        if (res.confirm) {
-							uni.navigateTo({
-								url: '../user/myinfo',
-							});
+							
 				        } else if (res.cancel) {
 				            
 				        }
@@ -423,9 +421,7 @@ export default {
 				    content: '确认删除草稿：'+iden+" ?",
 				    success: function (res) {
 				        if (res.confirm) {
-							uni.navigateTo({
-								url: '../user/myinfo',
-							});
+							
 				        } else if (res.cancel) {
 				            
 				        }
@@ -442,11 +438,9 @@ export default {
 				    content: '确认提交草稿：'+iden+" ?",
 				    success: function (res) {
 				        if (res.confirm) {
-				            uni.navigateTo({
-				                url: '../user/myinfo',
-				            });
+				            
 				        } else if (res.cancel) {
-				            console.log('用户点击取消');
+				            
 				        }
 				    }
 				});
@@ -456,9 +450,7 @@ export default {
 				    content: '确认提交草稿：'+iden+" ?",
 				    success: function (res) {
 				        if (res.confirm) {
-							uni.navigateTo({
-								url: '../user/myinfo',
-							});
+							
 				        } else if (res.cancel) {
 				            
 				        }
@@ -470,9 +462,7 @@ export default {
 				    content: '确认提交草稿：'+iden+" ?",
 				    success: function (res) {
 				        if (res.confirm) {
-							uni.navigateTo({
-								url: '../user/myinfo',
-							});
+							
 				        } else if (res.cancel) {
 				            
 				        }
@@ -484,9 +474,7 @@ export default {
 				    content: '确认提交草稿：'+iden+" ?",
 				    success: function (res) {
 				        if (res.confirm) {
-							uni.navigateTo({
-								url: '../user/myinfo',
-							});
+							
 				        } else if (res.cancel) {
 				            
 				        }
