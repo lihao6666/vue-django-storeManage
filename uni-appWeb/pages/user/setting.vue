@@ -11,22 +11,49 @@
 
 <script>
 	import wButton from '../../components/watch-login/watch-button.vue'
+	var _this
 	export default {
 		components:{
 			wButton
 		},
+		mounted() {
+			_this = this;
+		},
 	    methods: {
 	        logout() {
+				var user_now_iden = uni.getStorageSync('user_now_iden')
 				uni.showModal({
 				    title: '提示',
 				    content: '确认退出登录?',
-				    success: function (res) {
-				        if (res.confirm) {
-				            uni.reLaunch({
-				                url: '../login/login',
-				            });
-				        } else if (res.cancel) {
-				            console.log('取消');
+				    success: function (choose) {
+				        if (choose.confirm) {
+				            _this.$http.post('/base/loginExit', {user_now_iden}).then(([err,res]) => {
+				            	uni.removeStorageSync('user_now_iden')
+				            	uni.reLaunch({
+				            	    url: '../login/login',
+				            	});
+								
+								//TODO 提示信息只能在该页面显示，想办法放在下个页面显示
+								// if (res.data.signal === '0') {
+								// 	uni.showToast({
+								// 		icon: 'none',
+								// 		position: 'bottom',
+								// 		title: res.data.message
+								// 	});
+								// } else {
+								//     uni.showToast({
+								//     	icon: 'none',
+								//     	position: 'bottom',
+								//     	title: '您的账号未登录'
+								//     });
+								// }
+				            })
+				        } else if (choose.cancel) {
+				            uni.showToast({
+							    icon: 'none',
+							    position: 'bottom',
+							    title: '取消退出'
+						    });
 				        }
 				    }
 				});

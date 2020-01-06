@@ -3,6 +3,12 @@ import App from './App'
 
 import store from './store'
 
+import config from './common/config.js'
+Vue.prototype.config = config
+
+import request from './common/request.js'
+Vue.prototype.$http = request
+
 Vue.config.productionTip = false
 
 Vue.prototype.$store = store
