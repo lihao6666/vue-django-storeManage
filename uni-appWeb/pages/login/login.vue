@@ -10,7 +10,7 @@
 				v-model="loginData.user_iden"
 				type="text"
 				maxlength="20"
-				placeholder="工号/手机号"
+				placeholder="用户名"
 			></wInput>
 			<wInput
 				v-model="loginData.user_passwd"
@@ -28,11 +28,10 @@
 </template>
 
 <script>
-	var _this;
 	import wInput from '../../components/watch-login/watch-input.vue' //input
 	import wButton from '../../components/watch-login/watch-button.vue' //button
 	import myAccunt from '../../data/accunt.js'
-	import {post} from '../../common/request.js'
+	var _this;
 	
 	export default {
 		data() {
@@ -53,7 +52,7 @@
 		},
 		mounted() {
 			_this = this;
-			//this.isLogin();
+			this.isLogin();
 		},
 		methods: {
 		    startLogin(){
@@ -65,34 +64,45 @@
 				_this.isRotate=true
 				setTimeout(function(){
 					_this.isRotate=false
-				},2000)
+				},1200)
 
-				uni.post('/base/login', _this.loginData).then((res)=>{
-					console.log(res.data.signal)
-					// if (res.data.signal === '0') {
-						
-				 //    } else {
-					    
-				 //    }
+				//请求登录
+				this.$http.post('/base/login', _this.loginData).then(([err,res]) => {
+					if (res.data.signal === '0') {
+						uni.setStorageSync('user_now_iden', _this.loginData.user_iden)
+						setTimeout(function(){
+							uni.showToast({
+								icon: 'none',
+								position: 'bottom',
+								title: res.data.message
+							});
+							uni.switchTab({
+								url: '../main/main'
+							})
+						},1200)
+				    } else {
+					    setTimeout(function(){
+					    	uni.showToast({
+					    		icon: 'none',
+					    		position: 'bottom',
+					    		title: res.data.message
+					    	});
+					    },1200)
+				    }
 				})
-
-
-				if((this.loginData.user_iden === "2017214879")&&(this.loginData.user_passwd === "2017214879")) {
-					setTimeout(function(){
-						uni.switchTab({
-						    url: '../main/main',
-						});
-					},2000)
-				} else {
-					setTimeout(function(){
-						uni.showToast({
-							icon: 'none',
-							position: 'bottom',
-							title: '账号或密码错误'
-						});
-					},2000)
+		    },
+			isLogin() {
+				if(uni.getStorageSync('user_now_iden')) {
+					uni.showToast({
+						icon: 'none',
+						position: 'bottom',
+						title: '您已登录'
+					});
+					uni.switchTab({
+						url: '../main/main'
+					})
 				}
-		    }
+			}
 		}
 	}
 </script>
