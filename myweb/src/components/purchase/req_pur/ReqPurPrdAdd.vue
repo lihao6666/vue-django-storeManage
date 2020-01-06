@@ -70,7 +70,7 @@
 </template>
 
 <script>
-import {postAPI} from '../../api/api'
+import {postAPI} from '../../../api/api'
 
 export default {
   name: 'req_pur_prd',

@@ -108,7 +108,7 @@
 </template>
 
 <script>
-import {postAPI} from '../../api/api'
+import {postAPI} from '../../../api/api'
 import Prdadd from './ReqPurPrdAdd'
 
 export default {

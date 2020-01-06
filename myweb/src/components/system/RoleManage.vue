@@ -68,7 +68,7 @@
             <el-button
               type="text"
               icon="el-icon-edit"
-              @click="handleRight( scope.row)"
+              @click="handlePower(scope.row)"
             >授权
             </el-button>
           </template>
@@ -138,13 +138,29 @@
         </el-col>
       </el-row>
     </el-dialog>
+    <!-- 授权弹出框 -->
+    <el-dialog title="授权" :visible.sync="powerVisible" width="40%"  :close-on-click-modal="false" :destroy-on-close="true" :before-close="closeRolePower">
+      <RolePower ref="RolePower" :powerform="powerform"></RolePower>
+      <el-row :gutter="20" class="el-row-button-save">
+        <el-col :span="1" :offset="16">
+          <el-button @click="closeRolePower">取 消</el-button>
+        </el-col>
+        <el-col :span="1" :offset="3">
+          <el-button type="primary" @click="savePower">确 定</el-button>
+        </el-col>
+      </el-row>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import {getAPI, postAPI} from '../../api/api'
+import RolePower from './RolePower'
 export default {
   name: 'test',
+  components: {
+    RolePower
+  },
   data () {
     return {
       manager: 'XXX',
@@ -161,6 +177,7 @@ export default {
         role_description: '',
         role: ''
       },
+      powerform: {},
       tableData: [],
       tableDataNew: [],
       role: '',
@@ -170,6 +187,7 @@ export default {
       delList: [],
       alterVisible: false,
       editVisible: false,
+      powerVisible: false,
       pageTotal: 0
     }
   },
@@ -370,6 +388,32 @@ export default {
     },
     handleSizeChange (val) {
       this.query.pageSize = val
+    },
+    // 关闭授权窗口二次确认
+    closeRolePower () {
+      this.$confirm('确定要关闭吗？', '提示', {
+        type: 'warning'
+      })
+        .then(() => {
+          this.powerVisible = false
+        })
+        .catch(() => {
+          this.powerVisible = true
+        })
+    },
+    // 授权
+    handlePower (row) {
+      this.powerform = row
+      console.log(row)
+      let _this = this
+      this.$nextTick(() => _this.$refs.RolePower.getForm())
+      this.powerVisible = true
+    },
+    // 保存授权
+    savePower () {
+      if (this.$refs.RolePower.save()) {
+        this.powerVisible = false
+      }
     }
   }
 }

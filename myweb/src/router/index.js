@@ -5,7 +5,7 @@ export default new Router({
   routes: [
     {
       path: '/',
-      redirect: '/requisition'
+      redirect: '/home'
     },
     {
       path: '/',
@@ -13,9 +13,14 @@ export default new Router({
       meta: {title: 'home'},
       children: [
         {
+          path: '/home',
+          component: () => import('../components/404.vue'),
+          meta: {title: '首页'}
+        },
+        {
           path: '/requisition',
-          component: () => import(/* webpackChunkName: "请购" */ '../components/req_pur/ReqPurCheck.vue'),
-          meta: {title: '请购'}
+          component: () => import(/* webpackChunkName: "请购" */ '../components/purchase/req_pur/ReqPurCheck.vue'),
+          meta: {title: '请购单'}
         },
         {
           path: '/sell',
