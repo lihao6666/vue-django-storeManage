@@ -1,0 +1,1 @@
+<scroll-view hidden="{{!(ifshow)}}" class="popup-layer" scroll-y data-event-opts="{{[['tap',[['ableClose',['$event']]]],['touchmove',[['',['$event']]]]]}}" bindtap="__e" catchtouchmove="__e"><view data-ref="popRef" data-event-opts="{{[['tap',[['stopEvent',['$event']]]]]}}" class="popup-content vue-ref" style="{{(_location)}}" catchtap="__e"><slot></slot></view></scroll-view>

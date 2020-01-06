@@ -1,13 +1,32 @@
 <template>
     <view class="content">
+		<uni-nav-bar :fixed="true" background-color="#0faeff" :border="false">
+			<view class="input-view"  v-if="current === 0">
+				<uni-icons type="search" size="22" color="#666666" />
+				<input v-model="outFilterText" confirm-type="search" class="input" type="text" placeholder="输入出库单信息">
+				<uni-icons :color="'#999999'" v-if="outFilterText!==''" class="icon-clear" type="clear" size="22" @click="clear1" />
+			</view>
+			<view class="input-view"  v-if="current === 1">
+				<uni-icons type="search" size="22" color="#666666" />
+				<input v-model="purchaseFilterText" confirm-type="search" class="input" type="text" placeholder="输入请购单信息">
+				<uni-icons :color="'#999999'" v-if="purchaseFilterText!==''" class="icon-clear" type="clear" size="22" @click="clear2" />
+			</view>
+			<view class="input-view"  v-if="current === 2">
+				<uni-icons type="search" size="22" color="#666666" />
+				<input v-model="sellFilterText" confirm-type="search" class="input" type="text" placeholder="输入销售订单信息">
+				<uni-icons :color="'#999999'" v-if="sellFilterText!==''" class="icon-clear" type="clear" size="22" @click="clear3" />
+			</view>
+			<view class="input-view"  v-if="current === 3">
+				<uni-icons type="search" size="22" color="#666666" />
+				<input v-model="exchangeFilterText" confirm-type="search" class="input" type="text" placeholder="输入转库申请单信息">
+				<uni-icons :color="'#999999'" v-if="exchangeFilterText!==''" class="icon-clear" type="clear" size="22" @click="clear4" />
+			</view>
+		</uni-nav-bar>
 		<view class="content-control">
 			<uni-segmented-control :current="current" :values="items" @clickItem="onClickItem" style-type="button" active-color="#0faeff"></uni-segmented-control>
 		</view>
 		<view class="current-content">
 			<view v-if="current === 0">
-				<view class='searchInput'>
-					<input class='input' v-model="outFilterText" placeholder="输入出库单信息"></input>
-				</view>
 				<view v-for="item in outFilterList" :key="item.id" class="card-set">
 					<uni-card
 					    :title="item.mso_iden"
@@ -30,10 +49,6 @@
 							<view class="commit" @click="commitOrder(item.mso_iden)">提交</view>
 						</view>
 						<view v-if="judgeStatus(item.mso_status) === 1" class="button-box">
-							<view class="delete" @click="closeOrder(item.mso_iden)">关闭</view>
-							<view class="detail" @click="viewDetail(item.mso_iden)">详情</view>
-						</view>
-						<view v-if="judgeStatus(item.mso_status) === 2" class="button-box">
 							<view class="detail" @click="viewDetail(item.mso_iden)">详情</view>
 						</view>
 					</uni-card>
@@ -47,9 +62,6 @@
 				</view>
 			</view>
 			<view v-if="current === 1">
-				<view class='searchInput'>
-					<input class='input' v-model="purchaseFilterText" placeholder="输入请购单信息"></input>
-				</view>
 				<view v-for="item in purchaseFilterList" :key="item.id" class="card-set">
 					<uni-card
 					    :title="item.rp_iden"
@@ -88,9 +100,6 @@
 				</view>
 			</view>
 			<view v-if="current === 2">
-				<view class='searchInput'>
-					<input class='input' v-model="sellFilterText" placeholder="输入销售单信息"></input>
-				</view>
 				<view v-for="item in sellFilterList" :key="item.id" class="card-set">
 					<uni-card
 					    :title="item.so_iden"
@@ -126,9 +135,6 @@
 				</view>
 			</view>
 			<view v-if="current === 3">
-				<view class='searchInput'>
-					<input class='input' v-model="exchangeFilterText" placeholder="输入转库申请单信息"></input>
-				</view>
 				<view v-for="item in exchangeFilterList" :key="item.id" class="card-set">
 					<uni-card
 					    :title="item.str_iden"
@@ -165,12 +171,14 @@
 		</view>
     </view> 
 </template>
-
+ 
 <script>
 import uniSegmentedControl from '../../components/uni-segmented-control/uni-segmented-control.vue'
 import uniCard from '../../components/uni-card/uni-card.vue'
+import uniIcons from '@/components/uni-icons/uni-icons.vue'
 import dragButton from '../../components/drag-button/drag-button.vue'
 import cmdIcon from "../../components/cmd-icon/cmd-icon.vue"
+import uniNavBar from '@/components/uni-nav-bar/uni-nav-bar.vue'
 import outData from '../../data/outStore.js'
 import purchaseData from '../../data/purchase.js'
 import sellData from '../../data/sell.js'
@@ -181,7 +189,9 @@ export default {
 		uniSegmentedControl,
 		uniCard,
 		dragButton,
-		cmdIcon
+		cmdIcon,
+		uniNavBar,
+		uniIcons
 	},
 	data() {
 		return {
@@ -510,20 +520,30 @@ export default {
 			    content: '确认关闭请购单：'+iden+" ?",
 			    success: function (res) {
 			        if (res.confirm) {
-			            uni.navigateTo({
-			                url: '../user/myinfo',
-			            });
+			            
 			        } else if (res.cancel) {
 			            console.log('用户点击取消');
 			        }
 			    }
 			});
 		},
+		clear1() {
+			this.outFilterText = ''
+		},
+		clear2() {
+			this.purchaseFilterText = ''
+		},
+		clear3() {
+			this.sellFilterText = ''
+		},
+		clear4() {
+			this.exchangeFilterText = ''
+		}
 
 	},
 	
 	onLoad: function() {   
-		//登录检查函数
+		//登录检查
 		// loginMsg = this.checkLogin('../pages/main/main', 'switchTab');
 		// if(!loginMsg){
 		// 	return;
@@ -532,7 +552,6 @@ export default {
 		uni.removeStorageSync('viewpurchase');
 		uni.removeStorageSync('viewsell');
 		uni.removeStorageSync('viewexchange');
-		var test = uni.getStorageSync('viewout');
 	}
 }
 
@@ -555,11 +574,9 @@ export default {
 	.content {
 		padding: 0;
 	}
-	.tabs {
-		padding: 0;
-	}
 	.content-control {
 		padding: 5upx;
+		padding-bottom: 0;
 		width: auto;
 	}
 	.current-content {
@@ -587,20 +604,25 @@ export default {
 		color: green;
 	}
 	
-	.searchInput {
-		margin-top: 1vw;
-		margin-left: 20rpx;
-		margin-right: 20rpx;
-		background: white;
-		border-radius: 30upx;
-		display: flex;
+	.input-view {
 		align-items: center;
 		justify-content: center;
-		height: 70rpx;
+		width: 100%;
+		display: flex;
+		background-color: #e7e7e7;
+		height: 30px;
+		border-radius: 15px;
+		padding: 0 4%;
+		flex-wrap: nowrap;
+		margin: 7px 10rpx;
+		line-height: 30px;
+		background: #f5f5f5;
 	}
-	
-	.input {
-		color: #999;
-		width: 90%;
+	.input-view .input {
+		height: 30px;
+		line-height: 30px;
+		width: 94%;
+		padding: 0 3%;
 	}
+
 </style>

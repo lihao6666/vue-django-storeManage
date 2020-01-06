@@ -355,11 +355,10 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-
 var _outStore = _interopRequireDefault(__webpack_require__(/*! ../../data/outStore.js */ 32));
 var _purchase = _interopRequireDefault(__webpack_require__(/*! ../../data/purchase.js */ 33));
 var _sell = _interopRequireDefault(__webpack_require__(/*! ../../data/sell.js */ 34));
-var _exchange = _interopRequireDefault(__webpack_require__(/*! ../../data/exchange.js */ 35));function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}var uniSegmentedControl = function uniSegmentedControl() {return __webpack_require__.e(/*! import() | components/uni-segmented-control/uni-segmented-control */ "components/uni-segmented-control/uni-segmented-control").then(__webpack_require__.bind(null, /*! ../../components/uni-segmented-control/uni-segmented-control.vue */ 132));};var uniCard = function uniCard() {return __webpack_require__.e(/*! import() | components/uni-card/uni-card */ "components/uni-card/uni-card").then(__webpack_require__.bind(null, /*! ../../components/uni-card/uni-card.vue */ 139));};var dragButton = function dragButton() {return __webpack_require__.e(/*! import() | components/drag-button/drag-button */ "components/drag-button/drag-button").then(__webpack_require__.bind(null, /*! ../../components/drag-button/drag-button.vue */ 146));};var cmdIcon = function cmdIcon() {return __webpack_require__.e(/*! import() | components/cmd-icon/cmd-icon */ "components/cmd-icon/cmd-icon").then(__webpack_require__.bind(null, /*! ../../components/cmd-icon/cmd-icon.vue */ 153));};var _default =
+var _exchange = _interopRequireDefault(__webpack_require__(/*! ../../data/exchange.js */ 35));function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}var uniSegmentedControl = function uniSegmentedControl() {return __webpack_require__.e(/*! import() | components/uni-segmented-control/uni-segmented-control */ "components/uni-segmented-control/uni-segmented-control").then(__webpack_require__.bind(null, /*! ../../components/uni-segmented-control/uni-segmented-control.vue */ 170));};var uniCard = function uniCard() {return __webpack_require__.e(/*! import() | components/uni-card/uni-card */ "components/uni-card/uni-card").then(__webpack_require__.bind(null, /*! ../../components/uni-card/uni-card.vue */ 177));};var dragButton = function dragButton() {return __webpack_require__.e(/*! import() | components/drag-button/drag-button */ "components/drag-button/drag-button").then(__webpack_require__.bind(null, /*! ../../components/drag-button/drag-button.vue */ 184));};var cmdIcon = function cmdIcon() {return __webpack_require__.e(/*! import() | components/cmd-icon/cmd-icon */ "components/cmd-icon/cmd-icon").then(__webpack_require__.bind(null, /*! ../../components/cmd-icon/cmd-icon.vue */ 191));};var _default =
 
 {
   components: {
@@ -463,9 +462,6 @@ var _exchange = _interopRequireDefault(__webpack_require__(/*! ../../data/exchan
       if (this.exchangeFilterText) {
         arr = this.exchangeList.filter(function (item) {return item.str_orga.includes(_this4.exchangeFilterText);});
         if (arr.length === 0) {
-          arr = this.exchangeList.filter(function (item) {return item.str_remarks.includes(_this4.exchangeFilterText);});
-        }
-        if (arr.length === 0) {
           arr = this.exchangeList.filter(function (item) {return item.str_iden.includes(_this4.exchangeFilterText);});
         }
         if (arr.length === 0) {
@@ -507,20 +503,40 @@ var _exchange = _interopRequireDefault(__webpack_require__(/*! ../../data/exchan
     viewDetail: function viewDetail(iden) {
       var diff = iden[0] + iden[1];
       if (diff === "MS") {
+        try {
+          uni.setStorageSync('viewout', iden);
+        } catch (e) {
+          console.log("传出库单单号失败");
+        }
         uni.navigateTo({
-          url: '../user/myinfo' });
+          url: '../detail/outDetails' });
 
       } else if (diff === "PR") {
+        try {
+          uni.setStorageSync('viewpurchase', iden);
+        } catch (e) {
+          console.log("传请购单单号失败");
+        }
         uni.navigateTo({
-          url: '../user/myinfo' });
+          url: '../detail/purchaseDetails' });
 
       } else if (diff === "SO") {
+        try {
+          uni.setStorageSync('viewsell', iden);
+        } catch (e) {
+          console.log("传销售单单号失败");
+        }
         uni.navigateTo({
-          url: '../user/myinfo' });
+          url: '../detail/sellDetails' });
 
       } else if (diff === "ST") {
+        try {
+          uni.setStorageSync('viewexchange', iden);
+        } catch (e) {
+          console.log("传转库申请单单号失败");
+        }
         uni.navigateTo({
-          url: '../user/myinfo' });
+          url: '../detail/exchangeDetails' });
 
       }
     },
@@ -553,11 +569,9 @@ var _exchange = _interopRequireDefault(__webpack_require__(/*! ../../data/exchan
           content: '确认删除草稿：' + iden + " ?",
           success: function success(res) {
             if (res.confirm) {
-              uni.navigateTo({
-                url: '../user/myinfo' });
 
             } else if (res.cancel) {
-              console.log('用户点击取消');
+
             }
           } });
 
@@ -567,8 +581,6 @@ var _exchange = _interopRequireDefault(__webpack_require__(/*! ../../data/exchan
           content: '确认删除草稿：' + iden + " ?",
           success: function success(res) {
             if (res.confirm) {
-              uni.navigateTo({
-                url: '../user/myinfo' });
 
             } else if (res.cancel) {
 
@@ -581,8 +593,6 @@ var _exchange = _interopRequireDefault(__webpack_require__(/*! ../../data/exchan
           content: '确认删除草稿：' + iden + " ?",
           success: function success(res) {
             if (res.confirm) {
-              uni.navigateTo({
-                url: '../user/myinfo' });
 
             } else if (res.cancel) {
 
@@ -595,8 +605,6 @@ var _exchange = _interopRequireDefault(__webpack_require__(/*! ../../data/exchan
           content: '确认删除草稿：' + iden + " ?",
           success: function success(res) {
             if (res.confirm) {
-              uni.navigateTo({
-                url: '../user/myinfo' });
 
             } else if (res.cancel) {
 
@@ -614,11 +622,9 @@ var _exchange = _interopRequireDefault(__webpack_require__(/*! ../../data/exchan
           content: '确认提交草稿：' + iden + " ?",
           success: function success(res) {
             if (res.confirm) {
-              uni.navigateTo({
-                url: '../user/myinfo' });
 
             } else if (res.cancel) {
-              console.log('用户点击取消');
+
             }
           } });
 
@@ -628,8 +634,6 @@ var _exchange = _interopRequireDefault(__webpack_require__(/*! ../../data/exchan
           content: '确认提交草稿：' + iden + " ?",
           success: function success(res) {
             if (res.confirm) {
-              uni.navigateTo({
-                url: '../user/myinfo' });
 
             } else if (res.cancel) {
 
@@ -642,8 +646,6 @@ var _exchange = _interopRequireDefault(__webpack_require__(/*! ../../data/exchan
           content: '确认提交草稿：' + iden + " ?",
           success: function success(res) {
             if (res.confirm) {
-              uni.navigateTo({
-                url: '../user/myinfo' });
 
             } else if (res.cancel) {
 
@@ -656,8 +658,6 @@ var _exchange = _interopRequireDefault(__webpack_require__(/*! ../../data/exchan
           content: '确认提交草稿：' + iden + " ?",
           success: function success(res) {
             if (res.confirm) {
-              uni.navigateTo({
-                url: '../user/myinfo' });
 
             } else if (res.cancel) {
 
@@ -702,17 +702,22 @@ var _exchange = _interopRequireDefault(__webpack_require__(/*! ../../data/exchan
           }
         } });
 
-    } }
+    } },
 
 
 
-  // onLoad: function() {   //登录检查函数
-  // 	loginMsg = this.checkLogin('../pages/main/main', 'switchTab');
-  // 	if(!loginMsg){
-  // 		return;
-  // 	}
-  // }
-};exports.default = _default;
+  onLoad: function onLoad() {
+    //登录检查函数
+    // loginMsg = this.checkLogin('../pages/main/main', 'switchTab');
+    // if(!loginMsg){
+    // 	return;
+    // }
+    uni.removeStorageSync('viewout');
+    uni.removeStorageSync('viewpurchase');
+    uni.removeStorageSync('viewsell');
+    uni.removeStorageSync('viewexchange');
+    var test = uni.getStorageSync('viewout');
+  } };exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 1)["default"]))
 
 /***/ }),

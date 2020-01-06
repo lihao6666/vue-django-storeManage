@@ -737,7 +737,7 @@ function initData(vueOptions, context) {
     try {
       data = data.call(context); // 支持 Vue.prototype 上挂的数据
     } catch (e) {
-      if (Object({"VUE_APP_PLATFORM":"mp-weixin","NODE_ENV":"development","BASE_URL":"/"}).VUE_APP_DEBUG) {
+      if (Object({"NODE_ENV":"development","VUE_APP_PLATFORM":"mp-weixin","BASE_URL":"/"}).VUE_APP_DEBUG) {
         console.warn('根据 Vue 的 data 函数初始化小程序 data 失败，请尽量确保 data 函数中不访问 vm 对象，否则可能影响首次数据渲染速度。', data);
       }
     }
@@ -1534,6 +1534,100 @@ uni$1;exports.default = _default;
 
 /***/ }),
 
+/***/ 126:
+/*!*************************************************************!*\
+  !*** C:/Users/流宇/Desktop/git/uni-appWeb/data/outDetails.js ***!
+  \*************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+var data = [
+{
+  id: 1,
+  msod_iden: '010100001',
+  msod_name: '钢琴',
+  msod_specification: '16键',
+  msod_model: '圆形',
+  msod_meterage: '台',
+  msod_num: '20',
+  msod_present_num: '50',
+  msod_remarks: '上音乐课借用器材' },
+{
+  id: 2,
+  msod_iden: '020100003',
+  msod_name: '足球',
+  msod_specification: '黑白',
+  msod_model: '签名款',
+  msod_meterage: '个',
+  msod_num: '30',
+  msod_present_num: '50',
+  msod_remarks: '上体育课借用器材' },
+{
+  id: 3,
+  msod_iden: '030100018',
+  msod_name: '画纸',
+  msod_specification: 'A4',
+  msod_model: '宣纸',
+  msod_meterage: '张',
+  msod_num: '50',
+  msod_present_num: '200',
+  msod_remarks: '上美术课借用器材' }];
+
+
+
+module.exports = {
+  data: data };
+
+/***/ }),
+
+/***/ 135:
+/*!******************************************************************!*\
+  !*** C:/Users/流宇/Desktop/git/uni-appWeb/data/purchaseDetails.js ***!
+  \******************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+var data = [
+{
+  id: 1,
+  prd_iden: '010100001',
+  prd_name: '钢琴',
+  prd_specification: '16键',
+  prd_model: '圆形',
+  prd_meterage: '台',
+  prd_num: '20',
+  prd_present_num: '50',
+  prd_remarks: '上音乐课借用器材' },
+{
+  id: 2,
+  prd_iden: '020100003',
+  prd_name: '足球',
+  prd_specification: '黑白',
+  prd_model: '签名款',
+  prd_meterage: '个',
+  prd_num: '30',
+  prd_present_num: '50',
+  prd_remarks: '上体育课借用器材' },
+{
+  id: 3,
+  prd_iden: '030100018',
+  prd_name: '画纸',
+  prd_specification: 'A4',
+  prd_model: '宣纸',
+  prd_meterage: '张',
+  prd_num: '50',
+  prd_present_num: '200',
+  prd_remarks: '上美术课借用器材' }];
+
+
+
+module.exports = {
+  data: data };
+
+/***/ }),
+
 /***/ 14:
 /*!**********************************************************************************************************!*\
   !*** ./node_modules/@dcloudio/vue-cli-plugin-uni/packages/vue-loader/lib/runtime/componentNormalizer.js ***!
@@ -1655,6 +1749,56 @@ function normalizeComponent (
 
 /***/ }),
 
+/***/ 144:
+/*!**************************************************************!*\
+  !*** C:/Users/流宇/Desktop/git/uni-appWeb/data/sellDetails.js ***!
+  \**************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+var data = [
+{
+  id: 1,
+  sod_iden: '010100001',
+  sod_name: '钢琴',
+  sod_specification: '16键',
+  sod_model: '圆形',
+  sod_meterage: '台',
+  sod_num: '20',
+  sod_taxRate: '13',
+  sod_tax_unitPrice: '4300.00',
+  sod_remarks: '上音乐课借用器材' },
+{
+  id: 2,
+  sod_iden: '020100003',
+  sod_name: '足球',
+  sod_specification: '黑白',
+  sod_model: '签名款',
+  sod_meterage: '个',
+  sod_num: '30',
+  sod_taxRate: '13',
+  sod_tax_unitPrice: '120.00',
+  sod_remarks: '上体育课借用器材' },
+{
+  id: 3,
+  sod_iden: '030100018',
+  sod_name: '画纸',
+  sod_specification: 'A4',
+  sod_model: '宣纸',
+  sod_meterage: '张',
+  sod_num: '50',
+  sod_taxRate: '13',
+  sod_tax_unitPrice: '1.00',
+  sod_remarks: '上美术课借用器材' }];
+
+
+
+module.exports = {
+  data: data };
+
+/***/ }),
+
 /***/ 15:
 /*!*********************************************************!*\
   !*** C:/Users/流宇/Desktop/git/uni-appWeb/store/index.js ***!
@@ -1690,6 +1834,53 @@ var store = new _vuex.default.Store({
 
 
 store;exports.default = _default;
+
+/***/ }),
+
+/***/ 153:
+/*!******************************************************************!*\
+  !*** C:/Users/流宇/Desktop/git/uni-appWeb/data/exchangeDetails.js ***!
+  \******************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+var data = [
+{
+  id: 1,
+  trd_iden: '010100001',
+  trd_name: '钢琴',
+  trd_specification: '16键',
+  trd_model: '圆形',
+  trd_meterage: '台',
+  trd_num: '20',
+  trd_present_num: '50',
+  trd_remarks: '上音乐课借用器材' },
+{
+  id: 2,
+  trd_iden: '020100003',
+  trd_name: '足球',
+  trd_specification: '黑白',
+  trd_model: '签名款',
+  trd_meterage: '个',
+  trd_num: '30',
+  trd_present_num: '50',
+  trd_remarks: '上体育课借用器材' },
+{
+  id: 3,
+  trd_iden: '030100018',
+  trd_name: '画纸',
+  trd_specification: 'A4',
+  trd_model: '宣纸',
+  trd_meterage: '张',
+  trd_num: '50',
+  trd_present_num: '200',
+  trd_remarks: '上美术课借用器材' }];
+
+
+
+module.exports = {
+  data: data };
 
 /***/ }),
 
@@ -8176,7 +8367,7 @@ function type(obj) {
 
 function flushCallbacks$1(vm) {
     if (vm.__next_tick_callbacks && vm.__next_tick_callbacks.length) {
-        if (Object({"VUE_APP_PLATFORM":"mp-weixin","NODE_ENV":"development","BASE_URL":"/"}).VUE_APP_DEBUG) {
+        if (Object({"NODE_ENV":"development","VUE_APP_PLATFORM":"mp-weixin","BASE_URL":"/"}).VUE_APP_DEBUG) {
             var mpInstance = vm.$scope;
             console.log('[' + (+new Date) + '][' + (mpInstance.is || mpInstance.route) + '][' + vm._uid +
                 ']:flushCallbacks[' + vm.__next_tick_callbacks.length + ']');
@@ -8197,14 +8388,14 @@ function nextTick$1(vm, cb) {
     //1.nextTick 之前 已 setData 且 setData 还未回调完成
     //2.nextTick 之前存在 render watcher
     if (!vm.__next_tick_pending && !hasRenderWatcher(vm)) {
-        if(Object({"VUE_APP_PLATFORM":"mp-weixin","NODE_ENV":"development","BASE_URL":"/"}).VUE_APP_DEBUG){
+        if(Object({"NODE_ENV":"development","VUE_APP_PLATFORM":"mp-weixin","BASE_URL":"/"}).VUE_APP_DEBUG){
             var mpInstance = vm.$scope;
             console.log('[' + (+new Date) + '][' + (mpInstance.is || mpInstance.route) + '][' + vm._uid +
                 ']:nextVueTick');
         }
         return nextTick(cb, vm)
     }else{
-        if(Object({"VUE_APP_PLATFORM":"mp-weixin","NODE_ENV":"development","BASE_URL":"/"}).VUE_APP_DEBUG){
+        if(Object({"NODE_ENV":"development","VUE_APP_PLATFORM":"mp-weixin","BASE_URL":"/"}).VUE_APP_DEBUG){
             var mpInstance$1 = vm.$scope;
             console.log('[' + (+new Date) + '][' + (mpInstance$1.is || mpInstance$1.route) + '][' + vm._uid +
                 ']:nextMPTick');
@@ -8280,7 +8471,7 @@ var patch = function(oldVnode, vnode) {
     });
     var diffData = diff(data, mpData);
     if (Object.keys(diffData).length) {
-      if (Object({"VUE_APP_PLATFORM":"mp-weixin","NODE_ENV":"development","BASE_URL":"/"}).VUE_APP_DEBUG) {
+      if (Object({"NODE_ENV":"development","VUE_APP_PLATFORM":"mp-weixin","BASE_URL":"/"}).VUE_APP_DEBUG) {
         console.log('[' + (+new Date) + '][' + (mpInstance.is || mpInstance.route) + '][' + this._uid +
           ']差量更新',
           JSON.stringify(diffData));
@@ -8696,242 +8887,7 @@ module.exports = {
 
 /***/ }),
 
-/***/ 232:
-/*!************************************************************!*\
-  !*** C:/Users/流宇/Desktop/git/uni-appWeb/common/catUtil.js ***!
-  \************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-function formateDate(datetime, type) {
-  var year = datetime.getFullYear(),
-  month = ("0" + (datetime.getMonth() + 1)).slice(-2),
-  date = ("0" + datetime.getDate()).slice(-2),
-  hour = ("0" + datetime.getHours()).slice(-2),
-  minute = ("0" + datetime.getMinutes()).slice(-2),
-  second = ("0" + datetime.getSeconds()).slice(-2);
-  if (type === "Y-M-D h:min:s") {
-    var result = year + "-" + month + "-" + date + " " + hour + ":" + minute + ":" + second;
-  } else if (type === "Y-M-D h:min") {
-    var result = year + "-" + month + "-" + date + " " + hour + ":" + minute;
-  } else if (type === "Y-M-D") {
-    var result = year + "-" + month + "-" + date;
-  } else if (type === "Y") {
-    var result = year;
-  } else if (type === "Y-M") {
-    var result = year + "-" + month;
-  } else if (type === "M") {
-    var result = month;
-  } else if (type === "h:min:s") {
-    var result = hour + ":" + minute + ":" + second;
-  } else if (type === "h:min") {
-    var result = hour + ":" + minute;
-  } else if (type === "h") {
-    var result = hour;
-  } else if (type === "min") {
-    var result = minute;
-  } else if (type === "s") {
-    var result = second;
-  }
-  return result;
-}
-
-function formatNumber(value, pattern) {
-  if (value == null)
-  return value;
-  var strarr = value ? value.toString().split('.') : ['0'];
-  var fmtarr = pattern ? pattern.split('.') : [''];
-  var retstr = '';
-  // 整数部分   
-  var str = strarr[0];
-  var fmt = fmtarr[0];
-  var i = str.length - 1;
-  var comma = false;
-  for (var f = fmt.length - 1; f >= 0; f--) {
-    switch (fmt.substr(f, 1)) {
-      case '#':
-        if (i >= 0) retstr = str.substr(i--, 1) + retstr;
-        break;
-      case '0':
-        if (i >= 0) retstr = str.substr(i--, 1) + retstr;else
-        retstr = '0' + retstr;
-        break;
-      case ',':
-        comma = true;
-        retstr = ',' + retstr;
-        break;}
-
-  }
-  if (i >= 0) {
-    if (comma) {
-      var l = str.length;
-      for (; i >= 0; i--) {
-        retstr = str.substr(i, 1) + retstr;
-        if (i > 0 && (l - i) % 3 == 0) retstr = ',' + retstr;
-      }
-    } else retstr = str.substr(0, i + 1) + retstr;
-  }
-  retstr = retstr + '.';
-  // 处理小数部分   
-  str = strarr.length > 1 ? strarr[1] : '';
-  fmt = fmtarr.length > 1 ? fmtarr[1] : '';
-  i = 0;
-  for (var _f = 0; _f < fmt.length; _f++) {
-    switch (fmt.substr(_f, 1)) {
-      case '#':
-        if (i < str.length) retstr += str.substr(i++, 1);
-        break;
-      case '0':
-        if (i < str.length) retstr += str.substr(i++, 1);else
-        retstr += '0';
-        break;}
-
-  }
-  return retstr.replace(/^,+/, '').replace(/\.$/, '');
-}
-//格式化金额
-function catformatMoney(value, pattern) {
-  if (!value || value == 0)
-  return 0;
-  var sign = value < 0 ? '-' : '';
-  return sign + formatNumber(Math.abs(value), pattern || '#,##0.00');
-}
-function formatMoneyAuto(value) {var pattern = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '#,##0.00';
-  var unit = "元";
-  if (value) {
-    var unitNum = {
-      // '千': 1000.00,
-      '万': 10000.00,
-      '千万': 10000000.00,
-      '亿': 100000000.00,
-      '百亿': 10000000000.00 };
-
-    var unitCount = {
-      // "4": '千',
-      "5": '万',
-      "8": '千万',
-      "9": '亿',
-      "11": '百亿' };
-
-    var count = 0;
-    var money = value;
-
-    while (money >= 1) {
-      money = money / 10;
-      count++;
-    }
-    var tmp = unitCount[count + ""];
-    while (count >= 4 && tmp === undefined) {
-      tmp = unitCount[--count + ""];
-    }
-    unit = tmp === undefined ? unit : tmp;
-    value = count >= 4 ? value / unitNum[unit] : value;
-  }
-  return formatMoney(value, pattern) + unit || "";
-}
-// 格式化文件大小
-function formatFileSize(value) {
-  if (null == value || value == '') {
-    return "0 Bytes";
-  }
-  var unitArr = new Array("Bytes", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB");
-  var index = 0;
-  var srcsize = parseFloat(value);
-  index = Math.floor(Math.log(srcsize) / Math.log(1024));
-  var size = srcsize / Math.pow(1024, index);
-  size = size.toFixed(2);
-  return size + unitArr[index];
-}
-
-
-
-
-
-
-var emptyPatt = /(^$)|(^[\u4E00-\u9FA5a-zA-Z0-9,，,.,!,@,#,$,%,^,&,*,(,),-,+,/,\\,!,￥,……,*,（,）,~,·,]{1,250}$)/;
-var phonePatt = /^1((3[\d])|(4[5,6,9])|(5[0-3,5-9])|(6[5-7])|(7[0-8])|(8[1-8])|(9[1,8,9]))\d{8}$/;
-var cardPatt = /(^[1-9]\d{5}(18|19|([23]\d))\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$)|(^[1-9]\d{5}\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{2}$)/;
-module.exports = {
-  formateDate: formateDate };
-
-/***/ }),
-
-/***/ 233:
-/*!***************************************************************!*\
-  !*** C:/Users/流宇/Desktop/git/uni-appWeb/data/materialData.js ***!
-  \***************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-var data = [
-{
-  id: 1,
-  material_iden: '00100001',
-  material_name: '舞鞋',
-  material_specification: '31码',
-  material_model: '1234',
-  material_meterage: '双',
-  material_attr: '208' },
-{
-  id: 2,
-  material_iden: '00100002',
-  material_name: '舞鞋',
-  material_specification: '30码',
-  material_model: '1234',
-  material_meterage: '双',
-  material_attr: '200' },
-{
-  id: 3,
-  material_iden: '00100003',
-  material_name: '毛笔',
-  material_specification: '狼毫',
-  material_model: '1234',
-  material_meterage: '支',
-  material_attr: '200' },
-{
-  id: 4,
-  material_iden: '00100004',
-  material_name: '颜料',
-  material_specification: '水彩',
-  material_model: '1234',
-  material_meterage: '盒',
-  material_attr: '200' },
-{
-  id: 5,
-  material_iden: '00100005',
-  material_name: '颜料',
-  material_specification: '油画棒',
-  material_model: '1234',
-  material_meterage: '盒',
-  material_attr: '200' },
-{
-  id: 6,
-  material_iden: '00100006',
-  material_name: '演出服',
-  material_specification: 'x',
-  material_model: '1234',
-  material_meterage: '双',
-  material_attr: '200' },
-{
-  id: 7,
-  material_iden: '00100001',
-  material_name: '舞鞋',
-  material_specification: '29码',
-  material_model: '1234',
-  material_meterage: '双',
-  material_attr: '200' }];
-
-
-
-module.exports = {
-  data: data };
-
-/***/ }),
-
-/***/ 239:
+/***/ 252:
 /*!************************************************************************************!*\
   !*** C:/Users/流宇/Desktop/git/uni-appWeb/components/w-picker/city-data/province.js ***!
   \************************************************************************************/
@@ -9081,7 +9037,7 @@ provinceData;exports.default = _default;
 
 /***/ }),
 
-/***/ 240:
+/***/ 253:
 /*!********************************************************************************!*\
   !*** C:/Users/流宇/Desktop/git/uni-appWeb/components/w-picker/city-data/city.js ***!
   \********************************************************************************/
@@ -10595,7 +10551,7 @@ cityData;exports.default = _default;
 
 /***/ }),
 
-/***/ 241:
+/***/ 254:
 /*!********************************************************************************!*\
   !*** C:/Users/流宇/Desktop/git/uni-appWeb/components/w-picker/city-data/area.js ***!
   \********************************************************************************/
@@ -23148,7 +23104,7 @@ areaData;exports.default = _default;
 
 /***/ }),
 
-/***/ 242:
+/***/ 255:
 /*!**************************************************************************!*\
   !*** C:/Users/流宇/Desktop/git/uni-appWeb/components/w-picker/w-picker.js ***!
   \**************************************************************************/
@@ -23809,7 +23765,7 @@ initPicker;exports.default = _default;
 
 /***/ }),
 
-/***/ 251:
+/***/ 263:
 /*!*********************************************************************************!*\
   !*** C:/Users/流宇/Desktop/git/uni-appWeb/components/lb-picker/style/picker.scss ***!
   \*********************************************************************************/
@@ -23820,7 +23776,7 @@ initPicker;exports.default = _default;
 
 /***/ }),
 
-/***/ 252:
+/***/ 264:
 /*!************************************************************************!*\
   !*** C:/Users/流宇/Desktop/git/uni-appWeb/components/lb-picker/utils.js ***!
   \************************************************************************/
@@ -23839,7 +23795,7 @@ function getIndicatorHeight() {
 
 /***/ }),
 
-/***/ 258:
+/***/ 291:
 /*!**************************************************************************************!*\
   !*** C:/Users/流宇/Desktop/git/uni-appWeb/components/lb-picker/style/picker-item.scss ***!
   \**************************************************************************************/
@@ -23923,7 +23879,7 @@ var data = [
   mso_date: '2020-1-2 16:00:00',
   mso_req_department: '非中心',
   mso_remarks: '上美术课借用器材',
-  mso_status: '草稿',
+  mso_status: '已审批',
   mso_creator: '董新宇',
   mso_createDate: '2020-1-2 12:09:00' },
 {
@@ -24146,7 +24102,6 @@ var data = [
   str_from: '合工大中心仓库01',
   str_req_date: '2020-1-2 14:00:00',
   str_req_department: '非中心',
-  str_remarks: '上体育课借用器材',
   str_status: '草稿',
   str_creator: '张恩普',
   str_createDate: '2020-1-2 12:02:00' },
@@ -24158,7 +24113,6 @@ var data = [
   str_from: '合工大中心仓库02',
   str_date: '2020-1-2 15:00:00',
   str_req_department: '非中心',
-  str_remarks: '上音乐课借用器材',
   str_status: '已审批',
   str_creator: '张恩普',
   str_createDate: '2020-1-2 12:03:00' },
@@ -24170,7 +24124,6 @@ var data = [
   str_from: '合工大中心仓库03',
   str_date: '2020-1-2 16:00:00',
   str_req_department: '非中心',
-  str_remarks: '上美术课借用器材',
   str_status: '草稿',
   str_creator: '张恩普',
   str_createDate: '2020-1-2 12:09:00' }];
@@ -25430,7 +25383,80 @@ var addUser = function addUser(userInfo) {
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var _default = { "pages": { "pages/login/login": { "navigationBarTitleText": "登录" }, "pages/main/main": { "navigationBarTitleText": "主页" }, "pages/index/index": { "navigationBarTitleText": "仓库" }, "pages/user/user": { "navigationBarTitleText": "我的" }, "pages/reg/reg": { "navigationBarTitleText": "注册" }, "pages/pwd/pwd": { "navigationBarTitleText": "找回密码" }, "pages/requisitions/requisitions": { "navigationBarTitleText": "请购" }, "pages/requisitions/start": { "navigationBarTitleText": "新建" }, "pages/user/phoneus": { "navigationBarTitleText": "联系我们" }, "pages/user/setting": { "navigationBarTitleText": "系统设置" }, "pages/user/myinfo": { "navigationBarTitleText": "我的信息" }, "pages/detail/detail": { "navigationBarTitleText": "货物详情" } }, "globalStyle": { "navigationBarTextStyle": "white", "navigationBarBackgroundColor": "#0faeff", "backgroundColor": "#fbf9fe" } };exports.default = _default;
+Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var _default = { "pages": { "pages/login/login": { "navigationBarTitleText": "登录" }, "pages/main/main": { "navigationBarTitleText": "主页" }, "pages/index/index": { "navigationBarTitleText": "仓库" }, "pages/user/user": { "navigationBarTitleText": "我的" }, "pages/reg/reg": { "navigationBarTitleText": "注册" }, "pages/pwd/pwd": { "navigationBarTitleText": "找回密码" }, "pages/requisitions/requisitions": { "navigationBarTitleText": "请购" }, "pages/requisitions/start": { "navigationBarTitleText": "新建" }, "pages/user/phoneus": { "navigationBarTitleText": "联系我们" }, "pages/user/setting": { "navigationBarTitleText": "系统设置" }, "pages/user/myinfo": { "navigationBarTitleText": "我的信息" }, "pages/detail/detail": { "navigationBarTitleText": "货物详情" }, "pages/detail/outDetails": { "navigationBarTitleText": "出库单详情" }, "pages/detail/purchaseDetails": { "navigationBarTitleText": "请购单详情" }, "pages/detail/sellDetails": { "navigationBarTitleText": "销售单详情" }, "pages/detail/exchangeDetails": { "navigationBarTitleText": "转库申请单详情" } }, "globalStyle": { "navigationBarTextStyle": "white", "navigationBarBackgroundColor": "#0faeff", "backgroundColor": "#fbf9fe" } };exports.default = _default;
+
+/***/ }),
+
+/***/ 78:
+/*!***************************************************************!*\
+  !*** C:/Users/流宇/Desktop/git/uni-appWeb/data/materialData.js ***!
+  \***************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+var data = [
+{
+  id: 1,
+  material_iden: '00100001',
+  material_name: '舞鞋',
+  material_specification: '31码',
+  material_model: '1234',
+  material_meterage: '双',
+  material_attr: '208' },
+{
+  id: 2,
+  material_iden: '00100002',
+  material_name: '舞鞋',
+  material_specification: '30码',
+  material_model: '1234',
+  material_meterage: '双',
+  material_attr: '200' },
+{
+  id: 3,
+  material_iden: '00100003',
+  material_name: '毛笔',
+  material_specification: '狼毫',
+  material_model: '1234',
+  material_meterage: '支',
+  material_attr: '200' },
+{
+  id: 4,
+  material_iden: '00100004',
+  material_name: '颜料',
+  material_specification: '水彩',
+  material_model: '1234',
+  material_meterage: '盒',
+  material_attr: '200' },
+{
+  id: 5,
+  material_iden: '00100005',
+  material_name: '颜料',
+  material_specification: '油画棒',
+  material_model: '1234',
+  material_meterage: '盒',
+  material_attr: '200' },
+{
+  id: 6,
+  material_iden: '00100006',
+  material_name: '演出服',
+  material_specification: 'x',
+  material_model: '1234',
+  material_meterage: '双',
+  material_attr: '200' },
+{
+  id: 7,
+  material_iden: '00100001',
+  material_name: '舞鞋',
+  material_specification: '29码',
+  material_model: '1234',
+  material_meterage: '双',
+  material_attr: '200' }];
+
+
+
+module.exports = {
+  data: data };
 
 /***/ }),
 
@@ -25443,6 +25469,168 @@ Object.defineProperty(exports, "__esModule", { value: true });exports.default = 
 
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var _default = { "appid": "" };exports.default = _default;
+
+/***/ }),
+
+/***/ 87:
+/*!************************************************************!*\
+  !*** C:/Users/流宇/Desktop/git/uni-appWeb/common/catUtil.js ***!
+  \************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+function formateDate(datetime, type) {
+  var year = datetime.getFullYear(),
+  month = ("0" + (datetime.getMonth() + 1)).slice(-2),
+  date = ("0" + datetime.getDate()).slice(-2),
+  hour = ("0" + datetime.getHours()).slice(-2),
+  minute = ("0" + datetime.getMinutes()).slice(-2),
+  second = ("0" + datetime.getSeconds()).slice(-2);
+  if (type === "Y-M-D h:min:s") {
+    var result = year + "-" + month + "-" + date + " " + hour + ":" + minute + ":" + second;
+  } else if (type === "Y-M-D h:min") {
+    var result = year + "-" + month + "-" + date + " " + hour + ":" + minute;
+  } else if (type === "Y-M-D") {
+    var result = year + "-" + month + "-" + date;
+  } else if (type === "Y") {
+    var result = year;
+  } else if (type === "Y-M") {
+    var result = year + "-" + month;
+  } else if (type === "M") {
+    var result = month;
+  } else if (type === "h:min:s") {
+    var result = hour + ":" + minute + ":" + second;
+  } else if (type === "h:min") {
+    var result = hour + ":" + minute;
+  } else if (type === "h") {
+    var result = hour;
+  } else if (type === "min") {
+    var result = minute;
+  } else if (type === "s") {
+    var result = second;
+  }
+  return result;
+}
+
+function formatNumber(value, pattern) {
+  if (value == null)
+  return value;
+  var strarr = value ? value.toString().split('.') : ['0'];
+  var fmtarr = pattern ? pattern.split('.') : [''];
+  var retstr = '';
+  // 整数部分   
+  var str = strarr[0];
+  var fmt = fmtarr[0];
+  var i = str.length - 1;
+  var comma = false;
+  for (var f = fmt.length - 1; f >= 0; f--) {
+    switch (fmt.substr(f, 1)) {
+      case '#':
+        if (i >= 0) retstr = str.substr(i--, 1) + retstr;
+        break;
+      case '0':
+        if (i >= 0) retstr = str.substr(i--, 1) + retstr;else
+        retstr = '0' + retstr;
+        break;
+      case ',':
+        comma = true;
+        retstr = ',' + retstr;
+        break;}
+
+  }
+  if (i >= 0) {
+    if (comma) {
+      var l = str.length;
+      for (; i >= 0; i--) {
+        retstr = str.substr(i, 1) + retstr;
+        if (i > 0 && (l - i) % 3 == 0) retstr = ',' + retstr;
+      }
+    } else retstr = str.substr(0, i + 1) + retstr;
+  }
+  retstr = retstr + '.';
+  // 处理小数部分   
+  str = strarr.length > 1 ? strarr[1] : '';
+  fmt = fmtarr.length > 1 ? fmtarr[1] : '';
+  i = 0;
+  for (var _f = 0; _f < fmt.length; _f++) {
+    switch (fmt.substr(_f, 1)) {
+      case '#':
+        if (i < str.length) retstr += str.substr(i++, 1);
+        break;
+      case '0':
+        if (i < str.length) retstr += str.substr(i++, 1);else
+        retstr += '0';
+        break;}
+
+  }
+  return retstr.replace(/^,+/, '').replace(/\.$/, '');
+}
+//格式化金额
+function catformatMoney(value, pattern) {
+  if (!value || value == 0)
+  return 0;
+  var sign = value < 0 ? '-' : '';
+  return sign + formatNumber(Math.abs(value), pattern || '#,##0.00');
+}
+function formatMoneyAuto(value) {var pattern = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '#,##0.00';
+  var unit = "元";
+  if (value) {
+    var unitNum = {
+      // '千': 1000.00,
+      '万': 10000.00,
+      '千万': 10000000.00,
+      '亿': 100000000.00,
+      '百亿': 10000000000.00 };
+
+    var unitCount = {
+      // "4": '千',
+      "5": '万',
+      "8": '千万',
+      "9": '亿',
+      "11": '百亿' };
+
+    var count = 0;
+    var money = value;
+
+    while (money >= 1) {
+      money = money / 10;
+      count++;
+    }
+    var tmp = unitCount[count + ""];
+    while (count >= 4 && tmp === undefined) {
+      tmp = unitCount[--count + ""];
+    }
+    unit = tmp === undefined ? unit : tmp;
+    value = count >= 4 ? value / unitNum[unit] : value;
+  }
+  return formatMoney(value, pattern) + unit || "";
+}
+// 格式化文件大小
+function formatFileSize(value) {
+  if (null == value || value == '') {
+    return "0 Bytes";
+  }
+  var unitArr = new Array("Bytes", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB");
+  var index = 0;
+  var srcsize = parseFloat(value);
+  index = Math.floor(Math.log(srcsize) / Math.log(1024));
+  var size = srcsize / Math.pow(1024, index);
+  size = size.toFixed(2);
+  return size + unitArr[index];
+}
+
+
+
+
+
+
+var emptyPatt = /(^$)|(^[\u4E00-\u9FA5a-zA-Z0-9,，,.,!,@,#,$,%,^,&,*,(,),-,+,/,\\,!,￥,……,*,（,）,~,·,]{1,250}$)/;
+var phonePatt = /^1((3[\d])|(4[5,6,9])|(5[0-3,5-9])|(6[5-7])|(7[0-8])|(8[1-8])|(9[1,8,9]))\d{8}$/;
+var cardPatt = /(^[1-9]\d{5}(18|19|([23]\d))\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$)|(^[1-9]\d{5}\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{2}$)/;
+module.exports = {
+  formateDate: formateDate };
 
 /***/ })
 
