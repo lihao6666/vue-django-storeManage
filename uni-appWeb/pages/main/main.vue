@@ -44,9 +44,9 @@
 							<view>创建日期：{{ item.mso_createDate }}</view>
 						</view>
 						<view v-if="judgeStatus(item.mso_status) === 0" class="button-box">
-							<view class="delete" @click="deleteOrder(item.mso_iden)">删除</view>
+							<view class="delete" @click="deleteOrder(item.mso_iden)"><evan-icons type="remove" color="red" size="16"></evan-icons>删除</view>
 							<view class="edit" @click="editOrder(item.mso_iden)">编辑</view>
-							<view class="commit" @click="commitOrder(item.mso_iden)">提交</view>
+							<view class="commit" @click="commitOrder(item.mso_iden)"><evan-icons type="check" color="green" size="16"></evan-icons>提交</view>
 						</view>
 						<view v-if="judgeStatus(item.mso_status) === 1" class="button-box">
 							<view class="detail" @click="viewDetail(item.mso_iden)">详情</view>
@@ -78,13 +78,13 @@
 							<view>创建日期：{{ item.rp_createDate }}</view>
 						</view>
 						<view v-if="judgeStatus(item.rp_status) === 0" class="button-box">
-							<view class="delete" @click="deleteOrder(item.rp_iden)">删除</view>
+							<view class="delete" @click="deleteOrder(item.rp_iden)"><evan-icons type="remove" color="red" size="16"></evan-icons>删除</view>
 							<view class="edit" @click="editOrder(item.rp_iden)">编辑</view>
-							<view class="commit" @click="commitOrder(item.rp_iden)">提交</view>
+							<view class="commit" @click="commitOrder(item.rp_iden)"><evan-icons type="check" color="green" size="16"></evan-icons>提交</view>
 						</view>
 						<view v-if="judgeStatus(item.rp_status) === 1" class="button-box">
 							<view class="detail" @click="viewDetail(item.rp_iden)">详情</view>
-							<view class="delete" @click="closeOrder(item.rp_iden)">关闭</view>
+							<view class="delete" @click="closeOrder(item.rp_iden)"><evan-icons type="close" color="red" size="16"></evan-icons>关闭</view>
 						</view>
 						<view v-if="judgeStatus(item.rp_status) === 2" class="button-box">
 							<view class="detail" @click="viewDetail(item.rp_iden)">详情</view>
@@ -117,9 +117,9 @@
 							<view>创建日期：{{ item.so_createDate }}</view>
 						</view>
 						<view v-if="judgeStatus(item.so_status) === 0" class="button-box">
-							<view class="delete" @click="deleteOrder(item.so_iden)">删除</view>
+							<view class="delete" @click="deleteOrder(item.so_iden)"><evan-icons type="remove" color="red" size="16"></evan-icons>删除</view>
 							<view class="edit" @click="editOrder(item.so_iden)">编辑</view>
-							<view class="commit" @click="commitOrder(item.so_iden)">提交</view>
+							<view class="commit" @click="commitOrder(item.so_iden)"><evan-icons type="check" color="green" size="16"></evan-icons>提交</view>
 						</view>
 						<view v-if="judgeStatus(item.so_status) === 1" class="button-box">
 							<view class="detail" @click="viewDetail(item.so_iden)">详情</view>
@@ -151,9 +151,9 @@
 							<view>创建日期：{{ item.str_createDate }}</view>
 						</view>
 						<view v-if="judgeStatus(item.str_status) === 0" class="button-box">
-							<view class="delete" @click="deleteOrder(item.str_iden)">删除</view>
+							<view class="delete" @click="deleteOrder(item.str_iden)"><evan-icons type="remove" color="red" size="16"></evan-icons>删除</view>
 							<view class="edit" @click="editOrder(item.str_iden)">编辑</view>
-							<view class="commit" @click="commitOrder(item.str_iden)">提交</view>
+							<view class="commit" @click="commitOrder(item.str_iden)"><evan-icons type="check" color="green" size="16"></evan-icons>提交</view>
 						</view>
 						<view v-if="judgeStatus(item.str_status) === 1" class="button-box">
 							<view class="detail" @click="viewDetail(item.str_iden)">详情</view>
@@ -179,6 +179,7 @@ import uniIcons from '@/components/uni-icons/uni-icons.vue'
 import dragButton from '../../components/drag-button/drag-button.vue'
 import cmdIcon from "../../components/cmd-icon/cmd-icon.vue"
 import uniNavBar from '@/components/uni-nav-bar/uni-nav-bar.vue'
+import EvanIcons from '../../components/evan-icons/evan-icons.vue'
 import outData from '../../data/outStore.js'
 import purchaseData from '../../data/purchase.js'
 import sellData from '../../data/sell.js'
@@ -191,7 +192,8 @@ export default {
 		dragButton,
 		cmdIcon,
 		uniNavBar,
-		uniIcons
+		uniIcons,
+		EvanIcons
 	},
 	data() {
 		return {
@@ -590,17 +592,17 @@ export default {
 		padding-top: 1vw;
 	}
 	.delete {
-		width: 60upx;
+		width: 90upx;
 		color: red;
 	}
 	.edit {
-		width: 60upx;
+		width: 90upx;
 	}
 	.detail {
-		width: 60upx;
+		width: 90upx;
 	}
 	.commit {
-		width: 60upx;
+		width: 90upx;
 		color: green;
 	}
 	
