@@ -55,7 +55,7 @@ export default {
         let _this = this
         postAPI('/base/loginExit', {}).then(function (res) {
           _this.$message.success(res.data.message)
-          localStorage.removeItem('user_now_iden')
+          localStorage.clear()
           _this.$router.push('/login')
         }).catch(function (err) {
           console.log(err)

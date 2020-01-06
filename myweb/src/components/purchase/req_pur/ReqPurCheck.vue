@@ -139,7 +139,7 @@
 
 <script>
 import Reqadd from './ReqPurAdd'
-import { postAPI } from '../../api/api'
+import { postAPI } from '../../../api/api'
 
 export default {
   name: 'req_pur_check',
