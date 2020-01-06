@@ -16,21 +16,21 @@ import datetime
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'r0fb3&#d8j9$6e6y4si8iu#3pperc*!oh048)@1-%om9p8v!n)'
+SECRET_KEY = 'gri0)@5t&e$l#ix(1x6ph+=+%3t#6xi=wejv%593sxs62($6vc'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOW_HOSTS=['*',]
-ALLOWED_HOSTS=['49.234.123.211']
+ALLOW_HOSTS = ['*', ]
+ALLOWED_HOSTS = ['49.234.123.211']
 
 # 重载系统的用户，让UserProfile生效
 AUTH_USER_MODEL = 'base.UserProfile'
-
 
 # Application definition
 
@@ -99,7 +99,6 @@ REST_FRAMEWORK = {
         # 'rest_framework.authentication.TokenAuthentication',
     ),
 }
-
 
 JWT_AUTH = {
     'JWT_EXPIRATION_DELTA': datetime.timedelta(days=2),
@@ -183,3 +182,4 @@ USE_TZ = False
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 STATIC_URL = '/static/'
+

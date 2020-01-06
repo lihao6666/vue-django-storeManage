@@ -1,5 +1,6 @@
 from django.db import models
 
+
 # Create your models here.
 
 class SellOrder(models.Model):
@@ -16,6 +17,7 @@ class SellOrder(models.Model):
     )
     id = models.AutoField(primary_key=True)
     so_iden = models.CharField(max_length=15, verbose_name='销售订单编号')
+    so_serial = models.CharField(max_length=4, verbose_name='流水号')
     organization = models.ForeignKey('base.Organization', verbose_name='组织', related_name='orga_so',
                                      on_delete=models.CASCADE)
     so_type = models.IntegerField(choices=SELL_ORDER_CHOICES, verbose_name='订单类型')
@@ -23,7 +25,7 @@ class SellOrder(models.Model):
                                  on_delete=models.CASCADE)
     so_date = models.DateField(auto_now_add=True, verbose_name='订单日期')
     deliver_ware_house = models.CharField(max_length=20, verbose_name='发货仓库名字')
-    deliver_ware_house_iden = models.CharField(max_length=6, verbose_name='发货仓库编码')  
+    deliver_ware_house_iden = models.CharField(max_length=6, verbose_name='发货仓库编码')
     so_remarks = models.TextField(max_length=400, verbose_name='订单备注')
     so_status = models.IntegerField(choices=SO_STATUS_CHOICES, verbose_name='销售订单状态')
     so_creator = models.CharField(max_length=20, verbose_name='订单创建人名字')
