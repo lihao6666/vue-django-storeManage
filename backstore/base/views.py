@@ -79,8 +79,8 @@ class LoginView(APIView):
                         user_roles = user.user_roles
 
                         models.UserNow.objects.create(user_id=user_id, user_iden=username, user_name=user_name,
-                                                    area_name=area_name,
-                                                    user_departments=user_departments, user_roles=user_roles)
+                                                      area_name=area_name,
+                                                      user_departments=user_departments, user_roles=user_roles)
 
                         print("登录成功")
                         return Response({'message': '登录成功', 'signal': '0'})
@@ -97,11 +97,12 @@ class LoginExitView(APIView):
         try:
             user_now = models.UserNow.objects.get(user_iden=user_now_iden)  # 删除当前用户表信息
         except models.UserNow.DoesNotExist:
-            return Response({"message": "未登录","signal":1})
+            return Response({"message": "未登录", "signal": 1})
         else:
             logout(request)
             user_now.delete()
-            return Response({"message": "退出登录成功","signal":0})
+            return Response({"message": "退出登录成功", "signal": 0})
+
 
 class UserView(APIView):
 
@@ -478,14 +479,14 @@ class CustomerAddView(APIView):
         if user_now:
             self.user_now_name = user_now.user_name
 
-        max_id = models.Customer.objects.all().aggregate(Max('customer_iden'))['customer_iden__max']
-        customer_iden = str(int(max_id) + 1)  # 编号后台处理过了
-
+        # max_id = models.Customer.objects.all().aggregate(Max('customer_iden'))['customer_iden__max']
+        # customer_iden = str(int(max_id) + 1)  # 编号后台处理过了
+        customer_iden = json_data['customer_iden']
         customer_name = json_data['customer_name']
         customer_type = json_data['customer_type']
         customer_remarks = json_data['customer_remarks']
 
-        if self.idCheck(customer_iden, id):
+        if self.idCheck(customer_iden):
             models.Customer.objects.create(customer_iden=customer_iden, customer_name=customer_name,
                                            customer_type=customer_type,
                                            customer_remarks=customer_remarks, customer_status=0,
@@ -493,9 +494,9 @@ class CustomerAddView(APIView):
                                            customer_creator_iden=user_now_iden)
         return Response({'message': self.message, 'signal': self.signal})
 
-    def idCheck(self, customer_iden, id):
+    def idCheck(self, customer_iden):
         try:
-            user = models.Customer.objects.get(~Q(id=id), customer_iden=customer_iden)
+            user = models.Customer.objects.get(customer_iden=customer_iden)
         except models.Customer.DoesNotExist:
             return True
         else:
@@ -512,7 +513,7 @@ class CustomerUpdateView(APIView):
 
     def post(self, request):
         json_data = json.loads(self.request.body.decode("utf-8"))
-        id = json_data["id"]
+        id = json_data['id']
         customer_iden = json_data['customer_iden']
         customer_name = json_data['customer_name']
         customer_type = json_data['customer_type']
@@ -544,7 +545,7 @@ class CustomerStatusView(APIView):
     def post(self, request):
         json_data = json.loads(self.request.body.decode("utf-8"))
 
-        customer_status = json_data['role_status']
+        customer_status = json_data['customer_status']
         customer_iden = json_data['customer_iden']
 
         customer = models.Customer.objects.filter(customer_iden=customer_iden)
@@ -715,7 +716,7 @@ class DepartmentAddView(APIView):
                 models.Department.objects.create(dpm_name=dpm_name, dpm_remarks=dpm_remarks,
                                                  dpm_status=0, dpm_center=dpm_center,
                                                  dpm_creator=self.user_now_name,
-                                                 creator_iden=user_now_iden)
+                                                 dpm_creator_iden=user_now_iden)
         else:
             self.message = "用户未登录"
             self.signal = 2
@@ -724,7 +725,7 @@ class DepartmentAddView(APIView):
 
     def nameCheck(self, name):
         try:
-            user = models.Department.objects.get(dpm=name)
+            user = models.Department.objects.get(dpm_name=name)
         except models.Department.DoesNotExist:
             return True
         else:
@@ -916,7 +917,8 @@ class TotalWareHouseNewView(APIView):
         for area_name in areas_name:
             organization = models.Organization.objects.filter(area_name=area_name, orga_status=1).values_list(
                 'orga_name', flat=True)
-            center = models.Center.objects.filter(area_name=area_name, center_status=1).values_list('center_name',flat=True)
+            center = models.Center.objects.filter(area_name=area_name, center_status=1).values_list('center_name',
+                                                                                                    flat=True)
             organizations[area_name] = organization
             centers[area_name] = center
         return Response({"brands": brands, "organizations": organizations, "centers": centers, "areas": areas_name})
@@ -948,12 +950,11 @@ class TotalWareHouseAddView(APIView):
         brand_name = json_data['brand_name']
         total_belong_center = json_data['total_belong_center']
         try:
-            total_belong_center_iden = models.Center.objects.get(center_name=total_belong_center,area_name=area_name)
+            total_belong_center_iden = models.Center.objects.get(center_name=total_belong_center, area_name=area_name)
         except models.Center.DoesNotExist:
             total_belong_center_iden = ""
         else:
-            total_belong_center_iden=total_belong_center_iden.id
-        
+            total_belong_center_iden = total_belong_center_iden.id
 
         total_remarks = json_data['total_remarks']
 
@@ -1292,17 +1293,17 @@ class SupplierUpdateView(APIView):
     def post(self, request):
         json_data = json.loads(self.request.body.decode("utf-8"))
 
-        id = json_data['id']
-        # supply_iden = json_data['supply_iden']
+        # id = json_data['id']
+        supply_iden = json_data['supply_iden']
         supply_name = json_data['supply_name']
         supply_type = json_data['supply_type']
         supply_remarks = json_data['supply_remarks']
         # supply_status = json_data['supply_status']
         # supply_creator = json_data['supply_creator']
         try:
-            models.Supplier.objects.filter(id=id).update(supply_name=supply_name,
-                                                         supply_type=supply_type,
-                                                         supply_remarks=supply_remarks)
+            models.Supplier.objects.filter(supply_iden=supply_iden).update(supply_name=supply_name,
+                                                                           supply_type=supply_type,
+                                                                           supply_remarks=supply_remarks)
         except:
             self.message = "更新失败"
             self.signal = 1
@@ -1314,10 +1315,11 @@ class SupplierStatusView(APIView):
         json_data = json.loads(self.request.body.decode("utf-8"))
 
         supply_status = json_data['supply_status']
-        id = json_data["id"]
+        # id = json_data["id"]
+        supply_iden = json_data['supply_iden']
         # dpm_iden = json_data['dpm_iden']
 
-        supplier = models.Supplier.objects.filter(id=id)
+        supplier = models.Supplier.objects.filter(supply_iden=supply_iden)
 
         if supplier:
             supplier.update(supply_status=supply_status)
@@ -1341,6 +1343,7 @@ class MeteragesView(APIView):
         meterages = models.Meterage.objects.all()
         if meterages:
             meterages_serializer = MeterageSerializer(meterages, many=True)
+            print(meterages_serializer.data)
             return Response({"max_iden": max_id, "meterages": meterages_serializer.data})
         else:
             return Response({"message": "未查询到信息"})
@@ -1366,10 +1369,11 @@ class MeterageAddView(APIView):
         meterage_dimension = json_data['meterage_dimension']
 
         if self.idCheck(meterage_iden):
-            models.Meterage.objects.create(meterage_iden=meterage_iden, meterage_name=meterage_name,
-                                        meterage_dimension=meterage_dimension,meterage_status=0,
-                                        meterage_creator=self.user_now_name,
-                                        meterage_creator_iden=user_now_iden)
+            if self.nameCheck(meterage_name):
+                models.Meterage.objects.create(meterage_iden=meterage_iden, meterage_name=meterage_name,
+                                            meterage_dimension=meterage_dimension, meterage_status=0,
+                                            meterage_creator=self.user_now_name,
+                                            meterage_creator_iden=user_now_iden)
 
         return Response({'message': self.message, 'signal': self.signal})
 
@@ -1382,6 +1386,16 @@ class MeterageAddView(APIView):
             self.message = "计量单位id已存在"
             self.signal = 1
             return False
+    def nameCheck(self, meterage_name):
+        try:
+            meterage = models.Meterage.objects.get(meterage_name=meterage_name)
+        except models.Meterage.DoesNotExist:
+            return True
+        else:
+            self.message = "计量单位名字已存在"
+            self.signal = 2
+            return False
+
 
 
 class MeterageUpdateView(APIView):
@@ -1397,16 +1411,16 @@ class MeterageUpdateView(APIView):
         meterage_name = json_data['meterage_name']
         meterage_dimension = json_data['meterage_dimension']
 
-        if self.idCheck(self,meterage_iden,id):
+        if self.idCheck(meterage_iden,id):
             try:
                 models.Meterage.objects.filter(id=id).update(meterage_name=meterage_name,
-                                                                                meterage_dimension=meterage_dimension)
+                                                             meterage_dimension=meterage_dimension)
             except:
                 self.message = "更新失败"
                 self.signal = 1
         return Response({'message': self.message, 'signal': self.signal})
 
-    def idCheck(self, meterage_iden, id):
+    def idCheck(self,meterage_iden,id):
         try:
             meterage = models.Meterage.objects.get(~Q(id=id), meterage_iden=meterage_iden)
         except models.Meterage.DoesNotExist:
@@ -1415,6 +1429,23 @@ class MeterageUpdateView(APIView):
             self.message = "计量单位id已存在"
             self.signal = 1
             return False
+
+
+class MeterageStatusView(APIView):
+    def post(self, request):
+        json_data = json.loads(self.request.body.decode("utf-8"))
+
+        meterage_status = json_data['meterage_status']
+        id = json_data["id"]
+        # dpm_iden = json_data['dpm_iden']
+
+        meterage = models.Meterage.objects.filter(id=id)
+
+        if meterage:
+            meterage.update(meterage_status=meterage_status)
+            return Response({"message": "状态更改成功", "signal": 0})
+        else:
+            return Response({"message": "未查询到计量单位,状态更改失败"})
 
 
 """
@@ -1431,17 +1462,22 @@ class MaterialTypesView(APIView):
         max_id = models.MaterialType.objects.all().aggregate(Max('type_iden'))['type_iden__max']
         material_types = models.MaterialType.objects.all()
         if material_types:
+            print(max_id)
             material_types_serializer = MaterialTypeSerializer(material_types, many=True)
-            return Response({"max_iden": max_id, "meterial_types": material_types_serializer.data})
+            return Response({"max_iden": max_id, "material_types": material_types_serializer.data})
         else:
             return Response({"message": "未查询到信息"})
+
+
+class MaterialTypeNewView(APIView):
+    pass
 
 
 class MaterialTypeAddView(APIView):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.massage = "添加成功"
+        self.message = "添加成功"
         self.signal = 0
         self.user_now_name = ""
 
@@ -1453,30 +1489,62 @@ class MaterialTypeAddView(APIView):
             self.user_now_name = user_now.user_name
         type_iden = json_data['type_iden']
         type_name = json_data['type_name']
-        models.MaterialType.objects.create(type_iden=type_iden, type_name=type_name,
-                                           type_status=0,
-                                           type_creator=self.user_now_name,
-                                           type_creator_iden=user_now_iden)
-        return Response({'massage': self.massage, 'signal': self.signal})
+
+        if self.idCheck(type_iden):
+            models.MaterialType.objects.create(type_iden=type_iden, type_name=type_name,
+                                               type_status=0,
+                                               type_creator=self.user_now_name,
+                                               type_creator_iden=user_now_iden)
+
+        return Response({"message": self.message, "signal": self.signal})
+
+    def idCheck(self, type_iden):
+        try:
+            meterage = models.MaterialType.objects.get(type_iden=type_iden)
+        except models.MaterialType.DoesNotExist:
+            return True
+        else:
+            self.message = "物料类别id已存在"
+            self.signal = 1
+            return False
 
 
 class MaterialTypeUpdateView(APIView):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.massage = "更新成功"
+        self.message = "更新成功"
         self.signal = 0
 
     def post(self, request):
         json_data = json.loads(self.request.body.decode("utf-8"))
+
+        id = json_data['id']
         type_iden = json_data['type_iden']
         type_name = json_data['type_name']
 
         try:
-            models.MaterialType.objects.filter(type_iden=type_iden).update(type_name=type_name, )
+            models.MaterialType.objects.filter(id=id).update(type_name=type_name)
         except:
-            self.massage = "更新失败"
+            self.message = "更新失败"
             self.signal = 1
-        return Response({'massage': self.massage, 'signal': self.signal})
+        return Response({"message": self.message, "signal": self.signal})
+
+
+class MaterialTypeStatusView(APIView):
+    def post(self, request):
+        json_data = json.loads(self.request.body.decode("utf-8"))
+
+        type_status = json_data['type_status']
+        id = json_data["id"]
+        # dpm_iden = json_data['dpm_iden']
+
+        type = models.MaterialType.objects.filter(id=id)
+
+        if type:
+            type.update(type_status=type_status)
+            return Response({"message": "状态更改成功", "signal": 0})
+        else:
+            return Response({"message": "未查询到物料类别,状态更改失败"})
 
 
 """
@@ -1490,12 +1558,13 @@ class MaterialTypeUpdateView(APIView):
 class MaterialsView(APIView):
 
     def get(self, request):
-        Materials = models.Material.objects.all()
-        if Materials:
-            Materials_serializer = MaterialSerializer(Materials, many=True)
-            return Response({"Materials": Materials_serializer.data})
+        materials = models.Material.objects.all()
+        if materials:
+            materials_serializer = MaterialSerializer(materials, many=True)
+            return Response({"materials": materials_serializer.data})
         else:
             return Response({"message": "未查询到信息"})
+            
 
 
 class MaterialNewView(APIView):
@@ -1504,17 +1573,18 @@ class MaterialNewView(APIView):
         物料类别及其名字和最大流水号编码
         """
         material_types = models.MaterialType.objects.filter(type_status=1).values_list('type_iden', 'type_name')
-        material_types = [list(material_type) for material_type in material_types]
-        for i, material_type in enumerate(material_types):
-            material_iden = \
-                models.Material.objects.filter(material_type_iden=material_type[0]).aggregate(Max('material_iden'
-                                                                                                  ))[
-                    'material_iden__max']
-            material_types[i].append(material_iden)
+        # material_types = [list(material_type) for material_type in material_types]
+        # for i, material_type in enumerate(material_types):
+        #     material_iden = \
+        #         models.Material.objects.filter(material_type_iden=material_type[0]).aggregate(Max('material_iden'
+        #                                                                                           ))[
+        #             'material_iden__max']
+        #     material_types[i].append(material_iden)
 
         """
         计量单位包括量纲和计量单位名称
         """
+        print(material_types)
         meterages = models.Meterage.objects.filter(meterage_status=1).values_list('meterage_dimension',
                                                                                   'meterage_iden', 'meterage_name')
         # 这里没有按照量纲再去区别
@@ -1527,25 +1597,37 @@ class MaterialAddView(APIView):
         super().__init__(**kwargs)
         self.message = "添加成功"
         self.signal = 0
+        self.user_now_name = ""
 
     def post(self, request):
         json_data = json.loads(self.request.body.decode("utf-8"))
-        material_iden = json_data['material_iden']
+
+        user_now_iden = json_data['user_now_iden']
+        user_now = models.UserNow.objects.get(user_iden=user_now_iden)
+        if user_now:
+            self.user_now_name = user_now.user_name
+
         material_name = json_data['material_name']
         material_type_iden = json_data['material_type_iden']
         material_specification = json_data['material_specification']
         material_model = json_data['material_model']
         meterage_name = json_data['meterage_name']
         material_attr = json_data['material_attr']
-        material_status = json_data['material_status']
-        material_creator = json_data['material_creator']
+ 
+        max_id = models.Material.objects.filter(material_type_iden=material_type_iden).aggregate(Max('material_iden'))['material_iden__max']
+        
+        if max_id:
+            material_iden = str(int(max_id)+1)
+        else:
+            material_iden = material_type_iden+"00001"
 
         models.Material.objects.create(material_iden=material_iden, material_name=material_name,
                                        material_type_iden=material_type_iden,
                                        material_specification=material_specification,
                                        material_model=material_model, meterage_name=meterage_name,
-                                       material_attr=material_attr, material_status=material_status,
-                                       material_creator=material_creator)
+                                       material_attr=material_attr, material_status=0,
+                                       material_creator=self.user_now_name,
+                                       material_creator_iden=user_now_iden)
         return Response({'message': self.message, 'signal': self.signal})
 
 
@@ -1557,6 +1639,7 @@ class MaterialUpdateView(APIView):
 
     def post(self, request):
         json_data = json.loads(self.request.body.decode("utf-8"))
+        id = json_data['id']
         material_iden = json_data['material_iden']
         material_name = json_data['material_name']
         material_specification = json_data['material_specification']
@@ -1565,7 +1648,7 @@ class MaterialUpdateView(APIView):
         material_attr = json_data['material_attr']
 
         try:
-            models.Material.objects.filter(material_iden=material_iden).update(
+            models.Material.objects.filter(id=id).update(
                 material_name=material_name,
                 material_specification=material_specification,
                 material_model=material_model, meterage_name=meterage_name,
@@ -1574,3 +1657,20 @@ class MaterialUpdateView(APIView):
             self.message = "更新失败"
             self.signal = 1
         return Response({'message': self.message, 'signal': self.signal})
+
+
+class MaterialStatusView(APIView):
+    def post(self, request):
+        json_data = json.loads(self.request.body.decode("utf-8"))
+
+        material_status = json_data['material_status']
+        id = json_data["id"]
+        # dpm_iden = json_data['dpm_iden']
+
+        material = models.Material.objects.filter(id=id)
+
+        if material:
+            material.update(material_status=material_status)
+            return Response({"message": "状态更改成功", "signal": 0})
+        else:
+            return Response({"message": "未查询到物料,状态更改失败"})

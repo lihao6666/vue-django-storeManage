@@ -71,15 +71,20 @@ urlpatterns = [
     path('meterages', views.MeteragesView.as_view(), name='meterages'),
     path('meterageAdd', views.MeterageAddView.as_view(), name='meterageAdd'),
     path('meterageUpdate', views.MeterageUpdateView.as_view(), name='meterageUpdate'),
+    path('meterageStatus', views.MeterageStatusView.as_view(), name='meterageStatus'),
+
 
     path('materialTypes', views.MaterialTypesView.as_view(), name='materialTypes'),
     path('materialTypeAdd', views.MaterialTypeAddView.as_view(), name='materialTypeAdd'),
     path('materialTypeUpdate', views.MaterialTypeUpdateView.as_view(), name='materialTypeUpdate'),
+    path('materialTypeStatus', views.MaterialTypeStatusView.as_view(), name='materialTypeStatus'),
+
 
     path('materials', views.MaterialsView.as_view(), name='materials'),
     path('materialNew', views.MaterialNewView.as_view(), name='materialNew'),
     path('materialAdd', views.MaterialAddView.as_view(), name='materialAdd'),
     path('materialUpdate', views.MaterialUpdateView.as_view(), name='materialUpdate'),
+    path('materialStatus', views.MaterialStatusView.as_view(), name='materialStatus'),
 
 
 
