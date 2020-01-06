@@ -45,28 +45,8 @@ export default {
   methods: {
     handleSubmit () {
       if (this.loginData.user_iden && this.loginData.user_passwd) {
-        // let data = {
-        //   'user_id': this.loginData.user_iden,
-        //   'user_passwd': this.loginData.user_passwd
-        // }
         let _this = this
         this.isLogin = true
-        // let data = {
-        //   user_iden: '2017214876',
-        //   user_passwd: '2017214876',
-        //   user_name: 'yq',
-        //   user_phone_number: '15155905038',
-        //   email: '306594076@qq.com',
-        //   user_creator_iden: '2017214876',
-        //   user_creator: 'yq',
-        //   departments: [],
-        //   roles: [],
-        //   area_name: '合肥'
-        // }
-        // console.log(data)
-        // postAPI('/base/userAdd', data)
-        // localStorage.setItem('user_now_iden', _this.loginData.user_iden)
-        // _this.$router.push('/')
         let iden = localStorage.getItem('user_now_iden')
         if (iden) {
           this.$message.error('已经有用户登录了')
@@ -77,6 +57,30 @@ export default {
           if (res.data.signal === '0') {
             _this.$message.success(res.data.message)
             localStorage.setItem('user_now_iden', _this.loginData.user_iden)
+            localStorage.setItem('user', res.data)
+            let roles = res.data.roles
+            let n = 100
+            let num = 0
+            let str = String(Array(n > num ? (n - ('' + num).length + 1) : 0).join(0) + num)
+            if (roles && roles.length > 0) {
+              let n = roles[0][1].length || 26
+              let num = 0
+              str = String(Array(n > num ? (n - ('' + num).length + 1) : 0).join(0) + num)
+              let strarr = str.split('')
+              for (let i in roles) {
+                let arr = roles[i][1].split('')
+                for (let j = 0; j < arr.length; j++) {
+                  if (strarr[j] === '0' || arr[j] === '3' || arr[j] === strarr[j]) {
+                    strarr[j] = arr[j]
+                  } else if (arr[j] !== '0') {
+                    strarr[j] = '3'
+                  }
+                }
+              }
+              str = strarr.join('')
+              console.log(str)
+            }
+            localStorage.setItem('user_power', str)
             _this.$router.push('/')
             _this.isLogin = false
           } else {

@@ -10,14 +10,14 @@
       unique-opened
       router
     >
-      <template v-for="item in items">
+      <template v-for="item in items" v-if="item.ifshow">
         <template v-if="item.subs">
           <el-submenu :index="item.index" :key="item.index">
             <template slot="title">
               <i :class="item.icon"></i>
               <span slot="title">{{ item.title }}</span>
             </template>
-            <template v-for="subItem in item.subs">
+            <template v-for="subItem in item.subs" v-if="subItem.ifshow">
               <el-submenu
                 v-if="subItem.subs"
                 :index="subItem.index"
@@ -28,6 +28,7 @@
                   v-for="(threeItem,i) in subItem.subs"
                   :key="i"
                   :index="threeItem.index"
+                  v-if="threeItem.ifshow"
                 >{{ threeItem.title }}
                 </el-menu-item>
               </el-submenu>
@@ -58,11 +59,13 @@ export default {
   data () {
     return {
       collapse: false,
+      power: '',
       items: [
         {
           icon: 'el-icon-s-home',
-          index: 'requisition',
-          title: '请购'
+          index: 'home',
+          title: '首页',
+          ifshow: true
         },
         {
           icon: 'el-icon-shopping-bag-1',
@@ -71,9 +74,12 @@ export default {
           subs: [
             {
               index: 'sell',
-              title: '销售订单'
+              title: '销售订单',
+              ifshow: true,
+              key: 0
             }
-          ]
+          ],
+          ifshow: true
         },
         {
           icon: 'el-icon-shopping-cart-full',
@@ -81,14 +87,25 @@ export default {
           title: '采购管理',
           subs: [
             {
+              index: 'requisition',
+              title: '请购单',
+              ifshow: true,
+              key: 1
+            },
+            {
               index: 'constract',
-              title: '采购合同'
+              title: '采购合同',
+              ifshow: true,
+              key: 2
             },
             {
               index: 'purchase',
-              title: '采购订单'
+              title: '采购订单',
+              ifshow: true,
+              key: 3
             }
-          ]
+          ],
+          ifshow: true
         },
         {
           icon: 'el-icon-box',
@@ -101,13 +118,18 @@ export default {
               subs: [
                 {
                   index: 'buyinstore',
-                  title: '采购入库'
+                  title: '采购入库',
+                  ifshow: true,
+                  key: 4
                 },
                 {
                   index: 'otherinstore',
-                  title: '其他入库'
+                  title: '其他入库',
+                  ifshow: true,
+                  key: 5
                 }
-              ]
+              ],
+              ifshow: true
             },
             {
               index: '4-3',
@@ -115,17 +137,24 @@ export default {
               subs: [
                 {
                   index: 'materialsoutstore',
-                  title: '材料出库'
+                  title: '材料出库',
+                  ifshow: true,
+                  key: 6
                 },
                 {
                   index: 'selloutstore',
-                  title: '销售出库'
+                  title: '销售出库',
+                  ifshow: true,
+                  key: 7
                 },
                 {
                   index: 'otheroutstore',
-                  title: '其他出库'
+                  title: '其他出库',
+                  ifshow: true,
+                  key: 8
                 }
-              ]
+              ],
+              ifshow: true
             },
             {
               index: '4-4',
@@ -133,21 +162,30 @@ export default {
               subs: [
                 {
                   index: 'stockrequisition',
-                  title: '转库申请'
+                  title: '转库申请',
+                  ifshow: true,
+                  key: 9
                 },
                 {
                   index: 'stockchange',
-                  title: '转库单'
+                  title: '转库单',
+                  ifshow: true,
+                  key: 10
                 },
                 {
                   index: 'stockconfirm',
-                  title: '库存盘点'
+                  title: '库存盘点',
+                  ifshow: true,
+                  key: 11
                 },
                 {
                   index: 'stockbegin',
-                  title: '期初库存'
+                  title: '期初库存',
+                  ifshow: true,
+                  key: 12
                 }
-              ]
+              ],
+              ifshow: true
             },
             {
               index: '4-1',
@@ -155,11 +193,15 @@ export default {
               subs: [
                 {
                   index: 'stockcheck',
-                  title: '现存量查询'
+                  title: '现存量查询',
+                  ifshow: true,
+                  key: 13
                 }
-              ]
+              ],
+              ifshow: true
             }
-          ]
+          ],
+          ifshow: true
         },
         {
           icon: 'el-icon-data-line',
@@ -168,17 +210,24 @@ export default {
           subs: [
             {
               index: 'organizationmanage',
-              title: '组织架构管理'
+              title: '组织架构管理',
+              ifshow: true,
+              key: 14
             },
             {
               index: 'rolemanage',
-              title: '角色管理'
+              title: '角色管理',
+              ifshow: true,
+              key: 15
             },
             {
               index: 'usermanage',
-              title: '用户管理'
+              title: '用户管理',
+              ifshow: true,
+              key: 16
             }
-          ]
+          ],
+          ifshow: true
         },
         {
           icon: 'el-icon-document',
@@ -187,41 +236,60 @@ export default {
           subs: [
             {
               index: 'organization',
-              title: '库存组织管理'
+              title: '库存组织管理',
+              ifshow: true,
+              key: 17
             },
             {
               index: 'center',
-              title: '中心管理'
+              title: '中心管理',
+              ifshow: true,
+              key: 18
             },
             {
               index: 'brand',
-              title: '品牌管理'
+              title: '品牌管理',
+              ifshow: true,
+              key: 19
             },
             {
               index: 'warehouse',
-              title: '仓库维护'
+              title: '仓库维护',
+              ifshow: true,
+              key: 20
             },
             {
               index: 'supplier',
-              title: '供应商维护'
+              title: '供应商维护',
+              ifshow: true,
+              key: 21
             },
             {
               index: 'customer',
-              title: '客户维护'
+              title: '客户维护',
+              ifshow: true,
+              key: 22
             },
             {
               index: 'meterage',
-              title: '计量单位维护'
+              title: '计量单位维护',
+              ifshow: true,
+              key: 23
             },
             {
               index: 'materialtype',
-              title: '物料类别维护'
+              title: '物料类别维护',
+              ifshow: true,
+              key: 24
             },
             {
               index: 'material',
-              title: '物料维护'
+              title: '物料维护',
+              ifshow: true,
+              key: 25
             }
-          ]
+          ],
+          ifshow: true
         }
       ]
     }
@@ -237,6 +305,33 @@ export default {
       this.collapse = msg
       bus.$emit('collapse-content', msg)
     })
+    this.power = String(localStorage.getItem('user_power'))
+    for (let i = 1; i < this.items.length; i++) {
+      this.ifShow(this.items[i])
+    }
+  },
+  methods: {
+    ifShow (item) {
+      let ifshow = false
+      let ifhas = false
+      for (let i in item.subs) {
+        ifhas = true
+        if (this.ifShow(item.subs[i])) {
+          ifshow = true
+        }
+      }
+      if (ifhas) {
+        item.ifshow = ifshow
+        return ifshow
+      }
+      if (this.power.charAt(item.key) !== '0') {
+        item.ifshow = true
+        return true
+      } else {
+        item.ifshow = false
+        return false
+      }
+    }
   }
 }
 </script>
