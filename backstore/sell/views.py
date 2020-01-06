@@ -104,16 +104,30 @@ class SellOrderUpdateView(APIView):
         so_date = json_data['so_date']
         so_remarks = json_data['so_remarks']
 
-
         try:
             so_iden = json_data['so_iden']
         except:
-            pre_iden = "SO"
+            date_str = timezone.now().strftime("%Y-%m-%d")
+            date = "".join(date_str.split("-"))
+            pre_iden = "SO" + date
             max_id = models.SellOrder.objects.all().aggregate(Max('so_serial'))['so_serial__max']
             if max_id:
-                so_iden = str(int(max_id) + 1)
+                so_serial = str(int(max_id) + 1)
             else:
-                so_iden =""
+                so_serial = "0001"
+            so_new_iden = pre_iden+so_serial
+            try:
+                models.SellOrder.objects.create(so_iden=so_new_iden,so_serial=so_serial,organization=organization,
+                                                so_type=so_type, customer=customer, so_date=so_date,
+                                                deliver_ware_house=deliver_ware_house,
+                                                deliver_ware_house_iden=deliver_ware_house_iden, so_remarks=so_remarks,
+                                                so_status=0,so_creator=self.user_now_name,so_creator_iden=user_now_iden)
+                self.message = "新建销售订单成功"
+                self.signal = 0
+            except:
+                self.message = "新建销售订单失败"
+                self.signal = 1
+
 
         else:
             so = models.SellOrder.objects.get(so_iden=so_iden)
