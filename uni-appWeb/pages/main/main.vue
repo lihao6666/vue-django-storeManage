@@ -1,6 +1,6 @@
 <template>
     <view class="content">
-		<uni-nav-bar :fixed="true" background-color="#0faeff" :border="false">
+		<uni-nav-bar :fixed="true" background-color="#20a0ff" :border="false">
 			<view class="input-view"  v-if="current === 0">
 				<uni-icons type="search" size="22" color="#666666" />
 				<input v-model="outFilterText" confirm-type="search" class="input" type="text" placeholder="输入出库单信息">
@@ -23,7 +23,7 @@
 			</view>
 		</uni-nav-bar>
 		<view class="content-control">
-			<uni-segmented-control :current="current" :values="items" @clickItem="onClickItem" style-type="button" active-color="#0faeff"></uni-segmented-control>
+			<uni-segmented-control :current="current" :values="items" @clickItem="onClickItem" style-type="button" active-color="#20a0ff"></uni-segmented-control>
 		</view>
 		<view class="current-content">
 			<view v-if="current === 0">
