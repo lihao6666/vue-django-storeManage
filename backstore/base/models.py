@@ -148,6 +148,15 @@ class Area(models.Model):
     def __str__(self):
         return self.area_name
 
+class Power(models.Model):
+    """
+    权限
+    """
+    
+    id = models.AutoField(primary_key=True)
+    power_name = models.CharField(max_length=20, verbose_name='权限名字')
+
+
 
 class Brand(models.Model):
     """

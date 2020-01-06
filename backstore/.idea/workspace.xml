@@ -1,73 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="34c6b5b4-0631-4a35-9482-5f8673ee1af7" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-    </list>
+    <list default="true" id="9f7cbd95-5dd5-4936-b96c-8649e46718ee" name="Default Changelist" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="DatabaseView">
-    <option name="SHOW_INTERMEDIATE" value="true" />
-    <option name="GROUP_DATA_SOURCES" value="true" />
-    <option name="GROUP_SCHEMA" value="true" />
-    <option name="GROUP_CONTENTS" value="false" />
-    <option name="SORT_POSITIONED" value="false" />
-    <option name="SHOW_EMPTY_GROUPS" value="false" />
-    <option name="AUTO_SCROLL_FROM_SOURCE" value="false" />
-    <option name="HIDDEN_KINDS">
-      <set />
-    </option>
-    <expand />
-    <select />
-  </component>
   <component name="DjangoConsoleOptions" custom-start-script="import sys; print('Python %s on %s' % (sys.version, sys.platform))&#10;import django; print('Django %s' % django.get_version())&#10;sys.path.extend([WORKING_DIR_AND_PYTHON_PATHS])&#10;if 'setup' in dir(django): django.setup()&#10;import django_manage_shell; django_manage_shell.run(PROJECT_ROOT)">
     <option name="myCustomStartScript" value="import sys; print('Python %s on %s' % (sys.version, sys.platform))&#10;import django; print('Django %s' % django.get_version())&#10;sys.path.extend([WORKING_DIR_AND_PYTHON_PATHS])&#10;if 'setup' in dir(django): django.setup()&#10;import django_manage_shell; django_manage_shell.run(PROJECT_ROOT)" />
   </component>
-  <component name="FavoritesManager">
-    <favorites_list name="store" />
-  </component>
-  <component name="FileTemplateManagerImpl">
-    <option name="RECENT_TEMPLATES">
-      <list>
-        <option value="Python Script" />
-      </list>
-    </option>
-  </component>
-  <component name="Git.Settings">
-    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
-  </component>
-  <component name="ProjectId" id="1VSV9bdZTg74BQZCTawor0iAI2t" />
-  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
-    <ConfirmationsSetting value="1" id="Add" />
-  </component>
+  <component name="ProjectId" id="1W0vJUREnNzhs8zagXrya5y9mJT" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showExcludedFiles" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
-    <property name="DatabaseDriversLRU" value="mysql" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
-    <property name="WebServerToolWindowFactoryState" value="true" />
-    <property name="WebServerToolWindowPanel.toolwindow.highlight.mappings" value="true" />
-    <property name="WebServerToolWindowPanel.toolwindow.highlight.symlinks" value="true" />
-    <property name="WebServerToolWindowPanel.toolwindow.show.date" value="false" />
-    <property name="WebServerToolWindowPanel.toolwindow.show.permissions" value="false" />
-    <property name="WebServerToolWindowPanel.toolwindow.show.size" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/purchase" />
-    <property name="settings.editor.selected.configurable" value="editor.preferences.tabs" />
-  </component>
-  <component name="RecentsManager">
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/purchase" />
-    </key>
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="settings.editor.selected.configurable" value="preferences.general" />
   </component>
   <component name="RunManager">
-    <configuration name="store" type="Python.DjangoServer" factoryName="Django server">
-      <module name="store" />
+    <configuration name="backstore" type="Python.DjangoServer" factoryName="Django server">
+      <module name="backstore" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
       <envs>
@@ -102,86 +58,21 @@
       </list>
     </option>
   </component>
-  <component name="StructureViewFactory">
-    <option name="AUTOSCROLL_FROM_SOURCE" value="true" />
-  </component>
   <component name="SvnConfiguration">
     <configuration />
   </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="34c6b5b4-0631-4a35-9482-5f8673ee1af7" name="Default Changelist" comment="" />
-      <created>1577246332690</created>
+      <changelist id="9f7cbd95-5dd5-4936-b96c-8649e46718ee" name="Default Changelist" comment="" />
+      <created>1578299254445</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1577246332690</updated>
-      <workItem from="1577246334886" duration="2022000" />
-      <workItem from="1577343592625" duration="52968000" />
-      <workItem from="1577513181545" duration="6382000" />
-      <workItem from="1577528753842" duration="577000" />
-      <workItem from="1577593027609" duration="182541000" />
-      <workItem from="1578211152476" duration="655000" />
+      <updated>1578299254445</updated>
+      <workItem from="1578299256533" duration="596000" />
     </task>
-    <task id="LOCAL-00001" summary="&quot;Add requirements.txt&quot;">
-      <created>1578018842973</created>
-      <option name="number" value="00001" />
-      <option name="presentableId" value="LOCAL-00001" />
-      <option name="project" value="LOCAL" />
-      <updated>1578018842973</updated>
-    </task>
-    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="1" />
-  </component>
-  <component name="VcsManagerConfiguration">
-    <MESSAGE value="&quot;Add requirements.txt&quot;" />
-    <option name="LAST_COMMIT_MESSAGE" value="&quot;Add requirements.txt&quot;" />
-  </component>
-  <component name="WindowStateProjectService">
-    <state x="2240" y="334" key="#Deployment" timestamp="1578210935700">
-      <screen x="1920" y="219" width="1440" height="900" />
-    </state>
-    <state x="2240" y="334" key="#Deployment/1920.219.1440.900/0.0.1920.1080@1920.219.1440.900" timestamp="1578210935700" />
-    <state x="2240" y="334" key="#Options" timestamp="1578211162922">
-      <screen x="1920" y="219" width="1440" height="900" />
-    </state>
-    <state x="2240" y="334" key="#Options/1920.219.1440.900/0.0.1920.1080@1920.219.1440.900" timestamp="1578211162922" />
-    <state x="560" y="205" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1577513163152">
-      <screen x="0" y="0" width="1920" height="1080" />
-    </state>
-    <state x="560" y="205" key="#com.intellij.execution.impl.EditConfigurationsDialog/1920.219.1440.900/0.0.1920.1080@0.0.1920.1080" timestamp="1577513163152" />
-    <state x="550" y="139" key="CommitChangelistDialog2" timestamp="1578018842838">
-      <screen x="0" y="0" width="1920" height="1080" />
-    </state>
-    <state x="550" y="139" key="CommitChangelistDialog2/1920.219.1440.900/0.0.1920.1080@0.0.1920.1080" timestamp="1578018842838" />
-    <state x="100" y="100" width="1720" height="880" key="DiffContextDialog" timestamp="1577529573352">
-      <screen x="0" y="23" width="1920" height="988" />
-    </state>
-    <state x="100" y="100" width="1720" height="880" key="DiffContextDialog/1920.242.1440.877/0.23.1920.988@0.23.1920.988" timestamp="1577529573352" />
-    <state x="425" y="147" key="SettingsEditor" timestamp="1578108378400">
-      <screen x="0" y="0" width="1440" height="900" />
-    </state>
-    <state x="425" y="147" key="SettingsEditor/0.0.1440.900@0.0.1440.900" timestamp="1578108378400" />
-    <state x="566" y="184" key="SettingsEditor/1920.242.1440.877/0.23.1920.989@0.23.1920.989" timestamp="1577504419495" />
-    <state x="473" y="153" width="660" height="595" key="find.popup" timestamp="1578034307099">
-      <screen x="0" y="0" width="1440" height="900" />
-    </state>
-    <state x="473" y="153" width="660" height="595" key="find.popup/0.0.1440.900@0.0.1440.900" timestamp="1578034307099" />
-    <state x="630" y="183" width="660" height="714" key="find.popup/1920.219.1440.900/0.0.1920.1080@0.0.1920.1080" timestamp="1577427173380" />
-    <state x="2547" y="406" key="ftp.server.browser" timestamp="1578210934525">
-      <screen x="1920" y="219" width="1440" height="900" />
-    </state>
-    <state x="2547" y="406" key="ftp.server.browser/1920.219.1440.900/0.0.1920.1080@1920.219.1440.900" timestamp="1578210934525" />
-    <state x="665" y="338" key="git4idea.merge.GitPullDialog" timestamp="1578018876224">
-      <screen x="0" y="0" width="1920" height="1080" />
-    </state>
-    <state x="665" y="338" key="git4idea.merge.GitPullDialog/1920.219.1440.900/0.0.1920.1080@0.0.1920.1080" timestamp="1578018876224" />
-    <state x="648" y="199" width="670" height="564" key="search.everywhere.popup" timestamp="1578034003173">
-      <screen x="0" y="0" width="1440" height="900" />
-    </state>
-    <state x="648" y="199" width="670" height="564" key="search.everywhere.popup/0.0.1440.900@0.0.1440.900" timestamp="1578034003173" />
-    <state x="864" y="239" width="670" height="676" key="search.everywhere.popup/1920.219.1440.900/0.0.1920.1080@0.0.1920.1080" timestamp="1578023734310" />
   </component>
 </project>

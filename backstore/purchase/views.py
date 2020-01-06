@@ -83,6 +83,7 @@ class PrEditView(APIView):
             message_return["organizations"] = orga_names
         else:
             message_return["message"] = "请购单明细为空"
+        return Response(message_return)
 
 
 class PrUpdateView(APIView):
@@ -104,13 +105,13 @@ class PrUpdateView(APIView):
         pr_type = json_data['pr_type']
         pr_remarks = json_data['pr_remarks']
         organization = Organization.objects.get(area_name=area_name, orga_name=orga_name)
-        # flag = json_data['flag']  # 判断0就是新增，1就是
+        # flag = json_data['flag']  # 判断0就是新增，1就是更新
         if pr_iden == "":
             pr_creator = json_data['pr_creator']
             try:
                 max_id = models.PurchaseRequest.objects.all().aggregate(Max('pr_iden'))['pr_iden__max']
                 pr_iden = str(int(max_id) + 1)
-                models.PurchaseRequest.objects.insert(pr_iden=pr_iden, organization=organization, pr_date=pr_date,
+                models.PurchaseRequest.objects.create(pr_iden=pr_iden, organization=organization, pr_date=pr_date,
                                                       pr_department=pr_department, pr_type=pr_type,
                                                       pr_creator=pr_creator,
                                                       pr_remarks=pr_remarks, pr_status=0
