@@ -4,6 +4,7 @@
     "uni-segmented-control": "/components/uni-segmented-control/uni-segmented-control",
     "uni-card": "/components/uni-card/uni-card",
     "uni-section": "/components/uni-section/uni-section",
+    "sl-filter": "/components/sl-filter/sl-filter",
     "drag-button": "/components/drag-button/anotherButton",
     "yp-number-box": "/components/yp-number-box/yp-number-box"
   }

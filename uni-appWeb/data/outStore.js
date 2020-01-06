@@ -32,7 +32,7 @@ let data = [
 		mso_date: '2020-1-2 16:00:00',
 		mso_req_department: '非中心',
 		mso_remarks: '上美术课借用器材',
-		mso_status: '已关闭',
+		mso_status: '已审批',
 		mso_creator: '董新宇',
 		mso_createDate: '2020-1-2 12:09:00'
 	},{

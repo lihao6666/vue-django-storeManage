@@ -1,0 +1,6 @@
+{
+  "navigationBarTitleText": "销售单详情",
+  "usingComponents": {
+    "uni-card": "/components/uni-card/uni-card"
+  }
+}

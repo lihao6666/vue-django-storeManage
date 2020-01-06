@@ -1,0 +1,7 @@
+{
+  "component": true,
+  "usingComponents": {
+    "popup-layer": "/components/sl-filter/popup-layer",
+    "sl-filter-view": "/components/sl-filter/filter-view"
+  }
+}

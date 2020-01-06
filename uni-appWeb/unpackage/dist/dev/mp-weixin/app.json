@@ -11,7 +11,11 @@
     "pages/user/phoneus",
     "pages/user/setting",
     "pages/user/myinfo",
-    "pages/detail/detail"
+    "pages/detail/detail",
+    "pages/detail/outDetails",
+    "pages/detail/purchaseDetails",
+    "pages/detail/sellDetails",
+    "pages/detail/exchangeDetails"
   ],
   "subPackages": [],
   "window": {
@@ -45,5 +49,5 @@
     ]
   },
   "usingComponents": {},
-  "sitemapLocation": "sitemap55.json"
+  "sitemapLocation": "sitemap8.json"
 }

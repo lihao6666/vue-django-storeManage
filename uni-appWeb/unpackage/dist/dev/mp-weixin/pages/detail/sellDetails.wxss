@@ -1,0 +1,31 @@
+
+page {
+	display: -webkit-box;
+	display: -webkit-flex;
+	display: flex;
+	-webkit-box-orient: vertical;
+	-webkit-box-direction: normal;
+	-webkit-flex-direction: column;
+	        flex-direction: column;
+	box-sizing: border-box;
+	background-color: #efeff4;
+	min-height: 100%;
+	height: auto;
+}
+view {
+	font-size: 28rpx;
+	line-height: inherit;
+}
+.content {
+	padding: 0;
+}
+.content-content {
+	-webkit-box-pack: center;
+	-webkit-justify-content: center;
+	        justify-content: center;
+	-webkit-box-align: center;
+	-webkit-align-items: center;
+	        align-items: center;
+	text-align: left;
+}
+

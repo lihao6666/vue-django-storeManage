@@ -71,7 +71,7 @@
 		align-items: center;
 		height: 170upx;
 		padding-left: 20px;
-		background: linear-gradient(to top, #365fff, #0faeff);
+		background: linear-gradient(to top, #4073ff, #0faeff);
 		border-top: 0;
 	}
 	.person-head-box {
