@@ -26,6 +26,7 @@ class PurchaseRequest(models.Model):
     pr_creator = models.CharField(max_length=20, verbose_name='请购创建者')
     pr_createDate = models.DateTimeField(auto_now_add=True, verbose_name='请购创建时间')
     pr_closer = models.CharField(max_length=20, verbose_name='请购关闭者', null=True)
+    pr_closer_iden = models.CharField(max_length=20, verbose_name='请购关闭者工号', null=True)
     pr_closeDate = models.DateTimeField(auto_now_add=True, verbose_name='请购关闭时间', null=True)
     pr_closeReason = models.TextField(max_length=200, verbose_name='请购关闭原因', null=True)
 

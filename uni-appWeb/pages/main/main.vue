@@ -30,6 +30,10 @@
 							<view class="commit" @click="commitOrder(item.mso_iden)">提交</view>
 						</view>
 						<view v-if="judgeStatus(item.mso_status) === 1" class="button-box">
+							<view class="delete" @click="closeOrder(item.mso_iden)">关闭</view>
+							<view class="detail" @click="viewDetail(item.mso_iden)">详情</view>
+						</view>
+						<view v-if="judgeStatus(item.mso_status) === 2" class="button-box">
 							<view class="detail" @click="viewDetail(item.mso_iden)">详情</view>
 						</view>
 					</uni-card>
@@ -137,7 +141,6 @@
 							<view>转入仓库：{{ item.str_to }}</view>
 							<view>转出仓库：{{ item.str_from }}</view>
 							<view>申请部门：{{ item.str_req_department }}</view>
-							<view>备注：{{ item.str_remarks }}</view>
 							<view>创建人：{{ item.str_creator }}</view>
 							<view>创建日期：{{ item.str_createDate }}</view>
 						</view>
@@ -275,9 +278,6 @@ export default {
 			if (this.exchangeFilterText) {
 				arr = this.exchangeList.filter(item => item.str_orga.includes(this.exchangeFilterText))
 				if(arr.length === 0) {
-					arr = this.exchangeList.filter(item => item.str_remarks.includes(this.exchangeFilterText))
-				} 
-				if(arr.length === 0) {
 					arr = this.exchangeList.filter(item => item.str_iden.includes(this.exchangeFilterText))
 				} 
 				if(arr.length === 0) {
@@ -319,20 +319,40 @@ export default {
 		viewDetail(iden) {
 			var diff = iden[0]+iden[1]
 			if(diff === "MS") {
+				try {
+				    uni.setStorageSync('viewout', iden);
+				} catch (e) {
+				    console.log("传出库单单号失败")
+				}
 				uni.navigateTo({
-				    url: '../user/myinfo',
+				    url: '../detail/outDetails',
 				});
 			} else if(diff === "PR") {
+				try {
+				    uni.setStorageSync('viewpurchase', iden);
+				} catch (e) {
+				    console.log("传请购单单号失败")
+				}
 				uni.navigateTo({
-				    url: '../user/myinfo',
+				    url: '../detail/purchaseDetails',
 				});
 			} else if(diff === "SO") {
+				try {
+				    uni.setStorageSync('viewsell', iden);
+				} catch (e) {
+				    console.log("传销售单单号失败")
+				}
 				uni.navigateTo({
-				    url: '../user/myinfo',
+				    url: '../detail/sellDetails',
 				});
 			} else if(diff === "ST") {
+				try {
+				    uni.setStorageSync('viewexchange', iden);
+				} catch (e) {
+				    console.log("传转库申请单单号失败")
+				}
 				uni.navigateTo({
-				    url: '../user/myinfo',
+				    url: '../detail/exchangeDetails',
 				});
 			}
 		},
@@ -344,7 +364,7 @@ export default {
 				});
 			} else if(page === 1) {
 				uni.navigateTo({
-				    url: '../user/myinfo',
+				    url: '../requisitions/requisitions',
 				});
 			} else if(page === 2) {
 				uni.navigateTo({
@@ -365,11 +385,9 @@ export default {
 				    content: '确认删除草稿：'+iden+" ?",
 				    success: function (res) {
 				        if (res.confirm) {
-				            uni.navigateTo({
-				                url: '../user/myinfo',
-				            });
+				            
 				        } else if (res.cancel) {
-				            console.log('用户点击取消');
+				           
 				        }
 				    }
 				});
@@ -379,9 +397,7 @@ export default {
 				    content: '确认删除草稿：'+iden+" ?",
 				    success: function (res) {
 				        if (res.confirm) {
-							uni.navigateTo({
-								url: '../user/myinfo',
-							});
+							
 				        } else if (res.cancel) {
 				            
 				        }
@@ -393,9 +409,7 @@ export default {
 				    content: '确认删除草稿：'+iden+" ?",
 				    success: function (res) {
 				        if (res.confirm) {
-							uni.navigateTo({
-								url: '../user/myinfo',
-							});
+							
 				        } else if (res.cancel) {
 				            
 				        }
@@ -407,9 +421,7 @@ export default {
 				    content: '确认删除草稿：'+iden+" ?",
 				    success: function (res) {
 				        if (res.confirm) {
-							uni.navigateTo({
-								url: '../user/myinfo',
-							});
+							
 				        } else if (res.cancel) {
 				            
 				        }
@@ -426,11 +438,9 @@ export default {
 				    content: '确认提交草稿：'+iden+" ?",
 				    success: function (res) {
 				        if (res.confirm) {
-				            uni.navigateTo({
-				                url: '../user/myinfo',
-				            });
+				            
 				        } else if (res.cancel) {
-				            console.log('用户点击取消');
+				            
 				        }
 				    }
 				});
@@ -440,9 +450,7 @@ export default {
 				    content: '确认提交草稿：'+iden+" ?",
 				    success: function (res) {
 				        if (res.confirm) {
-							uni.navigateTo({
-								url: '../user/myinfo',
-							});
+							
 				        } else if (res.cancel) {
 				            
 				        }
@@ -454,9 +462,7 @@ export default {
 				    content: '确认提交草稿：'+iden+" ?",
 				    success: function (res) {
 				        if (res.confirm) {
-							uni.navigateTo({
-								url: '../user/myinfo',
-							});
+							
 				        } else if (res.cancel) {
 				            
 				        }
@@ -468,9 +474,7 @@ export default {
 				    content: '确认提交草稿：'+iden+" ?",
 				    success: function (res) {
 				        if (res.confirm) {
-							uni.navigateTo({
-								url: '../user/myinfo',
-							});
+							
 				        } else if (res.cancel) {
 				            
 				        }
@@ -516,14 +520,20 @@ export default {
 			});
 		},
 
-	}
+	},
 	
-	// onLoad: function() {   //登录检查函数
-	// 	loginMsg = this.checkLogin('../pages/main/main', 'switchTab');
-	// 	if(!loginMsg){
-	// 		return;
-	// 	}
-	// }
+	onLoad: function() {   
+		//登录检查函数
+		// loginMsg = this.checkLogin('../pages/main/main', 'switchTab');
+		// if(!loginMsg){
+		// 	return;
+		// }
+		uni.removeStorageSync('viewout');
+		uni.removeStorageSync('viewpurchase');
+		uni.removeStorageSync('viewsell');
+		uni.removeStorageSync('viewexchange');
+		var test = uni.getStorageSync('viewout');
+	}
 }
 
 </script>
@@ -542,35 +552,6 @@ export default {
 		font-size: 28rpx;
 		line-height: inherit;
 	}
-	.searchInput {
-			margin-top: 1vw;
-			margin-left: 20rpx;
-			margin-right: 20rpx;
-			background: white;
-			border-radius: 30upx;
-			display: flex;
-			align-items: center;
-			justify-content: center;
-			height: 70rpx;
-		}
-		
-		.search {
-			width: 32upx;
-			height: 32upx;
-		}
-		
-		.searchBox {
-			width: 56upx;
-			height: 56upx;
-			display: flex;
-			justify-content: center;
-			align-items: center;
-		}
-		
-		.input {
-			color: #999;
-			width: 90%;
-		}
 	.content {
 		padding: 0;
 	}
@@ -604,5 +585,22 @@ export default {
 	.commit {
 		width: 60upx;
 		color: green;
+	}
+	
+	.searchInput {
+		margin-top: 1vw;
+		margin-left: 20rpx;
+		margin-right: 20rpx;
+		background: white;
+		border-radius: 30upx;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		height: 70rpx;
+	}
+	
+	.input {
+		color: #999;
+		width: 90%;
 	}
 </style>

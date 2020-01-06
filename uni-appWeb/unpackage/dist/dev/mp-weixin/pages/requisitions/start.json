@@ -1,6 +1,7 @@
 {
   "navigationBarTitleText": "新建",
   "usingComponents": {
-    "mpvue-city-picker": "/components/mpvue-citypicker/mpvueCityPicker"
+    "w-picker": "/components/w-picker/w-picker",
+    "lb-picker": "/components/lb-picker/index"
   }
 }

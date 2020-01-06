@@ -1,4 +1,5 @@
 import axios from 'axios'
+import {Message, Loading} from 'element-ui'
 // import qs from 'qs'
 // import router from '@/router'
 // import {Message, MessageBox} from 'element-ui'
@@ -13,10 +14,37 @@ if (httpUrl.indexOf('.com') !== -1) {
   axios.defaults.baseURL = 'http://www.test.com' // 这是调用数据接口,公共接口url+调用接口名
 } else if (httpUrl.indexOf('localhost:8080') !== -1) {
   console.log('指定开发环境', httpUrl)
-  axios.defaults.baseURL = 'http://localhost:8090/'
+  axios.defaults.baseURL = 'http://49.234.123.211:8000/'
 } else {
   console.log('开发环境', httpUrl)
-  axios.defaults.baseURL = 'http://localhost:8090/' // 这是调用数据接口,公共接口url+调用接口名
+  axios.defaults.baseURL = 'http://49.234.123.211:8000/' // 这是调用数据接口,公共接口url+调用接口名
+}
+
+let loading
+function startLoading () {
+  loading = Loading.service({
+    lock: true,
+    text: '加载中……',
+    background: 'rgba(0, 0, 0, 0.7)'
+  })
+}
+function endLoading () {
+  loading.close()
+}
+
+let needLoadingRequestCount = 0
+export function showFullScreenLoading () {
+  if (needLoadingRequestCount === 0) {
+    startLoading()
+  }
+  needLoadingRequestCount++
+}
+export function tryHideFullScreenLoading () {
+  if (needLoadingRequestCount <= 0) return
+  needLoadingRequestCount--
+  if (needLoadingRequestCount === 0) {
+    endLoading()
+  }
 }
 
 axios.interceptors.request.use(config => {
@@ -26,6 +54,10 @@ axios.interceptors.request.use(config => {
       config.data.user_now_iden = username
     }
   }
+  // Vue.$vux.loading.show({
+  //   text: 'Loading'
+  // })
+  showFullScreenLoading()
   console.log(config)
   // let bToken = localStorage.getItem('btoken')
   // if (bToken === null) {
@@ -38,6 +70,8 @@ axios.interceptors.request.use(config => {
   // config.data = qs.stringify(config.data)
   return config
 }, error => {
+  tryHideFullScreenLoading()
+  Message.error('加载失败')
   return Promise.reject(error)
 })
 
@@ -65,8 +99,12 @@ axios.interceptors.response.use(response => {
   //     })
   //   }
   // }
+  // Vue.$vux.loading.hide()
+  tryHideFullScreenLoading()
   return response
 }, error => {
+  tryHideFullScreenLoading()
+  Message.error('加载失败')
   return Promise.resolve(error.response)
 })
 
@@ -82,6 +120,7 @@ export function getAPI (url, params = null) {
     }
   })
 }
+
 // post请求
 export function postAPI (url, params = null) {
   return axios({

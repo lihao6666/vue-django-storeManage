@@ -532,7 +532,7 @@ var _exchange = _interopRequireDefault(__webpack_require__(/*! ../../data/exchan
 
       } else if (page === 1) {
         uni.navigateTo({
-          url: '../user/myinfo' });
+          url: '../requisitions/requisitions' });
 
       } else if (page === 2) {
         uni.navigateTo({

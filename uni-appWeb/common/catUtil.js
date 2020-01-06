@@ -148,11 +148,5 @@ const emptyPatt = /(^$)|(^[\u4E00-\u9FA5a-zA-Z0-9,，,.,!,@,#,$,%,^,&,*,(,),-,+,
 const phonePatt = /^1((3[\d])|(4[5,6,9])|(5[0-3,5-9])|(6[5-7])|(7[0-8])|(8[1-8])|(9[1,8,9]))\d{8}$/;
 const cardPatt = /(^[1-9]\d{5}(18|19|([23]\d))\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$)|(^[1-9]\d{5}\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{2}$)/;
 module.exports = {
-	formatMoney,
-	formateDate,
-	catformatMoney,
-	formatMoneyAuto,
-	formatFileSize,
-	phonePatt,
-	cardPatt,
+	formateDate
 }

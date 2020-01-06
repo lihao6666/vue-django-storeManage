@@ -133,7 +133,7 @@ __webpack_require__.r(__webpack_exports__);
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-/* WEBPACK VAR INJECTION */(function(uni) {Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var uniSegmentedControl = function uniSegmentedControl() {return __webpack_require__.e(/*! import() | components/uni-section/uni-section */ "components/uni-section/uni-section").then(__webpack_require__.bind(null, /*! ../../components/uni-section/uni-section.vue */ 181));};var uniSection = function uniSection() {return __webpack_require__.e(/*! import() | components/uni-section/uni-section */ "components/uni-section/uni-section").then(__webpack_require__.bind(null, /*! ../../components/uni-section/uni-section.vue */ 181));};var _default =
+/* WEBPACK VAR INJECTION */(function(uni) {Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;
 
 
 
@@ -172,209 +172,220 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+var _materialData = _interopRequireDefault(__webpack_require__(/*! ../../data/materialData.js */ 233));var _components;function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}function _defineProperty(obj, key, value) {if (key in obj) {Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true });} else {obj[key] = value;}return obj;}var uniSegmentedControl = function uniSegmentedControl() {return __webpack_require__.e(/*! import() | components/uni-segmented-control/uni-segmented-control */ "components/uni-segmented-control/uni-segmented-control").then(__webpack_require__.bind(null, /*! ../../components/uni-segmented-control/uni-segmented-control.vue */ 132));};var uniCard = function uniCard() {return __webpack_require__.e(/*! import() | components/uni-card/uni-card */ "components/uni-card/uni-card").then(__webpack_require__.bind(null, /*! ../../components/uni-card/uni-card.vue */ 139));};var uniSection = function uniSection() {return __webpack_require__.e(/*! import() | components/uni-section/uni-section */ "components/uni-section/uni-section").then(__webpack_require__.bind(null, /*! ../../components/uni-section/uni-section.vue */ 208));};var dragButton = function dragButton() {return __webpack_require__.e(/*! import() | components/drag-button/anotherButton */ "components/drag-button/anotherButton").then(__webpack_require__.bind(null, /*! ../../components/drag-button/anotherButton.vue */ 216));};var ypNumberBox = function ypNumberBox() {return __webpack_require__.e(/*! import() | components/yp-number-box/yp-number-box */ "components/yp-number-box/yp-number-box").then(__webpack_require__.bind(null, /*! @/components/yp-number-box/yp-number-box.vue */ 223));};var _default =
 
 
 
 {
-  components: {
-    uniSection: uniSection,
-    uniSegmentedControl: uniSegmentedControl },
+  components: (_components = {
+    uniSegmentedControl: uniSegmentedControl,
+    uniCard: uniCard,
+    uniSection: uniSection }, _defineProperty(_components, "uniSegmentedControl",
+  uniSegmentedControl), _defineProperty(_components, "dragButton",
+
+  dragButton), _defineProperty(_components, "ypNumberBox",
+  ypNumberBox), _components),
 
   data: function data() {
     return {
-      // items: ['选项卡1', '选项卡2'],
-      // styles: [{
-      // 		value: 'button',
-      // 		text: '按钮',
-      // 		checked: true
-      // 	}
-      // ],
-      // colors: ['#007aff', '#4cd964', '#dd524d'],
-      current: 0,
-      colorIndex: 0,
-      activeColor: '#007aff',
-      styleType: 'button',
-      // tabs: [
-      // 	{
-      // 		name: '查看',
-      // 		 state: 0,
-      // 		 orderList: []
-      // 	},
-      // 	{
-      // 		name: '新建',
-      // 		 state: 1,
-      // 		orderList: []
-      // 	}
-      // ],
-      scrollHeight: '500px',
-      leftArray: [],
-      mainArray: [],
-      topArr: [],
-      leftIndex: 0,
-      scrollInto: '' };
+      themeColor: '#000000',
+      titleColor: '#666666',
+      filterResult: '',
+      materialList: _materialData.default.data,
+      menuList: [{
+        'title': '品牌',
+        'detailTitle': '请选择职位类型（可多选）',
+        'isMutiple': true,
+        'key': 'jobType',
+        'defaultSelectedIndex': [0],
+        'detailList': [{
+          'title': '不限',
+          'value': '' },
 
-  }, onLoad: function onLoad() {var _this = this;
-    uni.getSystemInfo({
-      success: function success(res) {
-        /* 设置当前滚动容器的高，若非窗口的高度，请自行修改 */
-        _this.scrollHeight = "".concat(res.windowHeight, "px");
-      } });
+        {
+          'title': 'uni-app',
+          'value': 'uni-app' },
+
+        {
+          'title': 'java开发',
+          'value': 'java' },
+
+        {
+          'title': 'web开发',
+          'value': 'web' },
+
+        {
+          'title': 'Android开发',
+          'value': 'Android' },
+
+        {
+          'title': 'iOS开发',
+          'value': 'iOS' },
+
+        {
+          'title': '测试工程师',
+          'value': '测试' },
+
+        {
+          'title': 'UI设计',
+          'value': 'UI' },
+
+        {
+          'title': 'Ruby开发',
+          'value': 'Ruby' },
+
+        {
+          'title': 'C#开发',
+          'value': 'C#' },
+
+        {
+          'title': 'PHP开发',
+          'value': 'php' },
+
+        {
+          'title': 'Python开发',
+          'value': 'Python' }] },
+
+
+
+
+      {
+        'title': '型号',
+        'key': 'salary',
+        'isMutiple': true,
+        'detailList': [{
+          'title': '不限',
+          'value': '' },
+
+        {
+          'title': '0~2000',
+          'value': '0~2000' },
+
+        {
+          'title': '2000~3000',
+          'value': '2000~3000' },
+
+        {
+          'title': '3000~4000',
+          'value': '3000~4000' },
+
+        {
+          'title': '4000~5000',
+          'value': '4000~5000' },
+
+        {
+          'title': '5000~6000',
+          'value': '5000~6000' },
+
+        {
+          'title': '6000~7000',
+          'value': '6000~7000' },
+
+        {
+          'title': '7000~8000',
+          'value': '7000~8000' },
+
+        {
+          'title': '8000~9000',
+          'value': '8000~9000' },
+
+        {
+          'title': '9000~10000',
+          'value': '9000~10000' },
+
+        {
+          'title': '10000以上',
+          'value': '10000~1000000' }] },
+
+
+
+
+      {
+        'title': '单选',
+        'key': 'single',
+        'isMutiple': false,
+        'detailTitle': '请选择（单选）',
+        'reflexTitle': true,
+        'defaultSelectedIndex': 2,
+        'detailList': [{
+          'title': '不限',
+          'value': '' },
+
+        {
+          'title': '条件1',
+          'value': 'test_1' },
+
+        {
+          'title': '条件2',
+          'value': 'test_2' },
+
+        {
+          'title': '条件3',
+          'value': 'test_3' },
+
+        {
+          'title': '条件4',
+          'value': 'test_4' },
+
+        {
+          'title': '条件5',
+          'value': 'test_5' },
+
+        {
+          'title': '条件6',
+          'value': 'test_6' },
+
+        {
+          'title': '条件7',
+          'value': 'test_7' },
+
+        {
+          'title': '条件8',
+          'value': 'test_8' }] },
+
+
+
+      {
+        'title': '排序',
+        'key': 'sort',
+        'isSort': true,
+        'reflexTitle': true,
+        'defaultSelectedIndex': 2,
+        'detailList': [{
+          'title': '默认排序',
+          'value': '' },
+
+        {
+          'title': '发布时间',
+          'value': 'add_time' },
+
+        {
+          'title': '薪资最高',
+          'value': 'wages_up' },
+
+        {
+          'title': '离我最近',
+          'value': 'location' }] }] };
+
+
+
+
+
+  }, onLoad: function onLoad() {
 
   },
   mounted: function mounted() {
-    this.getListData();
+
   },
   methods: {
-    // onClickItem(e) {
-    // 		if (this.current !== e.currentIndex) {
-    // 			this.current = e.currentIndex
-    // 		}
-    // 	},
-    // 	styleChange(e) {
-    // 		if (this.styleType !== e.detail.value) {
-    // 			this.styleType = e.detail.value
-    // 		}
-    // 	},
-    // 	colorChange(e) {
-    // 		if (this.styleType !== e.detail.value) {
-    // 			console.log(e.detail.value);
-    // 			this.activeColor = e.detail.value
-    // 		}
-    // 	},
-
-    // swiperChange(e) {
-    // 	this.current = e.detail.current
-    // },
-
-    // // changeTab(e) {
-    // // 	this.current = e.target.current;
-    // // },
-
-    // transition({ detail: { dx } }) {
-    // 	this.$refs.tabs.setDx(dx);
-    // },
-
-    // animationfinish({detail: { current }}) {
-    // 	this.$refs.tabs.setFinishCurrent(current);
-    // 	// this.swiperCurrent = current;
-    // 	this.current = current;
-    // },
-
-    // /**
-    //  * 选显卡切换
-    //  * */
-    // tabChange(index) {
-    // 	this.current = index
-
-    // },
-
-    // swichNav(index) {
-    // 	let item = this.tabs[index]
-    // 	if (item && item.disabled) return
-    // 	if (this.currentTab == index) {
-    // 		return false
-    // 	} else {
-    // 		this.currentTab = Number(index)
-    // 	}
-    // },
-
-
-    /* 获取列表数据 */
-    getListData: function getListData() {var _this2 = this;
-      /* 因无真实数据，当前方法模拟数据 */var
-      left = [],main = [];
-
-
-
-      for (var i = 0; i < 3; i++) {
-        left.push("".concat(i + 1, "\u7C7B"));
-
-        var list = [];
-        for (var j = 0; j < 10; j++) {
-          list.push(j);
-        }
-        main.push({
-          title: "\u7B2C".concat(i + 1, "\u8868\u5355"),
-          list: list });
-
-      }
-      this.leftArray = left;
-      this.mainArray = main;
-
-      this.$nextTick(function () {
-        _this2.getElementTop();
-      });
+    result: function result(val) {
+      console.log('filter_result:' + JSON.stringify(val));
+      this.filterResult = JSON.stringify(val, null, 2);
     },
-    /* 获取元素顶部信息 */
-    getElementTop: function getElementTop() {var _this3 = this;
-      /* Promise 对象数组 */
-      var p_arr = [];
+    newOut: function newOut() {
+      uni.navigateTo({
+        url: './start' });
 
-      /* 新建 Promise 方法 */
-      var new_p = function new_p(selector) {
-        return new Promise(function (resolve, reject) {
-          var view = uni.createSelectorQuery().select(selector);
-          view.boundingClientRect(function (data) {
-            resolve(data.top);
-          }).exec();
-        });
-      };
-
-      /* 遍历数据，创建相应的 Promise 数组数据 */
-      this.mainArray.forEach(function (item, index) {
-        p_arr.push(new_p("#item-".concat(index)));
-      });
-
-      /* 所有节点信息返回后调用该方法 */
-      Promise.all(p_arr).then(function (data) {
-        _this3.topArr = data;
-      });
-    },
-    /* 主区域滚动监听 */
-    mainScroll: function mainScroll(e) {
-      var top = e.detail.scrollTop;
-      var index = 0;
-      /* 查找当前滚动距离 */
-      for (var i = this.topArr.length - 1; i >= 0; i--) {
-        /* 在部分安卓设备上，因手机逻辑分辨率与rpx单位计算不是整数，滚动距离与有误差，增加2px来完善该问题 */
-        if (top + 2 >= this.topArr[i]) {
-          index = i;
-          break;
-        }
-      }
-      this.leftIndex = index < 0 ? 0 : index;
-    },
-    /* 左侧导航点击 */
-    leftTap: function leftTap(e) {
-      var index = e.currentTarget.dataset.index;
-      this.scrollInto = "item-".concat(index);
     } } };exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 1)["default"]))
 

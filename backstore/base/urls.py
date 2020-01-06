@@ -55,6 +55,7 @@ urlpatterns = [
     path('centerNew', views.CenterNewView.as_view(), name='centerNew'),
     path('centerAdd', views.CenterAddView.as_view(), name='centerAdd'),
     path('centerUpdate', views.CenterUpdateView.as_view(), name='centerUpdate'),
+    path('centerStatus', views.CenterStatusView.as_view(), name='centerStatus'),
 
     # path('centerWareHouses', views.CenterWareHousesView.as_view(), name='centerWareHouses'),
     # path('centerWareHouseNew', views.CenterWareHouseNewView.as_view(), name='centerWareHouseNew'),
@@ -64,19 +65,26 @@ urlpatterns = [
     path('suppliers', views.SuppliersView.as_view(), name='suppliers'),
     path('supplierAdd', views.SupplierAddView.as_view(), name='supplierAdd'),
     path('supplierUpdate', views.SupplierUpdateView.as_view(), name='supplierUpdate'),
+    path('supplierStatus', views.SupplierStatusView.as_view(), name='supplierStatus'),
+
 
     path('meterages', views.MeteragesView.as_view(), name='meterages'),
     path('meterageAdd', views.MeterageAddView.as_view(), name='meterageAdd'),
     path('meterageUpdate', views.MeterageUpdateView.as_view(), name='meterageUpdate'),
+    path('meterageStatus', views.MeterageStatusView.as_view(), name='meterageStatus'),
+
 
     path('materialTypes', views.MaterialTypesView.as_view(), name='materialTypes'),
     path('materialTypeAdd', views.MaterialTypeAddView.as_view(), name='materialTypeAdd'),
     path('materialTypeUpdate', views.MaterialTypeUpdateView.as_view(), name='materialTypeUpdate'),
+    path('materialTypeStatus', views.MaterialTypeStatusView.as_view(), name='materialTypeStatus'),
+
 
     path('materials', views.MaterialsView.as_view(), name='materials'),
     path('materialNew', views.MaterialNewView.as_view(), name='materialNew'),
     path('materialAdd', views.MaterialAddView.as_view(), name='materialAdd'),
     path('materialUpdate', views.MaterialUpdateView.as_view(), name='materialUpdate'),
+    path('materialStatus', views.MaterialStatusView.as_view(), name='materialStatus'),
 
 
 

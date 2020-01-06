@@ -1,7 +1,9 @@
 <template>
 	<view class="page">
 		
-		<sl-filter :independence="true" :color="titleColor" :themeColor="themeColor" :menuList.sync="menuList" @result="result"></sl-filter>
+		<cover-view class="select">
+			<sl-filter :independence="true" :color="titleColor" :themeColor="themeColor" :menuList.sync="menuList" @result="result"></sl-filter>
+		</cover-view>
 		
 		<view v-for="item in materialList" :key="item.id" class="card-set">
 			<uni-card
@@ -266,115 +268,8 @@
 	.num_select{
 		
 	}
-	// .swiper {
-	// 	width: 100%;
-	// 	height: 30%;
-	// 	.swiper-item {
-	// 		width: 100%;
-	// 		height: 100%;
-	// 	}
-	// }
 	
-	// .list_box{
-	// 	display: flex;
-	//     flex-direction: row;
-	//     flex-wrap: nowrap;
-	//     justify-content: flex-start;
-	//     align-items: flex-start;
-	//     align-content: flex-start;
-	// 	font-size: 28rpx;
+	.select {
 		
-	// 	.left{
-	// 		width: 200rpx;
-	// 		background-color: #f6f6f6;
-	// 		line-height: 80rpx;
-	// 		box-sizing: border-box;
-	// 		font-size: 32rpx;
-			
-	// 		.item{
-	// 			padding-left: 20rpx;
-	// 			position: relative;
-	// 			&:not(:first-child) {
-	// 				margin-top: 1px;
-				
-	// 				&::after {
-	// 					content: '';
-	// 					display: block;
-	// 					height: 0;
-	// 					border-top: #d6d6d6 solid 1px;
-	// 					width: 620upx;
-	// 					position: absolute;
-	// 					top: -1px;
-	// 					right: 0;
-	// 					transform:scaleY(0.5);	/* 1px像素 */
-	// 				}
-	// 			}
-				
-	// 			&.active{
-	// 				color: #42b983;
-	// 				background-color: #fff;
-	// 			}
-	// 		}
-			
-				
-	// 		.start{
-	// 			position: absolute;
-	// 			bottom:8px;
-	// 			width: 200rpx;
-	// 		}
-	// 	}
-	// 	.main{
-	// 		background-color: #fff;
-	// 		padding-left: 20rpx;
-	// 		width: 0;
-	// 		flex-grow: 1;
-	// 		box-sizing: border-box;
-			
-			
-			
-	// 		.title{
-	// 			line-height: 64rpx;
-	// 			font-size: 24rpx;
-	// 			font-weight: bold;
-	// 			color: #666;
-	// 			background-color: #fff;
-	// 			position: sticky;
-	// 			top: 0;
-	// 			z-index: 19;
-	// 		}
-			
-	// 		.item{
-	// 			padding-bottom: 10rpx;
-	// 			border-bottom: #eee solid 1px;
-	// 		}
-			
-	// 		.goods{
-	// 			display: flex;
-	// 			flex-direction: row;
-	// 			flex-wrap: nowrap;
-	// 			justify-content: flex-start;
-	// 			align-items: center;
-	// 			align-content: center;
-	// 			margin-bottom: 10rpx;
-				
-	// 			&>image{
-	// 				width: 120rpx;
-	// 				height: 120rpx;
-	// 				margin-right: 16rpx;
-	// 			}
-				
-	// 			.describe{
-	// 				font-size: 24rpx;
-	// 				color: #999;
-	// 			}
-				
-	// 			.money{
-	// 				font-size: 24rpx;
-	// 				color: #efba21;
-	// 			}
-				
-	// 		}
-	// 	}
-		
-	// }
+	}
 </style>

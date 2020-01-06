@@ -23,7 +23,7 @@
 		    @change="handleChange"
 		    @confirm="handleConfirmWithType"
 		    @cancle="handleCancle">
-			</lb-picker>
+		</lb-picker>
 	</view> 
 	
 	<view class="address-item ">
@@ -36,13 +36,13 @@
 		    @change="handleChange"
 		    @confirm="handelConfirmWithDepartment"
 		    @cancle="handleCancle">
-			</lb-picker>
+		</lb-picker>
 	</view> 
 	
 	<view class="address-item ">
 		<text class="address-item-title">创建时间</text>	
 		<text class="address-item-input" @tap="toggleTab('date')">{{label4}}</text>
-		  <w-picker
+		 <w-picker
 		  	mode="date" 
 		  	startYear="2000" 
 		  	endYear="2030"
@@ -69,9 +69,11 @@
 <script>
 	import {formateDate} from "../../common/catUtil.js"
 	import wPicker from "@/components/w-picker/w-picker.vue";
+	import lbPicker from "@/components/lb-picker"
 	export default {
 		components:{
-			wPicker
+			wPicker,
+			lbPicker
 		},
 		data(){
 			return {

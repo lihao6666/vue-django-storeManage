@@ -185,6 +185,8 @@ export default {
         }
         _this.tableData = res.data.brands
         _this.find()
+        _this.brand_nameSet = []
+        _this.brand_creatorSet = []
         let nameset = new Set()
         let creatorset = new Set()
         for (let i in _this.tableData) {
@@ -410,7 +412,9 @@ export default {
     position: absolute;
     right:0;
   }
-
+  .inputs {
+    width: 590px;
+  }
   .table {
     width: 100%;
     font-size: 14px;
@@ -420,8 +424,5 @@ export default {
   }
   .green {
     color: GREEN;
-  }
-  .inputs {
-    width: 590px;
   }
 </style>

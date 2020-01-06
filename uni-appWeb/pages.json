@@ -60,6 +60,26 @@
 		    "style": {
 		        "navigationBarTitleText": "货物详情"
 		    }
+		},{
+		    "path": "pages/detail/outDetails",
+		    "style": {
+		        "navigationBarTitleText": "出库单详情"
+		    }
+		},{
+		    "path": "pages/detail/purchaseDetails",
+		    "style": {
+		        "navigationBarTitleText": "请购单详情"
+		    }
+		},{
+		    "path": "pages/detail/sellDetails",
+		    "style": {
+		        "navigationBarTitleText": "销售单详情"
+		    }
+		},{
+		    "path": "pages/detail/exchangeDetails",
+		    "style": {
+		        "navigationBarTitleText": "转库申请单详情"
+		    }
 		}
     ],
     "tabBar": {//下方导航栏

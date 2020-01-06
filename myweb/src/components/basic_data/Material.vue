@@ -34,7 +34,7 @@
                          :filter-method="filter" align="center"></el-table-column>
         <el-table-column prop="material_model" sortable label="型号" :filters="material_modelSet"
                          :filter-method="filter" align="center"></el-table-column>
-        <el-table-column prop="material_meterage" sortable label="计量单位" :filters="material_meterageSet"
+        <el-table-column prop="meterage_name" sortable label="计量单位" :filters="meterage_nameSet"
                          :filter-method="filter" align="center"></el-table-column>
         <el-table-column prop="material_attr" sortable label="存货属性" :filters="material_attrSet"
                          :filter-method="filter" align="center">
@@ -93,7 +93,8 @@
           <el-row>
             <el-form-item label="分类" class="inputs" align="left">
               <el-col :span="10">
-                <el-cascader :options="options" :props="{ expandTrigger: 'hover', checkStrictly: true  }" clearable @change="changeCascader">
+                <el-cascader :options="options" :props="{ expandTrigger: 'hover', checkStrictly: true  }"
+                             clearable @change="changeCascaderType">
                   <template slot-scope="{ node, data }">
                     <span>{{ data.label }}</span>
                     <span v-if="!node.isLeaf"> ({{ data.children.length }}) </span>
@@ -125,14 +126,8 @@
           </el-row>
           <el-row>
             <el-form-item label="计量单位"  align="left">
-              <el-select v-model="form.material_meterage" placeholder="请选择计量单位"  class="option" >
-                <el-option
-                  v-for="item in meterage_options"
-                  :key="item"
-                  :label="item"
-                  :value="item">
-                </el-option>
-              </el-select>
+              <el-cascader :show-all-levels="false" :options="meterage_options"
+                           :props="{ expandTrigger: 'hover'}" @change="changeCascaderMeterage"></el-cascader>
             </el-form-item>
           </el-row>
           <el-row>
@@ -161,10 +156,7 @@
           <el-row>
             <el-form-item label="编码" class="inputs" align="left">
               <el-col :span="10">
-                <el-tag
-                  :type="'success'"
-                >{{editform.material_iden}}
-                </el-tag>
+                <el-tag>{{editform.material_iden}}</el-tag>
               </el-col>
             </el-form-item>
           </el-row>
@@ -191,14 +183,8 @@
           </el-row>
           <el-row>
             <el-form-item label="计量单位"  align="left">
-              <el-select v-model="editform.material_meterage" placeholder="请选择区域"  class="option" >
-                <el-option
-                  v-for="item in meterage_options"
-                  :key="item"
-                  :label="item"
-                  :value="item">
-                </el-option>
-              </el-select>
+              <el-cascader v-model="editform.meterage_name" :show-all-levels="false" :options="meterage_options"
+                           :props="{ expandTrigger: 'hover'}" @change="changeCascader"></el-cascader>
             </el-form-item>
           </el-row>
           <el-row>
@@ -212,7 +198,7 @@
       </div>
       <el-row :gutter="20" class="el-row-button-save">
         <el-col :span="1" :offset="15">
-          <el-button @click="alterVisible = false">取 消</el-button>
+          <el-button @click="editVisible = false">取 消</el-button>
         </el-col>
         <el-col :span="1" :offset="4">
           <el-button type="primary" @click="saveEdit">确 定</el-button>
@@ -223,7 +209,7 @@
 </template>
 
 <script>
-import {postAPI} from '../../api/api'
+import {getAPI, postAPI} from '../../api/api'
 export default {
   name: 'test',
   data () {
@@ -250,18 +236,18 @@ export default {
       },
       search: '',
       form: {
-        material_iden: '',
+        material_type_iden: '',
         material_name: '',
         material_specification: '',
         material_model: '',
-        material_meterage: '',
+        meterage_name: '',
         material_attr: ''
       },
       material_name: '',
       material_specSet: [],
       material_nameSet: [],
       material_modelSet: [],
-      material_meterageSet: [],
+      meterage_nameSet: [],
       material_attrSet: [],
       material_creatorSet: [],
       editform: {
@@ -269,7 +255,7 @@ export default {
         material_name: '',
         material_specification: '',
         material_model: '',
-        material_meterage: '',
+        meterage_name: '',
         material_attr: ''
       },
       tableData: [],
@@ -287,11 +273,19 @@ export default {
   methods: {
     getData () {
       this.getlist()
-      this.getoptions()
       let _this = this
-      postAPI('/material').then(function (res) {
-        _this.tableData = res.data.list
+      getAPI('/base/materials').then(function (res) {
+        if (!res.data.materials) {
+          return
+        }
+        _this.tableData = res.data.materials
         _this.find()
+        _this.material_specSet = []
+        _this.material_nameSet = []
+        _this.material_modelSet = []
+        _this.meterage_nameSet = []
+        _this.material_attrSet = []
+        _this.material_creatorSet = []
         let nameset = new Set()
         let specset = new Set()
         let modelset = new Set()
@@ -299,10 +293,10 @@ export default {
         let attrset = new Set()
         let creatorset = new Set()
         for (let i in _this.tableData) {
-          nameset.add(_this.tableData[i]['material_iden'])
+          nameset.add(_this.tableData[i]['material_name'])
           specset.add(_this.tableData[i]['material_specification'])
           modelset.add(_this.tableData[i]['material_model'])
-          meterageset.add(_this.tableData[i]['material_meterage'])
+          meterageset.add(_this.tableData[i]['meterage_name'])
           attrset.add(_this.tableData[i]['material_attr'])
           creatorset.add(_this.tableData[i]['material_creator'])
         }
@@ -325,14 +319,14 @@ export default {
           })
         }
         for (let i of meterageset) {
-          _this.material_meterageSet.push({
+          _this.meterage_nameSet.push({
             text: i,
             value: i
           })
         }
         for (let i of attrset) {
           _this.material_attrSet.push({
-            text: _this.materialattr[i],
+            text: _this.materialattr[i].label,
             value: i
           })
         }
@@ -342,7 +336,7 @@ export default {
             value: i
           })
         }
-        _this.pageTotal = res.data.list.length
+        _this.pageTotal = res.data.materials.length
       }).catch(function (err) {
         console.log(err)
       })
@@ -371,7 +365,7 @@ export default {
     clearform () {
       this.form.material_attr = ''
       this.form.material_iden = ''
-      this.form.material_meterage = ''
+      this.form.meterage_name = ''
       this.form.material_model = ''
       this.form.material_specification = ''
       this.form.material_name = ''
@@ -413,8 +407,8 @@ export default {
           String(data.material_iden).toLowerCase().includes(this.search.toLowerCase()) ||
           String(data.material_specification).toLowerCase().includes(this.search.toLowerCase()) ||
           String(data.material_model).toLowerCase().includes(this.search.toLowerCase()) ||
-          String(data.material_meterage).toLowerCase().includes(this.search.toLowerCase()) ||
-          String(data.material_meterage).toLowerCase().includes(this.search.toLowerCase()) ||
+          String(data.meterage_name).toLowerCase().includes(this.search.toLowerCase()) ||
+          String(data.meterage_name).toLowerCase().includes(this.search.toLowerCase()) ||
           String(data.material_attr).toLowerCase().includes(this.search.toLowerCase()) ||
           String(data.material_creator).toLowerCase().includes(this.search.toLowerCase()))
     },
@@ -447,17 +441,29 @@ export default {
           })
         })
     },
+    // 选择分类
+    changeCascaderType (val) {
+      this.form.material_type_iden = val[val.length - 1]
+    },
+    // 新增选择计量单位
+    changeCascaderMeterage (val) {
+      this.form.meterage_name = val[val.length - 1]
+    },
+    // 编辑选择计量单位
+    changeCascader (val) {
+      this.editform.meterage_name = val[val.length - 1]
+    },
     // 获取级联选择器
     optionsAdd (parent, child, length, end) {
       if (length === end) {
         parent.push({
-          value: child.type_iden,
-          label: child.type_name,
+          value: child[0],
+          label: child[1],
           children: []
         })
         return
       }
-      let pub = child.type_iden.substring(0, length)
+      let pub = child[0].substring(0, length)
       for (let i in parent) {
         if (parent[i].value === pub) {
           this.optionsAdd(parent[i].children, child, length + 2, end)
@@ -465,43 +471,60 @@ export default {
         }
       }
       parent.push({
-        value: child.type_iden,
-        label: child.type_name,
+        value: child[0],
+        label: child[1],
         children: []
       })
     },
-    getoptions () {
+    // 获取列表
+    getlist () {
       let _this = this
-      postAPI('/material_type').then(function (res) {
+      getAPI('/base/materialNew').then(function (res) {
+        console.log(res.data)
+        _this.options = []
         let length = 2
-        while (res.data.list.length > 0) {
-          for (let i = 0; i < res.data.list.length; i++) {
-            if (res.data.list[i].type_iden.length === length) {
-              _this.optionsAdd(_this.options, res.data.list[i], 2, length)
-              res.data.list.splice(i, 1)
+        while (res.data.material_types.length > 0) {
+          for (let i = 0; i < res.data.material_types.length; i++) {
+            if (res.data.material_types[i][0].length === length) {
+              _this.optionsAdd(_this.options, res.data.material_types[i], 2, length)
+              res.data.material_types.splice(i, 1)
               i -= 1
             }
           }
           length += 2
         }
-      }).catch(function (err) {
-        console.log(err)
-      })
-    },
-    // 选择分类
-    changeCascader (val) {
-      console.log(val)
-    },
-    // 获取列表
-    getlist () {
-      let _this = this
-      postAPI('/meterage').then(function (res) {
-        let altermeterage = new Set()
-        for (let i in res.data.list) {
-          altermeterage.add(res.data.list[i]['meterage_name'])
-        }
-        for (let j of altermeterage) {
-          _this.meterage_options.push(j)
+        _this.meterage_options = [
+          {
+            value: 0,
+            label: '重量',
+            children: []
+          },
+          {
+            value: 1,
+            label: '长度',
+            children: []
+          },
+          {
+            value: 2,
+            label: '面积',
+            children: []
+          },
+          {
+            value: 3,
+            label: '体积',
+            children: []
+          },
+          {
+            value: 4,
+            label: '件数',
+            children: []
+          }
+        ]
+        for (let i in res.data.meterages) {
+          _this.meterage_options[res.data.meterages[i][0]].children.push({
+            value: res.data.meterages[i][2],
+            label: res.data.meterages[i][2]
+          })
         }
       }).catch(function (err) {
         console.log(err)
@@ -513,30 +536,53 @@ export default {
       this.editform.material_iden = row.material_iden
       this.editform.material_specification = row.material_specification
       this.editform.material_model = row.material_model
-      this.editform.material_meterage = row.material_meterage
+      this.editform.meterage_name = row.meterage_name
       this.editform.material_attr = row.material_attr
-      this.material_name = row.material_name
+      this.editform.id = row.id
       this.editVisible = true
     },
     // 保存编辑
     saveEdit () {
-      this.editVisible = false
-      this.$message.success(`修改成功`)
-      postAPI('/material', {data: this.editform, material_name: this.material_name}).then(function (res) {
-        console.log(res)
+      if (!this.editform.material_name || !this.editform.material_specification ||
+      !this.editform.material_model || !this.editform.meterage_name || (this.editform.material_attr !== 0 && !this.editform.material_attr)) {
+        this.$message.error(`请填写完信息`)
+        return
+      }
+      let _this = this
+      postAPI('/base/materialUpdate', this.editform).then(function (res) {
+        if (res.data.signal === 0) {
+          _this.$message.success(`修改成功`)
+          _this.editVisible = false
+          _this.getData()
+        } else {
+          _this.$message.error(res.data.message)
+        }
       }).catch(function (err) {
         console.log(err)
+        _this.$message.error(`修改失败`)
       })
     },
     // 保存新增
     saveAlter () {
-      this.alterVisible = false
-      this.$message.success(`新增成功`)
-      this.clearform()
-      postAPI('/material', {data: this.form, table: 'material'}).then(function (res) {
-        console.log(res)
+      console.log(this.form)
+      if (!this.form.material_name || !this.form.material_type_iden || !this.form.material_specification ||
+      !this.form.material_model || !this.form.meterage_name || (this.form.material_attr !== 0 && !this.form.material_attr)) {
+        this.$message.error(`请填写完信息`)
+        return
+      }
+      let _this = this
+      postAPI('/base/materialAdd', this.form).then(function (res) {
+        if (res.data.signal === 0) {
+          _this.$message.success(`新增成功`)
+          _this.alterVisible = false
+          _this.clearform()
+          _this.getData()
+        } else {
+          _this.$message.error(res.data.message)
+        }
       }).catch(function (err) {
         console.log(err)
+        _this.$message.error(`新增失败`)
       })
     },
     // 分页导航
@@ -555,18 +601,6 @@ export default {
   }
   .el-row-button-save {
     top: 15px;
-  }
-  .demo-table-expand {
-    font-size: 0;
-  }
-  .demo-table-expand label {
-    width: 90px;
-    color: #99a9bf;
-  }
-  .demo-table-expand .el-form-item {
-    margin-right: 0;
-    margin-bottom: 0;
-    width: 100%;
   }
 </style>
 
