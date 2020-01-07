@@ -216,22 +216,13 @@ export default {
 			var arr = []
 			this.outList.forEach((item) => arr.push(item))
 			if (this.outFilterText) {
-				arr = this.outList.filter(item => item.mso_orga.includes(this.outFilterText))
-				if(arr.length === 0) {
-					arr = this.outList.filter(item => item.mso_iden.includes(this.outFilterText))
-				} 
-				if(arr.length === 0) {
-					arr = this.outList.filter(item => item.mso_remarks.includes(this.outFilterText))
-				} 
-				if(arr.length === 0) {
-					arr = this.outList.filter(item => item.mso_warehouse.includes(this.outFilterText))
-				} 
-				if(arr.length === 0) {
-					arr = this.outList.filter(item => item.mso_req_department.includes(this.outFilterText))
-				}
-				if(arr.length === 0) {
-					arr = this.outList.filter(item => item.mso_creator.includes(this.outFilterText))
-				}
+				arr = this.outList.filter(item => item.mso_orga.includes(this.outFilterText)||
+					item.mso_iden.includes(this.outFilterText)||
+					item.mso_remarks.includes(this.outFilterText)||
+					item.mso_warehouse.includes(this.outFilterText)||
+					item.mso_req_department.includes(this.outFilterText)||
+					item.mso_creator.includes(this.outFilterText)
+				)
 			}
 			return arr
 		},
@@ -239,22 +230,13 @@ export default {
 			var arr = []
 			this.purchaseList.forEach((item) => arr.push(item))
 			if (this.purchaseFilterText) {
-				arr = this.purchaseList.filter(item => item.rp_orga.includes(this.purchaseFilterText))
-				if(arr.length === 0) {
-					arr = this.purchaseList.filter(item => item.rp_iden.includes(this.purchaseFilterText))
-				} 
-				if(arr.length === 0) {
-					arr = this.purchaseList.filter(item => item.rp_remarks.includes(this.purchaseFilterText))
-				} 
-				if(arr.length === 0) {
-					arr = this.purchaseList.filter(item => item.rp_type.includes(this.purchaseFilterText))
-				} 
-				if(arr.length === 0) {
-					arr = this.purchaseList.filter(item => item.rp_req_department.includes(this.purchaseFilterText))
-				}
-				if(arr.length === 0) {
-					arr = this.purchaseList.filter(item => item.rp_creator.includes(this.purchaseFilterText))
-				}
+				arr = this.purchaseList.filter(item => item.rp_orga.includes(this.purchaseFilterText)||
+					item.rp_iden.includes(this.purchaseFilterText)||
+					item.rp_remarks.includes(this.purchaseFilterText)||
+					item.rp_type.includes(this.purchaseFilterText)||
+					item.rp_req_department.includes(this.purchaseFilterText)||
+					item.rp_creator.includes(this.purchaseFilterText)
+				)
 			}
 			return arr
 		},
@@ -262,25 +244,14 @@ export default {
 			var arr = []
 			this.sellList.forEach((item) => arr.push(item))
 			if (this.sellFilterText) {
-				arr = this.sellList.filter(item => item.so_orga.includes(this.sellFilterText))
-				if(arr.length === 0) {
-					arr = this.sellList.filter(item => item.so_remarks.includes(this.sellFilterText))
-				} 
-				if(arr.length === 0) {
-					arr = this.sellList.filter(item => item.so_iden.includes(this.sellFilterText))
-				} 
-				if(arr.length === 0) {
-					arr = this.sellList.filter(item => item.so_warehouse.includes(this.sellFilterText))
-				} 
-				if(arr.length === 0) {
-					arr = this.sellList.filter(item => item.so_type.includes(this.selFilterText))
-				}
-				if(arr.length === 0) {
-					arr = this.sellList.filter(item => item.so_creator.includes(this.sellFilterText))
-				}
-				if(arr.length === 0) {
-					arr = this.sellList.filter(item => item.so_custom.includes(this.sellFilterText))
-				}
+				arr = this.sellList.filter(item => item.so_orga.includes(this.sellFilterText)||
+					item.so_remarks.includes(this.sellFilterText)||
+					item.so_iden.includes(this.sellFilterText)||
+					item.so_warehouse.includes(this.sellFilterText)||
+					item.so_type.includes(this.selFilterText)||
+					item.so_creator.includes(this.sellFilterText)||
+					item.so_custom.includes(this.sellFilterText)
+				)
 			}
 			return arr
 		},
@@ -288,22 +259,13 @@ export default {
 			var arr = []
 			this.exchangeList.forEach((item) => arr.push(item))
 			if (this.exchangeFilterText) {
-				arr = this.exchangeList.filter(item => item.str_orga.includes(this.exchangeFilterText))
-				if(arr.length === 0) {
-					arr = this.exchangeList.filter(item => item.str_iden.includes(this.exchangeFilterText))
-				} 
-				if(arr.length === 0) {
-					arr = this.exchangeList.filter(item => item.str_to.includes(this.exchangeFilterText))
-				} 
-				if(arr.length === 0) {
-					arr = this.exchangeList.filter(item => item.str_from.includes(this.exchangeFilterText))
-				} 
-				if(arr.length === 0) {
-					arr = this.exchangeList.filter(item => item.str_req_department.includes(this.exchangeFilterText))
-				}
-				if(arr.length === 0) {
-					arr = this.exchangeList.filter(item => item.str_creator.includes(this.exchangeFilterText))
-				}
+				arr = this.exchangeList.filter(item => item.str_orga.includes(this.exchangeFilterText)||
+					item.str_iden.includes(this.exchangeFilterText)||
+					item.str_to.includes(this.exchangeFilterText)||
+					item.str_from.includes(this.exchangeFilterText)||
+					item.str_req_department.includes(this.exchangeFilterText)||
+					item.str_creator.includes(this.exchangeFilterText)
+				)
 			}
 			return arr
 		}

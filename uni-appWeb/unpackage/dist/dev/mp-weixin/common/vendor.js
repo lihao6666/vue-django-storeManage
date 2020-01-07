@@ -1534,7 +1534,7 @@ uni$1;exports.default = _default;
 
 /***/ }),
 
-/***/ 128:
+/***/ 127:
 /*!*************************************************************!*\
   !*** C:/Users/流宇/Desktop/git/uni-appWeb/data/outDetails.js ***!
   \*************************************************************/
@@ -1581,7 +1581,7 @@ module.exports = {
 
 /***/ }),
 
-/***/ 137:
+/***/ 136:
 /*!******************************************************************!*\
   !*** C:/Users/流宇/Desktop/git/uni-appWeb/data/purchaseDetails.js ***!
   \******************************************************************/
@@ -1749,7 +1749,7 @@ function normalizeComponent (
 
 /***/ }),
 
-/***/ 146:
+/***/ 145:
 /*!**************************************************************!*\
   !*** C:/Users/流宇/Desktop/git/uni-appWeb/data/sellDetails.js ***!
   \**************************************************************/
@@ -1837,7 +1837,7 @@ store;exports.default = _default;
 
 /***/ }),
 
-/***/ 155:
+/***/ 154:
 /*!******************************************************************!*\
   !*** C:/Users/流宇/Desktop/git/uni-appWeb/data/exchangeDetails.js ***!
   \******************************************************************/
@@ -8933,7 +8933,7 @@ internalMixin(Vue);
 
 /***/ }),
 
-/***/ 219:
+/***/ 218:
 /*!*************************************************************************!*\
   !*** C:/Users/流宇/Desktop/git/uni-appWeb/components/evan-icons/icons.js ***!
   \*************************************************************************/
@@ -8966,7 +8966,7 @@ module.exports = {
 
 /***/ }),
 
-/***/ 276:
+/***/ 275:
 /*!************************************************************************************!*\
   !*** C:/Users/流宇/Desktop/git/uni-appWeb/components/w-picker/city-data/province.js ***!
   \************************************************************************************/
@@ -9116,7 +9116,7 @@ provinceData;exports.default = _default;
 
 /***/ }),
 
-/***/ 277:
+/***/ 276:
 /*!********************************************************************************!*\
   !*** C:/Users/流宇/Desktop/git/uni-appWeb/components/w-picker/city-data/city.js ***!
   \********************************************************************************/
@@ -10630,7 +10630,7 @@ cityData;exports.default = _default;
 
 /***/ }),
 
-/***/ 278:
+/***/ 277:
 /*!********************************************************************************!*\
   !*** C:/Users/流宇/Desktop/git/uni-appWeb/components/w-picker/city-data/area.js ***!
   \********************************************************************************/
@@ -23183,7 +23183,7 @@ areaData;exports.default = _default;
 
 /***/ }),
 
-/***/ 279:
+/***/ 278:
 /*!**************************************************************************!*\
   !*** C:/Users/流宇/Desktop/git/uni-appWeb/components/w-picker/w-picker.js ***!
   \**************************************************************************/
@@ -23844,7 +23844,7 @@ initPicker;exports.default = _default;
 
 /***/ }),
 
-/***/ 287:
+/***/ 286:
 /*!*********************************************************************************!*\
   !*** C:/Users/流宇/Desktop/git/uni-appWeb/components/lb-picker/style/picker.scss ***!
   \*********************************************************************************/
@@ -23855,7 +23855,7 @@ initPicker;exports.default = _default;
 
 /***/ }),
 
-/***/ 288:
+/***/ 287:
 /*!************************************************************************!*\
   !*** C:/Users/流宇/Desktop/git/uni-appWeb/components/lb-picker/utils.js ***!
   \************************************************************************/
@@ -23905,7 +23905,7 @@ module.exports = g;
 
 /***/ }),
 
-/***/ 322:
+/***/ 321:
 /*!**************************************************************************************!*\
   !*** C:/Users/流宇/Desktop/git/uni-appWeb/components/lb-picker/style/picker-item.scss ***!
   \**************************************************************************************/
@@ -25377,35 +25377,6 @@ main();
 
 /***/ }),
 
-/***/ 58:
-/*!***********************************************************!*\
-  !*** C:/Users/流宇/Desktop/git/uni-appWeb/data/userinfo.js ***!
-  \***********************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-var data = [
-{
-  id: 1,
-  user_name: '俞浩然',
-  user_id: '123456789',
-  user_phone_number: '15198765450',
-  user_mailbox: 'haoranyu@jisuanke.com',
-  user_area: '合肥',
-  user_departments: '计蒜客中心01',
-  user_roles: '教师',
-  user_creator: '张恩普',
-  user_createDate: '2020-1-1 12:00:00',
-  user_status: '启用' }];
-
-
-
-module.exports = {
-  data: data };
-
-/***/ }),
-
 /***/ 6:
 /*!******************************************************!*\
   !*** ./node_modules/@dcloudio/uni-stat/package.json ***!
@@ -25417,7 +25388,7 @@ module.exports = {"_from":"@dcloudio/uni-stat@alpha","_id":"@dcloudio/uni-stat@2
 
 /***/ }),
 
-/***/ 67:
+/***/ 66:
 /*!*****************************************************!*\
   !*** C:/Users/流宇/Desktop/git/uni-appWeb/service.js ***!
   \*****************************************************/
@@ -25466,19 +25437,7 @@ Object.defineProperty(exports, "__esModule", { value: true });exports.default = 
 
 /***/ }),
 
-/***/ 8:
-/*!*********************************************************************!*\
-  !*** C:/Users/流宇/Desktop/git/uni-appWeb/pages.json?{"type":"stat"} ***!
-  \*********************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var _default = { "appid": "" };exports.default = _default;
-
-/***/ }),
-
-/***/ 80:
+/***/ 79:
 /*!***************************************************************!*\
   !*** C:/Users/流宇/Desktop/git/uni-appWeb/data/materialData.js ***!
   \***************************************************************/
@@ -25551,7 +25510,19 @@ module.exports = {
 
 /***/ }),
 
-/***/ 89:
+/***/ 8:
+/*!*********************************************************************!*\
+  !*** C:/Users/流宇/Desktop/git/uni-appWeb/pages.json?{"type":"stat"} ***!
+  \*********************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var _default = { "appid": "" };exports.default = _default;
+
+/***/ }),
+
+/***/ 88:
 /*!************************************************************!*\
   !*** C:/Users/流宇/Desktop/git/uni-appWeb/common/catUtil.js ***!
   \************************************************************/

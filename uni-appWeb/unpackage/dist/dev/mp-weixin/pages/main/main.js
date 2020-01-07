@@ -371,7 +371,7 @@ __webpack_require__.r(__webpack_exports__);
 var _outStore = _interopRequireDefault(__webpack_require__(/*! ../../data/outStore.js */ 34));
 var _purchase = _interopRequireDefault(__webpack_require__(/*! ../../data/purchase.js */ 35));
 var _sell = _interopRequireDefault(__webpack_require__(/*! ../../data/sell.js */ 36));
-var _exchange = _interopRequireDefault(__webpack_require__(/*! ../../data/exchange.js */ 37));function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}var uniSegmentedControl = function uniSegmentedControl() {return __webpack_require__.e(/*! import() | components/uni-segmented-control/uni-segmented-control */ "components/uni-segmented-control/uni-segmented-control").then(__webpack_require__.bind(null, /*! ../../components/uni-segmented-control/uni-segmented-control.vue */ 172));};var uniCard = function uniCard() {return __webpack_require__.e(/*! import() | components/uni-card/uni-card */ "components/uni-card/uni-card").then(__webpack_require__.bind(null, /*! ../../components/uni-card/uni-card.vue */ 179));};var uniIcons = function uniIcons() {return __webpack_require__.e(/*! import() | components/uni-icons/uni-icons */ "components/uni-icons/uni-icons").then(__webpack_require__.bind(null, /*! @/components/uni-icons/uni-icons.vue */ 186));};var dragButton = function dragButton() {return __webpack_require__.e(/*! import() | components/drag-button/drag-button */ "components/drag-button/drag-button").then(__webpack_require__.bind(null, /*! ../../components/drag-button/drag-button.vue */ 193));};var cmdIcon = function cmdIcon() {return __webpack_require__.e(/*! import() | components/cmd-icon/cmd-icon */ "components/cmd-icon/cmd-icon").then(__webpack_require__.bind(null, /*! ../../components/cmd-icon/cmd-icon.vue */ 200));};var uniNavBar = function uniNavBar() {return __webpack_require__.e(/*! import() | components/uni-nav-bar/uni-nav-bar */ "components/uni-nav-bar/uni-nav-bar").then(__webpack_require__.bind(null, /*! @/components/uni-nav-bar/uni-nav-bar.vue */ 207));};var EvanIcons = function EvanIcons() {return Promise.all(/*! import() | components/evan-icons/evan-icons */[__webpack_require__.e("common/vendor"), __webpack_require__.e("components/evan-icons/evan-icons")]).then(__webpack_require__.bind(null, /*! ../../components/evan-icons/evan-icons.vue */ 214));};var _default =
+var _exchange = _interopRequireDefault(__webpack_require__(/*! ../../data/exchange.js */ 37));function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}var uniSegmentedControl = function uniSegmentedControl() {return __webpack_require__.e(/*! import() | components/uni-segmented-control/uni-segmented-control */ "components/uni-segmented-control/uni-segmented-control").then(__webpack_require__.bind(null, /*! ../../components/uni-segmented-control/uni-segmented-control.vue */ 171));};var uniCard = function uniCard() {return __webpack_require__.e(/*! import() | components/uni-card/uni-card */ "components/uni-card/uni-card").then(__webpack_require__.bind(null, /*! ../../components/uni-card/uni-card.vue */ 178));};var uniIcons = function uniIcons() {return __webpack_require__.e(/*! import() | components/uni-icons/uni-icons */ "components/uni-icons/uni-icons").then(__webpack_require__.bind(null, /*! @/components/uni-icons/uni-icons.vue */ 185));};var dragButton = function dragButton() {return __webpack_require__.e(/*! import() | components/drag-button/drag-button */ "components/drag-button/drag-button").then(__webpack_require__.bind(null, /*! ../../components/drag-button/drag-button.vue */ 192));};var cmdIcon = function cmdIcon() {return __webpack_require__.e(/*! import() | components/cmd-icon/cmd-icon */ "components/cmd-icon/cmd-icon").then(__webpack_require__.bind(null, /*! ../../components/cmd-icon/cmd-icon.vue */ 199));};var uniNavBar = function uniNavBar() {return __webpack_require__.e(/*! import() | components/uni-nav-bar/uni-nav-bar */ "components/uni-nav-bar/uni-nav-bar").then(__webpack_require__.bind(null, /*! @/components/uni-nav-bar/uni-nav-bar.vue */ 206));};var EvanIcons = function EvanIcons() {return Promise.all(/*! import() | components/evan-icons/evan-icons */[__webpack_require__.e("common/vendor"), __webpack_require__.e("components/evan-icons/evan-icons")]).then(__webpack_require__.bind(null, /*! ../../components/evan-icons/evan-icons.vue */ 213));};var _default =
 
 {
   components: {
@@ -404,22 +404,13 @@ var _exchange = _interopRequireDefault(__webpack_require__(/*! ../../data/exchan
       var arr = [];
       this.outList.forEach(function (item) {return arr.push(item);});
       if (this.outFilterText) {
-        arr = this.outList.filter(function (item) {return item.mso_orga.includes(_this.outFilterText);});
-        if (arr.length === 0) {
-          arr = this.outList.filter(function (item) {return item.mso_iden.includes(_this.outFilterText);});
-        }
-        if (arr.length === 0) {
-          arr = this.outList.filter(function (item) {return item.mso_remarks.includes(_this.outFilterText);});
-        }
-        if (arr.length === 0) {
-          arr = this.outList.filter(function (item) {return item.mso_warehouse.includes(_this.outFilterText);});
-        }
-        if (arr.length === 0) {
-          arr = this.outList.filter(function (item) {return item.mso_req_department.includes(_this.outFilterText);});
-        }
-        if (arr.length === 0) {
-          arr = this.outList.filter(function (item) {return item.mso_creator.includes(_this.outFilterText);});
-        }
+        arr = this.outList.filter(function (item) {return item.mso_orga.includes(_this.outFilterText) ||
+          item.mso_iden.includes(_this.outFilterText) ||
+          item.mso_remarks.includes(_this.outFilterText) ||
+          item.mso_warehouse.includes(_this.outFilterText) ||
+          item.mso_req_department.includes(_this.outFilterText) ||
+          item.mso_creator.includes(_this.outFilterText);});
+
       }
       return arr;
     },
@@ -427,22 +418,13 @@ var _exchange = _interopRequireDefault(__webpack_require__(/*! ../../data/exchan
       var arr = [];
       this.purchaseList.forEach(function (item) {return arr.push(item);});
       if (this.purchaseFilterText) {
-        arr = this.purchaseList.filter(function (item) {return item.rp_orga.includes(_this2.purchaseFilterText);});
-        if (arr.length === 0) {
-          arr = this.purchaseList.filter(function (item) {return item.rp_iden.includes(_this2.purchaseFilterText);});
-        }
-        if (arr.length === 0) {
-          arr = this.purchaseList.filter(function (item) {return item.rp_remarks.includes(_this2.purchaseFilterText);});
-        }
-        if (arr.length === 0) {
-          arr = this.purchaseList.filter(function (item) {return item.rp_type.includes(_this2.purchaseFilterText);});
-        }
-        if (arr.length === 0) {
-          arr = this.purchaseList.filter(function (item) {return item.rp_req_department.includes(_this2.purchaseFilterText);});
-        }
-        if (arr.length === 0) {
-          arr = this.purchaseList.filter(function (item) {return item.rp_creator.includes(_this2.purchaseFilterText);});
-        }
+        arr = this.purchaseList.filter(function (item) {return item.rp_orga.includes(_this2.purchaseFilterText) ||
+          item.rp_iden.includes(_this2.purchaseFilterText) ||
+          item.rp_remarks.includes(_this2.purchaseFilterText) ||
+          item.rp_type.includes(_this2.purchaseFilterText) ||
+          item.rp_req_department.includes(_this2.purchaseFilterText) ||
+          item.rp_creator.includes(_this2.purchaseFilterText);});
+
       }
       return arr;
     },
@@ -450,25 +432,14 @@ var _exchange = _interopRequireDefault(__webpack_require__(/*! ../../data/exchan
       var arr = [];
       this.sellList.forEach(function (item) {return arr.push(item);});
       if (this.sellFilterText) {
-        arr = this.sellList.filter(function (item) {return item.so_orga.includes(_this3.sellFilterText);});
-        if (arr.length === 0) {
-          arr = this.sellList.filter(function (item) {return item.so_remarks.includes(_this3.sellFilterText);});
-        }
-        if (arr.length === 0) {
-          arr = this.sellList.filter(function (item) {return item.so_iden.includes(_this3.sellFilterText);});
-        }
-        if (arr.length === 0) {
-          arr = this.sellList.filter(function (item) {return item.so_warehouse.includes(_this3.sellFilterText);});
-        }
-        if (arr.length === 0) {
-          arr = this.sellList.filter(function (item) {return item.so_type.includes(_this3.selFilterText);});
-        }
-        if (arr.length === 0) {
-          arr = this.sellList.filter(function (item) {return item.so_creator.includes(_this3.sellFilterText);});
-        }
-        if (arr.length === 0) {
-          arr = this.sellList.filter(function (item) {return item.so_custom.includes(_this3.sellFilterText);});
-        }
+        arr = this.sellList.filter(function (item) {return item.so_orga.includes(_this3.sellFilterText) ||
+          item.so_remarks.includes(_this3.sellFilterText) ||
+          item.so_iden.includes(_this3.sellFilterText) ||
+          item.so_warehouse.includes(_this3.sellFilterText) ||
+          item.so_type.includes(_this3.selFilterText) ||
+          item.so_creator.includes(_this3.sellFilterText) ||
+          item.so_custom.includes(_this3.sellFilterText);});
+
       }
       return arr;
     },
@@ -476,22 +447,13 @@ var _exchange = _interopRequireDefault(__webpack_require__(/*! ../../data/exchan
       var arr = [];
       this.exchangeList.forEach(function (item) {return arr.push(item);});
       if (this.exchangeFilterText) {
-        arr = this.exchangeList.filter(function (item) {return item.str_orga.includes(_this4.exchangeFilterText);});
-        if (arr.length === 0) {
-          arr = this.exchangeList.filter(function (item) {return item.str_iden.includes(_this4.exchangeFilterText);});
-        }
-        if (arr.length === 0) {
-          arr = this.exchangeList.filter(function (item) {return item.str_to.includes(_this4.exchangeFilterText);});
-        }
-        if (arr.length === 0) {
-          arr = this.exchangeList.filter(function (item) {return item.str_from.includes(_this4.exchangeFilterText);});
-        }
-        if (arr.length === 0) {
-          arr = this.exchangeList.filter(function (item) {return item.str_req_department.includes(_this4.exchangeFilterText);});
-        }
-        if (arr.length === 0) {
-          arr = this.exchangeList.filter(function (item) {return item.str_creator.includes(_this4.exchangeFilterText);});
-        }
+        arr = this.exchangeList.filter(function (item) {return item.str_orga.includes(_this4.exchangeFilterText) ||
+          item.str_iden.includes(_this4.exchangeFilterText) ||
+          item.str_to.includes(_this4.exchangeFilterText) ||
+          item.str_from.includes(_this4.exchangeFilterText) ||
+          item.str_req_department.includes(_this4.exchangeFilterText) ||
+          item.str_creator.includes(_this4.exchangeFilterText);});
+
       }
       return arr;
     } },
