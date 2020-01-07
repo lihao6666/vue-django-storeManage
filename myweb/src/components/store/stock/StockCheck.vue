@@ -41,9 +41,9 @@
                          :filter-method="filter" align="center"></el-table-column>
         <el-table-column prop="meterage_name" sortable label="单位" :filters="stock_meterageSet"
                          :filter-method="filter" align="center"></el-table-column>
-        <el-table-column prop="present_num" sortable label="现存量" align="center"></el-table-column>
-        <el-table-column prop="present_price" sortable label="库存单价"  align="center"></el-table-column>
-        <el-table-column prop="present_sum" sortable label="库存金额" align="center"></el-table-column>
+        <el-table-column prop="ts_present_num" sortable label="现存量" align="center"></el-table-column>
+        <el-table-column prop="ts_present_price" sortable label="库存单价"  align="center"></el-table-column>
+        <el-table-column prop="ts_present_sum" sortable label="库存金额" align="center"></el-table-column>
       </el-table>
       <div class="pagination">
         <el-pagination

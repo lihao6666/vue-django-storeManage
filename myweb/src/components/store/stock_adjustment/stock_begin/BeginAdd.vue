@@ -8,23 +8,13 @@
           >{{formadd.str_orga}}
           </el-tag>
         </el-form-item>
-        <el-form-item label="转出仓库">
+        <el-form-item label="仓库">
           <el-tag
             :type="'success'"
           >{{formadd.str_from}}
           </el-tag>
         </el-form-item>
-        <el-form-item label="转入仓库">
-          <el-select v-model="formadd.str_to" placeholder="请选择" :disabled="!ifchange">
-            <el-option v-for="item in form_str_to" v-bind:key="item" :label="item" :value="item"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="申请部门">
-          <el-select v-model="formadd.str_req_department" placeholder="请选择" :disabled="!ifchange">
-            <el-option v-for="item in form_str_req_department" v-bind:key="item" :label="item" :value="item"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="申请日期">
+        <el-form-item label="盘点日期">
           <el-col :span="11">
             <el-date-picker
               v-model="formadd.str_req_date"
@@ -37,18 +27,19 @@
             </el-date-picker>
           </el-col>
         </el-form-item>
+        <el-button type="primary" class="form-item-save" v-if="ifchange">保 存</el-button>
       </el-form>
     </div>
-    <Trdetail :formadd="formadd" @close="close" :ifchange="ifchange"></Trdetail>
+    <Begindetail :formadd="formadd" @close="close" :ifchange="ifchange"></Begindetail>
   </div>
 </template>
 
 <script>
-import Trdetail from './TrDetail'
+import Begindetail from './BeginDetail'
 export default {
   props: ['editform', 'ifchange'],
   components: {
-    Trdetail
+    Begindetail
   },
   data () {
     return {

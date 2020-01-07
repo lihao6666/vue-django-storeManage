@@ -3,7 +3,7 @@
     <div class="crumbs">
       <el-breadcrumb separator="/">
         <el-breadcrumb-item>
-          <i class="el-icon-lx-cascades"></i> 库存调整
+          <i class="el-icon-lx-cascades"></i> 期初库存
         </el-breadcrumb-item>
       </el-breadcrumb>
     </div>
@@ -26,35 +26,31 @@
         header-cell-class-name="table-header"
         :row-class-name="tableRowClassName"
       >
-        <el-table-column prop="str_iden" sortable label="订单编号" align="center"></el-table-column>
-        <el-table-column prop="str_orga" sortable label="库存组织" :filters="str_orgaSet"
+        <el-table-column prop="oi_iden" sortable label="单据编号" align="center"></el-table-column>
+        <el-table-column prop="oi_orga" sortable label="库存组织" :filters="oi_orgaSet"
                          :filter-method="filter" align="center"></el-table-column>
-        <el-table-column prop="str_to" sortable label="转入仓库" :filters="str_toSet"
+        <el-table-column prop="oi_to" sortable label="仓库" :filters="oi_toSet"
                          :filter-method="filter" align="center"></el-table-column>
-        <el-table-column prop="str_from" sortable label="转出仓库" :filters="str_fromSet"
-                         :filter-method="filter" align="center"></el-table-column>
-        <el-table-column prop="str_req_department" sortable label="申请部门" :filters="str_dpmSet"
-                         :filter-method="filter" align="center"></el-table-column>
-        <el-table-column prop="str_req_date" sortable label="申请日期" align="center"></el-table-column>
-        <el-table-column prop="str_status" sortable label="状态" :filters="str_statusSet"
+        <el-table-column prop="oi_req_date" sortable label="盘点日期" align="center"></el-table-column>
+        <el-table-column prop="oi_status" sortable label="状态" :filters="oi_statusSet"
                          :filter-method="filter" align="center">
           <template slot-scope="scope">
             <el-tag
-              :type="scope.row.str_status==='已审批'?'success':''"
-            >{{scope.row.str_status}}
+              :type="scope.row.oi_status==='已审批'?'success':''"
+            >{{scope.row.oi_status}}
             </el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="str_creator" sortable label="创建人" :filters="str_creatorSet"
+        <el-table-column prop="oi_creator" sortable label="创建人" :filters="oi_creatorSet"
                          :filter-method="filter" align="center"></el-table-column>
-        <el-table-column prop="str_createDate" sortable label="创建日期" align="center"></el-table-column>
+        <el-table-column prop="oi_createDate" sortable label="创建日期" align="center"></el-table-column>
         <el-table-column label="操作" align="center">
           <template slot-scope="scope">
             <el-button
               type="text"
               icon="el-icon-edit"
               @click="handleEdit(scope.$index, scope.row)"
-              v-if="scope.row.str_status==='草稿'"
+              v-if="scope.row.oi_status==='草稿'"
             >编辑
             </el-button>
             <el-button
@@ -62,7 +58,7 @@
               icon="el-icon-delete"
               class="red"
               @click="handleDelete(scope.$index, scope.row)"
-              v-if="scope.row.str_status==='草稿'"
+              v-if="scope.row.oi_status==='草稿'"
             >删除
             </el-button>
             <el-button
@@ -70,7 +66,7 @@
               icon="el-icon-postcard"
               class="green"
               @click="handleMore(scope.$index, scope.row)"
-              v-if="scope.row.str_status==='已审批'"
+              v-if="scope.row.oi_status==='已审批'"
             >详情
             </el-button>
           </template>
@@ -92,25 +88,25 @@
     </div>
     <!-- 新增弹出框 -->
     <el-dialog title="新增" :visible.sync="addVisible" width="90%" :close-on-click-modal="false">
-      <Transferadd ref="Transferadd" @close="close" :editform="addform" :ifchange="true"></Transferadd>
+      <Beginadd ref="Transferadd" @close="close" :editform="addform" :ifchange="true"></Beginadd>
     </el-dialog>
     <!-- 编辑弹出框 -->
-    <el-dialog title="编辑" :visible.sync="editVisible" width="90%" :close-on-click-modal="false" :destroy-on-close="true" :before-close="closePcedit">
-      <Transferadd ref="Reqedit" :editform="editform" :ifchange="true"></Transferadd>
+    <el-dialog title="编辑" :visible.sync="editVisible" width="90%" :close-on-click-modal="false" :deoioy-on-close="true" :before-close="closePcedit">
+      <Beginadd ref="Reqedit" :editform="editform" :ifchange="true"></Beginadd>
     </el-dialog>
     <!-- 详情弹出框 -->
-    <el-dialog title="详情" :visible.sync="moreVisible" width="90%" :destroy-on-close="true">
-      <Transferadd ref="Reqmore" :editform="moreform" :ifchange="false"></Transferadd>
+    <el-dialog title="详情" :visible.sync="moreVisible" width="90%" :deoioy-on-close="true">
+      <Beginadd ref="Reqmore" :editform="moreform" :ifchange="false"></Beginadd>
     </el-dialog>
   </div>
 </template>
 
 <script>
-import { postAPI } from '../../../api/api'
-import Transferadd from './TransferAdd'
+import { postAPI } from '../../../../api/api'
+import Beginadd from './Beginadd'
 
 export default {
-  name: 'str_check',
+  name: 'oi_check',
   data () {
     return {
       query: {
@@ -120,12 +116,12 @@ export default {
       search: '',
       tableData: [],
       tableDataNew: [],
-      str_orgaSet: [],
-      str_toSet: [],
-      str_fromSet: [],
-      str_dpmSet: [],
-      str_statusSet: [],
-      str_creatorSet: [],
+      oi_orgaSet: [],
+      oi_toSet: [],
+      oi_fromSet: [],
+      oi_dpmSet: [],
+      oi_statusSet: [],
+      oi_creatorSet: [],
       editVisible: false,
       editform: {},
       moreVisible: false,
@@ -133,24 +129,24 @@ export default {
       pageTotal: 0,
       addVisible: false,
       addform: {
-        str_iden: '',
-        str_orga: '',
-        str_from: '',
-        str_to: '',
-        str_req_date: ''
+        oi_iden: '',
+        oi_orga: '',
+        oi_from: '',
+        oi_to: '',
+        oi_req_date: ''
       }
     }
   },
   components: {
-    Transferadd
+    Beginadd
   },
   created () {
-    this.getData()
+    // this.getData()
   },
   methods: {
     getData () {
       let _this = this
-      postAPI('/str_check').then(function (res) {
+      postAPI('/oi_check').then(function (res) {
         _this.tableData = res.data.list
         _this.find()
         let orgaset = new Set()
@@ -160,45 +156,45 @@ export default {
         let fromset = new Set()
         let creatorset = new Set()
         for (let i in _this.tableData) {
-          orgaset.add(_this.tableData[i]['str_orga'])
-          fromset.add(_this.tableData[i]['str_from'])
-          toset.add(_this.tableData[i]['str_to'])
-          dpmset.add(_this.tableData[i]['str_req_department'])
-          statusset.add(_this.tableData[i]['str_status'])
-          creatorset.add(_this.tableData[i]['str_creator'])
+          orgaset.add(_this.tableData[i]['oi_orga'])
+          fromset.add(_this.tableData[i]['oi_from'])
+          toset.add(_this.tableData[i]['oi_to'])
+          dpmset.add(_this.tableData[i]['oi_req_department'])
+          statusset.add(_this.tableData[i]['oi_status'])
+          creatorset.add(_this.tableData[i]['oi_creator'])
         }
         for (let i of orgaset) {
-          _this.str_orgaSet.push({
+          _this.oi_orgaSet.push({
             text: i,
             value: i
           })
         }
         for (let i of fromset) {
-          _this.str_fromSet.push({
+          _this.oi_fromSet.push({
             text: i,
             value: i
           })
         }
         for (let i of toset) {
-          _this.str_toSet.push({
+          _this.oi_toSet.push({
             text: i,
             value: i
           })
         }
         for (let i of dpmset) {
-          _this.str_dpmSet.push({
+          _this.oi_dpmSet.push({
             text: i,
             value: i
           })
         }
         for (let i of statusset) {
-          _this.str_statusSet.push({
+          _this.oi_statusSet.push({
             text: i,
             value: i
           })
         }
         for (let i of creatorset) {
-          _this.str_creatorSet.push({
+          _this.oi_creatorSet.push({
             text: i,
             value: i
           })
@@ -228,13 +224,13 @@ export default {
     find () {
       this.pageTotal = 0
       this.tableDataNew = this.tableData.filter(data => !this.search ||
-          data.str_iden.toLowerCase().includes(this.search.toLowerCase()) ||
-          data.str_orga.toLowerCase().includes(this.search.toLowerCase()) ||
-          data.str_to.toLowerCase().includes(this.search.toLowerCase()) ||
-          data.str_from.toLowerCase().includes(this.search.toLowerCase()) ||
-          data.str_req_department.toLowerCase().includes(this.search.toLowerCase()) ||
-          data.str_req_date.toLowerCase().includes(this.search.toLowerCase()) ||
-          data.str_creator.toLowerCase().includes(this.search.toLowerCase()))
+          data.oi_iden.toLowerCase().includes(this.search.toLowerCase()) ||
+          data.oi_orga.toLowerCase().includes(this.search.toLowerCase()) ||
+          data.oi_to.toLowerCase().includes(this.search.toLowerCase()) ||
+          data.oi_from.toLowerCase().includes(this.search.toLowerCase()) ||
+          data.oi_req_department.toLowerCase().includes(this.search.toLowerCase()) ||
+          data.oi_req_date.toLowerCase().includes(this.search.toLowerCase()) ||
+          data.oi_creator.toLowerCase().includes(this.search.toLowerCase()))
     },
     // 新增
     add () {

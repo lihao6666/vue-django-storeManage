@@ -3,7 +3,7 @@
     <div class="crumbs">
       <el-breadcrumb separator="/">
         <el-breadcrumb-item>
-          <i class="el-icon-lx-cascades"></i> 转库明细
+          <i class="el-icon-lx-cascades"></i> 期初盘点明细
         </el-breadcrumb-item>
       </el-breadcrumb>
     </div>
@@ -60,18 +60,20 @@
                          :filter-method="filter" align="center"></el-table-column>
         <el-table-column prop="trd_meterage" sortable label="单位" :filters="trd_meterageSet"
                          :filter-method="filter" align="center"></el-table-column>
-        <el-table-column prop="trd_num" sortable label="申请数量" align="center">
-        <template slot-scope="scope">
-          <el-input
-            placeholder="1"
-            :disabled="!ifchange"
-            v-model="scope.row.trd_num"
-            @input="scope.row.trd_num = inputnum(scope.row.trd_num)"
-            @change="scope.row.trd_num = changenum(scope.row.trd_num)">
-          </el-input>
-        </template>
+        <el-table-column prop="trd_num" sortable label="入库数量" align="center">
+          <template slot-scope="scope">
+            <el-input
+              placeholder="1"
+              :disabled="!ifchange"
+              v-model="scope.row.trd_num"
+              @input="scope.row.trd_num = inputnum(scope.row.trd_num)"
+              @change="scope.row.trd_num = changenum(scope.row.trd_num)">
+            </el-input>
+          </template>
         </el-table-column>
-        <el-table-column prop="trd_present_num" sortable label="现存数量" align="center"></el-table-column>
+        <el-table-column prop="trd_present_num" sortable label="入库单价" align="center"></el-table-column>
+        <el-table-column prop="trd_present_num" sortable label="入库金额" align="center"></el-table-column>
+        <el-table-column prop="trd_present_num" sortable label="入库时间" align="center"></el-table-column>
         <el-table-column label="操作" align="center" v-if="ifchange">
           <template slot-scope="scope">
             <el-button
@@ -99,21 +101,21 @@
       </div>
     </div>
     <!-- 新增弹出框 -->
-    <el-dialog title="新增物料" :visible.sync="addVisible" width="90%" append-to-body>
-      <TrDetailadd @add="addPrd" :tableHas="tableData" :formadd="formadd" :ifhasorga="ifhasorga" :ifhasfrom="ifhasfrom"></TrDetailadd>
+    <el-dialog title="选择物料" :visible.sync="addVisible" width="90%" append-to-body>
+      <BeginDetailadd @add="addPrd" :tableHas="tableData" :formadd="formadd" :ifhasorga="ifhasorga" :ifhasfrom="ifhasfrom"></BeginDetailadd>
     </el-dialog>
   </div>
 </template>
 
 <script>
-import {postAPI} from '../../../api/api'
-import TrDetailadd from './TrDetailadd'
+import {postAPI} from '../../../../api/api'
+import BeginDetailadd from './BeginDetailadd'
 
 export default {
   name: 'sell_sod',
   props: ['formadd', 'ifchange'],
   components: {
-    TrDetailadd
+    BeginDetailadd
   },
   data () {
     return {
@@ -136,12 +138,12 @@ export default {
     }
   },
   created () {
-    this.getData()
-    this.$nextTick(function () {
-      if (!this.formadd.str_orga && !this.formadd.str_from) {
-        this.addVisible = true
-      }
-    })
+    // this.getData()
+    // this.$nextTick(function () {
+    //   if (!this.formadd.str_orga && !this.formadd.str_from) {
+    //     this.addVisible = true
+    //   }
+    // })
   },
   methods: {
     getData () {
@@ -233,7 +235,7 @@ export default {
     // 新增
     add () {
       this.addVisible = true
-      if (this.formadd.str_orga === '') {
+      if (this.formadd.str_orga === '' || this.formadd.str_from === '') {
         this.ifhasorga = false
       } else {
         this.ifhasorga = true
