@@ -14,6 +14,7 @@ class PurchaseContract(models.Model):
 
     id = models.AutoField(primary_key=True)
     pc_iden = models.CharField(max_length=15, verbose_name='合同编号')
+    pc_serial = models.CharField(max_length=4, verbose_name='合同流水号')
     organization = models.ForeignKey('base.Organization', verbose_name='组织', related_name='orga_pc',
                                      on_delete=models.CASCADE)
     pc_name = models.CharField(max_length=20, verbose_name='合同名称')
@@ -22,7 +23,7 @@ class PurchaseContract(models.Model):
     pc_date = models.DateTimeField(auto_now_add=True, verbose_name='合同签订日期')
     pc_sum = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='合同总额')
     pc_remarks = models.TextField(max_length=400, verbose_name='合同备注', null=True)
-    pc_status = models.IntegerField(choices=PC_STATUS_CHOICES, verbose_name='合同状态')
+    pc_status = models.IntegerField(choices=PC_STATUS_CHOICES, default=0,verbose_name='合同状态')
     pc_creator = models.CharField(max_length=20, verbose_name='合同创建者名字')
     pc_creator_iden = models.CharField(max_length=20, verbose_name='合同创建者工号')
     pc_createDate = models.DateTimeField(auto_now_add=True, verbose_name='合同创建时间')

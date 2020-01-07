@@ -132,7 +132,7 @@ class SellOrderUpdateView(APIView):
             pre_iden = "SO" + date
             max_id = models.SellOrder.objects.all().aggregate(Max('so_serial'))['so_serial__max']
             if max_id:
-                so_serial = str(int(max_id) + 1)
+                so_serial = str(int(max_id) + 1).zfill(4)
             else:
                 so_serial = "0001"
             so_new_iden = pre_iden + so_serial
@@ -153,7 +153,7 @@ class SellOrderUpdateView(APIView):
         else:
             so = models.SellOrder.objects.get(so_iden=so_iden)
             if so:
-                so.Update(organization=organization, so_type=so_type, customer=customer, so_date=so_date,
+                so.update(organization=organization, so_type=so_type, customer=customer, so_date=so_date,
                           deliver_ware_house=deliver_ware_house,
                           deliver_ware_house_iden=deliver_ware_house_iden, so_remarks=so_remarks)
             else:

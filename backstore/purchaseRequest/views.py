@@ -69,7 +69,6 @@ class PrNewView(APIView):
         self.area_name = ""
 
     def post(self, request):
-        dpms = []
         json_data = json.loads(self.request.body.decode("utf-8"))
         user_now_iden = json_data['user_now_iden']
         user_now = UserNow.objects.get(user_iden=user_now_iden)
@@ -77,7 +76,7 @@ class PrNewView(APIView):
             self.user_now_name = user_now.user_name
             self.area_name = user_now.area_name
 
-        orga_names = Organization.objects.filter(area_name=self.area_name).values_list('id', 'orga_name')
+        orga_names = Organization.objects.filter(area_name=self.area_name, orga_status=1).values_list('id', 'orga_name')
         dpms = Department.objects.filter(dpm_status=1).values_list('id', 'dpm_name', 'dpm_center')
         try:
             pr_iden = json_data['pr_iden']
@@ -162,7 +161,7 @@ class PrUpdateView(APIView):
             pre_iden = "PR" + date
             max_id = models.PurchaseRequest.objects.all().aggregate(Max('pr_serial'))['pr_serial__max']
             if max_id:
-                pr_serial = str(int(max_id) + 1)
+                pr_serial = str(int(max_id) + 1).zfill(4)
             else:
                 pr_serial = "0001"
             pr_new_iden = pre_iden + pr_serial
@@ -181,11 +180,12 @@ class PrUpdateView(APIView):
         else:
             pr = models.PurchaseRequest.objects.get(pr_iden=pr_iden)
             if pr:
-                pr.Update(organization=organization, pr_department=department_name, pr_type=pr_type, pr_date=pr_date,
+                pr.update(organization=organization, pr_department=department_name, pr_type=pr_type, pr_date=pr_date,
                           pr_remarks=pr_remarks)
             else:
                 self.message = "更新失败"
                 self.signal = 1
+        return Response({"message": self.message, "signal": self.signal})
 
 
 class PrdSaveView(APIView):
@@ -242,18 +242,22 @@ class PrdNewView(APIView):
 
     def post(self, request):
         json_data = json.loads(self.request.body.decode("utf-8"))
-        organization_id = json_data['orga_name']
+        organization_name = json_data['orga_name']
         materials = Material.objects.filter(material_status=1).all()
         if materials:
             materials_serializer = MaterialSerializer(materials, many=True)
             prds_present_num = []
             for material in materials:
-                # prd_present_num = TotalStock.objects.filter(totalwarehouse__organization__orga_name=organization_id,
-                #                                             material=material).aggregate(
-                #     prd_present_num=Sum('ts_present_num'))
-                ss = TotalStock.objects.all()
-                print(ss)
-                prds_present_num.append(prds_present_num)
+                # print(material)
+                # try:
+                prd_present_num = TotalStock.objects.filter(totalwarehouse__organization__orga_name=organization_name,
+                                                            material=material).aggregate(
+                    prd_present_num=Sum('ts_present_num'))['prd_present_num']
+                if prd_present_num:
+                    pass
+                else:
+                    prd_present_num = 0
+                prds_present_num.append(prd_present_num)
             # 现存量单独统计，单独发送字段
 
             return Response({"materials": materials_serializer.data, "prds_present_num": prds_present_num, "signal": 0})

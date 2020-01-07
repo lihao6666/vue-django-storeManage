@@ -9,7 +9,7 @@ class PurchaseRequestSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.PurchaseRequest
         fields = ('id', 'pr_iden', 'orga_name', 'area_name', 'pr_type', 'pr_department',
-                  'pr_date', 'pr_remarks', 'pr_status', 'pr_creator', 'pr_createDate', 'pr_closer', 'pr_closeDate',
+                  'pr_date', 'pr_remarks', 'pr_status', 'pr_creator','pr_creator_iden', 'pr_createDate', 'pr_closer', 'pr_closeDate',
                   'pr_closeReason')
 
 
