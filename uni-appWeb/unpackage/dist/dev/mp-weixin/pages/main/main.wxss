@@ -19,11 +19,9 @@ view {
 .content {
 	padding: 0;
 }
-.tabs {
-	padding: 0;
-}
 .content-control {
 	padding: 5rpx;
+	padding-bottom: 0;
 	width: auto;
 }
 .current-content {
@@ -45,38 +43,45 @@ view {
 	padding-top: 1vw;
 }
 .delete {
-	width: 60rpx;
+	width: 90rpx;
 	color: red;
 }
 .edit {
-	width: 60rpx;
+	width: 90rpx;
 }
 .detail {
-	width: 60rpx;
+	width: 90rpx;
 }
 .commit {
-	width: 60rpx;
+	width: 90rpx;
 	color: green;
 }
-.searchInput {
-	margin-top: 1vw;
-	margin-left: 20rpx;
-	margin-right: 20rpx;
-	background: white;
-	border-radius: 30rpx;
-	display: -webkit-box;
-	display: -webkit-flex;
-	display: flex;
+.input-view {
 	-webkit-box-align: center;
 	-webkit-align-items: center;
 	        align-items: center;
 	-webkit-box-pack: center;
 	-webkit-justify-content: center;
 	        justify-content: center;
-	height: 70rpx;
+	width: 100%;
+	display: -webkit-box;
+	display: -webkit-flex;
+	display: flex;
+	background-color: #e7e7e7;
+	height: 30px;
+	border-radius: 15px;
+	padding: 0 4%;
+	-webkit-flex-wrap: nowrap;
+	        flex-wrap: nowrap;
+	margin: 7px 10rpx;
+	line-height: 30px;
+	background: #f5f5f5;
 }
-.input {
-	color: #999;
-	width: 90%;
+.input-view .input {
+	height: 30px;
+	line-height: 30px;
+	width: 94%;
+	padding: 0 3%;
 }
+
 

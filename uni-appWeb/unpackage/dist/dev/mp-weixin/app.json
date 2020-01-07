@@ -20,7 +20,7 @@
   "subPackages": [],
   "window": {
     "navigationBarTextStyle": "white",
-    "navigationBarBackgroundColor": "#0faeff",
+    "navigationBarBackgroundColor": "#20a0ff",
     "backgroundColor": "#fbf9fe"
   },
   "tabBar": {
@@ -49,5 +49,5 @@
     ]
   },
   "usingComponents": {},
-  "sitemapLocation": "sitemap8.json"
+  "sitemapLocation": "sitemap5.json"
 }
