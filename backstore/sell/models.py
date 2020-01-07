@@ -51,7 +51,7 @@ class SoDetail(models.Model):
     sod_tax_sum = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='含税总额',null=True)
     sod_sum = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='无税总额',null=True)
     sod_tax_price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='税金总额',null=True)
-    sod_remarks = models.TextField(max_length=200, verbose_name='订单明细备注')
+    sod_remarks = models.TextField(max_length=200, verbose_name='订单明细备注',null=True)
 
     class Meta:
         verbose_name = "销售订单明细"

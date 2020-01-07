@@ -21,13 +21,13 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'gri0)@5t&e$l#ix(1x6ph+=+%3t#6xi=wejv%593sxs62($6vc'
+SECRET_KEY = '^7zdnokgmrofyy$7k33r+5+&6olhe_$p4el7^#)$utit+&*&5w'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
 ALLOW_HOSTS = ['*', ]
-ALLOWED_HOSTS = ['49.234.123.211']
+ALLOWED_HOSTS = ['49.234.123.211','127.0.0.1']
 
 # 重载系统的用户，让UserProfile生效
 AUTH_USER_MODEL = 'base.UserProfile'
@@ -35,6 +35,7 @@ AUTH_USER_MODEL = 'base.UserProfile'
 # Application definition
 
 INSTALLED_APPS = [
+    'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -43,10 +44,11 @@ INSTALLED_APPS = [
     'rest_framework',
     'corsheaders',
     'base',
-    'purchase',
+    'purchaseRequest',
     'sell',
+    'purchase',
     # 'orderManage',
-    'storeManage'
+    'storeManage',
 ]
 
 MIDDLEWARE = [
@@ -55,7 +57,7 @@ MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
-    # 'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
@@ -129,17 +131,40 @@ WSGI_APPLICATION = 'backstore.wsgi.application'
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
 DATABASES = {
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.mysql',
+    #     'NAME': 'store',  # 数据库名字
+    #     'USER': 'root',  # 账号
+    #     'PASSWORD': 'HyLh@617',  # 密码
+    #     # 'HOST': '47.93.198.159',     #IP
+    #     'HOST': '127.0.0.1',  # IP
+    #     'PORT': '3306',  # 端口
+    #     'TEST': {
+    #         'NAME': 'store2'
+    #     }
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.mysql',
+    #     'NAME': 'store',  # 数据库名字
+    #     'USER': 'root',  # 账号
+    #     'PASSWORD': 'lh19990507',  # 密码
+    #     # 'HOST': '47.93.198.159',     #IP
+    #     'HOST': '127.0.0.1',  # IP
+    #     'PORT': '3306',  # 端口
+    #     'TEST': {
+    #         'NAME': 'store2'
+    #     }
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'store',  # 数据库名字
-        'USER': 'root',  # 账号
+        'NAME': 'store2',  # 数据库名字
+        'USER': 'root',  # 账
         'PASSWORD': 'HyLh@617',  # 密码
         # 'HOST': '47.93.198.159',     #IP
-        'HOST': '127.0.0.1',  # IP
+        'HOST': '49.234.123.211',  # IP
         'PORT': '3306',  # 端口
         'TEST': {
             'NAME': 'store2'
         }
+
         # 这里引擎用innodb（默认myisam）
         # 因为后面第三方登录时，要求引擎为INNODB
         # 'OPTIONS':{'init_command': 'SET storage_engine=INNODB'},    #按照课程会报错，改为
@@ -182,4 +207,3 @@ USE_TZ = False
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 STATIC_URL = '/static/'
-
