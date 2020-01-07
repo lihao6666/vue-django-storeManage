@@ -174,7 +174,24 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-var _materialData = _interopRequireDefault(__webpack_require__(/*! ../../data/materialData.js */ 80));var _components;function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}function _defineProperty(obj, key, value) {if (key in obj) {Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true });} else {obj[key] = value;}return obj;}var uniSegmentedControl = function uniSegmentedControl() {return __webpack_require__.e(/*! import() | components/uni-segmented-control/uni-segmented-control */ "components/uni-segmented-control/uni-segmented-control").then(__webpack_require__.bind(null, /*! ../../components/uni-segmented-control/uni-segmented-control.vue */ 172));};var uniCard = function uniCard() {return __webpack_require__.e(/*! import() | components/uni-card/uni-card */ "components/uni-card/uni-card").then(__webpack_require__.bind(null, /*! ../../components/uni-card/uni-card.vue */ 179));};var uniSection = function uniSection() {return __webpack_require__.e(/*! import() | components/uni-section/uni-section */ "components/uni-section/uni-section").then(__webpack_require__.bind(null, /*! ../../components/uni-section/uni-section.vue */ 243));};var slFilter = function slFilter() {return __webpack_require__.e(/*! import() | components/sl-filter/sl-filter */ "components/sl-filter/sl-filter").then(__webpack_require__.bind(null, /*! @/components/sl-filter/sl-filter.vue */ 250));};var dragButton = function dragButton() {return __webpack_require__.e(/*! import() | components/drag-button/anotherButton */ "components/drag-button/anotherButton").then(__webpack_require__.bind(null, /*! ../../components/drag-button/anotherButton.vue */ 257));};var ypNumberBox = function ypNumberBox() {return __webpack_require__.e(/*! import() | components/yp-number-box/yp-number-box */ "components/yp-number-box/yp-number-box").then(__webpack_require__.bind(null, /*! @/components/yp-number-box/yp-number-box.vue */ 264));};var _default =
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+var _materialData = _interopRequireDefault(__webpack_require__(/*! ../../data/materialData.js */ 80));var _components;function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}function _defineProperty(obj, key, value) {if (key in obj) {Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true });} else {obj[key] = value;}return obj;}var uniSegmentedControl = function uniSegmentedControl() {return __webpack_require__.e(/*! import() | components/uni-segmented-control/uni-segmented-control */ "components/uni-segmented-control/uni-segmented-control").then(__webpack_require__.bind(null, /*! ../../components/uni-segmented-control/uni-segmented-control.vue */ 172));};var uniCard = function uniCard() {return __webpack_require__.e(/*! import() | components/uni-card/uni-card */ "components/uni-card/uni-card").then(__webpack_require__.bind(null, /*! ../../components/uni-card/uni-card.vue */ 179));};var uniSection = function uniSection() {return __webpack_require__.e(/*! import() | components/uni-section/uni-section */ "components/uni-section/uni-section").then(__webpack_require__.bind(null, /*! ../../components/uni-section/uni-section.vue */ 243));};var slFilter = function slFilter() {return __webpack_require__.e(/*! import() | components/sl-filter/sl-filter */ "components/sl-filter/sl-filter").then(__webpack_require__.bind(null, /*! @/components/sl-filter/sl-filter.vue */ 250));};var dragButton = function dragButton() {return __webpack_require__.e(/*! import() | components/drag-button/anotherButton */ "components/drag-button/anotherButton").then(__webpack_require__.bind(null, /*! ../../components/drag-button/anotherButton.vue */ 257));};var uniNumberBox = function uniNumberBox() {return __webpack_require__.e(/*! import() | components/uni-number-box/uni-number-box */ "components/uni-number-box/uni-number-box").then(__webpack_require__.bind(null, /*! @/components/uni-number-box/uni-number-box.vue */ 264));};var _default =
+
 
 
 
@@ -185,204 +202,53 @@ var _materialData = _interopRequireDefault(__webpack_require__(/*! ../../data/ma
     uniSection: uniSection }, _defineProperty(_components, "uniSegmentedControl",
   uniSegmentedControl), _defineProperty(_components, "slFilter",
   slFilter), _defineProperty(_components, "dragButton",
-  dragButton), _defineProperty(_components, "ypNumberBox",
-  ypNumberBox), _components),
+  dragButton), _defineProperty(_components, "uniNumberBox",
+  uniNumberBox), _components),
 
   data: function data() {
     return {
       themeColor: '#000000',
       titleColor: '#666666',
       filterResult: '',
-      materialList: _materialData.default.data,
-      menuList: [{
-        'title': '品牌',
-        'detailTitle': '请选择职位类型（可多选）',
-        'isMutiple': true,
-        'key': 'jobType',
-        'defaultSelectedIndex': [0],
-        'detailList': [{
-          'title': '不限',
-          'value': '' },
-
-        {
-          'title': 'uni-app',
-          'value': 'uni-app' },
-
-        {
-          'title': 'java开发',
-          'value': 'java' },
-
-        {
-          'title': 'web开发',
-          'value': 'web' },
-
-        {
-          'title': 'Android开发',
-          'value': 'Android' },
-
-        {
-          'title': 'iOS开发',
-          'value': 'iOS' },
-
-        {
-          'title': '测试工程师',
-          'value': '测试' },
-
-        {
-          'title': 'UI设计',
-          'value': 'UI' },
-
-        {
-          'title': 'Ruby开发',
-          'value': 'Ruby' },
-
-        {
-          'title': 'C#开发',
-          'value': 'C#' },
-
-        {
-          'title': 'PHP开发',
-          'value': 'php' },
-
-        {
-          'title': 'Python开发',
-          'value': 'Python' }] },
+      materialList: _materialData.default.data };
 
 
-
-
-      {
-        'title': '型号',
-        'key': 'salary',
-        'isMutiple': true,
-        'detailList': [{
-          'title': '不限',
-          'value': '' },
-
-        {
-          'title': '0~2000',
-          'value': '0~2000' },
-
-        {
-          'title': '2000~3000',
-          'value': '2000~3000' },
-
-        {
-          'title': '3000~4000',
-          'value': '3000~4000' },
-
-        {
-          'title': '4000~5000',
-          'value': '4000~5000' },
-
-        {
-          'title': '5000~6000',
-          'value': '5000~6000' },
-
-        {
-          'title': '6000~7000',
-          'value': '6000~7000' },
-
-        {
-          'title': '7000~8000',
-          'value': '7000~8000' },
-
-        {
-          'title': '8000~9000',
-          'value': '8000~9000' },
-
-        {
-          'title': '9000~10000',
-          'value': '9000~10000' },
-
-        {
-          'title': '10000以上',
-          'value': '10000~1000000' }] },
-
-
-
-
-      {
-        'title': '单选',
-        'key': 'single',
-        'isMutiple': false,
-        'detailTitle': '请选择（单选）',
-        'reflexTitle': true,
-        'defaultSelectedIndex': 2,
-        'detailList': [{
-          'title': '不限',
-          'value': '' },
-
-        {
-          'title': '条件1',
-          'value': 'test_1' },
-
-        {
-          'title': '条件2',
-          'value': 'test_2' },
-
-        {
-          'title': '条件3',
-          'value': 'test_3' },
-
-        {
-          'title': '条件4',
-          'value': 'test_4' },
-
-        {
-          'title': '条件5',
-          'value': 'test_5' },
-
-        {
-          'title': '条件6',
-          'value': 'test_6' },
-
-        {
-          'title': '条件7',
-          'value': 'test_7' },
-
-        {
-          'title': '条件8',
-          'value': 'test_8' }] },
-
-
-
-      {
-        'title': '排序',
-        'key': 'sort',
-        'isSort': true,
-        'reflexTitle': true,
-        'defaultSelectedIndex': 2,
-        'detailList': [{
-          'title': '默认排序',
-          'value': '' },
-
-        {
-          'title': '发布时间',
-          'value': 'add_time' },
-
-        {
-          'title': '薪资最高',
-          'value': 'wages_up' },
-
-        {
-          'title': '离我最近',
-          'value': 'location' }] }] };
-
-
-
-
-
-  }, onLoad: function onLoad() {
+  },
+  onLoad: function onLoad() {
 
   },
   mounted: function mounted() {
 
   },
+  computed: {
+    materialAdd: function materialAdd() {
+      var arr = [];
+      this.materialList.forEach(function (item) {
+        var num = '';
+        var remarks = '';
+        var maxnum = parseInt(item.material_attr);
+        item.material_attr = maxnum;
+        item.material_remarks = remarks;
+        item.material_num = num;
+        arr.push(item);
+      });
+
+      return arr;
+    } },
+
   methods: {
     result: function result(val) {
-      console.log('filter_result:' + JSON.stringify(val));
       this.filterResult = JSON.stringify(val, null, 2);
+    },
+    change: function change(num) {
+
+    },
+    switchChange: function switchChange() {
+
+    },
+    test: function test(item) {
+      console.log(item.material_remarks);
+      console.log(item.material_num);
     },
     newOut: function newOut() {
       uni.navigateTo({

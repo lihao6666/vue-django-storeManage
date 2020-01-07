@@ -45,11 +45,11 @@
 						</view>
 						<view v-if="judgeStatus(item.mso_status) === 0" class="button-box">
 							<view class="delete" @click="deleteOrder(item.mso_iden)"><evan-icons type="remove" color="red" size="16"></evan-icons>删除</view>
-							<view class="edit" @click="editOrder(item.mso_iden)">编辑</view>
+							<view class="edit" @click="editOrder(item.mso_iden)"><evan-icons type="edit" color="blue" size="13"></evan-icons>编辑</view>
 							<view class="commit" @click="commitOrder(item.mso_iden)"><evan-icons type="check" color="green" size="16"></evan-icons>提交</view>
 						</view>
 						<view v-if="judgeStatus(item.mso_status) === 1" class="button-box">
-							<view class="detail" @click="viewDetail(item.mso_iden)">详情</view>
+							<view class="detail" @click="viewDetail(item.mso_iden)"><evan-icons type="reorder" size="15"></evan-icons>详情</view>
 						</view>
 					</uni-card>
 				</view>
@@ -79,15 +79,15 @@
 						</view>
 						<view v-if="judgeStatus(item.rp_status) === 0" class="button-box">
 							<view class="delete" @click="deleteOrder(item.rp_iden)"><evan-icons type="remove" color="red" size="16"></evan-icons>删除</view>
-							<view class="edit" @click="editOrder(item.rp_iden)">编辑</view>
+							<view class="edit" @click="editOrder(item.rp_iden)"><evan-icons type="edit" color="blue" size="13"></evan-icons>编辑</view>
 							<view class="commit" @click="commitOrder(item.rp_iden)"><evan-icons type="check" color="green" size="16"></evan-icons>提交</view>
 						</view>
 						<view v-if="judgeStatus(item.rp_status) === 1" class="button-box">
-							<view class="detail" @click="viewDetail(item.rp_iden)">详情</view>
+							<view class="detail" @click="viewDetail(item.rp_iden)"><evan-icons type="reorder" size="15"></evan-icons>详情</view>
 							<view class="delete" @click="closeOrder(item.rp_iden)"><evan-icons type="close" color="red" size="16"></evan-icons>关闭</view>
 						</view>
 						<view v-if="judgeStatus(item.rp_status) === 2" class="button-box">
-							<view class="detail" @click="viewDetail(item.rp_iden)">详情</view>
+							<view class="detail" @click="viewDetail(item.rp_iden)"><evan-icons type="reorder" size="15"></evan-icons>详情</view>
 						</view>
 					</uni-card>
 				</view>
@@ -118,11 +118,11 @@
 						</view>
 						<view v-if="judgeStatus(item.so_status) === 0" class="button-box">
 							<view class="delete" @click="deleteOrder(item.so_iden)"><evan-icons type="remove" color="red" size="16"></evan-icons>删除</view>
-							<view class="edit" @click="editOrder(item.so_iden)">编辑</view>
+							<view class="edit" @click="editOrder(item.so_iden)"><evan-icons type="edit" color="blue" size="13"></evan-icons>编辑</view>
 							<view class="commit" @click="commitOrder(item.so_iden)"><evan-icons type="check" color="green" size="16"></evan-icons>提交</view>
 						</view>
 						<view v-if="judgeStatus(item.so_status) === 1" class="button-box">
-							<view class="detail" @click="viewDetail(item.so_iden)">详情</view>
+							<view class="detail" @click="viewDetail(item.so_iden)"><evan-icons type="reorder" size="15"></evan-icons>详情</view>
 						</view>
 					</uni-card>
 				</view>
@@ -152,11 +152,11 @@
 						</view>
 						<view v-if="judgeStatus(item.str_status) === 0" class="button-box">
 							<view class="delete" @click="deleteOrder(item.str_iden)"><evan-icons type="remove" color="red" size="16"></evan-icons>删除</view>
-							<view class="edit" @click="editOrder(item.str_iden)">编辑</view>
+							<view class="edit" @click="editOrder(item.str_iden)"><evan-icons type="edit" color="blue" size="13"></evan-icons>编辑</view>
 							<view class="commit" @click="commitOrder(item.str_iden)"><evan-icons type="check" color="green" size="16"></evan-icons>提交</view>
 						</view>
 						<view v-if="judgeStatus(item.str_status) === 1" class="button-box">
-							<view class="detail" @click="viewDetail(item.str_iden)">详情</view>
+							<view class="detail" @click="viewDetail(item.str_iden)"><evan-icons type="reorder" size="15"></evan-icons>详情</view>
 						</view>
 					</uni-card>
 				</view>
@@ -596,6 +596,8 @@ export default {
 		color: red;
 	}
 	.edit {
+		padding-top: 3rpx;
+		color: blue;
 		width: 90upx;
 	}
 	.detail {

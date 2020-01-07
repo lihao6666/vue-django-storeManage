@@ -29,6 +29,7 @@
 				        if (choose.confirm) {
 				            _this.$http.post('/base/loginExit', {user_now_iden}).then(([err,res]) => {
 				            	uni.removeStorageSync('user_now_iden')
+								uni.removeStorageSync('user_info')
 				            	uni.reLaunch({
 				            	    url: '../login/login',
 				            	});
