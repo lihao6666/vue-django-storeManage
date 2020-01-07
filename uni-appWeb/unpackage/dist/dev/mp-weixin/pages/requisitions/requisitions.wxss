@@ -29,4 +29,101 @@
   height: 100%;
   background: #F1F0F3;
 }
+.card_style.data-v-1522dd26 {
+  font-size: 14px;
+}
+.card_style .num_select.data-v-1522dd26 {
+    float: right;
+}
+.card_style .select.data-v-1522dd26 {
+    float: right;
+}
+.list-text.data-v-1522dd26 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+  -webkit-flex-direction: row;
+          flex-direction: row;
+}
+.shopcart .cartBottom.data-v-1522dd26 {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 54px;
+  z-index: 99;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: flex;
+  background-color: #141d27;
+}
+.carIcon.data-v-1522dd26 {
+  -webkit-box-flex: 1;
+  -webkit-flex: 1;
+          flex: 1;
+}
+.iconBox.data-v-1522dd26 {
+  position: absolute;
+  bottom: 22px;
+  left: 18px;
+  z-index: 101;
+  background-color: #46494b;
+  border-radius: 50%;
+  height: 48px;
+  width: 48px;
+  line-height: 55px;
+  /* border: 6px solid #141d27; */
+}
+.iconBox .allcount.data-v-1522dd26 {
+  position: absolute;
+  right: -6px;
+  top: 0;
+  display: inline-block;
+  padding: 0 6px;
+  font-size: 9px;
+  line-height: 16px;
+  font-weight: 400;
+  border-radius: 10px;
+  background-color: #f01414;
+  color: #ffffff;
+}
+.img.data-v-1522dd26 {
+  font-size: 24px;
+  line-height: 24px;
+  width: 30px;
+  height: 30px;
+  padding-left: 6px;
+  padding-top: 6px;
+  color: #cccccc;
+  border-radius: 50%;
+}
+.carIcon .active.data-v-1522dd26 {
+  background-color: #00a0dc;
+}
+.middle.data-v-1522dd26 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -webkit-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-flex: 2;
+  -webkit-flex: 2;
+          flex: 2;
+  color: #ffffff;
+}
+.BtnRight.data-v-1522dd26 {
+  -webkit-box-flex: 1;
+  -webkit-flex: 1;
+          flex: 1;
+}
+.BtnRight .button_style.data-v-1522dd26 {
+    padding: 0;
+    margin: 0;
+    height: 54px;
+    border-radius: 0;
+}
 

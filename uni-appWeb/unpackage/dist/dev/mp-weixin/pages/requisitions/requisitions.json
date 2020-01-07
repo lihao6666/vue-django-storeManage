@@ -6,6 +6,6 @@
     "uni-section": "/components/uni-section/uni-section",
     "sl-filter": "/components/sl-filter/sl-filter",
     "drag-button": "/components/drag-button/anotherButton",
-    "yp-number-box": "/components/yp-number-box/yp-number-box"
+    "uni-number-box": "/components/uni-number-box/uni-number-box"
   }
 }

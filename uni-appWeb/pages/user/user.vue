@@ -1,10 +1,10 @@
 <template>
     <view class="content">
 		<view class="person-head">
-			<cmd-avatar src="https://avatar.bbs.miui.com/images/noavatar_small.gif" @click="mydetail" size="md" :make="{'background-color': '#fff', 'margin-right': '10upx'}"></cmd-avatar>
-			<view class="person-head-box" @click="mydetail(info)" v-for="info in myInfo" :key="info.id">
-				<view class="user-name">{{ info.user_name }}</view>
-				<view class="user-id">ID：{{ info.user_id }}</view>
+			<cmd-avatar src="https://avatar.bbs.miui.com/images/noavatar_small.gif" @click="mydetail()" size="md" :make="{'background-color': '#fff', 'margin-right': '10upx'}"></cmd-avatar>
+			<view class="person-head-box" @click="mydetail()">
+				<view class="user-name">{{ user_name }}</view>
+				<view class="user-id">ID：{{ user_id }}</view>
 			</view>
 		</view>
 		<view class="person-list">
@@ -22,7 +22,7 @@
 	import cmdAvatar from "../../components/cmd-avatar/cmd-avatar.vue"
 	import cmdIcon from "../../components/cmd-icon/cmd-icon.vue"
 	import cmdCellItem from "../../components/cmd-cell-item/cmd-cell-item.vue"
-	import myData from '../../data/userinfo.js'
+	var _this;
 
     export default {
 		components: {
@@ -33,16 +33,20 @@
 		data() {
 			return {
 				//将data文件夹中的数据读入
-				myInfo: myData.data
+				user_name: '',
+				user_id: ''
 			}
 		},
+		mounted() {
+			_this = this;
+		},
+		onLoad: function() {
+			var myinfo = uni.getStorageSync('user_info')
+			this.user_name = myinfo.data.user.user_name
+			this.user_id = myinfo.data.user.username
+		},
         methods: {
-			mydetail(info) {
-				try {
-				    uni.setStorageSync('userInfo', info);
-				} catch (e) {
-				    console.log("传用户信息失败")
-				}
+			mydetail() {
 				uni.navigateTo({
 				    url: 'myinfo',
 				});
@@ -70,7 +74,7 @@
 		flex-direction: row;
 		align-items: center;
 		height: 170upx;
-		padding-left: 20px;
+		padding-left: 20rpx;
 		background: linear-gradient(to top, #4073ff, #20a0ff);
 		border-top: 0;
 	}
@@ -79,6 +83,7 @@
 		flex-direction: column;
 		justify-content: center;
 		align-items: flex-start;
+		padding-left: 20rpx;
 	}
 	.user-name {
 		font-size: 18px;
