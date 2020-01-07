@@ -14,7 +14,7 @@ export default new Router({
       children: [
         {
           path: '/home',
-          component: () => import('../components/404.vue'),
+          component: () => import('../components/FirstPage.vue'),
           meta: {title: '首页'}
         },
         {

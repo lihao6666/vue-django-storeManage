@@ -245,6 +245,11 @@ export default {
       this.addVisible = true
       this.checkshow = false
     },
+    // 返回
+    back () {
+      this.addVisible = false
+      this.checkshow = true
+    },
     // 关闭新增弹窗
     close () {
       this.addVisible = false
