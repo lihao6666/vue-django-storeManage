@@ -87,10 +87,14 @@ class LoginView(APIView):
                             user_roles_list = list(map(int, user_roles.split('-')))
                             for user_role in user_roles_list:
                                 role_message = []
-                                role = models.Role.objects.get(id=user_role, role_status=1)
-                                role_message.append(role.role_name)
-                                role_message.append(role.role_power)
-                                roles.append(role_message)
+                                try:
+                                    role = models.Role.objects.get(id=user_role, role_status=1)
+                                except models.Role.DoesNotExist:
+                                    pass
+                                else:
+                                    role_message.append(role.role)
+                                    role_message.append(role.role_power)
+                                    roles.append(role_message)
 
                         user_serializer = UserProfileSerializer(user)
                         return Response(
