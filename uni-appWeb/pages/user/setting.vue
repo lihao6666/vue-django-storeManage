@@ -21,14 +21,14 @@
 		},
 	    methods: {
 	        logout() {
-				var user_now_iden = uni.getStorageSync('user_now_iden')
+				var myinfo = uni.getStorageSync('user_info')
+				var user_now_iden = myinfo.data.user.username
 				uni.showModal({
 				    title: '提示',
 				    content: '确认退出登录?',
 				    success: function (choose) {
 				        if (choose.confirm) {
 				            _this.$http.post('/base/loginExit', {user_now_iden}).then(([err,res]) => {
-				            	uni.removeStorageSync('user_now_iden')
 								uni.removeStorageSync('user_info')
 				            	uni.reLaunch({
 				            	    url: '../login/login',

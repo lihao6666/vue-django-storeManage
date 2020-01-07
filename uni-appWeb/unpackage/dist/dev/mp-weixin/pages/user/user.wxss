@@ -14,7 +14,7 @@
 	-webkit-align-items: center;
 	        align-items: center;
 	height: 170rpx;
-	padding-left: 20px;
+	padding-left: 20rpx;
 	background: -webkit-linear-gradient(bottom, #4073ff, #20a0ff);
 	background: linear-gradient(to top, #4073ff, #20a0ff);
 	border-top: 0;
@@ -33,6 +33,7 @@
 	-webkit-box-align: start;
 	-webkit-align-items: flex-start;
 	        align-items: flex-start;
+	padding-left: 20rpx;
 }
 .user-name {
 	font-size: 18px;

@@ -47,6 +47,7 @@ view {
 	color: red;
 }
 .edit {
+	padding-top: 3rpx;
 	color: blue;
 	width: 90rpx;
 }
