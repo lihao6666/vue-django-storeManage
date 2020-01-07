@@ -5,6 +5,14 @@
 			<sl-filter :independence="true" :color="titleColor" :themeColor="themeColor" :menuList.sync="menuList" @result="result"></sl-filter>
 		</cover-view> -->
 		
+		<uni-nav-bar :fixed="true" background-color="#20a0ff" :border="false">
+			<view class="input-view">
+				<uni-icons type="search" size="22" color="#666666" />
+				<input v-model="materialFilterText" confirm-type="search" class="input" type="text" placeholder="输入物料信息">
+				<uni-icons :color="'#999999'" v-if="materialFilterText!==''" class="icon-clear" type="clear" size="22" @click="clear" />
+			</view>
+		</uni-nav-bar>
+		
 		<view v-for="item in materialAdd" :key="item.id" class="card-set">
 			<uni-card class="card_style"
 			    :title="item.material_name"
@@ -18,7 +26,7 @@
 				<view>型号：{{ item.material_model }}</view>
 				<view>计量单位：{{ item.material_meterage }}</view>
 				<view>存货量：{{ item.material_attr }}</view>
-				<view>选择数量:  <uni-number-box :max="item.material_attr" v-bind:value="item.material_num" @change="change(item)"></uni-number-box></view>
+				<view>选择数量:  <uni-number-box :max="item.material_attr" ></uni-number-box></view>
 				<view>选择：<switch class="select" color='#d81e06' @change="switchChange" type="checkbox" /></view>
 				<view>备注：<textarea class="remarks_input" maxlength="200" v-model="item.material_remarks" placeholder="请输入,限制200字" auto-height="true"></textarea></view>
 			</uni-card>
@@ -54,11 +62,12 @@
 	import uniSegmentedControl from '../../components/uni-segmented-control/uni-segmented-control.vue'
 	import uniCard from '../../components/uni-card/uni-card.vue'
 	import uniSection from '../../components/uni-section/uni-section.vue'
-	import slFilter from '@/components/sl-filter/sl-filter.vue'
+	// import slFilter from '@/components/sl-filter/sl-filter.vue'
 	import materialData from '../../data/materialData.js'
 	import dragButton from '../../components/drag-button/anotherButton.vue'
 	import uniNumberBox from '@/components/uni-number-box/uni-number-box.vue'
-	
+	import uniIcons from '@/components/uni-icons/uni-icons.vue'
+	import uniNavBar from '@/components/uni-nav-bar/uni-nav-bar.vue'
 	
 	export default {
 		components: {
@@ -66,16 +75,19 @@
 			uniCard,
 			uniSection,
 			uniSegmentedControl,
-			slFilter,
+			// slFilter,
 			dragButton,
-			uniNumberBox
+			uniNumberBox,
+			uniNavBar,
+			uniIcons
 		},
 		data() {
 			return {
+				
 				themeColor: '#000000',
 				titleColor: '#666666',
-				filterResult: '',
 				materialList: materialData.data,
+				materialFilterText: '',
 			}
 						
 		},
@@ -88,6 +100,7 @@
 		computed:{
 			materialAdd(){
 				var arr = []
+		
 				this.materialList.forEach((item) => {
 					var num = ''
 					var remarks = ''
@@ -98,15 +111,25 @@
 					arr.push(item)
 				})
 				
+				if (this.materialFilterText) {
+					arr = this.materialList.filter(item => item.material_iden.includes(this.materialFilterText)||
+						item.material_name.includes(this.materialFilterText)||
+						item.material_specification.includes(this.materialFilterText)||
+						item.material_model.includes(this.materialFilterText)||
+						item.material_meterage.includes(this.materialFilterText)
+					)
+				}
+				
 				return arr
 			}
+			
 		},
 		methods:{
 			result(val) {
 				this.filterResult = JSON.stringify(val, null, 2)
 			},
-			change(num) {
-				
+			change(item,num) {
+				this.item.material_num = num
 			},
 			switchChange(){
 				
@@ -119,6 +142,12 @@
 				uni.navigateTo({
 					url: './start',
 				});
+			},
+			value(item){
+				this.item.material_num = value
+			},
+			clear(){
+				this.materialFilterText = ''
 			}
 		}
 	}
@@ -157,6 +186,17 @@
 		z-index: 99;
 		display: flex;
 		background-color: #141d27;
+	}
+	
+	.input_style{
+		position: fixed;
+		top: 44px;
+		left: 0;
+		right: 0;
+		height: 44px;
+		z-index: 99;
+		display: flex;
+		background-color: #20a0ff;
 	}
 	
 	.carIcon {
@@ -223,5 +263,26 @@
 		}
 		
 		}
-
+	
+	.input-view {
+		align-items: center;
+		justify-content: center;
+		width: 100%;
+		display: flex;
+		background-color: #e7e7e7;
+		height: 30px;
+		border-radius: 15px;
+		padding: 0 4%;
+		flex-wrap: nowrap;
+		margin: 7px 10rpx;
+		line-height: 30px;
+		background: #f5f5f5;
+		
+		.input {
+			height: 30px;
+			line-height: 30px;
+			width: 94%;
+			padding: 0 3%;
+		}
+	}
 </style>
