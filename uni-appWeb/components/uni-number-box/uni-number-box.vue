@@ -101,7 +101,9 @@
 					value = this.min;
 				}
 				this.inputValue = value;
+				
 			}
+			
 		}
 	};
 </script>
