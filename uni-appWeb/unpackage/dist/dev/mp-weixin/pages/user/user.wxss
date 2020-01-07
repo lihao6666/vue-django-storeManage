@@ -15,8 +15,8 @@
 	        align-items: center;
 	height: 170rpx;
 	padding-left: 20px;
-	background: -webkit-linear-gradient(bottom, #365fff, #0faeff);
-	background: linear-gradient(to top, #365fff, #0faeff);
+	background: -webkit-linear-gradient(bottom, #4073ff, #20a0ff);
+	background: linear-gradient(to top, #4073ff, #20a0ff);
 	border-top: 0;
 }
 .person-head-box {

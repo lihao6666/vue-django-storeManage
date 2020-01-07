@@ -4,6 +4,9 @@
     "uni-segmented-control": "/components/uni-segmented-control/uni-segmented-control",
     "uni-card": "/components/uni-card/uni-card",
     "drag-button": "/components/drag-button/drag-button",
-    "cmd-icon": "/components/cmd-icon/cmd-icon"
+    "cmd-icon": "/components/cmd-icon/cmd-icon",
+    "uni-nav-bar": "/components/uni-nav-bar/uni-nav-bar",
+    "uni-icons": "/components/uni-icons/uni-icons",
+    "evan-icons": "/components/evan-icons/evan-icons"
   }
 }
