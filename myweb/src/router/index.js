@@ -109,8 +109,23 @@ export default new Router({
         },
         {
           path: '/stockrequisition',
-          component: () => import(/* webpackChunkName: "donate" */ '../components/store/stock_adjustment/TransferRequest.vue'),
+          component: () => import(/* webpackChunkName: "donate" */ '../components/store/stock_adjustment/stock_require/TransferRequest.vue'),
           meta: {title: '转库申请单'}
+        },
+        {
+          path: '/stockchange',
+          component: () => import(/* webpackChunkName: "donate" */ '../components/store/stock_adjustment/stock_transfer/ChangeCheck.vue'),
+          meta: {title: '转库单'}
+        },
+        {
+          path: '/stockconfirm',
+          component: () => import(/* webpackChunkName: "donate" */ '../components/store/stock_adjustment/stock_confirm/ConfirmCheck.vue'),
+          meta: {title: '库存盘点'}
+        },
+        {
+          path: '/stockbegin',
+          component: () => import(/* webpackChunkName: "donate" */ '../components/store/stock_adjustment/stock_begin/BeginCheck.vue'),
+          meta: {title: '期初库存'}
         }
       ]
     },
