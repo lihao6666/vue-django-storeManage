@@ -101,7 +101,7 @@ class Role(models.Model):
         verbose_name = "角色"
 
     def __str__(self):
-        return self.role_name
+        return self.role
 
 
 class Organization(models.Model):
@@ -148,14 +148,14 @@ class Area(models.Model):
     def __str__(self):
         return self.area_name
 
-class Power(models.Model):
-    """
-    权限
-    """
-    
-    id = models.AutoField(primary_key=True)
-    power_name = models.CharField(max_length=20, verbose_name='权限名字')
 
+# class Power(models.Model):
+#     """
+#     权限
+#     """
+#
+#     id = models.AutoField(primary_key=True)
+#     power_name = models.CharField(max_length=20, verbose_name='权限名字')
 
 
 class Brand(models.Model):
@@ -195,7 +195,7 @@ class TotalWareHouse(models.Model):
     organization = models.ForeignKey('Organization', related_name='orga_total_ware_house', on_delete=models.CASCADE)
     total_status = models.IntegerField(choices=TOTAL_STATUS_CHOICES, default=1, verbose_name='总仓状态')
     total_belong_center = models.CharField(max_length=20, verbose_name='所属中心的名字', null=True)
-    total_belong_center_iden = models.CharField(max_length=20, verbose_name='所属中心的编号',null=True)
+    total_belong_center_iden = models.CharField(max_length=20, verbose_name='所属中心的编号', null=True)
     # brand = models.ForeignKey('Brand', verbose_name='品牌', on_delete=models.CASCADE)
     brand_name = models.CharField(max_length=20, verbose_name='品牌名称', null=True)
     total_remarks = models.TextField(max_length=400, verbose_name='总仓备注')

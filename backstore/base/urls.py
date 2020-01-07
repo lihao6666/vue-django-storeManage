@@ -24,21 +24,18 @@ urlpatterns = [
     path('departmentAdd', views.DepartmentAddView.as_view(), name='departmentAdd'),
     path('departmentUpdate', views.DepartmentUpdateView.as_view(), name='departmentUpdate'),
     path('departmentStatus', views.DepartmentStatusView.as_view(), name='departmentStatus'),
-
-
+    path('rolePowerAddSave', views.RolePowerAddSaveView.as_view(), name='rolePowerAddSave'),
 
     path('customers', views.CustomersView.as_view(), name='customers'),
     path('customerAdd', views.CustomerAddView.as_view(), name='customerAdd'),
     path('customerUpdate', views.CustomerUpdateView.as_view(), name='customerUpdate'),
     path('customerStatus', views.CustomerStatusView.as_view(), name='customerStatus'),
 
-
     path('organizations', views.OrganizationsView.as_view(), name='organizations'),
     path('organizationNew', views.OrganizationNewView.as_view(), name='organizationNew'),
     path('organizationAdd', views.OrganizationAddView.as_view(), name='organizationAdd'),
     path('organizationUpdate', views.OrganizationUpdateView.as_view(), name='organizationUpdate'),
     path('organizationStatus', views.OrganizationStatusView.as_view(), name='organizationStatus'),
-
 
     path('brands', views.BrandsView.as_view(), name='brands'),
     path('brandAdd', views.BrandAddView.as_view(), name='brandAdd'),
@@ -67,26 +64,21 @@ urlpatterns = [
     path('supplierUpdate', views.SupplierUpdateView.as_view(), name='supplierUpdate'),
     path('supplierStatus', views.SupplierStatusView.as_view(), name='supplierStatus'),
 
-
     path('meterages', views.MeteragesView.as_view(), name='meterages'),
     path('meterageAdd', views.MeterageAddView.as_view(), name='meterageAdd'),
     path('meterageUpdate', views.MeterageUpdateView.as_view(), name='meterageUpdate'),
     path('meterageStatus', views.MeterageStatusView.as_view(), name='meterageStatus'),
-
 
     path('materialTypes', views.MaterialTypesView.as_view(), name='materialTypes'),
     path('materialTypeAdd', views.MaterialTypeAddView.as_view(), name='materialTypeAdd'),
     path('materialTypeUpdate', views.MaterialTypeUpdateView.as_view(), name='materialTypeUpdate'),
     path('materialTypeStatus', views.MaterialTypeStatusView.as_view(), name='materialTypeStatus'),
 
-
     path('materials', views.MaterialsView.as_view(), name='materials'),
     path('materialNew', views.MaterialNewView.as_view(), name='materialNew'),
     path('materialAdd', views.MaterialAddView.as_view(), name='materialAdd'),
     path('materialUpdate', views.MaterialUpdateView.as_view(), name='materialUpdate'),
     path('materialStatus', views.MaterialStatusView.as_view(), name='materialStatus'),
-
-
 
     # path('area',)
 ]

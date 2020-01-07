@@ -81,9 +81,24 @@ class LoginView(APIView):
                         models.UserNow.objects.create(user_id=user_id, user_iden=username, user_name=user_name,
                                                       area_name=area_name,
                                                       user_departments=user_departments, user_roles=user_roles)
+                        user_roles = user.user_roles
+                        roles = []
+                        if user_roles:
+                            user_roles_list = list(map(int, user_roles.split('-')))
+                            for user_role in user_roles_list:
+                                role_message = []
+                                try:
+                                    role = models.Role.objects.get(id=user_role, role_status=1)
+                                except models.Role.DoesNotExist:
+                                    pass
+                                else:
+                                    role_message.append(role.role)
+                                    role_message.append(role.role_power)
+                                    roles.append(role_message)
 
-                        print("登录成功")
-                        return Response({'message': '登录成功', 'signal': '0'})
+                        user_serializer = UserProfileSerializer(user)
+                        return Response(
+                            {'message': '登录成功', 'signal': '0', 'roles': roles, 'user': user_serializer.data})
                     elif user.is_active == 0:
                         return Response({'message': '账号已关闭,请联系管理员开启', 'signal': '1'})
                 else:
@@ -442,6 +457,19 @@ class RoleStatusView(APIView):
             return Response({"message": "状态更改成功", "signal": 0})
         else:
             return Response({"message": "未查询到角色,状态更改失败"})
+
+
+class RolePowerAddSaveView(APIView):
+    def post(self, request):
+        json_data = json.loads(self.request.body.decode("utf-8"))
+        id = json_data['id']
+        role_power = json_data['role_power']
+        try:
+            models.Role.objects.get(id=id).Update(role_power=role_power)
+        except:
+            return Response({"message": "权限添加失败", "signal": 0})
+        else:
+            return Response({"message": "权限添加成功", "signal": 0})
 
 
 """
@@ -1371,9 +1399,9 @@ class MeterageAddView(APIView):
         if self.idCheck(meterage_iden):
             if self.nameCheck(meterage_name):
                 models.Meterage.objects.create(meterage_iden=meterage_iden, meterage_name=meterage_name,
-                                            meterage_dimension=meterage_dimension, meterage_status=0,
-                                            meterage_creator=self.user_now_name,
-                                            meterage_creator_iden=user_now_iden)
+                                               meterage_dimension=meterage_dimension, meterage_status=0,
+                                               meterage_creator=self.user_now_name,
+                                               meterage_creator_iden=user_now_iden)
 
         return Response({'message': self.message, 'signal': self.signal})
 
@@ -1386,6 +1414,7 @@ class MeterageAddView(APIView):
             self.message = "计量单位id已存在"
             self.signal = 1
             return False
+
     def nameCheck(self, meterage_name):
         try:
             meterage = models.Meterage.objects.get(meterage_name=meterage_name)
@@ -1395,7 +1424,6 @@ class MeterageAddView(APIView):
             self.message = "计量单位名字已存在"
             self.signal = 2
             return False
-
 
 
 class MeterageUpdateView(APIView):
@@ -1411,7 +1439,7 @@ class MeterageUpdateView(APIView):
         meterage_name = json_data['meterage_name']
         meterage_dimension = json_data['meterage_dimension']
 
-        if self.idCheck(meterage_iden,id):
+        if self.idCheck(meterage_iden, id):
             try:
                 models.Meterage.objects.filter(id=id).update(meterage_name=meterage_name,
                                                              meterage_dimension=meterage_dimension)
@@ -1420,7 +1448,7 @@ class MeterageUpdateView(APIView):
                 self.signal = 1
         return Response({'message': self.message, 'signal': self.signal})
 
-    def idCheck(self,meterage_iden,id):
+    def idCheck(self, meterage_iden, id):
         try:
             meterage = models.Meterage.objects.get(~Q(id=id), meterage_iden=meterage_iden)
         except models.Meterage.DoesNotExist:
@@ -1564,7 +1592,6 @@ class MaterialsView(APIView):
             return Response({"materials": materials_serializer.data})
         else:
             return Response({"message": "未查询到信息"})
-            
 
 
 class MaterialNewView(APIView):
@@ -1613,13 +1640,14 @@ class MaterialAddView(APIView):
         material_model = json_data['material_model']
         meterage_name = json_data['meterage_name']
         material_attr = json_data['material_attr']
- 
-        max_id = models.Material.objects.filter(material_type_iden=material_type_iden).aggregate(Max('material_iden'))['material_iden__max']
-        
+
+        max_id = models.Material.objects.filter(material_type_iden=material_type_iden).aggregate(Max('material_iden'))[
+            'material_iden__max']
+
         if max_id:
-            material_iden = str(int(max_id)+1)
+            material_iden = str(int(max_id) + 1)
         else:
-            material_iden = material_type_iden+"00001"
+            material_iden = material_type_iden + "00001"
 
         models.Material.objects.create(material_iden=material_iden, material_name=material_name,
                                        material_type_iden=material_type_iden,

@@ -4,14 +4,16 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from sell import models
 from django.utils import timezone
-from base.models import UserNow, Area
+from storeManage.models import TotalStock
 from base.models import Organization, Material, Department, UserNow, Customer, TotalWareHouse
+from base.Serializer import MaterialSerializer
 from .Serializer import SellOrderSerializer, SoDetailSerializer
+from storeManage.Serializer import TotalStockSerializer
 import json
 
 """
-请购单模块接口
-- 返回采购单列表
+销售订单模块接口
+- 返回销售订单列表
 -
 """
 
@@ -60,18 +62,19 @@ class SellOrderNewView(APIView):
         deliver_ware_houses = TotalWareHouse.objects.filter(organization__area_name=self.area_name). \
             values_list("id", "total_name", "organization__orga_name")
 
-        sods_serializers = ""
         try:
             so_iden = json_data['so_iden']
         except:
-            pass
+            return Response(
+                {"organizations": organizations, "customers": customers, "deliver_ware_houses": deliver_ware_houses,
+                 "signal": 0})
         else:
             sods = models.SoDetail.objects.filter(sell_order__so_iden=so_iden)
             sods_serializers = SoDetailSerializer(sods, many=True)
 
-        return Response(
+            return Response(
             {"organizations": organizations, "customers": customers, "deliver_ware_houses": deliver_ware_houses,
-             "sods": sods_serializers.data})
+             "sods": sods_serializers.data,"signal":1})
 
 
 class SellOrderUpdateView(APIView):
@@ -104,16 +107,31 @@ class SellOrderUpdateView(APIView):
         so_date = json_data['so_date']
         so_remarks = json_data['so_remarks']
 
-
         try:
             so_iden = json_data['so_iden']
         except:
-            pre_iden = "SO"
+            date_str = timezone.now().strftime("%Y-%m-%d")
+            date = "".join(date_str.split("-"))
+            pre_iden = "SO" + date
             max_id = models.SellOrder.objects.all().aggregate(Max('so_serial'))['so_serial__max']
             if max_id:
-                so_iden = str(int(max_id) + 1)
+                so_serial = str(int(max_id) + 1)
             else:
-                so_iden =""
+                so_serial = "0001"
+            so_new_iden = pre_iden + so_serial
+            try:
+                models.SellOrder.objects.create(so_iden=so_new_iden, so_serial=so_serial, organization=organization,
+                                                so_type=so_type, customer=customer, so_date=so_date,
+                                                deliver_ware_house=deliver_ware_house,
+                                                deliver_ware_house_iden=deliver_ware_house_iden, so_remarks=so_remarks,
+                                                so_status=0, so_creator=self.user_now_name,
+                                                so_creator_iden=user_now_iden)
+                self.message = "新建销售订单成功"
+                self.signal = 0
+            except:
+                self.message = "新建销售订单失败"
+                self.signal = 1
+
 
         else:
             so = models.SellOrder.objects.get(so_iden=so_iden)
@@ -124,3 +142,20 @@ class SellOrderUpdateView(APIView):
             else:
                 self.message = "更新失败"
                 self.signal = 1
+
+
+class SoDetailNewView(APIView):
+
+    def get(self, request):
+        materials = Material.objects.filter(material_status=1).all()
+        if materials:
+            materials_serializer = MaterialSerializer(materials, many=True)
+            # 现存量单独统计，单独发送字段
+
+            return Response({"materials": materials_serializer.data, "prd_present_num": ""})
+        else:
+            return Response({"message": "空空如也你不服？"})
+
+
+class SoDetailSaveView(APIView):
+    pass

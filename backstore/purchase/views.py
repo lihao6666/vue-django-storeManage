@@ -3,11 +3,14 @@ from django.db.models import Max
 from rest_framework.views import APIView
 from .Serializer import PurchaseRequestSerializer, PrDetailSerializer
 from rest_framework.response import Response
+from django.utils import timezone
 from django.shortcuts import render, redirect
 from purchase import models
-from base.models import Organization, Material, Department
+from base.models import Organization, Material, Department, UserNow
 from base.Serializer import MaterialSerializer
+from storeManage.models import TotalStock
 import json
+from django.db.models import Q, Sum
 
 """
 请购单模块接口
@@ -23,118 +26,164 @@ import json
 
 
 class PrsView(APIView):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.user_now_name = ""
+        self.area_name = ""
+
     def post(self, request):
         """
         需要获取区域名字，用户编号
         """
         json_data = json.loads(self.request.body.decode("utf-8"))
-        user_iden = json_data['user_iden']
-        area_name = json_data['area_name']
+        user_now_iden = json_data['user_now_iden']
+        user_now = UserNow.objects.get(user_iden=user_now_iden)
+        if user_now:
+            self.user_now_name = user_now.user_name
+            self.area_name = user_now.area_name
+
+        power = json_data['power']
+
         # 判断是个人还是采购专员
-        if user_iden == "":
-            prs = models.PurchaseRequest.objects.filter(area_name=area_name).all()
+        if power == 1:
+            prs = models.PurchaseRequest.objects.filter(~Q(pr_status=0), organization__area_name=self.area_name).all()
+        elif power == 2:
+            prs = models.PurchaseRequest.objects.filter(pr_creator_iden=user_now_iden,
+                                                        organization__area_name=self.area_name).all()
         else:
-            prs = models.PurchaseRequest.objects.filter(pr_creator=user_iden).all()
+            prs = models.PurchaseRequest.objects.filter(~Q(pr_status=0), organization__area_name=self.area_name).all()
         if prs:
             prs_serializer = PurchaseRequestSerializer(prs, many=True)
-            return Response({"prs": prs_serializer.data})
+            return Response({"prs": prs_serializer.data, "signal": 0})
         else:
             return Response({"message": "未查询到信息"})
 
 
 class PrNewView(APIView):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.user_now_name = ""
+        self.area_name = ""
+
     def post(self, request):
-        """
-        需要获取的数据为区域名字，用户角色发送类似"1-2-3"
-        返回的数据为库存组织名字，申请部门名字、是否中心
-        """
         dpms = []
         json_data = json.loads(self.request.body.decode("utf-8"))
-        area_name = json_data['area_name']
-        role = json_data['role']
-        orga_names = Organization.objects.filter(area_name=area_name).values_list('orga_name', flat=True)
-        roles = map(int, role.split("-"))
-        for role in roles:
-            dpm = Department.objects.filter(id=role).values_list('id', 'dpm_name', 'dpm_center')
-            dpms.append(dpm)
-        return Response({"orga_names": orga_names, 'dpms': dpms})
+        user_now_iden = json_data['user_now_iden']
+        user_now = UserNow.objects.get(user_iden=user_now_iden)
+        if user_now:
+            self.user_now_name = user_now.user_name
+            self.area_name = user_now.area_name
 
+        orga_names = Organization.objects.filter(area_name=self.area_name).values_list('id', 'orga_name')
+        dpms = Department.objects.filter(dpm_status=1).values_list('id', 'dpm_name', 'dpm_center')
 
-class PrEditView(APIView):
-    def post(self, request):
-        """
-        需要获取请购单状态、区域名字、请购单编号
-        """
-        message_return = {}
-        json_data = json.loads(self.request.body.decode("utf-8"))
-        pr_status = json_data['pr_status']
-        area_name = json_data['area_name']
-        pr_iden = json_data['pr_iden']
-        pr = models.PurchaseRequest.objects.get(pr_iden=pr_iden)
-        prds = models.PrDetail.objects.filter(purchase_request=pr)
-        if prds:
-            prds_serializer = PrDetailSerializer(prds, many=True)
-            message_return["prds"] = prds_serializer.data
+        try:
+            pr_iden = json_data['pr_iden']
+            orga_name = json_data['orga_name']
+        except:
+            return Response({"orga_names": orga_names, "dpms": dpms, "signal": 0})
         else:
-            message_return["prds"] = ""
+            prds = models.PrDetail.objects.filter(request_order__so_iden=pr_iden)
+            prds_serializers = PrDetailSerializer(prds, many=True)
+            prds_present_num = []
+            for prd in prds:
+                material = prd.material
+                prd_present_num = TotalStock.objects.filter(material=material,
+                                                            totalwarehouse__organization__area_name=self.area_name,
+                                                            totalwarehouse__organization__orga_name=orga_name) \
+                    .aggregate(prd_present_num=Sum('prd_present_num'))
+                prds_present_num.append(prd_present_num)
 
-        if pr_status == 0:
-            orga_names = Organization.objects.filter(area_name=area_name).values_list('orga_name', flat=True)
-            message_return["organizations"] = orga_names
-        else:
-            message_return["message"] = "请购单明细为空"
-        return Response(message_return)
+        return Response({"orga_names": orga_names, 'dpms': dpms, "prds": prds_serializers.data,
+                         "prds_present_num": prds_present_num, "signal": 1})
+
+
+# class PrUpdateView(APIView):
+#     """
+#         只读取添加的数据，订单号自动生成，用于保存新增和编辑的订单
+#         """
+#
+#     def post(self, request):
+#
+#         message_return = {}
+#         json_data = json.loads(self.request.body.decode("utf-8"))
+#         pr_status = json_data['pr_status']
+#         area_name = json_data['area_name']
+#         pr_iden = json_data['pr_iden']
+#         pr = models.PurchaseRequest.objects.get(pr_iden=pr_iden)
+#         prds = models.PrDetail.objects.filter(purchase_request=pr)
+#         if prds:
+#             prds_serializer = PrDetailSerializer(prds, many=True)
+#             message_return["prds"] = prds_serializer.data
+#         else:
+#             message_return["prds"] = ""
+#
+#         if pr_status == 0:
+#             orga_names = Organization.objects.filter(area_name=area_name).values_list('orga_name', flat=True)
+#             message_return["organizations"] = orga_names
+#         else:
+#             message_return["message"] = "请购单明细为空"
+#         return Response(message_return)
 
 
 class PrUpdateView(APIView):
+    """
+       只读取添加的数据，订单号自动生成，用于保存新增和编辑的订单
+       """
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.message = "更新请购单成功"
+        self.message = "更新成功"
         self.signal = 0
+        self.user_now_name = ""
+        self.area_name = ""
 
     def post(self, request):
-        """
-        需要获取请购单编号、区域名字、库存组织名字、部门名称、需求类型、时间、备注
-        """
         json_data = json.loads(self.request.body.decode("utf-8"))
-        pr_iden = json_data['pr_iden']
-        pr_date = json_data['pr_date']
-        area_name = json_data['area_name']
-        orga_name = json_data['orga_name']
-        pr_department = json_data['pr_department']
+        user_now_iden = json_data['user_now_iden']
+        user_now = UserNow.objects.get(user_iden=user_now_iden)
+        if user_now:
+            self.user_now_name = user_now.user_name
+            self.area_name = user_now.area_name
+        orga_id = json_data['organization']['id']
+        organization = Organization.objects.get(id=orga_id)
+        department_name = json_data['department']['dpm_name']
         pr_type = json_data['pr_type']
+        pr_date = json_data['pr_date']
         pr_remarks = json_data['pr_remarks']
-        organization = Organization.objects.get(area_name=area_name, orga_name=orga_name)
-        # flag = json_data['flag']  # 判断0就是新增，1就是更新
-        if pr_iden == "":
-            pr_creator = json_data['pr_creator']
+
+        try:
+            pr_iden = json_data['pr_iden']
+        except:
+            date_str = timezone.now().strftime("%Y-%m-%d")
+            date = "".join(date_str.split("-"))
+            pre_iden = "PR" + date
+            max_id = models.PurchaseRequest.objects.all().aggregate(Max('pr_serial'))['pr_serial__max']
+            if max_id:
+                pr_serial = str(int(max_id) + 1)
+            else:
+                pr_serial = "0001"
+            pr_new_iden = pre_iden + pr_serial
             try:
-                max_id = models.PurchaseRequest.objects.all().aggregate(Max('pr_iden'))['pr_iden__max']
-                pr_iden = str(int(max_id) + 1)
-                models.PurchaseRequest.objects.create(pr_iden=pr_iden, organization=organization, pr_date=pr_date,
-                                                      pr_department=pr_department, pr_type=pr_type,
-                                                      pr_creator=pr_creator,
-                                                      pr_remarks=pr_remarks, pr_status=0
-                                                      )
+                models.PurchaseRequest.objects.create(pr_iden=pr_new_iden, pr_serial=pr_serial,
+                                                      organization=organization, pr_department=department_name,
+                                                      pr_type=pr_type, pr_date=pr_date,
+                                                      pr_remarks=pr_remarks,
+                                                      pr_status=0, pr_creator=self.user_now_name,
+                                                      pr_creator_iden=user_now_iden)
+                self.message = "新建请购单成功"
+                self.signal = 0
             except:
                 self.message = "新建请购单失败"
                 self.signal = 1
-            else:
-                self.message = "新建请购单成功"
-                self.signal = 0
-
-            return Response({'message': self.message, 'signal': self.signal})
-
         else:
-            try:
-                models.PurchaseRequest.objects.filter(pr_iden=pr_iden).update(
-                    organization=organization, pr_date=pr_date, pr_department=pr_department, pr_type=pr_type,
-                    pr_remarks=pr_remarks
-                )
-            except:
-                self.message = "更新请购单失败"
+            pr = models.PurchaseRequest.objects.get(pr_iden=pr_iden)
+            if pr:
+                pr.Update(organization=organization, pr_department=department_name, pr_type=pr_type, pr_date=pr_date,
+                          pr_remarks=pr_remarks)
+            else:
+                self.message = "更新失败"
                 self.signal = 1
-            return Response({'message': self.message, 'signal': self.signal})
 
 
 class PrdSaveView(APIView):
@@ -186,12 +235,22 @@ class PrdSubmitView(APIView):
 
 
 class PrdNewView(APIView):
-    def get(self, request):
+
+    def post(self, request):
+        json_data = json.loads(self.request.body.decode("utf-8"))
+        organization_id = json_data['organization']
         materials = Material.objects.filter(material_status=1).all()
         if materials:
             materials_serializer = MaterialSerializer(materials, many=True)
+            prds_present_num = []
+            for material in materials:
+                prd_present_num = TotalStock.objects.filter(totalwarehouse__organization__id=organization_id,
+                                                            material=material).aggregate(
+                    prd_present_num=Sum('prd_present_num'))
+                prds_present_num.append(prds_present_num)
             # 现存量单独统计，单独发送字段
-            return Response({"materials": materials_serializer.data, "prd_present_num": ""})
+
+            return Response({"materials": materials_serializer.data, "prds_present_num": prds_present_num, "signal": 0})
         else:
             return Response({"message": "空空如也你不服？"})
 
@@ -199,7 +258,6 @@ class PrdNewView(APIView):
 class PrdNewSaveView(APIView):
     def post(self, request):
         """
-        额外的功能，小程序可能需要
         需要获取物料详情(iden ,现存量，请购量就可以了)，请购单编号
         """
         json_data = json.loads(self.request.body.decode("utf-8"))

@@ -15,6 +15,7 @@ class PurchaseRequest(models.Model):
     )
     id = models.AutoField(primary_key=True)
     pr_iden = models.CharField(max_length=15, verbose_name='请购单编号')
+    pr_serial = models.CharField(max_length=4, verbose_name='请购单流水')
     organization = models.ForeignKey('base.Organization', related_name='orga_pr', verbose_name='组织',
                                      on_delete=models.CASCADE)
     pr_type = models.CharField(max_length=20, verbose_name='需求类型')
