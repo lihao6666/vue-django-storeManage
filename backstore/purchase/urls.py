@@ -5,7 +5,7 @@ app_name = "purchase"
 
 urlpatterns = [
     path('prs', views.PrsView.as_view(), name='prs'),
-    path('prEdit', views.PrEditView.as_view(), name='prEdit'),
+    # path('prEdit', views.PrEditView.as_view(), name='prEdit'),
     path('prNew', views.PrdNewView.as_view(), name='prNew'),
     path('prUpdate', views.PrUpdateView.as_view(), name='prUpdate'),
     path('prdSave', views.PrdSaveView.as_view(), name='prdSave'),
