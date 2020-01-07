@@ -91,11 +91,11 @@ class PrNewView(APIView):
                 prd_present_num = TotalStock.objects.filter(material=material,
                                                             totalwarehouse__organization__area_name=self.area_name,
                                                             totalwarehouse__organization__orga_name=orga_name) \
-                    .aggregate(prd_present_num=Sum('prd_present_num'))
+                    .aggregate(prd_present_num=Sum('ts_present_num'))
                 prds_present_num.append(prd_present_num)
 
-        return Response({"orga_names": orga_names, 'dpms': dpms, "prds": prds_serializers.data,
-                         "prds_present_num": prds_present_num, "signal": 1})
+            return Response({"orga_names": orga_names, 'dpms': dpms, "prds": prds_serializers.data,
+                             "prds_present_num": prds_present_num, "signal": 1})
 
 
 # class PrUpdateView(APIView):
@@ -203,9 +203,10 @@ class PrdSaveView(APIView):
             prd_iden = prd['prd_iden']  # 物料编码
             prd_num = prd['prd_num']  # 请购数量
             prd_present_num = prd['prd_present_num']  # 实际库存数量
+            prd_remarks = prd['prd_remarks']
             try:
                 models.PrDetail.objects.filter(prd_iden=prd_iden).update(prd_num=prd_num,
-                                                                         prd_present_num=prd_present_num)
+                                                                         prd_present_num=prd_present_num,prd_remarks=prd_remarks)
             except:
                 self.message = "请购单详情保存失败"
                 self.signal = 1
@@ -273,9 +274,9 @@ class PrdNewSaveView(APIView):
                 models.PrDetail.objects.create(purchase_request=pr, material=material, prd_num=prd_present_num,
                                                prd_present_num=prd_present_num, prd_used=0)
             except:
-                return Response({"message": "新建物料错误"})
+                return Response({"message": "新建物料出现错误"})
 
-        return Response({"message": "新建物料详情成功"})
+        return Response({"message": "新建物料详情成功", "signal": 0})
 
 
 class PrdDeleteView(APIView):

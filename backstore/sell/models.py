@@ -45,12 +45,12 @@ class SoDetail(models.Model):
     material = models.ForeignKey('base.Material', verbose_name='物料', related_name='material_sod',
                                  on_delete=models.CASCADE)
     sod_num = models.IntegerField(verbose_name='销售数量')
-    sod_taxRate = models.IntegerField(default=13, verbose_name='税率')
-    sod_tax_unitPrice = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='含税单价')
-    sod_unitPrice = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='无税单价')
-    sod_tax_sum = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='含税总额')
-    sod_sum = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='无税总额')
-    sod_tax_price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='税金总额')
+    sod_taxRate = models.IntegerField(default=13, verbose_name='税率',null=True)
+    sod_tax_unitPrice = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='含税单价',null=True)
+    sod_unitPrice = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='无税单价',null=True)
+    sod_tax_sum = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='含税总额',null=True)
+    sod_sum = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='无税总额',null=True)
+    sod_tax_price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='税金总额',null=True)
     sod_remarks = models.TextField(max_length=200, verbose_name='订单明细备注')
 
     class Meta:
