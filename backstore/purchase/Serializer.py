@@ -2,26 +2,36 @@ from rest_framework import serializers
 from purchase import models
 
 
-class PurchaseRequestSerializer(serializers.ModelSerializer):
+class PCSerializer(serializers.ModelSerializer):
     orga_name = serializers.CharField(source='organization.orga_name')
     area_name = serializers.CharField(source='organization.area_name')
+    supply_name = serializers.CharField(source='supplier.supply_name')
+    supply_iden = serializers.CharField(source='supplier.supply_iden')
 
     class Meta:
-        model = models.PurchaseRequest
-        fields = ('id', 'pr_iden', 'orga_name','area_name','pr_type', 'pr_department',
-                  'pr_date', 'pr_remarks', 'pr_status', 'pr_creator', 'pr_createDate', 'pr_closer', 'pr_closeDate',
-                  'pr_closeReason')
+        model = models.PurchaseContract
+        fields = ('id', 'pc_iden', 'orga_name', 'area_name', 'pc_name', 'supply_name', 'supply_iden', 'pc_date',
+                  'pc_sum', 'pc_remarks', 'pc_status', 'pc_creator', 'pc_creator_iden', 'pc_createDate')
 
 
-class PrDetailSerializer(serializers.ModelSerializer):
-    pr_iden = serializers.CharField(source='purchase_request.pr_iden')
-    prd_iden = serializers.CharField(source='material.material_iden')
-    prd_name = serializers.CharField(source='material.material_name')
-    prd_specification = serializers.CharField(source='material.material_specification')
-    prd_model = serializers.CharField(source='material.material_model')
-    prd_meterage = serializers.CharField(source='material.meterage_name')
+class CdDSerializer(serializers.ModelSerializer):
+    pc_iden = serializers.CharField(source='purchase_contract.pc_iden')
+    cd_iden = serializers.CharField(source='material.material_iden')
+    cd_name = serializers.CharField(source='material.material_name')
+    cd_specification = serializers.CharField(source='material.material_specification')
+    cd_model = serializers.CharField(source='material.material_model')
+    cd_meterage = serializers.CharField(source='material.meterage_name')
 
     class Meta:
-        model = models.PrDetail
-        fields = ('id', 'prd_iden', 'pr_iden', 'prd_name', 'prd_specification', 'prd_model', 'prd_meterage',
-                  'prd_num', 'prd_present_num', 'prd_remarks', 'prd_used')
+        model = models.CdDetail
+        fields = ('id', 'cd_iden', 'pc_iden', 'cd_name', 'cd_specification',
+                  'cd_model', 'cd_meterage', 'cd_num', 'cd_taxRate', 'cd_tax_unitPrice', 'cd_unitPrice',
+                  'cd_tax_sum', 'cd_sum', 'cd_tax_price', 'cd_remarks')
+
+
+class CdPaySerializer(serializers.ModelSerializer):
+    pc_iden = serializers.CharField(source='purchase_contract.pc_iden')
+
+    class Meta:
+        model = models.CdPayDetail
+        fields = ('id', 'pc_iden', 'pay_batch', 'pay_rate', 'pay_price', 'pay_planDate', 'pay_preay', 'pay_remarks')

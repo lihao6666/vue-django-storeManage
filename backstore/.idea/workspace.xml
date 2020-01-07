@@ -1,14 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="9f7cbd95-5dd5-4936-b96c-8649e46718ee" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/purchase/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/purchase/urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/purchase/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/purchase/views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sell/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/sell/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sell/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/sell/urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sell/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/sell/views.py" afterDir="false" />
-    </list>
+    <list default="true" id="31c6b82b-25ff-47ad-8cdf-2b6c63731413" name="Default Changelist" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -17,11 +10,14 @@
   <component name="DjangoConsoleOptions" custom-start-script="import sys; print('Python %s on %s' % (sys.version, sys.platform))&#10;import django; print('Django %s' % django.get_version())&#10;sys.path.extend([WORKING_DIR_AND_PYTHON_PATHS])&#10;if 'setup' in dir(django): django.setup()&#10;import django_manage_shell; django_manage_shell.run(PROJECT_ROOT)">
     <option name="myCustomStartScript" value="import sys; print('Python %s on %s' % (sys.version, sys.platform))&#10;import django; print('Django %s' % django.get_version())&#10;sys.path.extend([WORKING_DIR_AND_PYTHON_PATHS])&#10;if 'setup' in dir(django): django.setup()&#10;import django_manage_shell; django_manage_shell.run(PROJECT_ROOT)" />
   </component>
-  <component name="Git.Settings">
-    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
   </component>
-  <component name="ProjectId" id="1W0vJUREnNzhs8zagXrya5y9mJT" />
-  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectId" id="1W3xjoBTlNNWk3Xkju3NELgewUE" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showExcludedFiles" value="true" />
@@ -29,7 +25,6 @@
   </component>
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
-    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="settings.editor.selected.configurable" value="preferences.general" />
   </component>
@@ -75,14 +70,12 @@
   </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="9f7cbd95-5dd5-4936-b96c-8649e46718ee" name="Default Changelist" comment="" />
-      <created>1578299254445</created>
+      <changelist id="31c6b82b-25ff-47ad-8cdf-2b6c63731413" name="Default Changelist" comment="" />
+      <created>1578392216249</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1578299254445</updated>
-      <workItem from="1578299256533" duration="596000" />
-      <workItem from="1578300176065" duration="24000" />
-      <workItem from="1578300216005" duration="25450000" />
+      <updated>1578392216249</updated>
+      <workItem from="1578392218011" duration="2572000" />
     </task>
     <servers />
   </component>
