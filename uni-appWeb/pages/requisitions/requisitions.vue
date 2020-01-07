@@ -1,36 +1,52 @@
 <template>
 	<view class="page">
 		
-		<cover-view class="select">
+		<!-- <cover-view class="select">
 			<sl-filter :independence="true" :color="titleColor" :themeColor="themeColor" :menuList.sync="menuList" @result="result"></sl-filter>
-		</cover-view>
+		</cover-view> -->
 		
-		<view v-for="item in materialList" :key="item.id" class="card-set">
-			<uni-card
-			    :title="item.mso_iden"
+		<view v-for="item in materialAdd" :key="item.id" class="card-set">
+			<uni-card class="card_style"
+			    :title="item.material_name"
 			    mode="basic" 
 			    :is-shadow="true" 
-				:extra="item.mso_date"
+				:extra="item.material_iden"
 			>
-				<view>物料编码：{{ item.material_iden }}</view>
+				<view @click="test(item)">物料编码：{{ item.material_iden }}</view>
 				<view>物料名称：{{ item.material_name }}</view>
 				<view>规格：{{ item.material_specification }}</view>
 				<view>型号：{{ item.material_model }}</view>
 				<view>计量单位：{{ item.material_meterage }}</view>
 				<view>存货量：{{ item.material_attr }}</view>
-				<view>选择数量:  <yp-number-box class="num_select" :max="item.material_attr" index="item.material_iden"></yp-number-box></view>
-				<view>选择：<switch color='#d81e06' @change="switchChange" /></view>
-				<view>备注：<textarea class="remarks_input" maxlength="200" v-model="remarks" placeholder="请输入,限制200字" auto-height="true"></textarea></view>
+				<view>选择数量:  <uni-number-box :max="item.material_attr" v-bind:value="item.material_num" @change="change(item)"></uni-number-box></view>
+				<view>选择：<switch class="select" color='#d81e06' @change="switchChange" type="checkbox" /></view>
+				<view>备注：<textarea class="remarks_input" maxlength="200" v-model="item.material_remarks" placeholder="请输入,限制200字" auto-height="true"></textarea></view>
 			</uni-card>
 		</view>
-		<view>
+		<!-- <view>
 			<drag-button
 				:isDock="true"
 				:existTabBar="true"
 				@btnClick="newOut">
 			</drag-button>
-		</view>
-		
+		</view> -->
+		<view class="shopcart">
+			<!-- @click="toggleList" -->
+			<view class="cartBottom" @click="toggleList">
+				<view class="carIcon">
+					<!-- <view class="iconBox" :class="getAllCount ? 'active' : '' ">
+						<text class="allcount" v-if="getAllCount">{{getAllCount}}</text>
+						<image src="/static/cart.png" mode="" class="img"></image>
+					</view> -->
+				</view>
+				<view class="middle">
+					<!-- <text class="price" :class="getAllCount ?　'active': ''">已选{{getAllPrice}}</text> -->
+				</view>
+				<view class="BtnRight">
+					<button type="primary" class="button_style" @click="newOut">确定</button>
+				</view>
+			</view>
+	</view>
 	</view>
 </template>
 
@@ -41,7 +57,8 @@
 	import slFilter from '@/components/sl-filter/sl-filter.vue'
 	import materialData from '../../data/materialData.js'
 	import dragButton from '../../components/drag-button/anotherButton.vue'
-	import ypNumberBox from '@/components/yp-number-box/yp-number-box.vue'
+	import uniNumberBox from '@/components/uni-number-box/uni-number-box.vue'
+	
 	
 	export default {
 		components: {
@@ -51,7 +68,7 @@
 			uniSegmentedControl,
 			slFilter,
 			dragButton,
-			ypNumberBox
+			uniNumberBox
 		},
 		data() {
 			return {
@@ -59,195 +76,44 @@
 				titleColor: '#666666',
 				filterResult: '',
 				materialList: materialData.data,
-				menuList: [{
-						'title': '品牌',
-						'detailTitle': '请选择职位类型（可多选）',
-						'isMutiple': true,
-						'key': 'jobType',
-						'defaultSelectedIndex': [0],
-						'detailList': [{
-								'title': '不限',
-								'value': ''
-							},
-							{
-								'title': 'uni-app',
-								'value': 'uni-app'
-							},
-							{
-								'title': 'java开发',
-								'value': 'java'
-							},
-							{
-								'title': 'web开发',
-								'value': 'web'
-							},
-							{
-								'title': 'Android开发',
-								'value': 'Android'
-							},
-							{
-								'title': 'iOS开发',
-								'value': 'iOS'
-							},
-							{
-								'title': '测试工程师',
-								'value': '测试'
-							},
-							{
-								'title': 'UI设计',
-								'value': 'UI'
-							},
-							{
-								'title': 'Ruby开发',
-								'value': 'Ruby'
-							},
-							{
-								'title': 'C#开发',
-								'value': 'C#'
-							},
-							{
-								'title': 'PHP开发',
-								'value': 'php'
-							},
-							{
-								'title': 'Python开发',
-								'value': 'Python'
-							}
-						]
-				
-					},
-					{
-						'title': '型号',
-						'key': 'salary',
-						'isMutiple': true,
-						'detailList': [{
-								'title': '不限',
-								'value': ''
-							},
-							{
-								'title': '0~2000',
-								'value': '0~2000'
-							},
-							{
-								'title': '2000~3000',
-								'value': '2000~3000'
-							},
-							{
-								'title': '3000~4000',
-								'value': '3000~4000'
-							},
-							{
-								'title': '4000~5000',
-								'value': '4000~5000'
-							},
-							{
-								'title': '5000~6000',
-								'value': '5000~6000'
-							},
-							{
-								'title': '6000~7000',
-								'value': '6000~7000'
-							},
-							{
-								'title': '7000~8000',
-								'value': '7000~8000'
-							},
-							{
-								'title': '8000~9000',
-								'value': '8000~9000'
-							},
-							{
-								'title': '9000~10000',
-								'value': '9000~10000'
-							},
-							{
-								'title': '10000以上',
-								'value': '10000~1000000'
-							}
-						]
-				
-					},
-					{
-						'title': '单选',
-						'key': 'single',
-						'isMutiple': false,
-						'detailTitle': '请选择（单选）',
-						'reflexTitle': true,
-						'defaultSelectedIndex': 2,
-						'detailList': [{
-								'title': '不限',
-								'value': ''
-							},
-							{
-								'title': '条件1',
-								'value': 'test_1'
-							},
-							{
-								'title': '条件2',
-								'value': 'test_2'
-							},
-							{
-								'title': '条件3',
-								'value': 'test_3'
-							},
-							{
-								'title': '条件4',
-								'value': 'test_4'
-							},
-							{
-								'title': '条件5',
-								'value': 'test_5'
-							},
-							{
-								'title': '条件6',
-								'value': 'test_6'
-							},
-							{
-								'title': '条件7',
-								'value': 'test_7'
-							},
-							{
-								'title': '条件8',
-								'value': 'test_8'
-							},
-						]
-					},
-					{
-						'title': '排序',
-						'key': 'sort',
-						'isSort': true,
-						'reflexTitle': true,
-						'defaultSelectedIndex': 2,
-						'detailList': [{
-								'title': '默认排序',
-								'value': ''
-							},
-							{
-								'title': '发布时间',
-								'value': 'add_time'
-							},
-							{
-								'title': '薪资最高',
-								'value': 'wages_up'
-							},
-							{
-								'title': '离我最近',
-								'value': 'location'
-							}
-						]
-					}
-				]
-			}	
-		},onLoad() {
+			}
+						
+		},
+		onLoad() {
 			
 		},
 		mounted(){
 			
 		},
+		computed:{
+			materialAdd(){
+				var arr = []
+				this.materialList.forEach((item) => {
+					var num = ''
+					var remarks = ''
+					var maxnum = parseInt(item.material_attr)
+					item.material_attr = maxnum
+					item.material_remarks = remarks
+					item.material_num = num
+					arr.push(item)
+				})
+				
+				return arr
+			}
+		},
 		methods:{
 			result(val) {
-				console.log('filter_result:' + JSON.stringify(val));
 				this.filterResult = JSON.stringify(val, null, 2)
+			},
+			change(num) {
+				
+			},
+			switchChange(){
+				
+			},
+			test(item) {
+				console.log(item.material_remarks)
+				console.log(item.material_num)
 			},
 			newOut(){
 				uni.navigateTo({
@@ -265,11 +131,97 @@
 		background: #F1F0F3;
 	}
 	
-	.num_select{
+	.card_style{
+		font-size: 14px;
 		
+		.num_select{
+			float: right;
+		}
+		
+		.select{
+			float: right;
+		}
 	}
 	
-	.select {
-		
+	.list-text {
+		display: flex;
+		flex-direction: row;
 	}
+	
+	.shopcart .cartBottom {
+		position: fixed;
+		bottom: 0;
+		left: 0;
+		right: 0;
+		height: 54px;
+		z-index: 99;
+		display: flex;
+		background-color: #141d27;
+	}
+	
+	.carIcon {
+		flex: 1;
+	}
+	
+	.iconBox {
+		position: absolute;
+		bottom: 22px;
+		left: 18px;
+		z-index: 101;
+		background-color: rgb(70, 73, 75);
+		border-radius: 50%;
+		height: 48px;
+		width: 48px;
+		line-height: 55px;
+		/* border: 6px solid #141d27; */
+	}
+	
+	.iconBox .allcount {
+		position: absolute;
+		right: -6px;
+		top: 0;
+		display: inline-block;
+		padding: 0 6px;
+		font-size: 9px;
+		line-height: 16px;
+		font-weight: 400;
+		border-radius: 10px;
+		background-color: #f01414;
+		color: #ffffff;
+	}
+	
+	.img {
+		font-size: 24px;
+		line-height: 24px;
+		width: 30px;
+		height: 30px;
+		padding-left: 6px;
+		padding-top: 6px;
+		color: #cccccc;
+		border-radius: 50%;
+	}
+	
+	.carIcon .active {
+		background-color: #00a0dc;
+	}
+	
+	.middle {
+		display: flex;
+		flex-direction: column;
+		flex: 2;
+		color: #ffffff;
+	}
+	
+	.BtnRight {
+		flex: 1;
+		
+		.button_style{
+			padding: 0;
+			margin: 0;
+			height: 54px;
+			border-radius: 0;
+		}
+		
+		}
+
 </style>
