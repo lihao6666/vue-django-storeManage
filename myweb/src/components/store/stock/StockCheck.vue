@@ -62,7 +62,7 @@
 </template>
 
 <script>
-import {postAPI} from '../../../api/api'
+import {getAPI} from '../../../api/api'
 export default {
   name: 'test',
   data () {
@@ -97,8 +97,8 @@ export default {
   methods: {
     getData () {
       let _this = this
-      postAPI('/stock_check').then(function (res) {
-        _this.tableData = res.data.list
+      getAPI('/storeManage/totalStock').then(function (res) {
+        _this.tableData = res.data.total_stocks
         _this.tableDataNew = _this.tableData
         let orgaSet = new Set()
         let wareSet = new Set()
@@ -150,7 +150,7 @@ export default {
             value: i
           })
         }
-        _this.pageTotal = res.data.list.length
+        _this.pageTotal = res.data.total_stocks.length
       }).catch(function (err) {
         console.log(err)
       })

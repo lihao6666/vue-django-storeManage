@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-show=checkshow>
+    <div v-if=checkshow>
     <div class="crumbs">
       <el-breadcrumb separator="/">
         <el-breadcrumb-item>
@@ -101,7 +101,7 @@
     </el-dialog>
   </div>
     <!-- 新增弹出框 -->
-    <div title="新增" v-show="addVisible" width="90%" :close-on-click-modal="false">
+    <div title="新增" v-if="addVisible" width="90%" :close-on-click-modal="false">
       <el-page-header @back="back" content="新增"></el-page-header>
       <Transferadd ref="Transferadd" @close="close" :editform="addform" :ifchange="true"></Transferadd>
     </div>
@@ -244,6 +244,11 @@ export default {
     add () {
       this.addVisible = true
       this.checkshow = false
+    },
+    // 返回
+    back () {
+      this.addVisible = false
+      this.checkshow = true
     },
     // 关闭新增弹窗
     close () {

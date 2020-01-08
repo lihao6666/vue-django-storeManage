@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-show=checkshow>
+    <div v-if=checkshow>
     <div class="crumbs">
       <el-breadcrumb separator="/">
         <el-breadcrumb-item>
@@ -97,7 +97,7 @@
     </el-dialog>
     </div>
     <!-- 新增弹出框 -->
-    <div title="新增" v-show=addVisible width="90%">
+    <div title="新增" v-if=addVisible width="90%">
       <el-page-header @back="back" content="新增"></el-page-header>
       <Confirmadd ref="Transferadd" @close="close" :editform="addform" :ifchange="true"></Confirmadd>
     </div>

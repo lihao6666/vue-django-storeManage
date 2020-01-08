@@ -14,7 +14,7 @@ export default new Router({
       children: [
         {
           path: '/home',
-          component: () => import('../components/404.vue'),
+          component: () => import('../components/FirstPage.vue'),
           meta: {title: '首页'}
         },
         {
@@ -66,6 +66,21 @@ export default new Router({
           path: '/stockcheck',
           component: () => import(/* webpackChunkName: "donate" */ '../components/store/stock/StockCheck.vue'),
           meta: {title: '现存量查询', key: 13}
+        },
+        {
+          path: '/otherinstore',
+          component: () => import('../components/store/in_store/other_in_store/OisCheck'),
+          meta: {title: '其他入库'}
+        },
+        {
+          path: '/selloutstore',
+          component: () => import('../components/store/out_store/sell_out_store/SosCheck'),
+          meta: {title: '销售出库'}
+        },
+        {
+          path: '/otheroutstore',
+          component: () => import('../components/store/out_store/other_out_store/OosCheck'),
+          meta: {title: '其他出库'}
         },
         {
           path: '/organizationmanage',

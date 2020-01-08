@@ -3,20 +3,17 @@
     <div class="crumbs">
       <el-breadcrumb separator="/">
         <el-breadcrumb-item>
-          <i class="el-icon-lx-cascades"></i> 仓库明细
+          <i class="el-icon-lx-cascades"></i> 转库单物料明细
         </el-breadcrumb-item>
       </el-breadcrumb>
     </div>
     <div class="container">
       <div class="handle-box">
-        <el-select v-model="formadd.str_orga" placeholder="请选择库存组织" :disabled="ifhasorga">
-          <el-option v-for="item in form_td_orga" v-bind:key="item" :label="item" :value="item"></el-option>
+        <el-select v-model="formadd.ois_orga" placeholder="请选择库存组织" :disabled="ifhasorga">
+          <el-option v-for="item in form_ois_orga" v-bind:key="item" :label="item" :value="item"></el-option>
         </el-select>
-        <el-select v-model="formadd.str_from" placeholder="请选择转出仓库" :disabled="ifhasfrom">
-          <el-option v-for="item in form_td_from" v-bind:key="item" :label="item" :value="item"></el-option>
-        </el-select>
-        <el-select v-model="formadd.str_to" placeholder="请选择转入仓库" :disabled="ifhasto">
-          <el-option v-for="item in form_td_to" v-bind:key="item" :label="item" :value="item"></el-option>
+        <el-select v-model="formadd.ois_warehouse" placeholder="请选择入库仓库" :disabled="ifhasware">
+          <el-option v-for="item in form_ois_warehouse" v-bind:key="item" :label="item" :value="item"></el-option>
         </el-select>
         <el-input
           placeholder="关键字搜索"
@@ -44,16 +41,29 @@
         size="mini"
       >
         <el-table-column type="selection" :selectable="selectable" width="55"></el-table-column>
-        <el-table-column prop="td_iden" sortable label="物料编码" align="center"></el-table-column>
-        <el-table-column prop="td_name" sortable label="物料名称" :filters="td_nameSet"
-                         :filter-method="filter" align="center"></el-table-column>
-        <el-table-column prop="td_specification" sortable label="规格" :filters="td_specificationSet"
-                         :filter-method="filter" align="center"></el-table-column>
-        <el-table-column prop="td_model" sortable label="型号" :filters="td_modelSet"
-                         :filter-method="filter" align="center"></el-table-column>
-        <el-table-column prop="td_meterage" sortable label="单位" :filters="td_meterageSet"
-                         :filter-method="filter" align="center"></el-table-column>
-        <el-table-column prop="td_present_num" sortable label="现存量" align="center"></el-table-column>
+        <el-table-column type="expand">
+          <template slot-scope="props">
+            <el-form label-position="left" inline class="demo-table-expand">
+              <el-form-item label="备注">
+                <span>{{props.row.bd_remarks}}</span>
+              </el-form-item>
+            </el-form>
+          </template>
+        </el-table-column>
+        <el-table-column prop="bd_iden" sortable label="物料编码" :filters="bd_idenSet"
+      :filter-method="filter"  align="center"></el-table-column>
+        <el-table-column prop="bd_name" sortable label="物料名称" :filters="bd_nameSet"
+      :filter-method="filter" align="center"></el-table-column>
+        <el-table-column prop="bd_specification" sortable label="规格" :filters="bd_specificationSet"
+      :filter-method="filter" align="center"></el-table-column>
+        <el-table-column prop="bd_model" sortable label="型号" :filters="bd_modelSet"
+      :filter-method="filter" align="center"></el-table-column>
+        <el-table-column prop="bd_meterage" sortable label="单位" :filters="bd_meterageSet"
+      :filter-method="filter" align="center"></el-table-column>
+        <el-table-column prop="bd_num" sortable label="数量" align="center"></el-table-column>
+        <el-table-column prop="bd_unitPrice" sortable label="无税单价" align="center"></el-table-column>
+        <el-table-column prop="bd_trans_iden" sortable label="转库单号" :filters="bd_trans_idenSet"
+      :filter-method="filter" align="center"></el-table-column>
       </el-table>
       <!-- 分页 -->
       <div class="pagination">
@@ -73,10 +83,11 @@
 </template>
 
 <script>
-import {postAPI} from '../../../../api/api'
+import { postAPI } from '../../../../api/api'
 
 export default {
-  props: ['tableHas', 'formadd', 'ifhasorga', 'ifhasfrom', 'ifhasto'],
+  name: 'ois_bd_add',
+  props: ['tableHas', 'formadd', 'ifhasorga'],
   data () {
     return {
       query: {
@@ -87,34 +98,30 @@ export default {
       tableData: [],
       tableDataNew: [],
       multipleSelection: [],
-      td_nameSet: [],
-      td_specificationSet: [],
-      td_modelSet: [],
-      td_meterageSet: [],
-      td_attrSet: [],
+      bd_idenSet: [],
+      bd_nameSet: [],
+      bd_specificationSet: [],
+      bd_modelSet: [],
+      bd_meterageSet: [],
+      bd_attrSet: [],
+      bd_trans_idenSet: [],
       pageTotal: 0,
       ifshowadd: true,
-      form_td_orga: [
-        '合肥工业大学',
-        '清华大学'
+      form_ois_orga: [
+        '合肥工业大学'
       ],
-      form_td_to: [
-        'A',
-        'B'
-      ],
-      form_td_from: [
-        'A',
-        'B'
+      form_ois_warehouse: [
+        'a'
       ]
     }
   },
   created () {
-    // this.getData()
+    this.getData()
   },
   methods: {
     getData () {
       let _this = this
-      postAPI('/str_detail_add', this.formadd).then(function (res) {
+      postAPI('/ois_bd_add', this.formadd.ois_orga).then(function (res) {
         _this.tableData = res.data.list
         _this.find()
         let nameset = new Set()
@@ -122,39 +129,55 @@ export default {
         let modelset = new Set()
         let meterageset = new Set()
         let attrset = new Set()
+        let idenset = new Set()
+        let transidenset = new Set()
         for (let i in _this.tableData) {
-          nameset.add(_this.tableData[i]['td_name'])
-          specificationset.add(_this.tableData[i]['td_specification'])
-          modelset.add(_this.tableData[i]['td_model'])
-          meterageset.add(_this.tableData[i]['td_meterage'])
-          attrset.add(_this.tableData[i]['td_attr'])
+          nameset.add(_this.tableData[i]['bd_name'])
+          specificationset.add(_this.tableData[i]['bd_specification'])
+          modelset.add(_this.tableData[i]['bd_model'])
+          meterageset.add(_this.tableData[i]['bd_meterage'])
+          attrset.add(_this.tableData[i]['bd_attr'])
+          transidenset.add(_this.tableData[i]['bd_trans_iden'])
+          idenset.add(_this.tableData[i]['bd_iden'])
         }
         for (let i of nameset) {
-          _this.td_nameSet.push({
+          _this.bd_nameSet.push({
             text: i,
             value: i
           })
         }
         for (let i of meterageset) {
-          _this.td_meterageSet.push({
+          _this.bd_meterageSet.push({
             text: i,
             value: i
           })
         }
         for (let i of specificationset) {
-          _this.td_specificationSet.push({
+          _this.bd_specificationSet.push({
             text: i,
             value: i
           })
         }
         for (let i of modelset) {
-          _this.td_modelSet.push({
+          _this.bd_modelSet.push({
             text: i,
             value: i
           })
         }
         for (let i of attrset) {
-          _this.td_attrSet.push({
+          _this.bd_attrSet.push({
+            text: i,
+            value: i
+          })
+        }
+        for (let i of idenset) {
+          _this.bd_idenSet.push({
+            text: i,
+            value: i
+          })
+        }
+        for (let i of transidenset) {
+          _this.bd_trans_idenSet.push({
             text: i,
             value: i
           })
@@ -184,12 +207,13 @@ export default {
     find () {
       this.pageTotal = 0
       this.tableDataNew = this.tableData.filter(data => (this.ifshowadd || this.selectable(data, 0)) &&
-          (!this.search ||
-            data.td_iden.toLowerCase().includes(this.search.toLowerCase()) ||
-            data.td_name.toLowerCase().includes(this.search.toLowerCase()) ||
-            data.td_specification.toLowerCase().includes(this.search.toLowerCase()) ||
-            data.td_model.toLowerCase().includes(this.search.toLowerCase()) ||
-            data.td_meterage.toLowerCase().includes(this.search.toLowerCase())))
+        (!this.search ||
+        data.bd_iden.toLowerCase().includes(this.search.toLowerCase()) ||
+        data.bd_name.toLowerCase().includes(this.search.toLowerCase()) ||
+        data.bd_specification.toLowerCase().includes(this.search.toLowerCase()) ||
+        data.bd_model.toLowerCase().includes(this.search.toLowerCase()) ||
+        data.bd_trans_iden.toLowerCase().includes(this.search.toLowerCase()) ||
+        data.bd_meterage.toLowerCase().includes(this.search.toLowerCase())))
     },
     // 分页导航
     handlePageChange (val) {
@@ -209,7 +233,7 @@ export default {
     // 可选项
     selectable (row, index) {
       for (let i in this.tableHas) {
-        if (this.tableHas[i].td_iden === row.td_iden) {
+        if (this.tableHas[i].bd_iden === row.bd_iden && this.tableHas[i].bd_rp_iden === row.bd_rp_iden) {
           return false
         }
       }
@@ -244,9 +268,6 @@ export default {
 </style>
 
 <style scoped>
-  .down {
-    margin-top: 10px;
-  }
   .handle-box {
     margin-bottom: 20px;
   }
@@ -257,7 +278,7 @@ export default {
   }
 
   .input-search {
-    width: 30%;
+    width: 40%;
   }
   .button-save {
     float: right;
