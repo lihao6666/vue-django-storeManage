@@ -40,7 +40,7 @@
 	</view> 
 	
 	<view class="address-item ">
-		<text class="address-item-title">创建时间</text>	
+		<text class="address-item-title">申请时间</text>	
 		<text class="address-item-input" @tap="toggleTab('date')">{{label4}}</text>
 		 <w-picker
 		  	mode="date" 
@@ -55,14 +55,25 @@
 		  ></w-picker>
 	</view> 
 	
-	
-	
 	<view class="remarks">
 		<text class="remarks_text">备注</text>	
-		<textarea class="remarks_input" maxlength="200" v-model="remarks" placeholder="请输入,限制200字" auto-height="true"></textarea>
+		<textarea class="remarks_input" maxlength="200" v-model="remarks" placeholder="请输入,限制200字"></textarea>
 	</view> 
 	
-	<button class="address-add-btn" @click="confirm">保存</button>
+	<view class="shopcart">
+		<!-- @click="toggleList" -->
+		<view class="cartBottom">
+			<view class="carIcon">
+				<button class="address-add-btn1" @click="cancel">取消</button>
+			</view>
+			<view class="middle">
+				<button class="address-add-btn2" @click="hold">保存</button>
+			</view>
+			<view class="BtnRight">
+				<button class="address-add-btn3" @click="confirm">提交</button>
+			</view>
+		</view>
+	</view>
 </view>
 </template>
 
@@ -91,6 +102,9 @@
 					{
 						label: '南京',
 						value: 'B'
+					},{
+						label: '杭州',
+						value: 'C'
 					}
 				],list2:[
 					{
@@ -156,6 +170,15 @@
 			},
 			handleCancle (item) {
 				console.log('cancle::', item)
+			},
+			cancel(){
+				uni.switchTab({url:'../main/main'})
+			},
+			hold(){
+				uni.switchTab({url:'../main/main'})
+			},
+			confirm(){
+				uni.switchTab({url:'../main/main'})
 			}
 		}
 	}
@@ -201,10 +224,9 @@
 		
 		.remarks-text{
 			flex-shrink: 0;
-			width: 200upx;
 			font-size: 32upx;
 			color: black;
-			align-items: center;
+			// align-items: center;
 		}
 		
 		.remarks-input{
@@ -223,17 +245,56 @@
 			transform: scale(.7);
 		}
 	}
+	
+	.shopcart .cartBottom {
+		position: fixed;
+		bottom: 0;
+		left: 0;
+		right: 0;
+		height: 50px;
+		z-index: 99;
+		display: flex;
+		background-color: #141d27;
+	}
 
-	.address-add-btn {
+	.address-add-btn1 {
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		width: 690upx;
+		width: 125px;
 		height: 80upx;
-		margin: 60upx auto;
+		margin: 10upx auto;
 		font-size: 32upx;
 		color: #fff;
 		background-color: #DD524D;
 		border-radius: 10upx;
+	}
+	
+	.address-add-btn2 {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 125px;
+		height: 80upx;
+		margin: 10upx auto;
+		font-size: 32upx;
+		color: #fff;
+		background-color: #20a0ff;
+		border-radius: 10upx;
+		
+	}
+	
+	.address-add-btn3 {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 125px;
+		height: 80upx;
+		margin: 10upx auto;
+		font-size: 32upx;
+		color: #fff;
+		background-color: #1aa034;
+		border-radius: 10upx;
+		
 	}
 </style>

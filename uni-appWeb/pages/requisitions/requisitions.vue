@@ -40,7 +40,7 @@
 		</view> -->
 		<view class="shopcart">
 			<!-- @click="toggleList" -->
-			<view class="cartBottom" @click="toggleList">
+			<view class="cartBottom" >
 				<view class="carIcon">
 					<!-- <view class="iconBox" :class="getAllCount ? 'active' : '' ">
 						<text class="allcount" v-if="getAllCount">{{getAllCount}}</text>
@@ -54,7 +54,7 @@
 					<button type="primary" class="button_style" @click="newOut">确定</button>
 				</view>
 			</view>
-	</view>
+		</view>
 	</view>
 </template>
 
