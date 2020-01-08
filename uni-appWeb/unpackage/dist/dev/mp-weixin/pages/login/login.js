@@ -204,6 +204,7 @@ var _this;var _default =
       this.$http.post('/base/login', _this.loginData).then(function (_ref) {var _ref2 = _slicedToArray(_ref, 2),err = _ref2[0],res = _ref2[1];
         if (res.data.signal === '0') {
           uni.setStorageSync('user_info', res);
+          uni.setStorageSync('user_now_iden', res.data.user.username);
           setTimeout(function () {
             uni.showToast({
               icon: 'none',

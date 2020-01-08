@@ -44,6 +44,7 @@
 			var myinfo = uni.getStorageSync('user_info')
 			this.user_name = myinfo.data.user.user_name
 			this.user_id = myinfo.data.user.username
+			console.log(myinfo)
 		},
         methods: {
 			mydetail() {

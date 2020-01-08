@@ -27,7 +27,7 @@
 		</view>
 		<view class="current-content">
 			<view v-if="current === 0">
-				<view v-for="item in outFilterList" :key="item.id" class="card-set">
+				<view v-for="(item,index) in outFilterList" :key="index" class="card-set">
 					<uni-card
 					    :title="item.mso_iden"
 					    mode="basic" 
@@ -62,7 +62,7 @@
 				</view>
 			</view>
 			<view v-if="current === 1">
-				<view v-for="item in purchaseFilterList" :key="item.id" class="card-set">
+				<view v-for="(item,index) in purchaseFilterList" :key="index" class="card-set">
 					<uni-card
 					    :title="item.rp_iden"
 					    mode="basic" 
@@ -100,7 +100,7 @@
 				</view>
 			</view>
 			<view v-if="current === 2">
-				<view v-for="item in sellFilterList" :key="item.id" class="card-set">
+				<view v-for="(item,index) in sellFilterList" :key="index" class="card-set">
 					<uni-card
 					    :title="item.so_iden"
 					    mode="basic" 
@@ -135,7 +135,7 @@
 				</view>
 			</view>
 			<view v-if="current === 3">
-				<view v-for="item in exchangeFilterList" :key="item.id" class="card-set">
+				<view v-for="(item,index) in exchangeFilterList" :key="index" class="card-set">
 					<uni-card
 					    :title="item.str_iden"
 					    mode="basic" 
@@ -169,7 +169,7 @@
 				</view>
 			</view>
 		</view>
-    </view> 
+    </view>
 </template>
  
 <script>
@@ -180,10 +180,6 @@ import dragButton from '../../components/drag-button/drag-button.vue'
 import cmdIcon from "../../components/cmd-icon/cmd-icon.vue"
 import uniNavBar from '@/components/uni-nav-bar/uni-nav-bar.vue'
 import EvanIcons from '../../components/evan-icons/evan-icons.vue'
-import outData from '../../data/outStore.js'
-import purchaseData from '../../data/purchase.js'
-import sellData from '../../data/sell.js'
-import exchangeData from '../../data/exchange.js'
 
 export default {
 	components: {
@@ -197,13 +193,13 @@ export default {
 	},
 	data() {
 		return {
-			items: ['出库','请购','销售','转库'],
+			items: [],
 			current: 0,
 			//将data文件夹中的数据读入
-			outList: outData.data,
-			purchaseList: purchaseData.data,
-			sellList: sellData.data,
-			exchangeList: exchangeData.data,
+			outList: [],
+			purchaseList: [],
+			sellList: [],
+			exchangeList: [],
 			outFilterText: '',
 			purchaseFilterText: '',
 			sellFilterText: '',
@@ -271,11 +267,74 @@ export default {
 		}
 	},
 	methods: {
-		//切换tab
+		//切换tab  current: 下方卡片内容,  currentIndex: tab栏,  范围(0-3)
 		onClickItem(e) {
 			if (this.current !== e.currentIndex) {
 				this.current = e.currentIndex;
 			}
+			
+			if(e.currentIndex === 0){
+				var mes = this.judgeMes(0)
+				this.$http.post('/outRequest/oss', mes).then(([err,res]) => {
+					if (res.data.signal === '0') {
+						_this.outList = res.data.prs
+				    } else {
+						uni.showToast({
+							icon: 'none',
+							position: 'bottom',
+							title: res.data.message
+						});
+				    }
+				})
+			} else if(e.currentIndex === 1){
+				var mes = this.judgeMes(1)
+				this.$http.post('/purchaseRequest/prs', mes).then(([err,res]) => {
+					if (res.data.signal === '0') {
+						_this.purchaseList = res.data.prs
+				    } else {
+						uni.showToast({
+							icon: 'none',
+							position: 'bottom',
+							title: res.data.message
+						});
+				    }
+				})
+			} else if(e.currentIndex === 2){
+				var mes = this.judgeMes(2)
+				this.$http.post('/sellRequest/sos', mes).then(([err,res]) => {
+					if (res.data.signal === '0') {
+						_this.sellList = res.data.prs
+				    } else {
+						uni.showToast({
+							icon: 'none',
+							position: 'bottom',
+							title: res.data.message
+						});
+				    }
+				})
+			} else if(e.currentIndex === 3){
+				var mes = this.judgeMes(3)
+				this.$http.post('/exchangeRequest/eos', mes).then(([err,res]) => {
+					if (res.data.signal === '0') {
+						_this.exchangeList = res.data.prs
+				    } else {
+						uni.showToast({
+							icon: 'none',
+							position: 'bottom',
+							title: res.data.message
+						});
+				    }
+				})
+			}
+		},
+		judgeMes(orderIndex) {
+			var myinfo = uni.getStorageSync('user_info')
+			var power = uni.getStorageSync('power')
+			var mes = {}
+			mes.area_name = myinfo.data.user.area_name			mes.user_now_iden = myinfo.data.user.username
+			mes.power = power[orderIndex]
+			
+			return mes
 		},
 		//判断订单状态
 		judgeStatus(status) {
@@ -502,16 +561,55 @@ export default {
 		},
 		clear4() {
 			this.exchangeFilterText = ''
+		},
+		judgePower() {
+			var myinfo = uni.getStorageSync('user_info')
+			var power = ['0','0','0','0']
+			for(var i=0; i<myinfo.data.roles.length; i++){
+				var po = myinfo.data.roles[i][1]
+				power[0] = power[0]<po[6]? po[6]:power[0]
+				power[1] = power[1]<po[1]? po[1]:power[0]
+				power[2] = power[2]<po[0]? po[0]:power[0]
+				power[3] = power[3]<po[9]? po[9]:power[0]
+			}
+			uni.setStorageSync('power',power)
 		}
-
 	},
 	
 	onLoad: function() {   
-		//登录检查
+		//登录检查，需要重写一下
 		// loginMsg = this.checkLogin('../pages/main/main', 'switchTab');
 		// if(!loginMsg){
 		// 	return;
 		// }
+		
+		//填入权限
+		this.judgePower()
+		var _this = this
+		var myinfo = uni.getStorageSync('user_info')
+		var power = uni.getStorageSync('power')
+		//判断界面权限
+		if((power[2] === '0')&&(power[3] === '0')){
+			this.items = ['出库','请购']
+		} else {
+			this.items = ['出库','请购','销售','转库']
+		}
+		
+		
+		//TODO 主页加载时默认搜索出库单
+		// var outMes = {}
+		// outMes.area_name = myinfo.data.user.area_name
+		// outMes.user_now_iden = myinfo.data.user.username
+		// outMes.power = power[0]
+		// this.$http.post('/purchaseRequest/prs', outMes).then(([err,res]) => {
+		// 	if (res.data.signal === '0') {
+		// 		_this.testList = res.data.prs
+		//     } else {
+		// 		console.log(res.data.message)
+		//     }
+		// })
+		
+		
 		uni.removeStorageSync('viewout');
 		uni.removeStorageSync('viewpurchase');
 		uni.removeStorageSync('viewsell');
