@@ -105,6 +105,7 @@ class SellOrderUpdateView(APIView):
         self.signal = 0
         self.user_now_name = ""
         self.area_name = ""
+        self.so_new_iden = ""
 
     def post(self, request):
         json_data = json.loads(self.request.body.decode("utf-8"))
@@ -136,15 +137,20 @@ class SellOrderUpdateView(APIView):
             else:
                 so_serial = "0001"
             so_new_iden = pre_iden + so_serial
+            self.so_new_iden = so_new_iden
             try:
-                models.SellOrder.objects.create(so_iden=so_new_iden, so_serial=so_serial, organization=organization,
-                                                so_type=so_type, customer=customer, so_date=so_date,
-                                                deliver_ware_house=deliver_ware_house,
-                                                deliver_ware_house_iden=deliver_ware_house_iden, so_remarks=so_remarks,
-                                                so_status=0, so_creator=self.user_now_name,
-                                                so_creator_iden=user_now_iden)
-                self.message = "新建销售订单成功"
-                self.signal = 0
+                if models.SellOrder.objects.create(so_iden=so_new_iden, so_serial=so_serial, organization=organization,
+                                                   so_type=so_type, customer=customer, so_date=so_date,
+                                                   deliver_ware_house=deliver_ware_house,
+                                                   deliver_ware_house_iden=deliver_ware_house_iden,
+                                                   so_remarks=so_remarks,
+                                                   so_status=0, so_creator=self.user_now_name,
+                                                   so_creator_iden=user_now_iden):
+                    self.message = "新建销售订单成功"
+                    self.signal = 0
+                else:
+                    self.message = "新建销售订单失败"
+                    self.signal = 1
             except:
                 self.message = "新建销售订单失败"
                 self.signal = 1
@@ -153,12 +159,18 @@ class SellOrderUpdateView(APIView):
         else:
             so = models.SellOrder.objects.get(so_iden=so_iden)
             if so:
-                so.update(organization=organization, so_type=so_type, customer=customer, so_date=so_date,
-                          deliver_ware_house=deliver_ware_house,
-                          deliver_ware_house_iden=deliver_ware_house_iden, so_remarks=so_remarks)
+                if so.update(organization=organization, so_type=so_type, customer=customer, so_date=so_date,
+                             deliver_ware_house=deliver_ware_house,
+                             deliver_ware_house_iden=deliver_ware_house_iden, so_remarks=so_remarks):
+                    pass
+                else:
+                    self.message = "更新失败"
+                    self.signal = 1
+
             else:
                 self.message = "更新失败"
                 self.signal = 1
+        return Response({"message": self.message, "signal": self.signal, "so_new_iden": self.so_new_iden})
 
 
 class SoDetailSaveView(APIView):
@@ -169,9 +181,10 @@ class SoDetailSaveView(APIView):
 
     def post(self, request):
         json_data = json.loads(self.request.body.decode("utf-8"))
-        # so_iden = json_data['so_iden']
+        so_iden = json_data['so_iden']
         sods = json_data['sods']
         for sod in sods:
+            # id = sod['id']
             sod_iden = sod['sod_iden']  # 物料编码
             sod_num = sod['sod_num']  # 销售数量
             sod_taxRate = sod['sod_taxRate']
@@ -183,13 +196,19 @@ class SoDetailSaveView(APIView):
             sod_remarks = sod['sod_remarks']
 
             try:
-                models.SoDetail.objects.filter(sod_iden=sod_iden).update(sod_num=sod_num, sod_taxRate=sod_taxRate,
-                                                                         sod_tax_unitPrice=sod_tax_unitPrice,
-                                                                         sod_unitPrice=sod_unitPrice,
-                                                                         sod_tax_sum=sod_tax_sum,
-                                                                         sod_sum=sod_sum,
-                                                                         sod_tax_price=sod_tax_price,
-                                                                         sod_remarks=sod_remarks)
+                if models.SoDetail.objects.filter(sell_order__so_iden=so_iden, sod_iden=sod_iden).update(
+                        sod_num=sod_num,
+                        sod_taxRate=sod_taxRate,
+                        sod_tax_unitPrice=sod_tax_unitPrice,
+                        sod_unitPrice=sod_unitPrice,
+                        sod_tax_sum=sod_tax_sum,
+                        sod_sum=sod_sum,
+                        sod_tax_price=sod_tax_price,
+                        sod_remarks=sod_remarks):
+                    pass
+                else:
+                    self.message = "销售订单详情保存失败"
+                    self.signal = 1
             except:
                 self.message = "销售订单详情保存失败"
                 self.signal = 1
@@ -210,8 +229,11 @@ class SoDetailSubmitView(APIView):
         so_iden = json_data['so_iden']
 
         try:
-            models.SellOrder.objects.filter(so_iden=so_iden).update(so_status=1)
-
+            if models.SellOrder.objects.filter(so_iden=so_iden).update(so_status=1):
+                pass
+            else:
+                self.message = "销售订单提交保存失败"
+                self.signal = 1
         except:
             self.message = "销售订单提交保存失败"
             self.signal = 1
@@ -242,7 +264,10 @@ class SoDetailNewSaveView(APIView):
             material = Material.objects.get(material_iden=sod_iden)
             so = models.SellOrder.objects.get(so_iden=so_iden)
             try:
-                models.SoDetail.objects.create(sell_order=so, material=material, sod_num=0)
+                if models.SoDetail.objects.create(sell_order=so, material=material, sod_num=0):
+                    pass
+                else:
+                    return Response({"message": "新建物料错误"})
             except:
                 return Response({"message": "新建物料错误"})
 
@@ -260,7 +285,10 @@ class SoDetailDeleteView(APIView):
         for sod in sods:
             sod_iden = sod['sod_iden']
             try:
-                models.SoDetail.objects.filter(sod_iden=sod_iden).delete()
+                if models.SoDetail.objects.filter(sod_iden=sod_iden).delete()[0]:
+                    pass
+                else:
+                    return Response({"message": "删除物料错误"})
             except:
                 return Response({"message": "删除物料错误"})
 
@@ -280,7 +308,12 @@ class SellOrderDeleteView(APIView):
         so_iden = json_data['so_iden']
 
         try:
-            models.SellOrder.objects.filter(so_iden=so_iden).delete()
+            if models.SellOrder.objects.filter(so_iden=so_iden).delete()[0]:
+                pass
+            else:
+                self.message = "删除销售订单失败"
+                self.signal = 1
+
         except:
             self.message = "删除销售订单失败"
             self.signal = 1

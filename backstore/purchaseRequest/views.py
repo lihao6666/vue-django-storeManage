@@ -138,6 +138,7 @@ class PrUpdateView(APIView):
         self.signal = 0
         self.user_now_name = ""
         self.area_name = ""
+        self.pr_new_iden = ""
 
     def post(self, request):
         json_data = json.loads(self.request.body.decode("utf-8"))
@@ -165,27 +166,36 @@ class PrUpdateView(APIView):
             else:
                 pr_serial = "0001"
             pr_new_iden = pre_iden + pr_serial
+            self.pr_new_iden = pr_new_iden
             try:
-                models.PurchaseRequest.objects.create(pr_iden=pr_new_iden, pr_serial=pr_serial,
-                                                      organization=organization, pr_department=department_name,
-                                                      pr_type=pr_type, pr_date=pr_date,
-                                                      pr_remarks=pr_remarks,
-                                                      pr_status=0, pr_creator=self.user_now_name,
-                                                      pr_creator_iden=user_now_iden)
-                self.message = "新建请购单成功"
-                self.signal = 0
+                res = models.PurchaseRequest.objects.create(pr_iden=pr_new_iden, pr_serial=pr_serial,
+                                                            organization=organization, pr_department=department_name,
+                                                            pr_type=pr_type, pr_date=pr_date,
+                                                            pr_remarks=pr_remarks,
+                                                            pr_status=0, pr_creator=self.user_now_name,
+                                                            pr_creator_iden=user_now_iden)
+                if res:
+                    self.message = "新建请购单成功"
+                    self.signal = 0
+                else:
+                    self.message = "新建请购单失败"
+                    self.signal = 1
             except:
                 self.message = "新建请购单失败"
                 self.signal = 1
         else:
             pr = models.PurchaseRequest.objects.get(pr_iden=pr_iden)
             if pr:
-                pr.update(organization=organization, pr_department=department_name, pr_type=pr_type, pr_date=pr_date,
-                          pr_remarks=pr_remarks)
+                if pr.update(organization=organization, pr_department=department_name, pr_type=pr_type, pr_date=pr_date,
+                             pr_remarks=pr_remarks):
+                    pass
+                else:
+                    self.message = "更新失败"
+                    self.signal = 1
             else:
                 self.message = "更新失败"
                 self.signal = 1
-        return Response({"message": self.message, "signal": self.signal})
+        return Response({"message": self.message, "signal": self.signal, "pr_new_iden": self.pr_new_iden})
 
 
 class PrdSaveView(APIView):
@@ -199,17 +209,21 @@ class PrdSaveView(APIView):
         需要获取物料详情信息(主要是iden和请购数量）
         """
         json_data = json.loads(self.request.body.decode("utf-8"))
-        # pr_iden = json_data['pr_iden']
+        pr_iden = json_data['pr_iden']
         prds = json_data['prds']
         for prd in prds:
             prd_iden = prd['prd_iden']  # 物料编码
+            # id = prd['prd_id']  # 物料id
             prd_num = prd['prd_num']  # 请购数量
             prd_present_num = prd['prd_present_num']  # 实际库存数量
             prd_remarks = prd['prd_remarks']
             try:
-                models.PrDetail.objects.filter(prd_iden=prd_iden).update(prd_num=prd_num,
-                                                                         prd_present_num=prd_present_num,
-                                                                         prd_remarks=prd_remarks)
+                if models.PrDetail.objects.filter(purchase_request__pr_iden=pr_iden, prd_iden=prd_iden). \
+                        update(prd_num=prd_num, prd_present_num=prd_present_num, prd_remarks=prd_remarks):
+                    pass
+                else:
+                    self.message = "请购单详情保存失败"
+                    self.signal = 1
             except:
                 self.message = "请购单详情保存失败"
                 self.signal = 1
@@ -230,8 +244,11 @@ class PrdSubmitView(APIView):
         pr_iden = json_data['pr_iden']
 
         try:
-            models.PurchaseRequest.objects.filter(pr_iden=pr_iden).update(pr_status=1)
-
+            if models.PurchaseRequest.objects.filter(pr_iden=pr_iden).update(pr_status=1):
+                pass
+            else:
+                self.message = "请购单提交保存失败"
+                self.signal = 1
         except:
             self.message = "请购单提交保存失败"
             self.signal = 1
@@ -280,8 +297,11 @@ class PrdNewSaveView(APIView):
             material = Material.objects.get(material_iden=prd_iden)
             pr = models.PurchaseRequest.objects.get(pr_iden=pr_iden)
             try:
-                models.PrDetail.objects.create(purchase_request=pr, material=material, prd_num=prd_present_num,
-                                               prd_present_num=prd_present_num, prd_used=0)
+                if models.PrDetail.objects.create(purchase_request=pr, material=material, prd_num=prd_present_num,
+                                                  prd_present_num=prd_present_num, prd_used=0):
+                    pass
+                else:
+                    return Response({"message": "新建物料出现错误"})
             except:
                 return Response({"message": "新建物料出现错误"})
 
@@ -299,11 +319,14 @@ class PrdDeleteView(APIView):
         for prd in prds:
             prd_iden = prd['prd_iden']
             try:
-                models.PrDetail.objects.filter(prd_iden=prd_iden).delete()
+                if models.PrDetail.objects.filter(prd_iden=prd_iden).delete()[0]:
+                    pass
+                else:
+                    return Response({"message": "删除物料错误"})
             except:
                 return Response({"message": "删除物料错误"})
 
-        return Response({"message": "删除物料成功"})
+        return Response({"message": "删除物料成功", "signal": 0})
 
 
 class PrDeleteView(APIView):
@@ -321,7 +344,11 @@ class PrDeleteView(APIView):
         pr_iden = json_data['pr_iden']
 
         try:
-            models.PurchaseRequest.objects.filter(pr_iden=pr_iden).delete()
+            if models.PurchaseRequest.objects.filter(pr_iden=pr_iden).delete()[0]:
+                pass
+            else:
+                self.message = "删除请购单失败"
+                self.signal = 1
         except:
             self.message = "删除请购单失败"
             self.signal = 1
@@ -344,9 +371,12 @@ class PrCloseView(APIView):
         pr_closerReason = json_data['pr_closerReason']
 
         try:
-            models.PurchaseRequest.objects.filter(pr_iden=pr_iden).update(pr_status=2, pr_closer=pr_closer,
-                                                                          pr_closerReason=pr_closerReason)
-
+            if models.PurchaseRequest.objects.filter(pr_iden=pr_iden).update(pr_status=2, pr_closer=pr_closer,
+                                                                             pr_closerReason=pr_closerReason):
+                pass
+            else:
+                self.message = "关闭请购单失败"
+                self.signal = 1
         except:
             self.message = "关闭请购单失败"
             self.signal = 1
