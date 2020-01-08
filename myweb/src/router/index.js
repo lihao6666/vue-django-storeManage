@@ -43,6 +43,21 @@ export default new Router({
           meta: {title: '采购入库'}
         },
         {
+          path: '/otherinstore',
+          component: () => import('../components/store/in_store/other_in_store/OisCheck'),
+          meta: {title: '其他入库'}
+        },
+        {
+          path: '/selloutstore',
+          component: () => import('../components/store/out_store/sell_out_store/SosCheck'),
+          meta: {title: '销售出库'}
+        },
+        {
+          path: '/otheroutstore',
+          component: () => import('../components/store/out_store/other_out_store/OosCheck'),
+          meta: {title: '其他出库'}
+        },
+        {
           path: '/organizationmanage',
           component: () => import(/* webpackChunkName: "donate" */ '../components/system/OrganizationManage.vue'),
           meta: {title: '组织架构管理'}

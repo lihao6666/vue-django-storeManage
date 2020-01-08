@@ -1,10 +1,9 @@
 <template>
   <div>
-    <div v-if=checkshow>
     <div class="crumbs">
       <el-breadcrumb separator="/">
         <el-breadcrumb-item>
-          <i class="el-icon-lx-cascades"></i> 期初库存
+          <i class="el-icon-lx-cascades"></i> 其他入库
         </el-breadcrumb-item>
       </el-breadcrumb>
     </div>
@@ -27,31 +26,42 @@
         header-cell-class-name="table-header"
         :row-class-name="tableRowClassName"
       >
-        <el-table-column prop="oi_iden" sortable label="单据编号" align="center"></el-table-column>
-        <el-table-column prop="oi_orga" sortable label="库存组织" :filters="oi_orgaSet"
+        <el-table-column type="expand">
+          <template slot-scope="props">
+            <el-form label-position="left" inline class="demo-table-expand">
+              <el-form-item label="备注">
+                <span>{{ props.row.ois_remarks }}</span>
+              </el-form-item>
+            </el-form>
+          </template>
+        </el-table-column>
+        <el-table-column prop="ois_iden" sortable label="入库单编号" align="center"></el-table-column>
+        <el-table-column prop="ois_orga" sortable label="库存组织" :filters="ois_orgaSet"
+      :filter-method="filter" align="center"></el-table-column>
+        <el-table-column prop="ois_warehouse" sortable label="仓库" :filters="ois_warehouseSet"
+      :filter-method="filter" align="center"></el-table-column>
+        <el-table-column prop="ois_type" sortable label="入库类型" :filters="ois_typeSet"
                          :filter-method="filter" align="center"></el-table-column>
-        <el-table-column prop="oi_to" sortable label="仓库" :filters="oi_toSet"
-                         :filter-method="filter" align="center"></el-table-column>
-        <el-table-column prop="oi_req_date" sortable label="盘点日期" align="center"></el-table-column>
-        <el-table-column prop="oi_status" sortable label="状态" :filters="oi_statusSet"
-                         :filter-method="filter" align="center">
+        <el-table-column prop="ois_date" sortable label="入库日期" align="center"></el-table-column>
+        <el-table-column prop="ois_status" sortable label="状态" :filters="ois_statusSet"
+      :filter-method="filter" align="center">
           <template slot-scope="scope">
             <el-tag
-              :type="scope.row.oi_status==='已审批'?'success':''"
-            >{{scope.row.oi_status}}
+              :type="scope.row.ois_status==='已审批'?'success':''"
+            >{{scope.row.ois_status}}
             </el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="oi_creator" sortable label="创建人" :filters="oi_creatorSet"
-                         :filter-method="filter" align="center"></el-table-column>
-        <el-table-column prop="oi_createDate" sortable label="创建日期" align="center"></el-table-column>
+        <el-table-column prop="ois_creator" sortable label="创建人" :filters="ois_creatorSet"
+      :filter-method="filter" align="center"></el-table-column>
+        <el-table-column prop="ois_createDate" sortable label="创建日期" align="center"></el-table-column>
         <el-table-column label="操作" align="center">
           <template slot-scope="scope">
             <el-button
               type="text"
               icon="el-icon-edit"
               @click="handleEdit(scope.$index, scope.row)"
-              v-if="scope.row.oi_status==='草稿'"
+              v-if="scope.row.ois_status==='草稿'"
             >编辑
             </el-button>
             <el-button
@@ -59,7 +69,7 @@
               icon="el-icon-delete"
               class="red"
               @click="handleDelete(scope.$index, scope.row)"
-              v-if="scope.row.oi_status==='草稿'"
+              v-if="scope.row.ois_status==='草稿'"
             >删除
             </el-button>
             <el-button
@@ -67,7 +77,7 @@
               icon="el-icon-postcard"
               class="green"
               @click="handleMore(scope.$index, scope.row)"
-              v-if="scope.row.oi_status==='已审批'"
+              v-if="scope.row.ois_status==='已审批'"
             >详情
             </el-button>
           </template>
@@ -87,29 +97,27 @@
         </el-pagination>
       </div>
     </div>
+    <!-- 新增弹出框 -->
+    <el-dialog title="新增" :visible.sync="addVisible" width="90%" :close-on-click-modal="false">
+      <OisAdd ref="poadd" :editform="addform" :ifchange="true"></OisAdd>
+    </el-dialog>
     <!-- 编辑弹出框 -->
-    <el-dialog title="编辑" :visible.sync="editVisible" width="90%" :close-on-click-modal="false" :deoioy-on-close="true" :before-close="closePcedit">
-      <Beginadd ref="Reqedit" :editform="editform" :ifchange="true"></Beginadd>
+    <el-dialog title="编辑" :visible.sync="editVisible" width="90%" :close-on-click-modal="false" :destroy-on-close="true" :before-close="closepoedit">
+      <OisAdd ref="poedit" :editform="editform" :ifchange="true"></OisAdd>
     </el-dialog>
     <!-- 详情弹出框 -->
-    <el-dialog title="详情" :visible.sync="moreVisible" width="90%" :deoioy-on-close="true">
-      <Beginadd ref="Reqmore" :editform="moreform" :ifchange="false"></Beginadd>
+    <el-dialog title="详情" :visible.sync="moreVisible" width="90%" :destroy-on-close="true">
+      <OisAdd ref="pomore" :editform="moreform" :ifchange="false"></OisAdd>
     </el-dialog>
-  </div>
-    <!-- 新增弹出框 -->
-    <div title="新增" v-if="addVisible" width="90%" :close-on-click-modal="false">
-      <el-page-header @back="back" content="新增"></el-page-header>
-      <Beginadd ref="Transferadd" @close="close" :editform="addform" :ifchange="true"></Beginadd>
-    </div>
   </div>
 </template>
 
 <script>
+import OisAdd from './OisAdd'
 import { postAPI } from '../../../../api/api'
-import Beginadd from './Beginadd'
 
 export default {
-  name: 'oi_check',
+  name: 'ois_check',
   data () {
     return {
       query: {
@@ -119,86 +127,77 @@ export default {
       search: '',
       tableData: [],
       tableDataNew: [],
-      oi_orgaSet: [],
-      oi_toSet: [],
-      oi_fromSet: [],
-      oi_dpmSet: [],
-      oi_statusSet: [],
-      oi_creatorSet: [],
+      ois_orgaSet: [],
+      ois_warehouseSet: [],
+      ois_typeSet: [],
+      ois_statusSet: [],
+      ois_creatorSet: [],
       editVisible: false,
-      checkshow: true,
       editform: {},
       moreVisible: false,
       moreform: {},
       pageTotal: 0,
       addVisible: false,
       addform: {
-        oi_iden: '',
-        oi_orga: '',
-        oi_from: '',
-        oi_to: '',
-        oi_req_date: ''
+        ois_iden: '',
+        ois_orga: '',
+        ois_type: '转库入库',
+        ois_warehouse: '',
+        ois_remarks: '',
+        ois_date: ''
       }
     }
   },
   components: {
-    Beginadd
+    OisAdd
   },
   created () {
-    // this.getData()
+    this.getData()
   },
   methods: {
     getData () {
       let _this = this
-      postAPI('/oi_check').then(function (res) {
+      postAPI('/ois_check').then(function (res) {
         _this.tableData = res.data.list
         _this.find()
         let orgaset = new Set()
-        let toset = new Set()
-        let dpmset = new Set()
+        let nameset = new Set()
         let statusset = new Set()
-        let fromset = new Set()
+        let typeset = new Set()
         let creatorset = new Set()
         for (let i in _this.tableData) {
-          orgaset.add(_this.tableData[i]['oi_orga'])
-          fromset.add(_this.tableData[i]['oi_from'])
-          toset.add(_this.tableData[i]['oi_to'])
-          dpmset.add(_this.tableData[i]['oi_req_department'])
-          statusset.add(_this.tableData[i]['oi_status'])
-          creatorset.add(_this.tableData[i]['oi_creator'])
+          orgaset.add(_this.tableData[i]['ois_orga'])
+          typeset.add(_this.tableData[i]['ois_type'])
+          nameset.add(_this.tableData[i]['ois_warehouse'])
+          statusset.add(_this.tableData[i]['ois_status'])
+          creatorset.add(_this.tableData[i]['ois_creator'])
         }
         for (let i of orgaset) {
-          _this.oi_orgaSet.push({
+          _this.ois_orgaSet.push({
             text: i,
             value: i
           })
         }
-        for (let i of fromset) {
-          _this.oi_fromSet.push({
+        for (let i of typeset) {
+          _this.ois_typeSet.push({
             text: i,
             value: i
           })
         }
-        for (let i of toset) {
-          _this.oi_toSet.push({
-            text: i,
-            value: i
-          })
-        }
-        for (let i of dpmset) {
-          _this.oi_dpmSet.push({
+        for (let i of nameset) {
+          _this.ois_warehouseSet.push({
             text: i,
             value: i
           })
         }
         for (let i of statusset) {
-          _this.oi_statusSet.push({
+          _this.ois_statusSet.push({
             text: i,
             value: i
           })
         }
         for (let i of creatorset) {
-          _this.oi_creatorSet.push({
+          _this.ois_creatorSet.push({
             text: i,
             value: i
           })
@@ -228,27 +227,15 @@ export default {
     find () {
       this.pageTotal = 0
       this.tableDataNew = this.tableData.filter(data => !this.search ||
-          data.oi_iden.toLowerCase().includes(this.search.toLowerCase()) ||
-          data.oi_orga.toLowerCase().includes(this.search.toLowerCase()) ||
-          data.oi_to.toLowerCase().includes(this.search.toLowerCase()) ||
-          data.oi_from.toLowerCase().includes(this.search.toLowerCase()) ||
-          data.oi_req_department.toLowerCase().includes(this.search.toLowerCase()) ||
-          data.oi_req_date.toLowerCase().includes(this.search.toLowerCase()) ||
-          data.oi_creator.toLowerCase().includes(this.search.toLowerCase()))
+        data.ois_iden.toLowerCase().includes(this.search.toLowerCase()) ||
+        data.ois_orga.toLowerCase().includes(this.search.toLowerCase()) ||
+        data.ois_warehouse.toLowerCase().includes(this.search.toLowerCase()) ||
+        data.ois_type.toLowerCase().includes(this.search.toLowerCase()) ||
+        data.ois_creator.toLowerCase().includes(this.search.toLowerCase()))
     },
     // 新增
     add () {
       this.addVisible = true
-      this.checkshow = false
-    },
-    // 返回
-    back () {
-      this.checkshow = true
-      this.addVisible = false
-    },
-    // 关闭新增弹窗
-    close () {
-      this.addVisible = false
     },
     // 删除操作
     handleDelete (index, row) {
@@ -259,6 +246,9 @@ export default {
         .then(() => {
           this.$message.success('删除成功')
           this.tableData.splice(index, 1)
+          let pageIndexNew = Math.ceil((this.pageTotal - 1) / this.query.pageSize) // 新的页面数量
+          this.query.pageIndex = (this.query.pageIndex > pageIndexNew) ? pageIndexNew : this.query.pageIndex
+          this.query.pageIndex = (this.query.pageIndex === 0) ? 1 : this.query.pageIndex
           this.find()
         })
         .catch(() => {
@@ -272,15 +262,38 @@ export default {
     handleEdit (index, row) {
       this.editform = row
       let _this = this
-      this.$nextTick(() => _this.$refs.Reqedit.getForm())
+      this.$nextTick(() => _this.$refs.poedit.getForm())
       this.editVisible = true
     },
     // 详情操作
     handleMore (index, row) {
       this.moreform = row
       let _this = this
-      this.$nextTick(() => _this.$refs.Reqmore.getForm())
+      this.$nextTick(() => _this.$refs.pomore.getForm())
       this.moreVisible = true
+    },
+    // 关闭操作
+    handleClose (index, row) {
+      this.$prompt('请输入关闭原因', '关闭', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消'
+      }).then(({ value }) => {
+        this.$confirm('确定要关闭吗？', '提示', {
+          type: 'warning'
+        }).then(() => {
+          this.$message.success('关闭成功')
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '取消关闭'
+          })
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '取消关闭'
+        })
+      })
     },
     // 分页导航
     handlePageChange (val) {
@@ -290,7 +303,7 @@ export default {
       this.query.pageSize = val
     },
     // 关闭窗口二次确认
-    closePcedit () {
+    closepoedit () {
       this.$confirm('确定要关闭吗？', '提示', {
         type: 'warning'
       })
@@ -341,14 +354,11 @@ export default {
     color: #00a854;
   }
 
-  .block {
-    color: grey;
-  }
-
   .input-search {
     width: 50%;
   }
   .button-plus {
     float: right;
+    margin-left: 30px;
   }
 </style>

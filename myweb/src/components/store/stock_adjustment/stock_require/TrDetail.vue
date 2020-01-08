@@ -99,7 +99,7 @@
       </div>
     </div>
     <!-- 新增弹出框 -->
-    <el-dialog title="选择物料" :visible.sync="addVisible" width="90%" append-to-body>
+    <el-dialog title="选择物料" :visible.sync="addVisible" width="90%" append-to-body v-cloak>
       <TrDetailadd @add="addPrd" :tableHas="tableData" :formadd="formadd" :ifhasorga="ifhasorga" :ifhasfrom="ifhasfrom"></TrDetailadd>
     </el-dialog>
   </div>
@@ -137,11 +137,11 @@ export default {
   },
   created () {
     // this.getData()
-    // this.$nextTick(function () {
-    //   if (!this.formadd.str_orga && !this.formadd.str_from) {
-    //     this.addVisible = true
-    //   }
-    // })
+    this.$nextTick(function () {
+      if (!this.formadd.str_orga && !this.formadd.str_from) {
+        this.addVisible = true
+      }
+    })
   },
   methods: {
     getData () {
@@ -389,6 +389,9 @@ export default {
 </style>
 
 <style scoped>
+  [v-cloak] {
+    display: none !important;
+  }
   .handle-box {
     margin-bottom: 20px;
   }
