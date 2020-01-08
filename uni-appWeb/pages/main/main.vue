@@ -328,18 +328,18 @@ export default {
 				    }
 				})
 			} else if(e.currentIndex === 2){
-				// var mes = this.judgeMes(2)
-				// this.$http.post('/sellRequest/sos', mes).then(([err,res]) => {
-				// 	if (res.data.signal === '0') {
-				// 		_this.sellList = res.data.prs
-				//     } else {
-				// 		uni.showToast({
-				// 			icon: 'none',
-				// 			position: 'bottom',
-				// 			title: res.data.message
-				// 		});
-				//     }
-				// })
+				var mes = this.judgeMes(2)
+				this.$http.post('/sell/sellOrders', mes).then(([err,res]) => {
+					if (res.data.signal === '0') {
+						_this.sellList = res.data.sos
+				    } else {
+						uni.showToast({
+							icon: 'none',
+							position: 'bottom',
+							title: res.data.message
+						});
+				    }
+				})
 			} else if(e.currentIndex === 3){
 				// var mes = this.judgeMes(3)
 				// this.$http.post('/exchangeRequest/eos', mes).then(([err,res]) => {
@@ -543,7 +543,23 @@ export default {
 				    content: '确认提交草稿：'+iden+" ?",
 				    success: function (Res) {
 				        if (Res.confirm) {
-				        	
+				        	// var mso_iden = iden
+				        	// _this.$http.post('/outRequest/sodSubmit', {mso_iden}).then(([err,res]) => {
+				        	// 	//修改列表中该单据信息
+				        	// 	if(res.data.signal === 0) {
+				        	// 		for(var i=0; i<_this.outList.length; i++) {
+				        	// 			if(_this.outList[i].mso_iden === iden){
+				        	// 				_this.outList[i].mso_status = '已审批'
+				        	// 				break
+				        	// 			}
+				        	// 		}
+				        	// 	}
+				        	// 	uni.showToast({
+				        	// 		icon: 'none',
+				        	// 		position: 'bottom',
+				        	// 		title: res.data.message
+				        	// 	});
+				        	// })
 				        } else if (Res.cancel) {
 				            
 				        }
@@ -559,7 +575,7 @@ export default {
 							_this.$http.post('/purchaseRequest/prdSubmit', {pr_iden}).then(([err,res]) => {
 								//修改列表中该单据信息
 								if(res.data.signal === 0) {
-									for(var i =0; i<_this.purchaseList.length; i++) {
+									for(var i=0; i<_this.purchaseList.length; i++) {
 										if(_this.purchaseList[i].rp_iden === iden){
 											_this.purchaseList[i].rp_status = '已审批'
 											break
@@ -583,7 +599,23 @@ export default {
 				    content: '确认提交草稿：'+iden+" ?",
 				    success: function (Res) {
 				        if (Res.confirm) {
-				        	
+				        	// var so_iden = iden
+				        	// _this.$http.post('/sellRequest/sdSubmit', {so_iden}).then(([err,res]) => {
+				        	// 	//修改列表中该单据信息
+				        	// 	if(res.data.signal === 0) {
+				        	// 		for(var i=0; i<_this.sellList.length; i++) {
+				        	// 			if(_this.sellList[i].so_iden === iden){
+				        	// 				_this.sellList[i].so_status = '已审批'
+				        	// 				break
+				        	// 			}
+				        	// 		}
+				        	// 	}
+				        	// 	uni.showToast({
+				        	// 		icon: 'none',
+				        	// 		position: 'bottom',
+				        	// 		title: res.data.message
+				        	// 	});
+				        	// })
 				        } else if (Res.cancel) {
 				            
 				        }
@@ -595,7 +627,23 @@ export default {
 				    content: '确认提交草稿：'+iden+" ?",
 				    success: function (Res) {
 				        if (Res.confirm) {
-				        	
+				        	// var str_iden = iden
+				        	// _this.$http.post('/exchangeRequest/strdSubmit', {str_iden}).then(([err,res]) => {
+				        	// 	//修改列表中该单据信息
+				        	// 	if(res.data.signal === 0) {
+				        	// 		for(var i=0; i<_this.exchangeList.length; i++) {
+				        	// 			if(_this.exchangeList[i].str_iden === iden){
+				        	// 				_this.exchangeList[i].str_status = '已审批'
+				        	// 				break
+				        	// 			}
+				        	// 		}
+				        	// 	}
+				        	// 	uni.showToast({
+				        	// 		icon: 'none',
+				        	// 		position: 'bottom',
+				        	// 		title: res.data.message
+				        	// 	});
+				        	// })
 				        } else if (Res.cancel) {
 				            
 				        }
