@@ -11,8 +11,8 @@ urlpatterns = [
     path('prdSave', views.PrdSaveView.as_view(), name='prdSave'),
     path('prdSubmit', views.PrdSubmitView.as_view(), name='prdSubmit'),
     path('prdNew', views.PrdNewView.as_view(), name='prdNew'),
-    path('prdNewSave', views.PrdNewSaveView.as_view(), name='prdNewSave'),
-    path('prdDelete', views.PrdDeleteView.as_view(), name='prdDelete'),
+    # path('prdNewSave', views.PrdNewSaveView.as_view(), name='prdNewSave'),
+    # path('prdDelete', views.PrdDeleteView.as_view(), name='prdDelete'),
     path('prDelete', views.PrDeleteView.as_view(), name='prDelete'),
     path('prClose', views.PrCloseView.as_view(), name='prClose')
 ]

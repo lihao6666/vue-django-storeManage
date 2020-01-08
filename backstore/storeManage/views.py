@@ -11,15 +11,22 @@ import json
 
 class TotalStockView(APIView):
 
-    def get(self, request):
-        user_now = UserNow.objects.get()
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.user_now_name = ""
+        self.area_name = ""
+
+    def post(self, request):
+        json_data = json.loads(self.request.body.decode("utf-8"))
+        user_now_iden = json_data['user_now_iden']
+        user_now = UserNow.objects.get(user_iden=user_now_iden)
         if user_now:
-            area_name = user_now.area_name
-            total_stocks = models.TotalStock.objects.filter(totalwarehouse__organization__area_name=area_name)
-            if total_stocks:
-                total_stocks_serializer = TotalStockSerializer(total_stocks, many=True)
-                return Response({"total_stocks": total_stocks_serializer.data})
-            else:
-                return Response({"message": "未查询到当地仓储信息"})
+            self.user_now_name = user_now.user_name
+            self.area_name = user_now.area_name
+
+        total_stocks = models.TotalStock.objects.filter(totalwarehouse__organization__area_name=self.area_name)
+        if total_stocks:
+            total_stocks_serializer = TotalStockSerializer(total_stocks, many=True)
+            return Response({"total_stocks": total_stocks_serializer.data})
         else:
-            return Response({"message": "用户未登录"})
+            return Response({"message": "未查询到当地仓储信息"})

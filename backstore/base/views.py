@@ -1309,7 +1309,12 @@ class SupplierAddView(APIView):
         user_now = models.UserNow.objects.get(user_iden=user_now_iden)
         if user_now:
             self.user_now_name = user_now.user_name
-        supply_iden = json_data['supply_iden']  # 这个是不用手动录入的信息，不需要判断
+        max_id = models.Supplier.objects.all().aggregate(Max('supply_iden'))['supply_iden__max']
+        if max_id:
+            supply_iden = str(int(max_id) + 1).zfill(5)
+        else:
+            supply_iden = "0100001"
+        # supply_iden = json_data['supply_iden']  # 这个是不用手动录入的信息，不需要判断
         supply_name = json_data['supply_name']
         supply_type = json_data['supply_type']
         supply_remarks = json_data['supply_remarks']
