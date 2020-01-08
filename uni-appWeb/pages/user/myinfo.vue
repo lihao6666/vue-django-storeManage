@@ -50,7 +50,13 @@
 			this.user_phone_number = myinfo.data.user.user_phone_number
 			this.user_mailbox = myinfo.data.user.email
 			this.user_area = myinfo.data.user.area_name
-			this.user_departments = myinfo.data.user.user_departments
+			for(var i=0; i<myinfo.data.user.user_departments.length; i++){
+				if(i < myinfo.data.user.user_departments.length-1) {
+					this.user_departments += myinfo.data.user.user_departments[i][0] + '、'
+				} else {
+					this.user_departments += myinfo.data.user.user_departments[i][0]
+				}
+			}
 			for(var i=0; i<myinfo.data.roles.length; i++){
 				if(i < myinfo.data.roles.length-1) {
 					this.user_roles += myinfo.data.roles[i][0] + '、'

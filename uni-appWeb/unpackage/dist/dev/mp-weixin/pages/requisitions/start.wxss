@@ -69,12 +69,8 @@ page {
 .remarks .remarks-text {
     -webkit-flex-shrink: 0;
             flex-shrink: 0;
-    width: 200rpx;
     font-size: 32rpx;
     color: black;
-    -webkit-box-align: center;
-    -webkit-align-items: center;
-            align-items: center;
 }
 .remarks .remarks-input {
     -webkit-box-flex: 1;
@@ -92,7 +88,19 @@ page {
   -webkit-transform: scale(0.7);
           transform: scale(0.7);
 }
-.address-add-btn {
+.shopcart .cartBottom {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 50px;
+  z-index: 99;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: flex;
+  background-color: #141d27;
+}
+.address-add-btn1 {
   display: -webkit-box;
   display: -webkit-flex;
   display: flex;
@@ -102,12 +110,48 @@ page {
   -webkit-box-pack: center;
   -webkit-justify-content: center;
           justify-content: center;
-  width: 690rpx;
+  width: 125px;
   height: 80rpx;
-  margin: 60rpx auto;
+  margin: 10rpx auto;
   font-size: 32rpx;
   color: #fff;
   background-color: #DD524D;
+  border-radius: 10rpx;
+}
+.address-add-btn2 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+          align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+          justify-content: center;
+  width: 125px;
+  height: 80rpx;
+  margin: 10rpx auto;
+  font-size: 32rpx;
+  color: #fff;
+  background-color: #20a0ff;
+  border-radius: 10rpx;
+}
+.address-add-btn3 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+          align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+          justify-content: center;
+  width: 125px;
+  height: 80rpx;
+  margin: 10rpx auto;
+  font-size: 32rpx;
+  color: #fff;
+  background-color: #1aa034;
   border-radius: 10rpx;
 }
 

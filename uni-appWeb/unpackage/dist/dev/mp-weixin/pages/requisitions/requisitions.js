@@ -190,7 +190,16 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-var _materialData = _interopRequireDefault(__webpack_require__(/*! ../../data/materialData.js */ 79));var _components;function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}function _defineProperty(obj, key, value) {if (key in obj) {Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true });} else {obj[key] = value;}return obj;}var uniSegmentedControl = function uniSegmentedControl() {return __webpack_require__.e(/*! import() | components/uni-segmented-control/uni-segmented-control */ "components/uni-segmented-control/uni-segmented-control").then(__webpack_require__.bind(null, /*! ../../components/uni-segmented-control/uni-segmented-control.vue */ 171));};var uniCard = function uniCard() {return __webpack_require__.e(/*! import() | components/uni-card/uni-card */ "components/uni-card/uni-card").then(__webpack_require__.bind(null, /*! ../../components/uni-card/uni-card.vue */ 178));};var uniSection = function uniSection() {return __webpack_require__.e(/*! import() | components/uni-section/uni-section */ "components/uni-section/uni-section").then(__webpack_require__.bind(null, /*! ../../components/uni-section/uni-section.vue */ 242));};var slFilter = function slFilter() {return __webpack_require__.e(/*! import() | components/sl-filter/sl-filter */ "components/sl-filter/sl-filter").then(__webpack_require__.bind(null, /*! @/components/sl-filter/sl-filter.vue */ 249));};var dragButton = function dragButton() {return __webpack_require__.e(/*! import() | components/drag-button/anotherButton */ "components/drag-button/anotherButton").then(__webpack_require__.bind(null, /*! ../../components/drag-button/anotherButton.vue */ 256));};var uniNumberBox = function uniNumberBox() {return __webpack_require__.e(/*! import() | components/uni-number-box/uni-number-box */ "components/uni-number-box/uni-number-box").then(__webpack_require__.bind(null, /*! @/components/uni-number-box/uni-number-box.vue */ 263));};var _default =
+
+
+
+
+
+
+
+
+var _materialData = _interopRequireDefault(__webpack_require__(/*! ../../data/materialData.js */ 79));var _components;function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}function _defineProperty(obj, key, value) {if (key in obj) {Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true });} else {obj[key] = value;}return obj;}var uniSegmentedControl = function uniSegmentedControl() {return __webpack_require__.e(/*! import() | components/uni-segmented-control/uni-segmented-control */ "components/uni-segmented-control/uni-segmented-control").then(__webpack_require__.bind(null, /*! ../../components/uni-segmented-control/uni-segmented-control.vue */ 171));};var uniCard = function uniCard() {return __webpack_require__.e(/*! import() | components/uni-card/uni-card */ "components/uni-card/uni-card").then(__webpack_require__.bind(null, /*! ../../components/uni-card/uni-card.vue */ 178));};var uniSection = function uniSection() {return __webpack_require__.e(/*! import() | components/uni-section/uni-section */ "components/uni-section/uni-section").then(__webpack_require__.bind(null, /*! ../../components/uni-section/uni-section.vue */ 242));};var dragButton = function dragButton() {return __webpack_require__.e(/*! import() | components/drag-button/anotherButton */ "components/drag-button/anotherButton").then(__webpack_require__.bind(null, /*! ../../components/drag-button/anotherButton.vue */ 249));};var uniNumberBox = function uniNumberBox() {return __webpack_require__.e(/*! import() | components/uni-number-box/uni-number-box */ "components/uni-number-box/uni-number-box").then(__webpack_require__.bind(null, /*! @/components/uni-number-box/uni-number-box.vue */ 256));};var uniIcons = function uniIcons() {return __webpack_require__.e(/*! import() | components/uni-icons/uni-icons */ "components/uni-icons/uni-icons").then(__webpack_require__.bind(null, /*! @/components/uni-icons/uni-icons.vue */ 185));};var uniNavBar = function uniNavBar() {return __webpack_require__.e(/*! import() | components/uni-nav-bar/uni-nav-bar */ "components/uni-nav-bar/uni-nav-bar").then(__webpack_require__.bind(null, /*! @/components/uni-nav-bar/uni-nav-bar.vue */ 206));};var _default =
+
 
 
 
@@ -200,17 +209,20 @@ var _materialData = _interopRequireDefault(__webpack_require__(/*! ../../data/ma
     uniSegmentedControl: uniSegmentedControl,
     uniCard: uniCard,
     uniSection: uniSection }, _defineProperty(_components, "uniSegmentedControl",
-  uniSegmentedControl), _defineProperty(_components, "slFilter",
-  slFilter), _defineProperty(_components, "dragButton",
+  uniSegmentedControl), _defineProperty(_components, "dragButton",
+
   dragButton), _defineProperty(_components, "uniNumberBox",
-  uniNumberBox), _components),
+  uniNumberBox), _defineProperty(_components, "uniNavBar",
+  uniNavBar), _defineProperty(_components, "uniIcons",
+  uniIcons), _components),
 
   data: function data() {
     return {
+
       themeColor: '#000000',
       titleColor: '#666666',
-      filterResult: '',
-      materialList: _materialData.default.data };
+      materialList: _materialData.default.data,
+      materialFilterText: '' };
 
 
   },
@@ -221,8 +233,9 @@ var _materialData = _interopRequireDefault(__webpack_require__(/*! ../../data/ma
 
   },
   computed: {
-    materialAdd: function materialAdd() {
+    materialAdd: function materialAdd() {var _this = this;
       var arr = [];
+
       this.materialList.forEach(function (item) {
         var num = '';
         var remarks = '';
@@ -233,15 +246,25 @@ var _materialData = _interopRequireDefault(__webpack_require__(/*! ../../data/ma
         arr.push(item);
       });
 
+      if (this.materialFilterText) {
+        arr = this.materialList.filter(function (item) {return item.material_iden.includes(_this.materialFilterText) ||
+          item.material_name.includes(_this.materialFilterText) ||
+          item.material_specification.includes(_this.materialFilterText) ||
+          item.material_model.includes(_this.materialFilterText) ||
+          item.material_meterage.includes(_this.materialFilterText);});
+
+      }
+
       return arr;
     } },
+
 
   methods: {
     result: function result(val) {
       this.filterResult = JSON.stringify(val, null, 2);
     },
-    change: function change(num) {
-
+    change: function change(item, num) {
+      this.item.material_num = num;
     },
     switchChange: function switchChange() {
 
@@ -254,6 +277,12 @@ var _materialData = _interopRequireDefault(__webpack_require__(/*! ../../data/ma
       uni.navigateTo({
         url: './start' });
 
+    },
+    value: function (_value) {function value(_x) {return _value.apply(this, arguments);}value.toString = function () {return _value.toString();};return value;}(function (item) {
+      this.item.material_num = value;
+    }),
+    clear: function clear() {
+      this.materialFilterText = '';
     } } };exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 1)["default"]))
 

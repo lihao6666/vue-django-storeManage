@@ -133,7 +133,18 @@ __webpack_require__.r(__webpack_exports__);
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;
+/* WEBPACK VAR INJECTION */(function(uni) {Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -270,15 +281,18 @@ var _catUtil = __webpack_require__(/*! ../../common/catUtil.js */ 88); //
 //
 //
 //
-var wPicker = function wPicker() {return Promise.all(/*! import() | components/w-picker/w-picker */[__webpack_require__.e("common/vendor"), __webpack_require__.e("components/w-picker/w-picker")]).then(__webpack_require__.bind(null, /*! @/components/w-picker/w-picker.vue */ 270));};var lbPicker = function lbPicker() {return Promise.all(/*! import() | components/lb-picker/index */[__webpack_require__.e("common/vendor"), __webpack_require__.e("components/lb-picker/index")]).then(__webpack_require__.bind(null, /*! @/components/lb-picker */ 281));};var _default = { components: { wPicker: wPicker, lbPicker: lbPicker }, data: function data() {return { value: '', label1: '点击选择', label2: '点击选择', label3: '点击选择', label4: (0, _catUtil.formateDate)(new Date(), "Y-M-D"), remarks: '', list1: [{ label: '合肥', value: 'A' }, { label: '南京', value: 'B' }], list2: [{ label: '礼品' }, { label: '教学用品' }, { label: '销售商品' }, { label: '办公用品' }, { label: '市场物资' }], list3: [{ label: '学习中心' }, { label: '其他部门' }] };}, methods: { toggleTab: function toggleTab(str) {this.$refs[str].show();}, handleTap: function handleTap(picker) {this.$refs[picker].show();}, handleChange: function handleChange(item) {console.log('change::', item);},
-    handleConfirmWithAdd: function handleConfirmWithAdd(item) {
-      this.label1 = item.item.label;
-      console.log(item);
-      console.log('confirm::', item);
-    },
-    handleConfirmWithType: function handleConfirmWithType(item) {
-      this.label2 = item.item.label;
-      console.log(item.item.label);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+var wPicker = function wPicker() {return Promise.all(/*! import() | components/w-picker/w-picker */[__webpack_require__.e("common/vendor"), __webpack_require__.e("components/w-picker/w-picker")]).then(__webpack_require__.bind(null, /*! @/components/w-picker/w-picker.vue */ 263));};var lbPicker = function lbPicker() {return Promise.all(/*! import() | components/lb-picker/index */[__webpack_require__.e("common/vendor"), __webpack_require__.e("components/lb-picker/index")]).then(__webpack_require__.bind(null, /*! @/components/lb-picker */ 274));};var _default = { components: { wPicker: wPicker, lbPicker: lbPicker }, data: function data() {return { value: '', label1: '点击选择', label2: '点击选择', label3: '点击选择', label4: (0, _catUtil.formateDate)(new Date(), "Y-M-D"), remarks: '', list1: [{ label: '合肥', value: 'A' }, { label: '南京', value: 'B' }, { label: '杭州', value: 'C' }], list2: [{ label: '礼品' }, { label: '教学用品' }, { label: '销售商品' }, { label: '办公用品' }, { label: '市场物资' }], list3: [{ label: '学习中心' }, { label: '其他部门' }] };}, methods: { toggleTab: function toggleTab(str) {this.$refs[str].show();}, handleTap: function handleTap(picker) {this.$refs[picker].show();}, handleChange: function handleChange(item) {console.log('change::', item);}, handleConfirmWithAdd: function handleConfirmWithAdd(item) {this.label1 = item.item.label;console.log(item);console.log('confirm::', item);}, handleConfirmWithType: function handleConfirmWithType(item) {this.label2 = item.item.label;console.log(item.item.label);
       console.log('confirm::', item);
     },
     handelConfirmWithDepartment: function handelConfirmWithDepartment(item) {
@@ -291,7 +305,17 @@ var wPicker = function wPicker() {return Promise.all(/*! import() | components/w
     },
     handleCancle: function handleCancle(item) {
       console.log('cancle::', item);
+    },
+    cancel: function cancel() {
+      uni.switchTab({ url: '../main/main' });
+    },
+    hold: function hold() {
+      uni.switchTab({ url: '../main/main' });
+    },
+    confirm: function confirm() {
+      uni.switchTab({ url: '../main/main' });
     } } };exports.default = _default;
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 1)["default"]))
 
 /***/ }),
 

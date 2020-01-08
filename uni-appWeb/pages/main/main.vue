@@ -355,7 +355,7 @@ export default {
 				// })
 			}
 		},
-		//单据显示信息判断
+		//单据显示信息判断(根据权限)
 		judgeMes(orderIndex) {
 			var myinfo = uni.getStorageSync('user_info')
 			var power = uni.getStorageSync('power')
@@ -658,7 +658,6 @@ export default {
 						msg.pr_iden = _this.closeIden
 						msg.pr_closer = myinfo.data.user.user_name
 						msg.pr_closerReason = _this.closeReason
-						console.log(msg)
 						_this.$http.post('/purchaseRequest/prClose', msg).then(([err,res]) => {
 							//修改列表中该单据信息
 							if(res.data.signal === 0) {
