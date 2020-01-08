@@ -110,7 +110,7 @@ var render = function() {
     }
   })
 
-  var l1 = _vm.__map(_vm.testList, function(item, index) {
+  var l1 = _vm.__map(_vm.purchaseFilterList, function(item, index) {
     var m2 = _vm.judgeStatus(item.rp_status)
     var m3 = _vm.judgeStatus(item.rp_status)
     var m4 = _vm.judgeStatus(item.rp_status)
@@ -368,6 +368,23 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 var _outStore = _interopRequireDefault(__webpack_require__(/*! ../../data/outStore.js */ 34));
 var _purchase = _interopRequireDefault(__webpack_require__(/*! ../../data/purchase.js */ 35));
 var _sell = _interopRequireDefault(__webpack_require__(/*! ../../data/sell.js */ 36));
@@ -385,18 +402,24 @@ var _exchange = _interopRequireDefault(__webpack_require__(/*! ../../data/exchan
 
   data: function data() {
     return {
-      items: ['出库', '请购', '销售', '转库'],
+      items: [],
       current: 0,
       //将data文件夹中的数据读入
-      testList: [],
       outList: _outStore.default.data,
       purchaseList: _purchase.default.data,
       sellList: _sell.default.data,
       exchangeList: _exchange.default.data,
+      // outList: [],
+      // purchaseList: [],
+      // sellList: [],
+      // exchangeList: [],
       outFilterText: '',
       purchaseFilterText: '',
       sellFilterText: '',
-      exchangeFilterText: '' };
+      exchangeFilterText: '',
+      closeReason: '',
+      closeIden: '',
+      showHide: false };
 
   },
   computed: {
@@ -460,11 +483,76 @@ var _exchange = _interopRequireDefault(__webpack_require__(/*! ../../data/exchan
     } },
 
   methods: {
-    //切换tab
+    //切换tab  current: 下方卡片内容,  currentIndex: tab栏,  范围(0-3)
     onClickItem: function onClickItem(e) {
       if (this.current !== e.currentIndex) {
         this.current = e.currentIndex;
       }
+
+      if (e.currentIndex === 0) {
+        // var mes = this.judgeMes(0)
+        // this.$http.post('/outRequest/oss', mes).then(([err,res]) => {
+        // 	if (res.data.signal === '0') {
+        // 		_this.outList = res.data.prs
+        //     } else {
+        // 		uni.showToast({
+        // 			icon: 'none',
+        // 			position: 'bottom',
+        // 			title: res.data.message
+        // 		});
+        //     }
+        // })
+      } else if (e.currentIndex === 1) {
+        var mes = this.judgeMes(1);
+        this.$http.post('/purchaseRequest/prs', mes).then(function (_ref) {var _ref2 = _slicedToArray(_ref, 2),err = _ref2[0],res = _ref2[1];
+          if (res.data.signal === '0') {
+            _this.purchaseList = res.data.prs;
+          } else {
+            uni.showToast({
+              icon: 'none',
+              position: 'bottom',
+              title: res.data.message });
+
+          }
+        });
+      } else if (e.currentIndex === 2) {
+        // var mes = this.judgeMes(2)
+        // this.$http.post('/sellRequest/sos', mes).then(([err,res]) => {
+        // 	if (res.data.signal === '0') {
+        // 		_this.sellList = res.data.prs
+        //     } else {
+        // 		uni.showToast({
+        // 			icon: 'none',
+        // 			position: 'bottom',
+        // 			title: res.data.message
+        // 		});
+        //     }
+        // })
+      } else if (e.currentIndex === 3) {
+        // var mes = this.judgeMes(3)
+        // this.$http.post('/exchangeRequest/eos', mes).then(([err,res]) => {
+        // 	if (res.data.signal === '0') {
+        // 		_this.exchangeList = res.data.prs
+        //     } else {
+        // 		uni.showToast({
+        // 			icon: 'none',
+        // 			position: 'bottom',
+        // 			title: res.data.message
+        // 		});
+        //     }
+        // })
+      }
+    },
+    //单据显示信息判断(根据权限)
+    judgeMes: function judgeMes(orderIndex) {
+      var myinfo = uni.getStorageSync('user_info');
+      var power = uni.getStorageSync('power');
+      var mes = {};
+      mes.area_name = myinfo.data.user.area_name;
+      mes.user_now_iden = myinfo.data.user.username;
+      mes.power = power[orderIndex];
+
+      return mes;
     },
     //判断订单状态
     judgeStatus: function judgeStatus(status) {
@@ -542,26 +630,48 @@ var _exchange = _interopRequireDefault(__webpack_require__(/*! ../../data/exchan
     //删除单据
     deleteOrder: function deleteOrder(iden) {
       var diff = iden[0] + iden[1];
+      var _this = this;
       if (diff === "MS") {
         uni.showModal({
           title: '提示',
           content: '确认删除草稿：' + iden + " ?",
-          success: function success(res) {
-            if (res.confirm) {
+          success: function success(Res) {
+            //     if (Res.confirm) {
+            //     	var mso_iden = iden
+            //     	_this.$http.post('/outRequest/soDelete', {mso_iden}).then(([err,res]) => {
+            // if(res.data.signal === 0){
+            // 	_this.outList = _this.outList.filter(item => !(item.mso_iden.includes(mso_iden)))
+            // }
+            //     		uni.showToast({
+            //     			icon: 'none',
+            //     			position: 'bottom',
+            //     			title: res.data.message
+            //     		});
+            //     	})
+            //     } else if (Res.cancel) {
 
-            } else if (res.cancel) {
-
-            }
+            //     }
           } });
 
       } else if (diff === "PR") {
         uni.showModal({
           title: '提示',
           content: '确认删除草稿：' + iden + " ?",
-          success: function success(res) {
-            if (res.confirm) {
+          success: function success(Res) {
+            if (Res.confirm) {
+              var pr_iden = iden;
+              _this.$http.post('/purchaseRequest/prDelete', { pr_iden: pr_iden }).then(function (_ref3) {var _ref4 = _slicedToArray(_ref3, 2),err = _ref4[0],res = _ref4[1];
+                //删除列表中该单据信息
+                if (res.data.signal === 0) {
+                  _this.purchaseList = _this.purchaseList.filter(function (item) {return !item.rp_iden.includes(pr_iden);});
+                }
+                uni.showToast({
+                  icon: 'none',
+                  position: 'bottom',
+                  title: res.data.message });
 
-            } else if (res.cancel) {
+              });
+            } else if (Res.cancel) {
 
             }
           } });
@@ -570,10 +680,20 @@ var _exchange = _interopRequireDefault(__webpack_require__(/*! ../../data/exchan
         uni.showModal({
           title: '提示',
           content: '确认删除草稿：' + iden + " ?",
-          success: function success(res) {
-            if (res.confirm) {
-
-            } else if (res.cancel) {
+          success: function success(Res) {
+            if (Res.confirm) {
+              // var so_iden = iden
+              // _this.$http.post('/sellRequest/soDelete', {so_iden}).then(([err,res]) => {
+              // 	if(res.data.signal === 0) {
+              // 		_this.sellList = _this.sellList.filter(item => !(item.so_iden.includes(so_iden)))
+              // 	}
+              // 	uni.showToast({
+              // 		icon: 'none',
+              // 		position: 'bottom',
+              // 		title: res.data.message
+              // 	});
+              // })
+            } else if (Res.cancel) {
 
             }
           } });
@@ -582,10 +702,20 @@ var _exchange = _interopRequireDefault(__webpack_require__(/*! ../../data/exchan
         uni.showModal({
           title: '提示',
           content: '确认删除草稿：' + iden + " ?",
-          success: function success(res) {
-            if (res.confirm) {
-
-            } else if (res.cancel) {
+          success: function success(Res) {
+            if (Res.confirm) {
+              //     	var str_iden = iden
+              //     	_this.$http.post('/exchangeRequest/strDelete', {str_iden}).then(([err,res]) => {
+              //     		if(res.data.signal === 0) {
+              // 	_this.exchangeList = _this.exchangeList.filter(item => !(item.str_iden.includes(str_iden)))
+              // }
+              //     		uni.showToast({
+              //     			icon: 'none',
+              //     			position: 'bottom',
+              //     			title: res.data.message
+              //     		});
+              //     	})
+            } else if (Res.cancel) {
 
             }
           } });
@@ -595,14 +725,15 @@ var _exchange = _interopRequireDefault(__webpack_require__(/*! ../../data/exchan
     //提交草稿
     commitOrder: function commitOrder(iden) {
       var diff = iden[0] + iden[1];
+      var _this = this;
       if (diff === "MS") {
         uni.showModal({
           title: '提示',
           content: '确认提交草稿：' + iden + " ?",
-          success: function success(res) {
-            if (res.confirm) {
+          success: function success(Res) {
+            if (Res.confirm) {
 
-            } else if (res.cancel) {
+            } else if (Res.cancel) {
 
             }
           } });
@@ -611,10 +742,26 @@ var _exchange = _interopRequireDefault(__webpack_require__(/*! ../../data/exchan
         uni.showModal({
           title: '提示',
           content: '确认提交草稿：' + iden + " ?",
-          success: function success(res) {
-            if (res.confirm) {
+          success: function success(Res) {
+            if (Res.confirm) {
+              var pr_iden = iden;
+              _this.$http.post('/purchaseRequest/prdSubmit', { pr_iden: pr_iden }).then(function (_ref5) {var _ref6 = _slicedToArray(_ref5, 2),err = _ref6[0],res = _ref6[1];
+                //修改列表中该单据信息
+                if (res.data.signal === 0) {
+                  for (var i = 0; i < _this.purchaseList.length; i++) {
+                    if (_this.purchaseList[i].rp_iden === iden) {
+                      _this.purchaseList[i].rp_status = '已审批';
+                      break;
+                    }
+                  }
+                }
+                uni.showToast({
+                  icon: 'none',
+                  position: 'bottom',
+                  title: res.data.message });
 
-            } else if (res.cancel) {
+              });
+            } else if (Res.cancel) {
 
             }
           } });
@@ -623,10 +770,10 @@ var _exchange = _interopRequireDefault(__webpack_require__(/*! ../../data/exchan
         uni.showModal({
           title: '提示',
           content: '确认提交草稿：' + iden + " ?",
-          success: function success(res) {
-            if (res.confirm) {
+          success: function success(Res) {
+            if (Res.confirm) {
 
-            } else if (res.cancel) {
+            } else if (Res.cancel) {
 
             }
           } });
@@ -635,10 +782,10 @@ var _exchange = _interopRequireDefault(__webpack_require__(/*! ../../data/exchan
         uni.showModal({
           title: '提示',
           content: '确认提交草稿：' + iden + " ?",
-          success: function success(res) {
-            if (res.confirm) {
+          success: function success(Res) {
+            if (Res.confirm) {
 
-            } else if (res.cancel) {
+            } else if (Res.cancel) {
 
             }
           } });
@@ -668,17 +815,8 @@ var _exchange = _interopRequireDefault(__webpack_require__(/*! ../../data/exchan
     },
     //关闭订单
     closeOrder: function closeOrder(iden) {
-      uni.showModal({
-        title: '提示',
-        content: '确认关闭请购单：' + iden + " ?",
-        success: function success(res) {
-          if (res.confirm) {
-
-          } else if (res.cancel) {
-            console.log('用户点击取消');
-          }
-        } });
-
+      this.showHide = true;
+      this.closeIden = iden;
     },
     clear1: function clear1() {
       this.outFilterText = '';
@@ -691,31 +829,98 @@ var _exchange = _interopRequireDefault(__webpack_require__(/*! ../../data/exchan
     },
     clear4: function clear4() {
       this.exchangeFilterText = '';
+    },
+    //隐藏输入框
+    modelHide: function modelHide() {
+      this.showHide = false;
+    },
+    // 输入框确定按钮
+    confirm: function confirm() {
+      var _this = this;
+      var myinfo = uni.getStorageSync('user_info');
+      uni.showModal({
+        title: '提示',
+        content: '确认关闭请购单：' + _this.closeIden + " ?",
+        success: function success(Res) {
+          if (Res.confirm) {
+            var msg = {};
+            msg.pr_iden = _this.closeIden;
+            msg.pr_closer = myinfo.data.user.user_name;
+            msg.pr_closerReason = _this.closeReason;
+            _this.$http.post('/purchaseRequest/prClose', msg).then(function (_ref7) {var _ref8 = _slicedToArray(_ref7, 2),err = _ref8[0],res = _ref8[1];
+              //修改列表中该单据信息
+              if (res.data.signal === 0) {
+                for (var i = 0; i < _this.purchaseList.length; i++) {
+                  if (_this.purchaseList[i].rp_iden === _this.closeIden) {
+                    _this.purchaseList[i].rp_status = '已关闭';
+                    break;
+                  }
+                }
+              }
+              uni.showToast({
+                icon: 'none',
+                position: 'bottom',
+                title: res.data.message });
+
+            });
+            //清空缓存
+            _this.closeIden = '';
+            _this.closeReason = '';
+          } else if (Res.cancel) {
+            _this.closeIden = '';
+            _this.closeReason = '';
+          }
+        } });
+
+      this.showHide = false;
+    },
+    //判断权限
+    judgePower: function judgePower() {
+      var myinfo = uni.getStorageSync('user_info');
+      var power = ['0', '0', '0', '0'];
+      for (var i = 0; i < myinfo.data.roles.length; i++) {
+        var po = myinfo.data.roles[i][1];
+        power[0] = power[0] < po[6] ? po[6] : power[0];
+        power[1] = power[1] < po[1] ? po[1] : power[0];
+        power[2] = power[2] < po[0] ? po[0] : power[0];
+        power[3] = power[3] < po[9] ? po[9] : power[0];
+      }
+      uni.setStorageSync('power', power);
     } },
 
 
-
   onLoad: function onLoad() {
-    //登录检查
+    //登录检查，需要重写一下
     // loginMsg = this.checkLogin('../pages/main/main', 'switchTab');
     // if(!loginMsg){
     // 	return;
     // }
+
+    //填入权限
+    this.judgePower();
     var _this = this;
     var myinfo = uni.getStorageSync('user_info');
-    var outMes = [];
-    outMes.area_name = myinfo.data.user.area_name;
-    outMes.user_now_iden = myinfo.data.user.username;
-    this.$http.post('/purchase/prs', outMes).then(function (_ref) {var _ref2 = _slicedToArray(_ref, 2),err = _ref2[0],res = _ref2[1];
-      if (res.data.signal === '0') {
-        _this.testList = res.data.prs;
-      } else {
-        console.log(res.data.message);
-        console.log(res);
-      }
-    });
+    var power = uni.getStorageSync('power');
+    //判断界面权限
+    if (power[2] === '0' && power[3] === '0') {
+      this.items = ['出库', '请购'];
+    } else {
+      this.items = ['出库', '请购', '销售', '转库'];
+    }
 
 
+    //TODO 主页加载时默认搜索出库单
+    // var outMes = {}
+    // outMes.area_name = myinfo.data.user.area_name
+    // outMes.user_now_iden = myinfo.data.user.username
+    // outMes.power = power[0]
+    // this.$http.post('/purchaseRequest/prs', outMes).then(([err,res]) => {
+    // 	if (res.data.signal === '0') {
+    // 		_this.testList = res.data.prs
+    //     } else {
+    // 		console.log(res.data.message)
+    //     }
+    // })
 
 
     uni.removeStorageSync('viewout');

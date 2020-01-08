@@ -59,6 +59,18 @@
   display: flex;
   background-color: #141d27;
 }
+.input_style.data-v-1522dd26 {
+  position: fixed;
+  top: 44px;
+  left: 0;
+  right: 0;
+  height: 44px;
+  z-index: 99;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: flex;
+  background-color: #20a0ff;
+}
 .carIcon.data-v-1522dd26 {
   -webkit-box-flex: 1;
   -webkit-flex: 1;
@@ -125,5 +137,32 @@
     margin: 0;
     height: 54px;
     border-radius: 0;
+}
+.input-view.data-v-1522dd26 {
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+          align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+          justify-content: center;
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: flex;
+  background-color: #e7e7e7;
+  height: 30px;
+  border-radius: 15px;
+  padding: 0 4%;
+  -webkit-flex-wrap: nowrap;
+          flex-wrap: nowrap;
+  margin: 7px 10rpx;
+  line-height: 30px;
+  background: #f5f5f5;
+}
+.input-view .input.data-v-1522dd26 {
+    height: 30px;
+    line-height: 30px;
+    width: 94%;
+    padding: 0 3%;
 }
 

@@ -147,6 +147,7 @@ var _this;var _default =
             _this.$http.post('/base/loginExit', { user_now_iden: user_now_iden }).then(function (_ref) {var _ref2 = _slicedToArray(_ref, 2),err = _ref2[0],res = _ref2[1];
               uni.removeStorageSync('user_info');
               uni.removeStorageSync('user_now_iden');
+              uni.removeStorageSync('power');
               uni.reLaunch({
                 url: '../login/login' });
 
