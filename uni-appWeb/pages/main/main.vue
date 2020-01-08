@@ -493,17 +493,17 @@ export default {
 				    content: '确认删除草稿：'+iden+" ?",
 				    success: function (Res) {
 				        if (Res.confirm) {
-							// var so_iden = iden
-							// _this.$http.post('/sellRequest/soDelete', {so_iden}).then(([err,res]) => {
-							// 	if(res.data.signal === 0) {
-							// 		_this.sellList = _this.sellList.filter(item => !(item.so_iden.includes(so_iden)))
-							// 	}
-							// 	uni.showToast({
-							// 		icon: 'none',
-							// 		position: 'bottom',
-							// 		title: res.data.message
-							// 	});
-							// })
+							var so_iden = iden
+							_this.$http.post('/sell/sellOrderDelete', {so_iden}).then(([err,res]) => {
+								if(res.data.signal === 0) {
+									_this.sellList = _this.sellList.filter(item => !(item.so_iden.includes(so_iden)))
+								}
+								uni.showToast({
+									icon: 'none',
+									position: 'bottom',
+									title: res.data.message
+								});
+							})
 				        } else if (Res.cancel) {
 				            
 				        }
@@ -599,23 +599,23 @@ export default {
 				    content: '确认提交草稿：'+iden+" ?",
 				    success: function (Res) {
 				        if (Res.confirm) {
-				        	// var so_iden = iden
-				        	// _this.$http.post('/sellRequest/sdSubmit', {so_iden}).then(([err,res]) => {
-				        	// 	//修改列表中该单据信息
-				        	// 	if(res.data.signal === 0) {
-				        	// 		for(var i=0; i<_this.sellList.length; i++) {
-				        	// 			if(_this.sellList[i].so_iden === iden){
-				        	// 				_this.sellList[i].so_status = '已审批'
-				        	// 				break
-				        	// 			}
-				        	// 		}
-				        	// 	}
-				        	// 	uni.showToast({
-				        	// 		icon: 'none',
-				        	// 		position: 'bottom',
-				        	// 		title: res.data.message
-				        	// 	});
-				        	// })
+				        	var so_iden = iden
+				        	_this.$http.post('/sell/soDetailSubmit', {so_iden}).then(([err,res]) => {
+				        		//修改列表中该单据信息
+				        		if(res.data.signal === 0) {
+				        			for(var i=0; i<_this.sellList.length; i++) {
+				        				if(_this.sellList[i].so_iden === iden){
+				        					_this.sellList[i].so_status = '已审批'
+				        					break
+				        				}
+				        			}
+				        		}
+				        		uni.showToast({
+				        			icon: 'none',
+				        			position: 'bottom',
+				        			title: res.data.message
+				        		});
+				        	})
 				        } else if (Res.cancel) {
 				            
 				        }
