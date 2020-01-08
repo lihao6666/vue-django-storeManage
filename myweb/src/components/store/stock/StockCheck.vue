@@ -9,7 +9,6 @@
     </div>
     <div class="container">
       <div class="handle-box">
-        <row>
           <el-input
             placeholder="关键字搜索"
             prefix-icon="el-icon-search"
@@ -18,7 +17,6 @@
             clearable
             v-model="search">
           </el-input>
-        </row>
       </div>
       <el-table
         :data="tableDataNew"
@@ -30,7 +28,7 @@
         <el-table-column type="index" width="50"></el-table-column>
         <el-table-column prop="orga_name" sortable label="库存组织" :filters="stock_orgaSet"
                          :filter-method="filter" align="center"></el-table-column>
-        <el-table-column prop="warehouse" sortable label="仓库" :filters="stock_wareSet"
+        <el-table-column prop="total_name" sortable label="仓库" :filters="stock_wareSet"
                          :filter-method="filter" align="center"></el-table-column>
         <el-table-column prop="material_iden" sortable label="物料编码"  align="center"></el-table-column>
         <el-table-column prop="material_name" sortable label="物料名称" :filters="stock_nameSet"
@@ -39,11 +37,11 @@
                          :filter-method="filter" align="center"></el-table-column>
         <el-table-column prop="material_model" sortable label="型号" :filters="stock_modelSet"
                          :filter-method="filter" align="center"></el-table-column>
-        <el-table-column prop="meterage_name" sortable label="单位" :filters="stock_meterageSet"
+        <el-table-column prop="material_meterage" sortable label="单位" :filters="stock_meterageSet"
                          :filter-method="filter" align="center"></el-table-column>
-        <el-table-column prop="present_num" sortable label="现存量" align="center"></el-table-column>
-        <el-table-column prop="present_price" sortable label="库存单价"  align="center"></el-table-column>
-        <el-table-column prop="present_sum" sortable label="库存金额" align="center"></el-table-column>
+        <el-table-column prop="ts_present_num" sortable label="现存量" align="center"></el-table-column>
+        <el-table-column prop="ts_present_price" sortable label="库存单价"  align="center"></el-table-column>
+        <el-table-column prop="ts_present_sum" sortable label="库存金额" align="center"></el-table-column>
       </el-table>
       <div class="pagination">
         <el-pagination
@@ -62,9 +60,9 @@
 </template>
 
 <script>
-import {getAPI} from '../../../api/api'
+import {postAPI} from '../../../api/api'
 export default {
-  name: 'test',
+  name: 'stockcheck',
   data () {
     return {
       orga_options: [],
@@ -88,7 +86,8 @@ export default {
       editVisible: false,
       pageTotal: 0,
       idx: -1,
-      id: -1
+      id: -1,
+      UserNow: localStorage.getItem('user_now_iden')
     }
   },
   created () {
@@ -97,9 +96,15 @@ export default {
   methods: {
     getData () {
       let _this = this
-      getAPI('/storeManage/totalStock').then(function (res) {
+      postAPI('/storeManage/totalStock', {'UserNow': _this.Usernow}).then(function (res) {
+        if (!res.data.total_stocks) {
+          return
+        }
+        if (res.data.message === '用户未登录') {
+          _this.$message.error(res.data.message)
+        }
         _this.tableData = res.data.total_stocks
-        _this.tableDataNew = _this.tableData
+        _this.tableDataNew = res.data.total_stocks
         let orgaSet = new Set()
         let wareSet = new Set()
         let nameSet = new Set()
@@ -108,11 +113,11 @@ export default {
         let meterageSet = new Set()
         for (let i in _this.tableData) {
           orgaSet.add(_this.tableData[i]['orga_name'])
-          wareSet.add(_this.tableData[i]['warehouse'])
+          wareSet.add(_this.tableData[i]['total_name'])
           nameSet.add(_this.tableData[i]['material_name'])
           specSet.add(_this.tableData[i]['material_specification'])
           modelSet.add(_this.tableData[i]['material_model'])
-          meterageSet.add(_this.tableData[i]['meterage_name'])
+          meterageSet.add(_this.tableData[i]['material_meterage'])
         }
         for (let i of orgaSet) {
           _this.stock_orgaSet.push({
@@ -153,6 +158,7 @@ export default {
         _this.pageTotal = res.data.total_stocks.length
       }).catch(function (err) {
         console.log(err)
+        _this.$message.error('获取信息失败')
       })
     },
     // 表格每行的class样式
@@ -180,7 +186,7 @@ export default {
           String(data.material_specification).toLowerCase().includes(this.search.toLowerCase()) ||
           String(data.material_model).toLowerCase().includes(this.search.toLowerCase()) ||
           String(data.orga_name).toLowerCase().includes(this.search.toLowerCase()) ||
-          String(data.warehouse).toLowerCase().includes(this.search.toLowerCase()))
+          String(data.total_name).toLowerCase().includes(this.search.toLowerCase()))
     },
     // 分页导航
     handlePageChange (val) {
