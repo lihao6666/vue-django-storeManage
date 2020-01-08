@@ -31,6 +31,7 @@
 				            _this.$http.post('/base/loginExit', {user_now_iden}).then(([err,res]) => {
 								uni.removeStorageSync('user_info')
 								uni.removeStorageSync('user_now_iden')
+								uni.removeStorageSync('power')
 				            	uni.reLaunch({
 				            	    url: '../login/login',
 				            	});

@@ -62,6 +62,9 @@
 				</view>
 			</view>
 			<view v-if="current === 1">
+				
+				<!-- TODO,已审批的单据->关闭按钮权限 -->
+				
 				<view v-for="(item,index) in purchaseFilterList" :key="index" class="card-set">
 					<uni-card
 					    :title="item.rp_iden"
@@ -168,6 +171,20 @@
 					</drag-button>
 				</view>
 			</view>
+			<!-- 弹出框，关闭请购单时输入关闭原因 -->
+			<view class="modelBox" v-if="showHide">
+				<view class="shade" @tap="modelHide"></view>
+				<view class="model">
+					<view class="modelTitle">请输入关闭原因</view>
+					<view class="modelInput">
+						<input  placeholder-class="inputStyle" v-model="closeReason" focus/>
+					</view>
+					<view class="modeBtnBox">
+						<view class="" @tap="modelHide">取消</view>
+						<view class="" @tap="confirm">确定</view>
+					</view>
+				</view>
+			</view>
 		</view>
     </view>
 </template>
@@ -180,6 +197,10 @@ import dragButton from '../../components/drag-button/drag-button.vue'
 import cmdIcon from "../../components/cmd-icon/cmd-icon.vue"
 import uniNavBar from '@/components/uni-nav-bar/uni-nav-bar.vue'
 import EvanIcons from '../../components/evan-icons/evan-icons.vue'
+import outData from '../../data/outStore.js'
+import purchaseData from '../../data/purchase.js'
+import sellData from '../../data/sell.js'
+import exchangeData from '../../data/exchange.js'
 
 export default {
 	components: {
@@ -196,14 +217,21 @@ export default {
 			items: [],
 			current: 0,
 			//将data文件夹中的数据读入
-			outList: [],
-			purchaseList: [],
-			sellList: [],
-			exchangeList: [],
+			outList: outData.data,
+			purchaseList: purchaseData.data,
+			sellList: sellData.data,
+			exchangeList: exchangeData.data,
+			// outList: [],
+			// purchaseList: [],
+			// sellList: [],
+			// exchangeList: [],
 			outFilterText: '',
 			purchaseFilterText: '',
 			sellFilterText: '',
-			exchangeFilterText: ''
+			exchangeFilterText: '',
+			closeReason: '',
+			closeIden: '',
+			showHide: false,
 		}
 	},
 	computed: {
@@ -274,18 +302,18 @@ export default {
 			}
 			
 			if(e.currentIndex === 0){
-				var mes = this.judgeMes(0)
-				this.$http.post('/outRequest/oss', mes).then(([err,res]) => {
-					if (res.data.signal === '0') {
-						_this.outList = res.data.prs
-				    } else {
-						uni.showToast({
-							icon: 'none',
-							position: 'bottom',
-							title: res.data.message
-						});
-				    }
-				})
+				// var mes = this.judgeMes(0)
+				// this.$http.post('/outRequest/oss', mes).then(([err,res]) => {
+				// 	if (res.data.signal === '0') {
+				// 		_this.outList = res.data.prs
+				//     } else {
+				// 		uni.showToast({
+				// 			icon: 'none',
+				// 			position: 'bottom',
+				// 			title: res.data.message
+				// 		});
+				//     }
+				// })
 			} else if(e.currentIndex === 1){
 				var mes = this.judgeMes(1)
 				this.$http.post('/purchaseRequest/prs', mes).then(([err,res]) => {
@@ -300,33 +328,34 @@ export default {
 				    }
 				})
 			} else if(e.currentIndex === 2){
-				var mes = this.judgeMes(2)
-				this.$http.post('/sellRequest/sos', mes).then(([err,res]) => {
-					if (res.data.signal === '0') {
-						_this.sellList = res.data.prs
-				    } else {
-						uni.showToast({
-							icon: 'none',
-							position: 'bottom',
-							title: res.data.message
-						});
-				    }
-				})
+				// var mes = this.judgeMes(2)
+				// this.$http.post('/sellRequest/sos', mes).then(([err,res]) => {
+				// 	if (res.data.signal === '0') {
+				// 		_this.sellList = res.data.prs
+				//     } else {
+				// 		uni.showToast({
+				// 			icon: 'none',
+				// 			position: 'bottom',
+				// 			title: res.data.message
+				// 		});
+				//     }
+				// })
 			} else if(e.currentIndex === 3){
-				var mes = this.judgeMes(3)
-				this.$http.post('/exchangeRequest/eos', mes).then(([err,res]) => {
-					if (res.data.signal === '0') {
-						_this.exchangeList = res.data.prs
-				    } else {
-						uni.showToast({
-							icon: 'none',
-							position: 'bottom',
-							title: res.data.message
-						});
-				    }
-				})
+				// var mes = this.judgeMes(3)
+				// this.$http.post('/exchangeRequest/eos', mes).then(([err,res]) => {
+				// 	if (res.data.signal === '0') {
+				// 		_this.exchangeList = res.data.prs
+				//     } else {
+				// 		uni.showToast({
+				// 			icon: 'none',
+				// 			position: 'bottom',
+				// 			title: res.data.message
+				// 		});
+				//     }
+				// })
 			}
 		},
+		//单据显示信息判断
 		judgeMes(orderIndex) {
 			var myinfo = uni.getStorageSync('user_info')
 			var power = uni.getStorageSync('power')
@@ -412,26 +441,48 @@ export default {
 		//删除单据
 		deleteOrder(iden) {
 			var diff = iden[0]+iden[1]
+			var _this = this
 			if(diff === "MS") {
 				uni.showModal({
 				    title: '提示',
 				    content: '确认删除草稿：'+iden+" ?",
-				    success: function (res) {
-				        if (res.confirm) {
+				    success: function (Res) {
+				    //     if (Res.confirm) {
+				    //     	var mso_iden = iden
+				    //     	_this.$http.post('/outRequest/soDelete', {mso_iden}).then(([err,res]) => {
+								// if(res.data.signal === 0){
+								// 	_this.outList = _this.outList.filter(item => !(item.mso_iden.includes(mso_iden)))
+								// }
+				    //     		uni.showToast({
+				    //     			icon: 'none',
+				    //     			position: 'bottom',
+				    //     			title: res.data.message
+				    //     		});
+				    //     	})
+				    //     } else if (Res.cancel) {
 				            
-				        } else if (res.cancel) {
-				           
-				        }
+				    //     }
 				    }
 				});
 			} else if(diff === "PR") {
 				uni.showModal({
 				    title: '提示',
 				    content: '确认删除草稿：'+iden+" ?",
-				    success: function (res) {
-				        if (res.confirm) {
-							
-				        } else if (res.cancel) {
+				    success: function (Res) {
+				        if (Res.confirm) {
+							var pr_iden = iden
+							_this.$http.post('/purchaseRequest/prDelete', {pr_iden}).then(([err,res]) => {
+								//删除列表中该单据信息
+								if(res.data.signal === 0) {
+									_this.purchaseList = _this.purchaseList.filter(item => !(item.rp_iden.includes(pr_iden)))
+								}
+								uni.showToast({
+									icon: 'none',
+									position: 'bottom',
+									title: res.data.message
+								});
+							})
+				        } else if (Res.cancel) {
 				            
 				        }
 				    }
@@ -440,10 +491,20 @@ export default {
 				uni.showModal({
 				    title: '提示',
 				    content: '确认删除草稿：'+iden+" ?",
-				    success: function (res) {
-				        if (res.confirm) {
-							
-				        } else if (res.cancel) {
+				    success: function (Res) {
+				        if (Res.confirm) {
+							// var so_iden = iden
+							// _this.$http.post('/sellRequest/soDelete', {so_iden}).then(([err,res]) => {
+							// 	if(res.data.signal === 0) {
+							// 		_this.sellList = _this.sellList.filter(item => !(item.so_iden.includes(so_iden)))
+							// 	}
+							// 	uni.showToast({
+							// 		icon: 'none',
+							// 		position: 'bottom',
+							// 		title: res.data.message
+							// 	});
+							// })
+				        } else if (Res.cancel) {
 				            
 				        }
 				    }
@@ -452,10 +513,20 @@ export default {
 				uni.showModal({
 				    title: '提示',
 				    content: '确认删除草稿：'+iden+" ?",
-				    success: function (res) {
-				        if (res.confirm) {
-							
-				        } else if (res.cancel) {
+				    success: function (Res) {
+				        if (Res.confirm) {
+				    //     	var str_iden = iden
+				    //     	_this.$http.post('/exchangeRequest/strDelete', {str_iden}).then(([err,res]) => {
+				    //     		if(res.data.signal === 0) {
+								// 	_this.exchangeList = _this.exchangeList.filter(item => !(item.str_iden.includes(str_iden)))
+								// }
+				    //     		uni.showToast({
+				    //     			icon: 'none',
+				    //     			position: 'bottom',
+				    //     			title: res.data.message
+				    //     		});
+				    //     	})
+				        } else if (Res.cancel) {
 				            
 				        }
 				    }
@@ -465,14 +536,15 @@ export default {
 		//提交草稿
 		commitOrder(iden) {
 			var diff = iden[0]+iden[1]
+			var _this = this
 			if(diff === "MS") {
 				uni.showModal({
 				    title: '提示',
 				    content: '确认提交草稿：'+iden+" ?",
-				    success: function (res) {
-				        if (res.confirm) {
-				            
-				        } else if (res.cancel) {
+				    success: function (Res) {
+				        if (Res.confirm) {
+				        	
+				        } else if (Res.cancel) {
 				            
 				        }
 				    }
@@ -481,22 +553,38 @@ export default {
 				uni.showModal({
 				    title: '提示',
 				    content: '确认提交草稿：'+iden+" ?",
-				    success: function (res) {
-				        if (res.confirm) {
-							
-				        } else if (res.cancel) {
-				            
-				        }
+				    success: function (Res) {
+				       if (Res.confirm) {
+							var pr_iden = iden
+							_this.$http.post('/purchaseRequest/prdSubmit', {pr_iden}).then(([err,res]) => {
+								//修改列表中该单据信息
+								if(res.data.signal === 0) {
+									for(var i =0; i<_this.purchaseList.length; i++) {
+										if(_this.purchaseList[i].rp_iden === iden){
+											_this.purchaseList[i].rp_status = '已审批'
+											break
+										}
+									}
+								}
+								uni.showToast({
+									icon: 'none',
+									position: 'bottom',
+									title: res.data.message
+								});
+							})
+				       } else if (Res.cancel) {
+				           
+				       }
 				    }
 				});
 			} else if(diff === "SO") {
 				uni.showModal({
 				    title: '提示',
 				    content: '确认提交草稿：'+iden+" ?",
-				    success: function (res) {
-				        if (res.confirm) {
-							
-				        } else if (res.cancel) {
+				    success: function (Res) {
+				        if (Res.confirm) {
+				        	
+				        } else if (Res.cancel) {
 				            
 				        }
 				    }
@@ -505,10 +593,10 @@ export default {
 				uni.showModal({
 				    title: '提示',
 				    content: '确认提交草稿：'+iden+" ?",
-				    success: function (res) {
-				        if (res.confirm) {
-							
-				        } else if (res.cancel) {
+				    success: function (Res) {
+				        if (Res.confirm) {
+				        	
+				        } else if (Res.cancel) {
 				            
 				        }
 				    }
@@ -538,17 +626,8 @@ export default {
 		},
 		//关闭订单
 		closeOrder(iden) {
-			uni.showModal({
-			    title: '提示',
-			    content: '确认关闭请购单：'+iden+" ?",
-			    success: function (res) {
-			        if (res.confirm) {
-			            
-			        } else if (res.cancel) {
-			            console.log('用户点击取消');
-			        }
-			    }
-			});
+			this.showHide = true
+			this.closeIden = iden
 		},
 		clear1() {
 			this.outFilterText = ''
@@ -562,6 +641,52 @@ export default {
 		clear4() {
 			this.exchangeFilterText = ''
 		},
+		//隐藏输入框
+		modelHide(){
+			this.showHide=false
+		},
+		// 输入框确定按钮
+		confirm(){
+			var _this = this
+			var myinfo = uni.getStorageSync('user_info')
+			uni.showModal({
+			    title: '提示',
+			    content: '确认关闭请购单：'+_this.closeIden+" ?",
+			    success: function (Res) {
+			        if (Res.confirm) {
+						var msg = {}
+						msg.pr_iden = _this.closeIden
+						msg.pr_closer = myinfo.data.user.user_name
+						msg.pr_closerReason = _this.closeReason
+						console.log(msg)
+						_this.$http.post('/purchaseRequest/prClose', msg).then(([err,res]) => {
+							//修改列表中该单据信息
+							if(res.data.signal === 0) {
+								for(var i =0; i<_this.purchaseList.length; i++) {
+									if(_this.purchaseList[i].rp_iden === _this.closeIden){
+										_this.purchaseList[i].rp_status = '已关闭'
+										break
+									}
+								}
+							}
+							uni.showToast({
+								icon: 'none',
+								position: 'bottom',
+								title: res.data.message
+							});
+						})
+						//清空缓存
+						_this.closeIden = ''
+						_this.closeReason = ''
+			        } else if (Res.cancel) {
+			            _this.closeIden = ''
+			            _this.closeReason = ''
+			        }
+			    }
+			});
+			this.showHide=false
+		},
+		//判断权限
 		judgePower() {
 			var myinfo = uni.getStorageSync('user_info')
 			var power = ['0','0','0','0']
@@ -687,6 +812,69 @@ export default {
 		line-height: 30px;
 		width: 94%;
 		padding: 0 3%;
+	}
+	.modelBox {
+		display: inline-flex;
+		flex-direction: row;
+		justify-content: space-between;
+		height: 50upx;
+		width: 220upx;
+		position: relative
+	}
+	.shade{
+		width: 100%;
+		height: 100%;
+		position: fixed;
+		top: 0;
+		left: 0;
+		z-index: 100;
+		background-color: rgba(0,0,0,.6);
+	}
+	.model{
+		width: 80%;
+		border-radius: 35upx;
+		background-color: #fff;
+		padding: 30upx;
+		box-sizing: border-box;
+		position: fixed;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%,-50%);
+		z-index: 200;
+	}
+	.modelTitle{
+		font-size: 34upx;
+		color: #333;
+		margin-bottom: 20upx;
+	}
+	.modelInput{
+		width: 100%;
+		height: 40upx;
+		font-size: 30upx;
+		color: #333;
+		margin-bottom: 40upx;
+	}
+	.modelInput input{
+		width: 100%;
+		height: 100%;
+		border: none;
+		border-bottom:2upx solid #8fba5d ;
+	}
+	.modeBtnBox{
+		width: 100%;
+		height: 40upx;
+		display: flex;
+		align-items: center;
+		justify-content: flex-end;
+		color:#8fba5d ;
+		font-size: 30upx;
+	}
+	.modeBtnBox view{
+		width: 25%;
+		height: 100%;
+		display: flex;
+		align-items: center;
+		justify-content: center;
 	}
 
 </style>
