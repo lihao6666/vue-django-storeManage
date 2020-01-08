@@ -17,7 +17,7 @@
           clearable
           v-model="search">
         </el-input>
-        <el-button type="primary" icon="el-icon-plus" class="button-plus" @click="add">新增</el-button>
+        <el-button v-if="power==='2'||power==='3'" type="primary" icon="el-icon-plus" class="button-plus" @click="add">新增</el-button>
       </div>
       <el-table
         :data="tableDataNew"
@@ -30,55 +30,55 @@
           <template slot-scope="props">
             <el-form label-position="left" inline class="demo-table-expand">
               <el-form-item label="备注">
-                <span>{{ props.row.req_pur_remarks }}</span>
+                <span>{{ props.row.pr_remarks }}</span>
               </el-form-item>
-              <el-form-item v-if="props.row.req_pur_status==='已关闭'" label="关闭人">
-                <span>{{ props.row.req_pur_closer }}</span>
+              <el-form-item v-if="props.row.pr_status==='已关闭'" label="关闭人">
+                <span>{{ props.row.pr_closer }}</span>
               </el-form-item>
-              <el-form-item v-if="props.row.req_pur_status==='已关闭'" label="关闭时间">
-                <span>{{ props.row.req_pur_closeDate }}</span>
+              <el-form-item v-if="props.row.pr_status==='已关闭'" label="关闭时间">
+                <span>{{ props.row.pr_closeDate }}</span>
               </el-form-item>
-              <el-form-item v-if="props.row.req_pur_status==='已关闭'" label="关闭原因">
-                <span>{{ props.row.req_pur_closeReason}}</span>
+              <el-form-item v-if="props.row.pr_status==='已关闭'" label="关闭原因">
+                <span>{{ props.row.pr_closeReason}}</span>
               </el-form-item>
             </el-form>
           </template>
         </el-table-column>
-        <el-table-column prop="req_pur_iden" sortable label="请购单号" align="center"></el-table-column>
-        <el-table-column prop="req_pur_orga" sortable label="库存组织" :filters="req_pur_orgaSet"
+        <el-table-column prop="pr_iden" sortable label="请购单号" align="center"></el-table-column>
+        <el-table-column prop="orga_name" sortable label="库存组织" :filters="orga_nameSet"
       :filter-method="filter" align="center"></el-table-column>
-        <el-table-column prop="req_pur_type" sortable label="需求类型" :filters="req_pur_typeSet"
+        <el-table-column prop="pr_type" sortable label="需求类型" :filters="pr_typeSet"
       :filter-method="filter" align="center"></el-table-column>
-        <el-table-column prop="req_pur_from" sortable label="申请部门" :filters="req_pur_fromSet"
+        <el-table-column prop="pr_department" sortable label="申请部门" :filters="pr_departmentSet"
       :filter-method="filter" align="center"></el-table-column>
-        <el-table-column prop="req_pur_date" sortable label="请购日期" align="center"></el-table-column>
-        <el-table-column prop="req_pur_status" sortable label="状态" :filters="req_pur_statusSet"
+        <el-table-column prop="pr_date" sortable label="请购日期" align="center"></el-table-column>
+        <el-table-column prop="pr_status" sortable label="状态" :filters="pr_statusSet"
       :filter-method="filter" align="center">
           <template slot-scope="scope">
-            <el-popover trigger="hover" placement="top" v-if="scope.row.req_pur_status==='已关闭'">
-              <p>关闭人: {{ scope.row.req_pur_closer }}</p>
-              <p>关闭时间: {{ scope.row.req_pur_closeDate }}</p>
-              <p>关闭原因: {{ scope.row.req_pur_closeReason }}</p>
+            <el-popover trigger="hover" placement="top" v-if="scope.row.pr_status===2">
+              <p>关闭人: {{ scope.row.pr_closer }}</p>
+              <p>关闭时间: {{ scope.row.pr_closeDate }}</p>
+              <p>关闭原因: {{ scope.row.pr_closeReason }}</p>
               <div slot="reference" class="name-wrapper">
-                <el-tag :type="'info'">{{scope.row.req_pur_status}}</el-tag>
+                <el-tag :type="status[scope.row.pr_status].type">{{status[scope.row.pr_status].label}}</el-tag>
               </div>
             </el-popover>
             <el-tag v-else
-              :type="scope.row.req_pur_status==='已审批'?'success':(scope.row.req_pur_status==='已关闭'?'info':'')"
-            >{{scope.row.req_pur_status}}
+              :type="status[scope.row.pr_status].type"
+            >{{status[scope.row.pr_status].label}}
             </el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="req_pur_creator" sortable label="创建人" :filters="req_pur_creatorSet"
+        <el-table-column prop="pr_creator" sortable label="创建人" :filters="pr_creatorSet"
       :filter-method="filter" align="center"></el-table-column>
-        <el-table-column prop="req_pur_createDate" sortable label="创建日期" align="center"></el-table-column>
+        <el-table-column prop="pr_createDate" sortable label="创建日期" align="center"></el-table-column>
         <el-table-column label="操作" align="center">
           <template slot-scope="scope">
             <el-button
               type="text"
               icon="el-icon-edit"
               @click="handleEdit(scope.$index, scope.row)"
-              v-if="scope.row.req_pur_status==='草稿'"
+              v-if="scope.row.pr_status===0"
             >编辑
             </el-button>
             <el-button
@@ -86,7 +86,7 @@
               icon="el-icon-delete"
               class="red"
               @click="handleDelete(scope.$index, scope.row)"
-              v-if="scope.row.req_pur_status==='草稿'"
+              v-if="scope.row.pr_status===0"
             >删除
             </el-button>
             <el-button
@@ -94,7 +94,7 @@
               icon="el-icon-postcard"
               class="green"
               @click="handleMore(scope.$index, scope.row)"
-              v-if="scope.row.req_pur_status==='已审批' || scope.row.req_pur_status==='已关闭'"
+              v-if="scope.row.pr_status==='1' || scope.row.pr_status===2"
             >详情
             </el-button>
             <el-button
@@ -102,7 +102,7 @@
               icon="el-icon-document-delete"
               class="block"
               @click="handleClose(scope.$index, scope.row)"
-              v-if="scope.row.req_pur_status==='已审批'"
+              v-if="scope.row.pr_status===1"
             >关闭
             </el-button>
           </template>
@@ -123,12 +123,12 @@
       </div>
     </div>
     <!-- 新增弹出框 -->
-    <el-dialog title="新增" :visible.sync="addVisible" width="90%" :close-on-click-modal="false">
-      <Reqadd ref="Reqadd" :editform="addform" :ifchange="true"></Reqadd>
+    <el-dialog title="新增" :visible.sync="addVisible" width="90%" :close-on-click-modal="false" :destroy-on-close="true" :before-close="closePcadd">
+      <Reqadd ref="Reqadd" @commit="addVisible = false" @save="getData" :editform="addform" :ifchange="true"></Reqadd>
     </el-dialog>
     <!-- 编辑弹出框 -->
     <el-dialog title="编辑" :visible.sync="editVisible" width="90%" :close-on-click-modal="false" :destroy-on-close="true" :before-close="closePcedit">
-      <Reqadd ref="Reqedit" :editform="editform" :ifchange="true"></Reqadd>
+      <Reqadd ref="Reqedit" @commit="editVisible = false" @save="getData" :editform="editform" :ifchange="true"></Reqadd>
     </el-dialog>
     <!-- 详情弹出框 -->
     <el-dialog title="详情" :visible.sync="moreVisible" width="90%" :destroy-on-close="true">
@@ -142,7 +142,7 @@ import Reqadd from './ReqPurAdd'
 import { postAPI } from '../../../api/api'
 
 export default {
-  name: 'req_pur_check',
+  name: 'pr_check',
   data () {
     return {
       query: {
@@ -152,11 +152,11 @@ export default {
       search: '',
       tableData: [],
       tableDataNew: [],
-      req_pur_orgaSet: [],
-      req_pur_typeSet: [],
-      req_pur_fromSet: [],
-      req_pur_statusSet: [],
-      req_pur_creatorSet: [],
+      orga_nameSet: [],
+      pr_typeSet: [],
+      pr_departmentSet: [],
+      pr_statusSet: [],
+      pr_creatorSet: [],
       editVisible: false,
       editform: {},
       moreVisible: false,
@@ -164,13 +164,31 @@ export default {
       pageTotal: 0,
       addVisible: false,
       addform: {
-        req_pur_iden: '',
-        req_pur_orga: '',
-        req_pur_from: '',
-        req_pur_type: '',
-        req_pur_remarks: '',
-        req_pur_date: ''
-      }
+        pr_iden: '',
+        orga_name: '',
+        pr_department: '',
+        pr_type: '',
+        pr_remarks: '',
+        pr_date: ''
+      },
+      status: [
+        {
+          value: 0,
+          label: '草稿',
+          type: ''
+        },
+        {
+          value: 1,
+          label: '已审批',
+          type: 'success'
+        },
+        {
+          value: 2,
+          label: '已关闭',
+          type: 'info'
+        }
+      ],
+      power: localStorage.getItem('user_power').charAt(1)
     }
   },
   components: {
@@ -182,52 +200,64 @@ export default {
   methods: {
     getData () {
       let _this = this
-      postAPI('/req_pur_check').then(function (res) {
-        _this.tableData = res.data.list
+      let data = {
+        power: this.power
+      }
+      console.log(data)
+      postAPI('/purchaseRequest/prs', data).then(function (res) {
+        if (!res.data.prs) {
+          return
+        }
+        _this.tableData = res.data.prs
         _this.find()
+        _this.orga_nameSet = []
+        _this.pr_typeSet = []
+        _this.pr_departmentSet = []
+        _this.pr_statusSet = []
+        _this.pr_creatorSet = []
         let orgaset = new Set()
         let typeset = new Set()
         let statusset = new Set()
         let fromset = new Set()
         let creatorset = new Set()
         for (let i in _this.tableData) {
-          orgaset.add(_this.tableData[i]['req_pur_orga'])
-          fromset.add(_this.tableData[i]['req_pur_from'])
-          typeset.add(_this.tableData[i]['req_pur_type'])
-          statusset.add(_this.tableData[i]['req_pur_status'])
-          creatorset.add(_this.tableData[i]['req_pur_creator'])
+          orgaset.add(_this.tableData[i]['orga_name'])
+          fromset.add(_this.tableData[i]['pr_department'])
+          typeset.add(_this.tableData[i]['pr_type'])
+          statusset.add(_this.tableData[i]['pr_status'])
+          creatorset.add(_this.tableData[i]['pr_creator'])
         }
         for (let i of orgaset) {
-          _this.req_pur_orgaSet.push({
+          _this.orga_nameSet.push({
             text: i,
             value: i
           })
         }
         for (let i of fromset) {
-          _this.req_pur_fromSet.push({
+          _this.pr_departmentSet.push({
             text: i,
             value: i
           })
         }
         for (let i of typeset) {
-          _this.req_pur_typeSet.push({
+          _this.pr_typeSet.push({
             text: i,
             value: i
           })
         }
         for (let i of statusset) {
-          _this.req_pur_statusSet.push({
-            text: i,
+          _this.pr_statusSet.push({
+            text: _this.status[i].label,
             value: i
           })
         }
         for (let i of creatorset) {
-          _this.req_pur_creatorSet.push({
+          _this.pr_creatorSet.push({
             text: i,
             value: i
           })
         }
-        _this.pageTotal = res.data.list.length
+        _this.pageTotal = res.data.prs.length
       }).catch(function (err) {
         console.log(err)
       })
@@ -252,15 +282,19 @@ export default {
     find () {
       this.pageTotal = 0
       this.tableDataNew = this.tableData.filter(data => !this.search ||
-        data.req_pur_iden.toLowerCase().includes(this.search.toLowerCase()) ||
-        data.req_pur_orga.toLowerCase().includes(this.search.toLowerCase()) ||
-        data.req_pur_type.toLowerCase().includes(this.search.toLowerCase()) ||
-        data.req_pur_from.toLowerCase().includes(this.search.toLowerCase()) ||
-        data.req_pur_creator.toLowerCase().includes(this.search.toLowerCase()))
+        data.pr_iden.toLowerCase().includes(this.search.toLowerCase()) ||
+        data.orga_name.toLowerCase().includes(this.search.toLowerCase()) ||
+        data.pr_type.toLowerCase().includes(this.search.toLowerCase()) ||
+        data.pr_department.toLowerCase().includes(this.search.toLowerCase()) ||
+        data.pr_creator.toLowerCase().includes(this.search.toLowerCase()))
     },
     // 新增
     add () {
       this.addVisible = true
+      let _this = this
+      this.$nextTick(() => _this.$refs.Reqadd.getList())
+      this.$nextTick(() => _this.$refs.Reqadd.getForm())
+      this.$nextTick(() => _this.$refs.Reqadd.addShow())
     },
     // 删除操作
     handleDelete (index, row) {
@@ -269,12 +303,20 @@ export default {
         type: 'warning'
       })
         .then(() => {
-          this.$message.success('删除成功')
-          this.tableData.splice(index, 1)
-          let pageIndexNew = Math.ceil((this.pageTotal - 1) / this.query.pageSize) // 新的页面数量
-          this.query.pageIndex = (this.query.pageIndex > pageIndexNew) ? pageIndexNew : this.query.pageIndex
-          this.query.pageIndex = (this.query.pageIndex === 0) ? 1 : this.query.pageIndex
-          this.find()
+          let _this = this
+          console.log(row)
+          postAPI('/purchaseRequest/prDelete', row).then(function (res) {
+            console.log(res.data)
+            if (res.data.signal === 0) {
+              _this.$message.success(`删除成功`)
+              _this.getData()
+            } else {
+              _this.$message.error(res.data.message)
+            }
+          }).catch(function (err) {
+            _this.$message.error('删除失败')
+            console.log(err)
+          })
         })
         .catch(() => {
           this.$message({
@@ -288,6 +330,7 @@ export default {
       this.editform = row
       let _this = this
       this.$nextTick(() => _this.$refs.Reqedit.getForm())
+      this.$nextTick(() => _this.$refs.Reqedit.getList())
       this.editVisible = true
     },
     // 详情操作
@@ -307,6 +350,22 @@ export default {
           type: 'warning'
         }).then(() => {
           this.$message.success('关闭成功')
+          let _this = this
+          console.log(value)
+          let data = row
+          data.pr_closerReason = value
+          postAPI('/purchaseRequest/prClose', data).then(function (res) {
+            console.log(res.data)
+            if (res.data.signal === 0) {
+              _this.$message.success(`关闭成功`)
+              _this.getData()
+            } else {
+              _this.$message.error(res.data.message)
+            }
+          }).catch(function (err) {
+            _this.$message.error('关闭失败')
+            console.log(err)
+          })
         }).catch(() => {
           this.$message({
             type: 'info',
@@ -337,6 +396,17 @@ export default {
         })
         .catch(() => {
           this.editVisible = true
+        })
+    },
+    closePcadd () {
+      this.$confirm('确定要关闭吗？', '提示', {
+        type: 'warning'
+      })
+        .then(() => {
+          this.addVisible = false
+        })
+        .catch(() => {
+          this.addVisible = true
         })
     }
   }

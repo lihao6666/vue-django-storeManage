@@ -180,10 +180,11 @@ export default {
     getData () {
       let _this = this
       getAPI('/base/brands').then(function (res) {
-        if (res.data.message) {
+        if (!res.data.brands) {
           return
         }
         _this.tableData = res.data.brands
+        _this.pageTotal = res.data.brands.length
         _this.find()
         _this.brand_nameSet = []
         _this.brand_creatorSet = []
@@ -205,7 +206,6 @@ export default {
             value: i
           })
         }
-        _this.pageTotal = res.data.brands.length
       }).catch(function (err) {
         console.log(err)
       })

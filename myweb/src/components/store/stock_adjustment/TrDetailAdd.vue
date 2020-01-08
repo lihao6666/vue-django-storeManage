@@ -3,17 +3,17 @@
     <div class="crumbs">
       <el-breadcrumb separator="/">
         <el-breadcrumb-item>
-          <i class="el-icon-lx-cascades"></i> 物料
+          <i class="el-icon-lx-cascades"></i> 明细
         </el-breadcrumb-item>
       </el-breadcrumb>
     </div>
     <div class="container">
       <div class="handle-box">
-        <el-select v-model="formadd.so_orga" placeholder="请选择库存组织" :disabled="ifhasorga">
-          <el-option v-for="item in form_so_orga" v-bind:key="item" :label="item" :value="item"></el-option>
+        <el-select v-model="formadd.str_orga" placeholder="请选择库存组织" :disabled="ifhasorga">
+          <el-option v-for="item in form_trd_orga" v-bind:key="item" :label="item" :value="item"></el-option>
         </el-select>
-        <el-select v-model="formadd.so_warehouse" placeholder="请选择发货仓库" :disabled="ifhasorga">
-          <el-option v-for="item in form_so_warehouse" v-bind:key="item" :label="item" :value="item"></el-option>
+        <el-select v-model="formadd.str_from" placeholder="请选择转出仓库" :disabled="ifhasfrom">
+          <el-option v-for="item in form_trd_from" v-bind:key="item" :label="item" :value="item"></el-option>
         </el-select>
         <el-input
           placeholder="关键字搜索"
@@ -41,19 +41,16 @@
         size="mini"
       >
         <el-table-column type="selection" :selectable="selectable" width="55"></el-table-column>
-        <el-table-column prop="sod_iden" sortable label="物料编码" align="center"></el-table-column>
-        <el-table-column prop="sod_name" sortable label="物料名称" :filters="sod_nameSet"
-      :filter-method="filter" align="center"></el-table-column>
-        <el-table-column prop="sod_specification" sortable label="规格" :filters="sod_specificationSet"
-      :filter-method="filter" align="center"></el-table-column>
-        <el-table-column prop="sod_model" sortable label="型号" :filters="sod_modelSet"
-      :filter-method="filter" align="center"></el-table-column>
-        <el-table-column prop="sod_meterage" sortable label="计量单位" :filters="sod_meterageSet"
-      :filter-method="filter" align="center"></el-table-column>
-        <el-table-column prop="sod_attr" sortable label="存货属性" :filters="sod_attrSet"
-      :filter-method="filter" align="center">
-        </el-table-column>
-        <el-table-column prop="sod_present_num" sortable label="现存量" align="center"></el-table-column>
+        <el-table-column prop="trd_iden" sortable label="物料编码" align="center"></el-table-column>
+        <el-table-column prop="trd_name" sortable label="物料名称" :filters="trd_nameSet"
+                         :filter-method="filter" align="center"></el-table-column>
+        <el-table-column prop="trd_specification" sortable label="规格" :filters="trd_specificationSet"
+                         :filter-method="filter" align="center"></el-table-column>
+        <el-table-column prop="trd_model" sortable label="型号" :filters="trd_modelSet"
+                         :filter-method="filter" align="center"></el-table-column>
+        <el-table-column prop="trd_meterage" sortable label="单位" :filters="trd_meterageSet"
+                         :filter-method="filter" align="center"></el-table-column>
+        <el-table-column prop="trd_present_num" sortable label="现存量" align="center"></el-table-column>
       </el-table>
       <!-- 分页 -->
       <div class="pagination">
@@ -73,11 +70,11 @@
 </template>
 
 <script>
-import {postAPI} from '../../api/api'
+import {postAPI} from '../../../api/api'
 
 export default {
   name: 'pr_sod',
-  props: ['tableHas', 'formadd', 'ifhasorga'],
+  props: ['tableHas', 'formadd', 'ifhasorga', 'ifhasfrom'],
   data () {
     return {
       query: {
@@ -88,18 +85,22 @@ export default {
       tableData: [],
       tableDataNew: [],
       multipleSelection: [],
-      sod_nameSet: [],
-      sod_specificationSet: [],
-      sod_modelSet: [],
-      sod_meterageSet: [],
-      sod_attrSet: [],
+      trd_nameSet: [],
+      trd_specificationSet: [],
+      trd_modelSet: [],
+      trd_meterageSet: [],
+      trd_attrSet: [],
       pageTotal: 0,
       ifshowadd: true,
-      form_so_orga: [
+      form_trd_orga: [
         '合肥工业大学',
         '清华大学'
       ],
-      form_so_warehouse: [
+      form_trd_to: [
+        'A',
+        'B'
+      ],
+      form_trd_from: [
         'A',
         'B'
       ]
@@ -111,7 +112,7 @@ export default {
   methods: {
     getData () {
       let _this = this
-      postAPI('/so_sod_add', this.formadd).then(function (res) {
+      postAPI('/str_detail_add', this.formadd).then(function (res) {
         _this.tableData = res.data.list
         _this.find()
         let nameset = new Set()
@@ -120,38 +121,38 @@ export default {
         let meterageset = new Set()
         let attrset = new Set()
         for (let i in _this.tableData) {
-          nameset.add(_this.tableData[i]['sod_name'])
-          specificationset.add(_this.tableData[i]['sod_specification'])
-          modelset.add(_this.tableData[i]['sod_model'])
-          meterageset.add(_this.tableData[i]['sod_meterage'])
-          attrset.add(_this.tableData[i]['sod_attr'])
+          nameset.add(_this.tableData[i]['trd_name'])
+          specificationset.add(_this.tableData[i]['trd_specification'])
+          modelset.add(_this.tableData[i]['trd_model'])
+          meterageset.add(_this.tableData[i]['trd_meterage'])
+          attrset.add(_this.tableData[i]['trd_attr'])
         }
         for (let i of nameset) {
-          _this.sod_nameSet.push({
+          _this.trd_nameSet.push({
             text: i,
             value: i
           })
         }
         for (let i of meterageset) {
-          _this.sod_meterageSet.push({
+          _this.trd_meterageSet.push({
             text: i,
             value: i
           })
         }
         for (let i of specificationset) {
-          _this.sod_specificationSet.push({
+          _this.trd_specificationSet.push({
             text: i,
             value: i
           })
         }
         for (let i of modelset) {
-          _this.sod_modelSet.push({
+          _this.trd_modelSet.push({
             text: i,
             value: i
           })
         }
         for (let i of attrset) {
-          _this.sod_attrSet.push({
+          _this.trd_attrSet.push({
             text: i,
             value: i
           })
@@ -181,12 +182,12 @@ export default {
     find () {
       this.pageTotal = 0
       this.tableDataNew = this.tableData.filter(data => (this.ifshowadd || this.selectable(data, 0)) &&
-        (!this.search ||
-        data.sod_iden.toLowerCase().includes(this.search.toLowerCase()) ||
-        data.sod_name.toLowerCase().includes(this.search.toLowerCase()) ||
-        data.sod_specification.toLowerCase().includes(this.search.toLowerCase()) ||
-        data.sod_model.toLowerCase().includes(this.search.toLowerCase()) ||
-        data.sod_meterage.toLowerCase().includes(this.search.toLowerCase())))
+          (!this.search ||
+            data.trd_iden.toLowerCase().includes(this.search.toLowerCase()) ||
+            data.trd_name.toLowerCase().includes(this.search.toLowerCase()) ||
+            data.trd_specification.toLowerCase().includes(this.search.toLowerCase()) ||
+            data.trd_model.toLowerCase().includes(this.search.toLowerCase()) ||
+            data.trd_meterage.toLowerCase().includes(this.search.toLowerCase())))
     },
     // 分页导航
     handlePageChange (val) {
@@ -206,7 +207,7 @@ export default {
     // 可选项
     selectable (row, index) {
       for (let i in this.tableHas) {
-        if (this.tableHas[i].sod_iden === row.sod_iden) {
+        if (this.tableHas[i].trd_iden === row.trd_iden) {
           return false
         }
       }
@@ -226,16 +227,30 @@ export default {
   .tableRowDisplay {
     display: none;
   }
+  .demo-table-expand {
+    font-size: 0;
+  }
+  .demo-table-expand label {
+    width: 90px;
+    color: #99a9bf;
+  }
+  .demo-table-expand .el-form-item {
+    margin-right: 0;
+    margin-bottom: 0;
+    width: 100%;
+  }
 </style>
 
 <style scoped>
   .handle-box {
     margin-bottom: 20px;
   }
+
   .table {
     width: 100%;
     font-size: 14px;
   }
+
   .input-search {
     width: 30%;
   }

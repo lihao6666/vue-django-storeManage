@@ -5,8 +5,8 @@
         <div v-if="item.child" class="checkbox-group-ch">
           <div v-for="child in item.child" v-bind:key="child.key">
             <el-checkbox :indeterminate="child.isIndeterminate" v-model="child.checkAll"
-                         @change="handleCheckAllChangeData(child,child.checkAll)">{{child.label}}</el-checkbox>
-            <el-checkbox-group v-if="child.options" v-model="child.checked" @change="handlecheckedOptionsChangeData(child,child.checked)" class="checkbox-group-ch">
+                         @change="handleCheckAllChange(child,child.checkAll)">{{child.label}}</el-checkbox>
+            <el-checkbox-group v-if="child.options" v-model="child.checked" @change="handlecheckedOptionsChange(child,child.checked)" class="checkbox-group-ch">
               <el-checkbox v-for="option in child.options" v-bind:key="option.value" :label="option.value" :value="option.value">{{option.label}}</el-checkbox>
             </el-checkbox-group>
           </div>
@@ -18,8 +18,8 @@
             <div v-if="item.child" class="checkbox-group-ch">
               <div v-for="child in item.child" v-bind:key="child.key">
                 <el-checkbox :indeterminate="child.isIndeterminate" v-model="child.checkAll"
-                             @change="handleCheckAllChangeStore(child,child.checkAll)">{{child.label}}</el-checkbox>
-                <el-checkbox-group v-if="child.options" v-model="child.checked" @change="handlecheckedOptionsChangeStore(child,child.checked)" class="checkbox-group-ch">
+                             @change="handleCheckAllChange(child,child.checkAll)">{{child.label}}</el-checkbox>
+                <el-checkbox-group v-if="child.options" v-model="child.checked" @change="handlecheckedOptionsChange(child,child.checked)" class="checkbox-group-ch">
                   <el-checkbox v-for="option in child.options" v-bind:key="option.value" :label="option.value" :value="option.value">{{option.label}}</el-checkbox>
                 </el-checkbox-group>
               </div>
@@ -31,8 +31,8 @@
         <div v-if="item.child" class="checkbox-group-ch">
           <div v-for="child in item.child" v-bind:key="child.key">
             <el-checkbox :indeterminate="child.isIndeterminate" v-model="child.checkAll"
-                         @change="handleCheckAllChangeSystem(child,child.checkAll)">{{child.label}}</el-checkbox>
-            <el-checkbox-group v-if="child.options" v-model="child.checked" @change="handlecheckedOptionsChangeSystem(child,child.checked)" class="checkbox-group-ch">
+                         @change="handleCheckAllChange(child,child.checkAll)">{{child.label}}</el-checkbox>
+            <el-checkbox-group v-if="child.options" v-model="child.checked" @change="handlecheckedOptionsChange(child,child.checked)" class="checkbox-group-ch">
               <el-checkbox class="el-checkbox-ch" v-for="option in child.options" v-bind:key="option.value" :label="option.value" :value="option.value">{{option.label}}</el-checkbox>
             </el-checkbox-group>
           </div>
@@ -516,9 +516,10 @@ export default {
         }
       }
       this.form.role = this.powerform.role
+      this.form.role_description = this.powerform.role_description
       this.form.id = this.powerform.id
     },
-    handleCheckAllChangeData (item, value) {
+    handleCheckAllChange (item, value) {
       if (value) {
         let arr = []
         for (let j in item.options) {
@@ -533,47 +534,7 @@ export default {
         item.checkAll = false
       }
     },
-    handlecheckedOptionsChangeData (item, value) {
-      console.log(item.checked)
-      item.checkAll = value.length === item.options.length
-      item.isIndeterminate = value.length > 0 && value.length < item.options.length
-    },
-    handleCheckAllChangeStore (item, value) {
-      if (value) {
-        let arr = []
-        for (let j in item.options) {
-          arr.push(parseInt(j) + 1)
-        }
-        item.checked = arr
-        item.isIndeterminate = false
-        item.checkAll = true
-      } else {
-        item.checked = []
-        item.isIndeterminate = false
-        item.checkAll = false
-      }
-    },
-    handlecheckedOptionsChangeStore (item, value) {
-      console.log(item.checked)
-      item.checkAll = value.length === item.options.length
-      item.isIndeterminate = value.length > 0 && value.length < item.options.length
-    },
-    handleCheckAllChangeSystem (item, value) {
-      if (value) {
-        let arr = []
-        for (let j in item.options) {
-          arr.push(parseInt(j) + 1)
-        }
-        item.checked = arr
-        item.isIndeterminate = false
-        item.checkAll = true
-      } else {
-        item.checked = []
-        item.isIndeterminate = false
-        item.checkAll = false
-      }
-    },
-    handlecheckedOptionsChangeSystem (item, value) {
+    handlecheckedOptionsChange (item, value) {
       console.log(item.checked)
       item.checkAll = value.length === item.options.length
       item.isIndeterminate = value.length > 0 && value.length < item.options.length
@@ -615,21 +576,19 @@ export default {
           str += s
         }
       }
-      console.log(str)
       this.form.role_power = str
+      console.log(this.form)
       let _this = this
       postAPI('/base/roleUpdate', this.form).then(function (res) {
         if (res.data.signal === 0) {
           _this.$message.success(`授权成功`)
-          return true
+          _this.$emit('closePower')
         } else {
-          _this.$message.error(res.data.message)
-          return false
+          _this.$message.error('授权失败')
         }
       }).catch(function (err) {
         console.log(err)
         _this.$message.error(`授权失败`)
-        return false
       })
     }
   }

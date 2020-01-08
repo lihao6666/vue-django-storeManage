@@ -14,12 +14,29 @@ Vue.use(ElementUI)
 /* eslint-disable no-new */
 router.beforeEach((to, from, next) => {
   document.title = `${to.meta.title} | 仓储管理系统`
-  const role = localStorage.getItem('user_now_iden')
-  if (!role && to.path !== '/login') {
+  const username = localStorage.getItem('user_now_iden')
+  const power = localStorage.getItem('user_power')
+  if (!username && to.path !== '/login') {
     next('/login')
-  } else {
+  } else if (to.path === '/login' || to.path === '/404') {
     next()
+  } else if (username && power) {
+    if (!to.meta.key) {
+      next()
+    } else if (power.charAt(to.meta.key) === '0') {
+      next('/404')
+    } else {
+      next()
+    }
+  } else {
+    next('/login')
   }
+  // const role = localStorage.getItem('user_now_iden')
+  // if (!role && to.path !== '/login') {
+  //   next('/login')
+  // } else {
+  //   next()
+  // }
 })
 
 new Vue({

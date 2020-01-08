@@ -61,11 +61,11 @@ export default {
             let roles = res.data.roles
             let n = 100
             let num = 0
-            let str = String(Array(n > num ? (n - ('' + num).length + 1) : 0).join(0) + num)
+            let str = String(Array(n > ('' + num).length ? (n - ('' + num).length + 1) : 0).join(0) + num)
             if (roles && roles.length > 0) {
               let n = roles[0][1].length || 26
               let num = 0
-              str = String(Array(n > num ? (n - ('' + num).length + 1) : 0).join(0) + num)
+              str = String(Array(n > ('' + num).length ? (n - ('' + num).length + 1) : 0).join(0) + num)
               let strarr = str.split('')
               for (let i in roles) {
                 let arr = roles[i][1].split('')

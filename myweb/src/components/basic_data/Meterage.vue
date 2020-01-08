@@ -220,10 +220,11 @@ export default {
     getData () {
       let _this = this
       getAPI('/base/meterages').then(function (res) {
-        if (res.data.message) {
+        if (!res.data.meterages) {
           return
         }
         _this.tableData = res.data.meterages
+        _this.pageTotal = res.data.meterages.length
         _this.find()
         _this.meterage_nameSet = []
         _this.meterage_dimSet = []
@@ -254,7 +255,6 @@ export default {
             value: i
           })
         }
-        _this.pageTotal = res.data.meterages.length
       }).catch(function (err) {
         console.log(err)
       })

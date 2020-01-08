@@ -220,6 +220,7 @@ export default {
       getAPI('/base/departments').then(function (res) {
         console.log(res.data)
         _this.tableData = res.data.departments
+        _this.pageTotal = res.data.departments.length
         _this.dpm_orgaSet = []
         _this.dpm_centerSet = []
         _this.dpm_creatorSet = []
@@ -250,7 +251,6 @@ export default {
             value: i
           })
         }
-        _this.pageTotal = res.data.departments.length
       }).catch(function (err) {
         console.log(err)
       })

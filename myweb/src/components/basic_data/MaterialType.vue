@@ -240,10 +240,12 @@ export default {
     getData () {
       let _this = this
       getAPI('/base/materialTypes').then(function (res) {
-        console.log(res.data)
         let n = res.data.max_iden.length
         let num = parseInt(res.data.max_iden) + 1
-        _this.username = String(Array(n > num ? (n - ('' + num).length + 1) : 0).join(0) + num)
+        _this.username = String(Array(n > ('' + num).length ? (n - ('' + num).length + 1) : 0).join(0) + num)
+        if (!res.data.material_types) {
+          return
+        }
         _this.tableData = res.data.material_types
         _this.pageTotal = _this.tableData.length
         _this.find()
@@ -282,7 +284,13 @@ export default {
     },
     // 选择分类
     changeCascader (val) {
-      this.option_iden = val[val.length - 1]
+      console.log(val)
+      if (val && val.length > 0) {
+        this.option_iden = val[val.length - 1]
+      } else {
+        this.option_iden = ''
+      }
+      console.log(this.option_iden)
     },
     // 编码校验
     inputIden (val) {

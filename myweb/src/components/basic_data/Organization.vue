@@ -222,14 +222,18 @@ export default {
     getData () {
       let _this = this
       getAPI('/base/organizations').then(function (res) {
-        _this.tableData = res.data.organizations
         let n = res.data.max_iden.length
         let num = parseInt(res.data.max_iden) + 1
-        _this.username = String(Array(n > num ? (n - ('' + num).length + 1) : 0).join(0) + num)
-        _this.find()
+        _this.username = String(Array(n > ('' + num).length ? (n - ('' + num).length + 1) : 0).join(0) + num)
         if (!res.data.organizations) {
           return
         }
+        _this.tableData = res.data.organizations
+        _this.pageTotal = res.data.organizations.length
+        _this.find()
+        _this.orga_nameSet = []
+        _this.area_nameSet = []
+        _this.orga_creatorSet = []
         let nameset = new Set()
         let areaset = new Set()
         let creatorset = new Set()
@@ -256,7 +260,6 @@ export default {
             value: i
           })
         }
-        _this.pageTotal = res.data.organizations.length
       }).catch(function (err) {
         console.log(err)
       })

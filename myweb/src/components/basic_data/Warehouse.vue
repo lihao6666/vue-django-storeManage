@@ -119,7 +119,8 @@
           </el-row>
           <el-row>
             <el-form-item v-if="form.area_name" label="所属中心"  align="left">
-              <el-select v-model="form.total_belong_center" placeholder="请选择中心"  class="option" >
+              <el-select v-model="form.total_belong_center" placeholder="请选择中心"  class="option" clearable>
+                <el-option :key="''" :label="'无'" :value="''"></el-option>
                 <el-option
                   v-for="item in center_options[form.area_name]"
                   :key="item"
@@ -145,7 +146,7 @@
           </el-row>
           <el-row>
             <el-form-item label="所属品牌"  align="left">
-              <el-select v-model="form.brand_name" placeholder="请选择品牌"  class="option" >
+              <el-select v-model="form.brand_name" placeholder="请选择品牌"  class="option">
                 <el-option
                   v-for="item in brand_options"
                   :key="item"
@@ -274,17 +275,21 @@ export default {
     getData () {
       let _this = this
       getAPI('/base/totalWareHouses').then(function (res) {
-        console.log(res.data)
         let n = res.data.max_iden.length
         let num = parseInt(res.data.max_iden) + 1
-        _this.username = String(Array(n > num ? (n - ('' + num).length + 1) : 0).join(0) + num)
+        _this.username = String(Array(n > ('' + num).length ? (n - ('' + num).length + 1) : 0).join(0) + num)
+        console.log(_this.username)
+        if (!res.data.totalWareHouses) {
+          return
+        }
         _this.total_nameSet = []
         _this.total_orgaSet = []
         _this.total_brandSet = []
         _this.total_creatorSet = []
         _this.total_centerSet = []
         _this.tableData = res.data.totalWareHouses
-        _this.tableDataNew = _this.tableData
+        _this.pageTotal = res.data.totalWareHouses.length
+        _this.find()
         let nameset = new Set()
         let orgaset = new Set()
         let brandset = new Set()
@@ -327,7 +332,6 @@ export default {
             value: i
           })
         }
-        _this.pageTotal = res.data.totalWareHouses.length
       }).catch(function (err) {
         console.log(err)
       })
@@ -352,7 +356,7 @@ export default {
     handleAlter () {
       this.alterVisible = true
       this.getlist()
-      this.form.orga_iden = this.username
+      this.form.total_iden = this.username
     },
     // 一键清除新增表单
     clearform () {

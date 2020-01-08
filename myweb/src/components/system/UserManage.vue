@@ -353,7 +353,7 @@ export default {
           }
           creatorset.add(_this.tableData[i]['user_creator'])
         }
-        console.log(_this.tableData)
+        _this.pageTotal = res.data.users.length
         _this.find()
         for (let i of areaset) {
           _this.area_nameSet.push({
@@ -379,7 +379,6 @@ export default {
             value: i
           })
         }
-        _this.pageTotal = res.data.users.length
       }).catch(function (err) {
         console.log(err)
       })
@@ -429,7 +428,7 @@ export default {
       getAPI('/base/userNew').then(function (res) {
         let n = res.data.max_iden.length
         let num = parseInt(res.data.max_iden) + 1
-        _this.username = String(Array(n > num ? (n - ('' + num).length + 1) : 0).join(0) + num)
+        _this.username = String(Array(n > ('' + num).length ? (n - ('' + num).length + 1) : 0).join(0) + num)
         _this.role_options = res.data.roles
         _this.area_options = res.data.areas
         _this.dpm_options = res.data.departments

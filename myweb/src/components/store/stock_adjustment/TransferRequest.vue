@@ -3,7 +3,7 @@
     <div class="crumbs">
       <el-breadcrumb separator="/">
         <el-breadcrumb-item>
-          <i class="el-icon-lx-cascades"></i> 销售订单
+          <i class="el-icon-lx-cascades"></i> 库存调整
         </el-breadcrumb-item>
       </el-breadcrumb>
     </div>
@@ -26,53 +26,35 @@
         header-cell-class-name="table-header"
         :row-class-name="tableRowClassName"
       >
-        <el-table-column type="expand">
-          <template slot-scope="props">
-            <el-form label-position="left" inline class="demo-table-expand">
-              <el-form-item label="备注">
-                <span>{{ props.row.pr_remarks }}</span>
-              </el-form-item>
-              <el-form-item v-if="props.row.pr_status==='已关闭'" label="关闭人">
-                <span>{{ props.row.pr_closer }}</span>
-              </el-form-item>
-              <el-form-item v-if="props.row.pr_status==='已关闭'" label="关闭时间">
-                <span>{{ props.row.pr_closeDate }}</span>
-              </el-form-item>
-              <el-form-item v-if="props.row.pr_status==='已关闭'" label="关闭原因">
-                <span>{{ props.row.pr_closeReason}}</span>
-              </el-form-item>
-            </el-form>
-          </template>
-        </el-table-column>
-        <el-table-column prop="so_iden" sortable label="销售订单号" align="center"></el-table-column>
-        <el-table-column prop="so_orga" sortable label="库存组织" :filters="so_orgaSet"
-      :filter-method="filter" align="center"></el-table-column>
-        <el-table-column prop="so_type" sortable label="订单类型" :filters="so_typeSet"
-      :filter-method="filter" align="center"></el-table-column>
-        <el-table-column prop="so_custom" sortable label="客户" :filters="so_customSet"
-      :filter-method="filter" align="center"></el-table-column>
-        <el-table-column prop="so_warehouse" sortable label="发货仓库" :filters="so_warehouseSet"
-      :filter-method="filter" align="center"></el-table-column>
-        <el-table-column prop="so_date" sortable label="订单日期" align="center"></el-table-column>
-        <el-table-column prop="so_status" sortable label="状态" :filters="so_statusSet"
-      :filter-method="filter" align="center">
+        <el-table-column prop="str_iden" sortable label="订单编号" align="center"></el-table-column>
+        <el-table-column prop="str_orga" sortable label="库存组织" :filters="str_orgaSet"
+                         :filter-method="filter" align="center"></el-table-column>
+        <el-table-column prop="str_to" sortable label="转入仓库" :filters="str_toSet"
+                         :filter-method="filter" align="center"></el-table-column>
+        <el-table-column prop="str_from" sortable label="转出仓库" :filters="str_fromSet"
+                         :filter-method="filter" align="center"></el-table-column>
+        <el-table-column prop="str_req_department" sortable label="申请部门" :filters="str_dpmSet"
+                         :filter-method="filter" align="center"></el-table-column>
+        <el-table-column prop="str_req_date" sortable label="申请日期" align="center"></el-table-column>
+        <el-table-column prop="str_status" sortable label="状态" :filters="str_statusSet"
+                         :filter-method="filter" align="center">
           <template slot-scope="scope">
             <el-tag
-              :type="scope.row.so_status==='已审批'?'success':''"
-            >{{scope.row.so_status}}
+              :type="scope.row.str_status==='已审批'?'success':''"
+            >{{scope.row.str_status}}
             </el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="so_creator" sortable label="创建人" :filters="so_creatorSet"
-      :filter-method="filter" align="center"></el-table-column>
-        <el-table-column prop="so_createDate" sortable label="创建日期" align="center"></el-table-column>
+        <el-table-column prop="str_creator" sortable label="创建人" :filters="str_creatorSet"
+                         :filter-method="filter" align="center"></el-table-column>
+        <el-table-column prop="str_createDate" sortable label="创建日期" align="center"></el-table-column>
         <el-table-column label="操作" align="center">
           <template slot-scope="scope">
             <el-button
               type="text"
               icon="el-icon-edit"
               @click="handleEdit(scope.$index, scope.row)"
-              v-if="scope.row.so_status==='草稿'"
+              v-if="scope.row.str_status==='草稿'"
             >编辑
             </el-button>
             <el-button
@@ -80,7 +62,7 @@
               icon="el-icon-delete"
               class="red"
               @click="handleDelete(scope.$index, scope.row)"
-              v-if="scope.row.so_status==='草稿'"
+              v-if="scope.row.str_status==='草稿'"
             >删除
             </el-button>
             <el-button
@@ -88,7 +70,7 @@
               icon="el-icon-postcard"
               class="green"
               @click="handleMore(scope.$index, scope.row)"
-              v-if="scope.row.so_status==='已审批'"
+              v-if="scope.row.str_status==='已审批'"
             >详情
             </el-button>
           </template>
@@ -110,25 +92,25 @@
     </div>
     <!-- 新增弹出框 -->
     <el-dialog title="新增" :visible.sync="addVisible" width="90%" :close-on-click-modal="false">
-      <Soadd ref="Soadd" :editform="addform" :ifchange="true"></Soadd>
+      <Transferadd ref="Transferadd" @close="close" :editform="addform" :ifchange="true"></Transferadd>
     </el-dialog>
     <!-- 编辑弹出框 -->
     <el-dialog title="编辑" :visible.sync="editVisible" width="90%" :close-on-click-modal="false" :destroy-on-close="true" :before-close="closePcedit">
-      <Soadd ref="Soedit" :editform="editform" :ifchange="true"></Soadd>
+      <Transferadd ref="Reqedit" :editform="editform" :ifchange="true"></Transferadd>
     </el-dialog>
     <!-- 详情弹出框 -->
     <el-dialog title="详情" :visible.sync="moreVisible" width="90%" :destroy-on-close="true">
-      <Soadd ref="Somore" :editform="moreform" :ifchange="false"></Soadd>
+      <Transferadd ref="Reqmore" :editform="moreform" :ifchange="false"></Transferadd>
     </el-dialog>
   </div>
 </template>
 
 <script>
-import Soadd from './SellAdd'
-import {postAPI} from '../../api/api'
+import { postAPI } from '../../../api/api'
+import Transferadd from './TransferAdd'
 
 export default {
-  name: 'sell_check',
+  name: 'str_check',
   data () {
     return {
       query: {
@@ -138,12 +120,12 @@ export default {
       search: '',
       tableData: [],
       tableDataNew: [],
-      so_orgaSet: [],
-      so_typeSet: [],
-      so_customSet: [],
-      so_warehouseSet: [],
-      so_statusSet: [],
-      so_creatorSet: [],
+      str_orgaSet: [],
+      str_toSet: [],
+      str_fromSet: [],
+      str_dpmSet: [],
+      str_statusSet: [],
+      str_creatorSet: [],
       editVisible: false,
       editform: {},
       moreVisible: false,
@@ -151,18 +133,16 @@ export default {
       pageTotal: 0,
       addVisible: false,
       addform: {
-        so_iden: '',
-        so_orga: '',
-        so_custom: '',
-        so_warehouse: '',
-        so_type: '',
-        so_remarks: '',
-        so_date: ''
+        str_iden: '',
+        str_orga: '',
+        str_from: '',
+        str_to: '',
+        str_req_date: ''
       }
     }
   },
   components: {
-    Soadd
+    Transferadd
   },
   created () {
     this.getData()
@@ -170,55 +150,55 @@ export default {
   methods: {
     getData () {
       let _this = this
-      postAPI('/so_check').then(function (res) {
+      postAPI('/str_check').then(function (res) {
         _this.tableData = res.data.list
         _this.find()
         let orgaset = new Set()
-        let typeset = new Set()
+        let toset = new Set()
+        let dpmset = new Set()
         let statusset = new Set()
-        let customset = new Set()
-        let warehouseset = new Set()
+        let fromset = new Set()
         let creatorset = new Set()
         for (let i in _this.tableData) {
-          orgaset.add(_this.tableData[i]['so_orga'])
-          customset.add(_this.tableData[i]['so_custom'])
-          warehouseset.add(_this.tableData[i]['so_warehouse'])
-          typeset.add(_this.tableData[i]['so_type'])
-          statusset.add(_this.tableData[i]['so_status'])
-          creatorset.add(_this.tableData[i]['so_creator'])
+          orgaset.add(_this.tableData[i]['str_orga'])
+          fromset.add(_this.tableData[i]['str_from'])
+          toset.add(_this.tableData[i]['str_to'])
+          dpmset.add(_this.tableData[i]['str_req_department'])
+          statusset.add(_this.tableData[i]['str_status'])
+          creatorset.add(_this.tableData[i]['str_creator'])
         }
         for (let i of orgaset) {
-          _this.so_orgaSet.push({
+          _this.str_orgaSet.push({
             text: i,
             value: i
           })
         }
-        for (let i of customset) {
-          _this.so_customSet.push({
+        for (let i of fromset) {
+          _this.str_fromSet.push({
             text: i,
             value: i
           })
         }
-        for (let i of warehouseset) {
-          _this.so_warehouseSet.push({
+        for (let i of toset) {
+          _this.str_toSet.push({
             text: i,
             value: i
           })
         }
-        for (let i of typeset) {
-          _this.so_typeSet.push({
+        for (let i of dpmset) {
+          _this.str_dpmSet.push({
             text: i,
             value: i
           })
         }
         for (let i of statusset) {
-          _this.so_statusSet.push({
+          _this.str_statusSet.push({
             text: i,
             value: i
           })
         }
         for (let i of creatorset) {
-          _this.so_creatorSet.push({
+          _this.str_creatorSet.push({
             text: i,
             value: i
           })
@@ -248,16 +228,21 @@ export default {
     find () {
       this.pageTotal = 0
       this.tableDataNew = this.tableData.filter(data => !this.search ||
-        data.so_iden.toLowerCase().includes(this.search.toLowerCase()) ||
-        data.so_orga.toLowerCase().includes(this.search.toLowerCase()) ||
-        data.so_type.toLowerCase().includes(this.search.toLowerCase()) ||
-        data.so_custom.toLowerCase().includes(this.search.toLowerCase()) ||
-        data.so_warehouse.toLowerCase().includes(this.search.toLowerCase()) ||
-        data.so_creator.toLowerCase().includes(this.search.toLowerCase()))
+          data.str_iden.toLowerCase().includes(this.search.toLowerCase()) ||
+          data.str_orga.toLowerCase().includes(this.search.toLowerCase()) ||
+          data.str_to.toLowerCase().includes(this.search.toLowerCase()) ||
+          data.str_from.toLowerCase().includes(this.search.toLowerCase()) ||
+          data.str_req_department.toLowerCase().includes(this.search.toLowerCase()) ||
+          data.str_req_date.toLowerCase().includes(this.search.toLowerCase()) ||
+          data.str_creator.toLowerCase().includes(this.search.toLowerCase()))
     },
     // 新增
     add () {
       this.addVisible = true
+    },
+    // 关闭新增弹窗
+    close () {
+      this.addVisible = false
     },
     // 删除操作
     handleDelete (index, row) {
@@ -268,9 +253,6 @@ export default {
         .then(() => {
           this.$message.success('删除成功')
           this.tableData.splice(index, 1)
-          let pageIndexNew = Math.ceil((this.pageTotal - 1) / this.query.pageSize) // 新的页面数量
-          this.query.pageIndex = (this.query.pageIndex > pageIndexNew) ? pageIndexNew : this.query.pageIndex
-          this.query.pageIndex = (this.query.pageIndex === 0) ? 1 : this.query.pageIndex
           this.find()
         })
         .catch(() => {
@@ -284,14 +266,14 @@ export default {
     handleEdit (index, row) {
       this.editform = row
       let _this = this
-      this.$nextTick(() => _this.$refs.Soedit.getForm())
+      this.$nextTick(() => _this.$refs.Reqedit.getForm())
       this.editVisible = true
     },
     // 详情操作
     handleMore (index, row) {
       this.moreform = row
       let _this = this
-      this.$nextTick(() => _this.$refs.Somore.getForm())
+      this.$nextTick(() => _this.$refs.Reqmore.getForm())
       this.moreVisible = true
     },
     // 分页导航
@@ -339,16 +321,24 @@ export default {
   .handle-box {
     margin-bottom: 20px;
   }
+
   .table {
     width: 100%;
     font-size: 14px;
   }
+
   .red {
     color: #ff0000;
   }
+
   .green {
     color: #00a854;
   }
+
+  .block {
+    color: grey;
+  }
+
   .input-search {
     width: 50%;
   }

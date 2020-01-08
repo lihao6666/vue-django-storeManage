@@ -42,7 +42,7 @@
         <el-table-column prop="customer_type" sortable label="类型" :filters="customer_typeSet"
                          :filter-method="filter" align="center">
           <template slot-scope="scope">
-            <el-tag :type="'success'">{{scope.row.customer_type==0?'内部单位':'外部单位'}}</el-tag>
+            <el-tag :type="scope.row.customer_type==0?'success':''">{{scope.row.customer_type==0?'内部单位':'外部单位'}}</el-tag>
           </template>
         </el-table-column>
         <el-table-column prop="customer_creator" sortable label="创建人" :filters="customer_creatorSet"
@@ -232,10 +232,11 @@ export default {
     getData () {
       let _this = this
       getAPI('/base/customers').then(function (res) {
-        if (res.data.message) {
+        if (!res.data.customers) {
           return
         }
         _this.tableData = res.data.customers
+        _this.pageTotal = res.data.customers.length
         _this.find()
         _this.customer_nameSet = []
         _this.customer_typeSet = []
@@ -266,7 +267,6 @@ export default {
             value: i
           })
         }
-        _this.pageTotal = res.data.customers.length
       }).catch(function (err) {
         console.log(err)
       })

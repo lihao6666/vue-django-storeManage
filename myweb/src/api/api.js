@@ -100,6 +100,7 @@ axios.interceptors.response.use(response => {
   //   }
   // }
   // Vue.$vux.loading.hide()
+  console.log(response)
   tryHideFullScreenLoading()
   return response
 }, error => {
