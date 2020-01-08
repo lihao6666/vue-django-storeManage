@@ -43,6 +43,26 @@ export default new Router({
           meta: {title: '采购入库', key: 4}
         },
         {
+          path: '/otherinstore',
+          component: () => import('../components/store/in_store/other_in_store/OisCheck'),
+          meta: {title: '其他入库', key: 5}
+        },
+        {
+          path: '/materialsoutstore',
+          component: () => import('../components/store/out_store/material_out_store/MosCheck'),
+          meta: {title: '材料出库', key: 8}
+        },
+        {
+          path: '/selloutstore',
+          component: () => import('../components/store/out_store/sell_out_store/SosCheck'),
+          meta: {title: '销售出库', key: 7}
+        },
+        {
+          path: '/otheroutstore',
+          component: () => import('../components/store/out_store/other_out_store/OosCheck'),
+          meta: {title: '其他出库', key: 8}
+        },
+        {
           path: '/stockrequisition',
           component: () => import(/* webpackChunkName: "donate" */ '../components/store/stock_adjustment/stock_require/TransferRequest.vue'),
           meta: {title: '转库申请单', key: 9}
@@ -50,37 +70,22 @@ export default new Router({
         {
           path: '/stockchange',
           component: () => import(/* webpackChunkName: "donate" */ '../components/store/stock_adjustment/stock_transfer/ChangeCheck.vue'),
-          meta: {title: '转库单'}
+          meta: {title: '转库单', key: 10}
         },
         {
           path: '/stockconfirm',
           component: () => import(/* webpackChunkName: "donate" */ '../components/store/stock_adjustment/stock_confirm/ConfirmCheck.vue'),
-          meta: {title: '库存盘点'}
+          meta: {title: '库存盘点', key: 11}
         },
         {
           path: '/stockbegin',
           component: () => import(/* webpackChunkName: "donate" */ '../components/store/stock_adjustment/stock_begin/BeginCheck.vue'),
-          meta: {title: '期初库存'}
+          meta: {title: '期初库存', key: 12}
         },
         {
           path: '/stockcheck',
           component: () => import(/* webpackChunkName: "donate" */ '../components/store/stock/StockCheck.vue'),
           meta: {title: '现存量查询', key: 13}
-        },
-        {
-          path: '/otherinstore',
-          component: () => import('../components/store/in_store/other_in_store/OisCheck'),
-          meta: {title: '其他入库'}
-        },
-        {
-          path: '/selloutstore',
-          component: () => import('../components/store/out_store/sell_out_store/SosCheck'),
-          meta: {title: '销售出库'}
-        },
-        {
-          path: '/otheroutstore',
-          component: () => import('../components/store/out_store/other_out_store/OosCheck'),
-          meta: {title: '其他出库'}
         },
         {
           path: '/organizationmanage',

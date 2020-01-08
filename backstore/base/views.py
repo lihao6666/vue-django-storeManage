@@ -316,8 +316,16 @@ class UsersView(APIView):
             for user in users:
                 department_list = []
                 role_list = []
-                departments = user.user_departments.split("-")
-                roles = user.user_roles.split("-")
+                departments = user.user_departments
+                if departments:
+                    departments = departments.split("-")
+                else:
+                    departments = []
+                roles = user.user_roles
+                if roles:
+                    roles = roles.split("-")
+                else:
+                    roles = []
                 if user.user_departments:
                     for department in departments:
                         department_list.append(models.Department.objects.get(id=department).dpm_name)
@@ -849,6 +857,7 @@ class BrandAddView(APIView):
         brand_description = json_data['brand_description']
         if self.nameCheck(brand_name):
             models.Brand.objects.create(brand_name=brand_name,
+                                        brand_status=0,
                                         brand_description=brand_description,
                                         brand_creator=self.user_now_name,
                                         brand_creator_iden=user_now_iden)
