@@ -334,19 +334,19 @@ export default {
 		newOrder(page) {
 			if(page === 0) {
 				uni.navigateTo({
-				    url: '../user/phoneus',
+				    url: '../out/out',
 				});
 			} else if(page === 1) {
 				uni.navigateTo({
-				    url: '../requisitions/requisitions',
+				    url: '../purchase/purchase',
 				});
 			} else if(page === 2) {
 				uni.navigateTo({
-				    url: '../user/setting',
+				    url: '../sell/sell',
 				});
 			} else if(page === 3) {
 				uni.navigateTo({
-				    url: '../user/myinfo',
+				    url: '../exchange/exchange',
 				});
 			}
 		},

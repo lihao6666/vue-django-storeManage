@@ -31,14 +31,14 @@
                 "navigationBarTitleText": "找回密码"
             }
         },{
-            "path": "pages/requisitions/requisitions",
+            "path": "pages/purchase/purchaseMaterials",
             "style": {
-                "navigationBarTitleText": "请购"
+                "navigationBarTitleText": "选择物料"
             }
         },{
-            "path": "pages/requisitions/start",
+            "path": "pages/purchase/purchase",
             "style": {
-                "navigationBarTitleText": "新建"
+                "navigationBarTitleText": "新建请购单"
             }
         },{
             "path": "pages/user/phoneus",
@@ -80,7 +80,37 @@
 		    "style": {
 		        "navigationBarTitleText": "转库申请单详情"
 		    }
-		}
+		},{
+            "path": "pages/out/out",
+            "style": {
+                "navigationBarTitleText": "新建出库单"
+            }
+        },{
+            "path": "pages/out/outMaterials",
+            "style": {
+                "navigationBarTitleText": "选择物料"
+            }
+        },{
+            "path": "pages/sell/sell",
+            "style": {
+                "navigationBarTitleText": "新建销售单"
+            }
+        },{
+            "path": "pages/sell/sellMaterials",
+            "style": {
+                "navigationBarTitleText": "物料选择"
+            }
+        },{
+            "path": "pages/exchange/exchange",
+            "style": {
+                "navigationBarTitleText": "新建转库单"
+            }
+        },{
+            "path": "pages/exchange/exchangeMaterials",
+            "style": {
+                "navigationBarTitleText": "物料选择"
+            }
+        }
     ],
     "tabBar": {//下方导航栏
         "color": "#7a7e83",
