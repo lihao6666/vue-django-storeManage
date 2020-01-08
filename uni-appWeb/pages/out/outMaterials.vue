@@ -63,7 +63,7 @@
 	import uniCard from '../../components/uni-card/uni-card.vue'
 	import uniSection from '../../components/uni-section/uni-section.vue'
 	// import slFilter from '@/components/sl-filter/sl-filter.vue'
-	import materialData from '../../data/materialData.js'
+	import materialData from '../../data/outMaterials.js'
 	import dragButton from '../../components/drag-button/anotherButton.vue'
 	import uniNumberBox from '@/components/uni-number-box/uni-number-box.vue'
 	import uniIcons from '@/components/uni-icons/uni-icons.vue'
@@ -140,7 +140,7 @@
 			},
 			newOut(){
 				uni.navigateTo({
-					url: './start',
+					url: './out',
 				});
 			},
 			value(item){

@@ -14,7 +14,7 @@
 	</view> 
 	 
 	<view class="address-item ">
-		<text class="address-item-title">需求类型</text>	
+		<text class="address-item-title">出库仓库</text>	
 		<text class="address-item-input" @tap="handleTap('picker2')">{{label2}}</text>
 		  <lb-picker ref="picker2"
 		    v-model="label2"
@@ -26,13 +26,27 @@
 		</lb-picker>
 	</view> 
 	
+	
 	<view class="address-item ">
-		<text class="address-item-title">申请部门</text>	
+		<text class="address-item-title">出库分类</text>	
 		<text class="address-item-input" @tap="handleTap('picker3')">{{label3}}</text>
 		  <lb-picker ref="picker3"
 		    v-model="label3"
 		    mode="selector"
 		    :list="list3"
+		    @change="handleChange"
+		    @confirm="handleConfirmWithType"
+		    @cancle="handleCancle">
+		</lb-picker>
+	</view> 
+	
+	<view class="address-item ">
+		<text class="address-item-title">申请部门</text>	
+		<text class="address-item-input" @tap="handleTap('picker4')">{{label4}}</text>
+		  <lb-picker ref="picker4"
+		    v-model="label4"
+		    mode="selector"
+		    :list="list4"
 		    @change="handleChange"
 		    @confirm="handelConfirmWithDepartment"
 		    @cancle="handleCancle">
@@ -41,7 +55,7 @@
 	
 	<view class="address-item ">
 		<text class="address-item-title">申请时间</text>	
-		<text class="address-item-input" @tap="toggleTab('date')">{{label4}}</text>
+		<text class="address-item-input" @tap="toggleTab('date')">{{label5}}</text>
 		 <w-picker
 		  	mode="date" 
 		  	startYear="2000" 
@@ -55,10 +69,21 @@
 		  ></w-picker>
 	</view> 
 	
+	<view class="address-item ">
+		<text class="address-item-title">创建时间</text>	
+		<text class="address-item-input">{{label6}}</text>
+	</view> 
+	
 	<view class="remarks">
 		<text class="remarks_text">备注</text>	
 		<textarea class="remarks_input" maxlength="200" v-model="remarks" placeholder="请输入,限制200字"></textarea>
 	</view> 
+	
+	<view class="shop">
+		<view class="cart">
+			<button class="address-add-btn4" @click="select">选择物料</button>
+		</view>
+	</view>
 	
 	<view class="shopcart">
 		<!-- @click="toggleList" -->
@@ -92,7 +117,9 @@
 				label1: '点击选择',
 				label2: '点击选择',
 				label3: '点击选择',
-				label4: formateDate(new Date(),"Y-M-D"),
+				label4: '点击选择',
+				label5: formateDate(new Date(),"Y-M-D"),
+				label6: formateDate(new Date(),"Y-M-D h:min:s"),
 				remarks: '',
 				list1: [
 					{
@@ -128,6 +155,15 @@
 						
 					}
 				],list3:[
+					{
+						label: '类别一',
+						
+					},
+					{
+						label: '类别二',
+						
+					}
+				],list4:[
 					{
 						label: '学习中心',
 						
@@ -165,6 +201,7 @@
 				console.log(item.item.label)
 				console.log('confirm::', item)
 			},handleConfirmWithDate(item){
+				console.log(label4)
 				console.log(item);
 				this.label4 = item.result
 			},
@@ -179,6 +216,11 @@
 			},
 			confirm(){
 				uni.switchTab({url:'../main/main'})
+			},
+			select(){
+				uni.navigateTo({
+					url: 'outMaterials'
+				})
 			}
 		}
 	}
@@ -246,6 +288,17 @@
 		}
 	}
 	
+	.shop .cart{
+		position: fixed;
+		bottom: 50px;
+		left: 0;
+		right: 0;
+		height: 50px;
+		z-index: 99;
+		display: flex;
+		background-color: #141d27;
+	}
+	
 	.shopcart .cartBottom {
 		position: fixed;
 		bottom: 0;
@@ -296,5 +349,20 @@
 		background-color: #1aa034;
 		border-radius: 10upx;
 		
+	}
+	
+	.address-add-btn4 {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 690upx;
+		height: 80upx;
+		margin: 60upx auto;
+		font-size: 32upx;
+		color: #fff;
+		background-color: #f9cc9d;
+		border-radius: 10upx;
+		position: relative;
+		bottom: 22px;
 	}
 </style>
