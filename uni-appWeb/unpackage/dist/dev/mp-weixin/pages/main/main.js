@@ -100,7 +100,7 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  var l0 = _vm.__map(_vm.outFilterList, function(item, __i0__) {
+  var l0 = _vm.__map(_vm.outFilterList, function(item, index) {
     var m0 = _vm.judgeStatus(item.mso_status)
     var m1 = _vm.judgeStatus(item.mso_status)
     return {
@@ -110,7 +110,7 @@ var render = function() {
     }
   })
 
-  var l1 = _vm.__map(_vm.purchaseFilterList, function(item, __i1__) {
+  var l1 = _vm.__map(_vm.testList, function(item, index) {
     var m2 = _vm.judgeStatus(item.rp_status)
     var m3 = _vm.judgeStatus(item.rp_status)
     var m4 = _vm.judgeStatus(item.rp_status)
@@ -122,7 +122,7 @@ var render = function() {
     }
   })
 
-  var l2 = _vm.__map(_vm.sellFilterList, function(item, __i2__) {
+  var l2 = _vm.__map(_vm.sellFilterList, function(item, index) {
     var m5 = _vm.judgeStatus(item.so_status)
     var m6 = _vm.judgeStatus(item.so_status)
     return {
@@ -132,7 +132,7 @@ var render = function() {
     }
   })
 
-  var l3 = _vm.__map(_vm.exchangeFilterList, function(item, __i3__) {
+  var l3 = _vm.__map(_vm.exchangeFilterList, function(item, index) {
     var m7 = _vm.judgeStatus(item.str_status)
     var m8 = _vm.judgeStatus(item.str_status)
     return {
@@ -371,7 +371,7 @@ __webpack_require__.r(__webpack_exports__);
 var _outStore = _interopRequireDefault(__webpack_require__(/*! ../../data/outStore.js */ 34));
 var _purchase = _interopRequireDefault(__webpack_require__(/*! ../../data/purchase.js */ 35));
 var _sell = _interopRequireDefault(__webpack_require__(/*! ../../data/sell.js */ 36));
-var _exchange = _interopRequireDefault(__webpack_require__(/*! ../../data/exchange.js */ 37));function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}var uniSegmentedControl = function uniSegmentedControl() {return __webpack_require__.e(/*! import() | components/uni-segmented-control/uni-segmented-control */ "components/uni-segmented-control/uni-segmented-control").then(__webpack_require__.bind(null, /*! ../../components/uni-segmented-control/uni-segmented-control.vue */ 171));};var uniCard = function uniCard() {return __webpack_require__.e(/*! import() | components/uni-card/uni-card */ "components/uni-card/uni-card").then(__webpack_require__.bind(null, /*! ../../components/uni-card/uni-card.vue */ 178));};var uniIcons = function uniIcons() {return __webpack_require__.e(/*! import() | components/uni-icons/uni-icons */ "components/uni-icons/uni-icons").then(__webpack_require__.bind(null, /*! @/components/uni-icons/uni-icons.vue */ 185));};var dragButton = function dragButton() {return __webpack_require__.e(/*! import() | components/drag-button/drag-button */ "components/drag-button/drag-button").then(__webpack_require__.bind(null, /*! ../../components/drag-button/drag-button.vue */ 192));};var cmdIcon = function cmdIcon() {return __webpack_require__.e(/*! import() | components/cmd-icon/cmd-icon */ "components/cmd-icon/cmd-icon").then(__webpack_require__.bind(null, /*! ../../components/cmd-icon/cmd-icon.vue */ 199));};var uniNavBar = function uniNavBar() {return __webpack_require__.e(/*! import() | components/uni-nav-bar/uni-nav-bar */ "components/uni-nav-bar/uni-nav-bar").then(__webpack_require__.bind(null, /*! @/components/uni-nav-bar/uni-nav-bar.vue */ 206));};var EvanIcons = function EvanIcons() {return Promise.all(/*! import() | components/evan-icons/evan-icons */[__webpack_require__.e("common/vendor"), __webpack_require__.e("components/evan-icons/evan-icons")]).then(__webpack_require__.bind(null, /*! ../../components/evan-icons/evan-icons.vue */ 213));};var _default =
+var _exchange = _interopRequireDefault(__webpack_require__(/*! ../../data/exchange.js */ 37));function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}function _slicedToArray(arr, i) {return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest();}function _nonIterableRest() {throw new TypeError("Invalid attempt to destructure non-iterable instance");}function _iterableToArrayLimit(arr, i) {var _arr = [];var _n = true;var _d = false;var _e = undefined;try {for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) {_arr.push(_s.value);if (i && _arr.length === i) break;}} catch (err) {_d = true;_e = err;} finally {try {if (!_n && _i["return"] != null) _i["return"]();} finally {if (_d) throw _e;}}return _arr;}function _arrayWithHoles(arr) {if (Array.isArray(arr)) return arr;}var uniSegmentedControl = function uniSegmentedControl() {return __webpack_require__.e(/*! import() | components/uni-segmented-control/uni-segmented-control */ "components/uni-segmented-control/uni-segmented-control").then(__webpack_require__.bind(null, /*! ../../components/uni-segmented-control/uni-segmented-control.vue */ 171));};var uniCard = function uniCard() {return __webpack_require__.e(/*! import() | components/uni-card/uni-card */ "components/uni-card/uni-card").then(__webpack_require__.bind(null, /*! ../../components/uni-card/uni-card.vue */ 178));};var uniIcons = function uniIcons() {return __webpack_require__.e(/*! import() | components/uni-icons/uni-icons */ "components/uni-icons/uni-icons").then(__webpack_require__.bind(null, /*! @/components/uni-icons/uni-icons.vue */ 185));};var dragButton = function dragButton() {return __webpack_require__.e(/*! import() | components/drag-button/drag-button */ "components/drag-button/drag-button").then(__webpack_require__.bind(null, /*! ../../components/drag-button/drag-button.vue */ 192));};var cmdIcon = function cmdIcon() {return __webpack_require__.e(/*! import() | components/cmd-icon/cmd-icon */ "components/cmd-icon/cmd-icon").then(__webpack_require__.bind(null, /*! ../../components/cmd-icon/cmd-icon.vue */ 199));};var uniNavBar = function uniNavBar() {return __webpack_require__.e(/*! import() | components/uni-nav-bar/uni-nav-bar */ "components/uni-nav-bar/uni-nav-bar").then(__webpack_require__.bind(null, /*! @/components/uni-nav-bar/uni-nav-bar.vue */ 206));};var EvanIcons = function EvanIcons() {return Promise.all(/*! import() | components/evan-icons/evan-icons */[__webpack_require__.e("common/vendor"), __webpack_require__.e("components/evan-icons/evan-icons")]).then(__webpack_require__.bind(null, /*! ../../components/evan-icons/evan-icons.vue */ 213));};var _default =
 
 {
   components: {
@@ -388,6 +388,7 @@ var _exchange = _interopRequireDefault(__webpack_require__(/*! ../../data/exchan
       items: ['出库', '请购', '销售', '转库'],
       current: 0,
       //将data文件夹中的数据读入
+      testList: [],
       outList: _outStore.default.data,
       purchaseList: _purchase.default.data,
       sellList: _sell.default.data,
@@ -400,59 +401,59 @@ var _exchange = _interopRequireDefault(__webpack_require__(/*! ../../data/exchan
   },
   computed: {
     // 单据列表
-    outFilterList: function outFilterList() {var _this = this;
+    outFilterList: function outFilterList() {var _this2 = this;
       var arr = [];
       this.outList.forEach(function (item) {return arr.push(item);});
       if (this.outFilterText) {
-        arr = this.outList.filter(function (item) {return item.mso_orga.includes(_this.outFilterText) ||
-          item.mso_iden.includes(_this.outFilterText) ||
-          item.mso_remarks.includes(_this.outFilterText) ||
-          item.mso_warehouse.includes(_this.outFilterText) ||
-          item.mso_req_department.includes(_this.outFilterText) ||
-          item.mso_creator.includes(_this.outFilterText);});
+        arr = this.outList.filter(function (item) {return item.mso_orga.includes(_this2.outFilterText) ||
+          item.mso_iden.includes(_this2.outFilterText) ||
+          item.mso_remarks.includes(_this2.outFilterText) ||
+          item.mso_warehouse.includes(_this2.outFilterText) ||
+          item.mso_req_department.includes(_this2.outFilterText) ||
+          item.mso_creator.includes(_this2.outFilterText);});
 
       }
       return arr;
     },
-    purchaseFilterList: function purchaseFilterList() {var _this2 = this;
+    purchaseFilterList: function purchaseFilterList() {var _this3 = this;
       var arr = [];
       this.purchaseList.forEach(function (item) {return arr.push(item);});
       if (this.purchaseFilterText) {
-        arr = this.purchaseList.filter(function (item) {return item.rp_orga.includes(_this2.purchaseFilterText) ||
-          item.rp_iden.includes(_this2.purchaseFilterText) ||
-          item.rp_remarks.includes(_this2.purchaseFilterText) ||
-          item.rp_type.includes(_this2.purchaseFilterText) ||
-          item.rp_req_department.includes(_this2.purchaseFilterText) ||
-          item.rp_creator.includes(_this2.purchaseFilterText);});
+        arr = this.purchaseList.filter(function (item) {return item.rp_orga.includes(_this3.purchaseFilterText) ||
+          item.rp_iden.includes(_this3.purchaseFilterText) ||
+          item.rp_remarks.includes(_this3.purchaseFilterText) ||
+          item.rp_type.includes(_this3.purchaseFilterText) ||
+          item.rp_req_department.includes(_this3.purchaseFilterText) ||
+          item.rp_creator.includes(_this3.purchaseFilterText);});
 
       }
       return arr;
     },
-    sellFilterList: function sellFilterList() {var _this3 = this;
+    sellFilterList: function sellFilterList() {var _this4 = this;
       var arr = [];
       this.sellList.forEach(function (item) {return arr.push(item);});
       if (this.sellFilterText) {
-        arr = this.sellList.filter(function (item) {return item.so_orga.includes(_this3.sellFilterText) ||
-          item.so_remarks.includes(_this3.sellFilterText) ||
-          item.so_iden.includes(_this3.sellFilterText) ||
-          item.so_warehouse.includes(_this3.sellFilterText) ||
-          item.so_type.includes(_this3.selFilterText) ||
-          item.so_creator.includes(_this3.sellFilterText) ||
-          item.so_custom.includes(_this3.sellFilterText);});
+        arr = this.sellList.filter(function (item) {return item.so_orga.includes(_this4.sellFilterText) ||
+          item.so_remarks.includes(_this4.sellFilterText) ||
+          item.so_iden.includes(_this4.sellFilterText) ||
+          item.so_warehouse.includes(_this4.sellFilterText) ||
+          item.so_type.includes(_this4.selFilterText) ||
+          item.so_creator.includes(_this4.sellFilterText) ||
+          item.so_custom.includes(_this4.sellFilterText);});
 
       }
       return arr;
     },
-    exchangeFilterList: function exchangeFilterList() {var _this4 = this;
+    exchangeFilterList: function exchangeFilterList() {var _this5 = this;
       var arr = [];
       this.exchangeList.forEach(function (item) {return arr.push(item);});
       if (this.exchangeFilterText) {
-        arr = this.exchangeList.filter(function (item) {return item.str_orga.includes(_this4.exchangeFilterText) ||
-          item.str_iden.includes(_this4.exchangeFilterText) ||
-          item.str_to.includes(_this4.exchangeFilterText) ||
-          item.str_from.includes(_this4.exchangeFilterText) ||
-          item.str_req_department.includes(_this4.exchangeFilterText) ||
-          item.str_creator.includes(_this4.exchangeFilterText);});
+        arr = this.exchangeList.filter(function (item) {return item.str_orga.includes(_this5.exchangeFilterText) ||
+          item.str_iden.includes(_this5.exchangeFilterText) ||
+          item.str_to.includes(_this5.exchangeFilterText) ||
+          item.str_from.includes(_this5.exchangeFilterText) ||
+          item.str_req_department.includes(_this5.exchangeFilterText) ||
+          item.str_creator.includes(_this5.exchangeFilterText);});
 
       }
       return arr;
@@ -700,6 +701,23 @@ var _exchange = _interopRequireDefault(__webpack_require__(/*! ../../data/exchan
     // if(!loginMsg){
     // 	return;
     // }
+    var _this = this;
+    var myinfo = uni.getStorageSync('user_info');
+    var outMes = [];
+    outMes.area_name = myinfo.data.user.area_name;
+    outMes.user_now_iden = myinfo.data.user.username;
+    this.$http.post('/purchase/prs', outMes).then(function (_ref) {var _ref2 = _slicedToArray(_ref, 2),err = _ref2[0],res = _ref2[1];
+      if (res.data.signal === '0') {
+        _this.testList = res.data.prs;
+      } else {
+        console.log(res.data.message);
+        console.log(res);
+      }
+    });
+
+
+
+
     uni.removeStorageSync('viewout');
     uni.removeStorageSync('viewpurchase');
     uni.removeStorageSync('viewsell');
