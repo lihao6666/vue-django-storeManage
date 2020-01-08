@@ -100,6 +100,9 @@ export default {
         if (!res.data.total_stocks) {
           return
         }
+        if (res.data.message === '用户未登录') {
+          _this.$message.error(res.data.message)
+        }
         _this.tableData = res.data.total_stocks
         _this.tableDataNew = res.data.total_stocks
         let orgaSet = new Set()
@@ -155,6 +158,7 @@ export default {
         _this.pageTotal = res.data.total_stocks.length
       }).catch(function (err) {
         console.log(err)
+        _this.$message.error('获取信息失败')
       })
     },
     // 表格每行的class样式
