@@ -5,23 +5,23 @@
         <el-form-item label="库存组织">
           <el-tag
             :type="'success'"
-          >{{formadd.req_pur_orga}}
+          >{{formadd.orga_name}}
           </el-tag>
         </el-form-item>
         <el-form-item label="申请部门">
-          <el-select v-model="formadd.req_pur_from" placeholder="请选择" :disabled="!ifchange">
-            <el-option v-for="item in form_req_pur_from" v-bind:key="item" :label="item" :value="item"></el-option>
+          <el-select v-model="formadd.pr_department" placeholder="请选择" :disabled="!ifchange">
+            <el-option v-for="item in form_pr_department" v-bind:key="item" :label="item" :value="item"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="需求类型">
-          <el-select v-model="formadd.req_pur_type" placeholder="请选择" :disabled="!ifchange">
-            <el-option v-for="item in form_req_pur_type" v-bind:key="item" :label="item" :value="item"></el-option>
+          <el-select v-model="formadd.pr_type" placeholder="请选择" :disabled="!ifchange">
+            <el-option v-for="item in form_pr_type" v-bind:key="item" :label="item" :value="item"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="请购日期">
           <el-col :span="11">
             <el-date-picker
-              v-model="formadd.req_pur_date"
+              v-model="formadd.pr_date"
               type="datetime"
               placeholder="选择日期时间"
               align="right"
@@ -31,21 +31,27 @@
         </el-form-item>
         <el-row>
           <el-form-item label="备注">
-            <el-input type="textarea" v-model="formadd.req_pur_remarks" rows="3" class="form-item-from" :disabled="!ifchange"
+            <el-input type="textarea" v-model="formadd.pr_remarks" rows="3" class="form-item-from" :disabled="!ifchange"
                       placeholder="请输入200字以内的描述" maxlength="200" show-word-limit clearable></el-input>
           </el-form-item>
-          <el-button type="primary" class="form-item-save" v-if="ifchange">保 存</el-button>
+          <el-tooltip content="保存主明细数据" placement="bottom" effect="light">
+            <el-button type="primary" class="form-item-save" v-if="ifchange" @click="saveReqPurAdd">保 存</el-button>
+          </el-tooltip>
         </el-row>
       </el-form>
     </div>
-    <Reqprd :formadd="formadd" :ifchange="ifchange"></Reqprd>
+    <Reqprd ref="Reqprd" :formadd="formadd" :prds="prds"
+            @commit="this.$emit('commit')"
+            @save="this.$emit('save')" @saveall="saveReqPurAdd"
+            :orga_name="form_orga_name" :ifchange="ifchange"></Reqprd>
   </div>
 </template>
 
 <script>
 import Reqprd from './ReqPurPrd'
+import {postAPI} from '../../../api/api'
 export default {
-  name: 'req_pur_add',
+  name: 'pr_add',
   props: ['editform', 'ifchange'],
   components: {
     Reqprd
@@ -75,33 +81,106 @@ export default {
         }]
       },
       formadd: {
-        req_pur_iden: this.editform.req_pur_iden,
-        req_pur_orga: this.editform.req_pur_orga,
-        req_pur_from: this.editform.req_pur_from,
-        req_pur_type: this.editform.req_pur_type,
-        req_pur_remarks: this.editform.req_pur_remarks,
-        req_pur_date: this.editform.req_pur_date
+        pr_iden: this.editform.pr_iden,
+        orga_name: this.editform.orga_name,
+        pr_department: this.editform.pr_department,
+        pr_type: this.editform.pr_type,
+        pr_remarks: this.editform.pr_remarks,
+        pr_date: this.editform.pr_date
       },
-      form_req_pur_from: [
+      form_pr_department: [],
+      form_orga_name: [],
+      form_pr_type: [
         '礼品',
         '教学用品',
-        '销售商品'
+        '销售商品',
+        '办公用品',
+        '市场物资'
       ],
-      form_req_pur_type: [
-        '礼品',
-        '教学用品',
-        '销售商品'
-      ]
+      prds: []
     }
   },
   methods: {
+    getList (row = {}) {
+      let _this = this
+      postAPI('/purchaseRequest/prNew', row).then(function (res) {
+        console.log(res.data)
+        _this.form_pr_department = []
+        for (let i in res.data.dpms) {
+          _this.form_pr_department.push(res.data.dpms[i][1])
+        }
+        _this.form_orga_name = []
+        for (let i in res.data.orga_names) {
+          _this.form_orga_name.push(res.data.orga_names[i][1])
+        }
+        if (res.data.prds) {
+          _this.prds = res.data.prds
+          for (let i in res.data.prds_present_num) {
+            _this.prds[i].prd_present_num = res.data.prds_present_num[i]
+          }
+        }
+      }).catch(function (err) {
+        console.log(err)
+      })
+    },
     getForm () {
-      this.formadd.req_pur_iden = this.editform.req_pur_iden
-      this.formadd.req_pur_orga = this.editform.req_pur_orga
-      this.formadd.req_pur_from = this.editform.req_pur_from
-      this.formadd.req_pur_type = this.editform.req_pur_type
-      this.formadd.req_pur_remarks = this.editform.req_pur_remarks
-      this.formadd.req_pur_date = this.editform.req_pur_date
+      this.formadd.pr_iden = this.editform.pr_iden
+      this.formadd.orga_name = this.editform.orga_name
+      this.formadd.pr_department = this.editform.pr_department
+      this.formadd.pr_type = this.editform.pr_type
+      this.formadd.pr_remarks = this.editform.pr_remarks
+      this.formadd.pr_date = this.editform.pr_date
+      // this.getData()
+    },
+    saveReqPurAdd (callback = null) {
+      if (this.formadd.pr_department === '' || this.formadd.orga_name === '' ||
+        this.formadd.pr_type === '' || this.formadd.pr_date === '') {
+        this.$message.error(`请填写完主明细信息`)
+        if (typeof (callback) === 'function') {
+          let back = false
+          callback(back)
+        }
+        return
+      }
+      let _this = this
+      console.log(_this.formadd)
+      if (_this.formadd.pr_iden === '') {
+        delete _this.formadd.pr_iden
+      }
+      postAPI('/purchaseRequest/prUpdate', this.formadd).then(function (res) {
+        console.log(res.data)
+        if (res.data.signal === 0) {
+          _this.$message.success(`保存主明细成功`)
+          if (res.data.pr_new_iden) {
+            _this.formadd.pr_iden = res.data.pr_new_iden
+          }
+          _this.$emit('save')
+          if (typeof (callback) === 'function') {
+            let back = true
+            callback(back)
+          }
+        } else {
+          _this.$message.error('保存主明细失败')
+          if (typeof (callback) === 'function') {
+            let back = false
+            callback(back)
+          }
+        }
+      }).catch(function (err) {
+        _this.$message.error('保存主明细失败')
+        console.log(err)
+        if (typeof (callback) === 'function') {
+          let back = false
+          callback(back)
+        }
+      })
+    },
+    // 新增窗口弹出
+    addShow () {
+      let _this = this
+      this.$nextTick(function () {
+        _this.$refs.Reqprd.addShow()
+      })
     }
   }
 }

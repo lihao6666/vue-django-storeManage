@@ -23,8 +23,12 @@
           clearable
           v-model="search">
         </el-input>
-        <el-button type="primary" class="button-save" v-if="ifchange">保 存</el-button>
-        <el-button type="primary" class="button-save" v-if="ifchange" :disabled="!tableDataNew.length>0">提 交</el-button>
+        <el-tooltip content="保存所有数据" placement="bottom" effect="light">
+          <el-button type="primary" class="button-save" v-if="ifchange" @click="save">保 存</el-button>
+        </el-tooltip>
+        <el-tooltip content="保存所有数据并提交" placement="bottom" effect="light">
+          <el-button type="primary" class="button-save" v-if="ifchange" :disabled="!tableDataNew.length>0" @click="commit">提 交</el-button>
+        </el-tooltip>
         <el-button type="primary" icon="el-icon-plus" class="button-save" @click="add" v-if="ifchange">新增</el-button>
       </div>
       <el-table
@@ -41,16 +45,16 @@
           v-if="ifchange"
           width="55">
         </el-table-column>
-        <el-table-column type="expand">
-          <template slot-scope="props">
-            <el-form label-position="left" inline class="demo-table-expand">
-              <el-form-item label="备注">
-                <el-input type="textarea" v-model="props.row.prd_remarks" rows="3" :disabled="!ifchange"
-                    placeholder="请输入200字以内的描述" maxlength="200" show-word-limit clearable></el-input>
-              </el-form-item>
-            </el-form>
-          </template>
-        </el-table-column>
+<!--        <el-table-column type="expand">-->
+<!--          <template slot-scope="props">-->
+<!--            <el-form label-position="left" inline class="demo-table-expand">-->
+<!--              <el-form-item label="备注">-->
+<!--                <el-input type="textarea" v-model="props.row.prd_remarks" rows="3" :disabled="!ifchange"-->
+<!--                    placeholder="请输入200字以内的描述" maxlength="200" show-word-limit clearable @input="props.row.prd_remarks = input(props.row.prd_remarks)"></el-input>-->
+<!--              </el-form-item>-->
+<!--            </el-form>-->
+<!--          </template>-->
+<!--        </el-table-column>-->
         <el-table-column prop="prd_iden" sortable label="物料编码" align="center"></el-table-column>
         <el-table-column prop="prd_name" sortable label="物料名称" :filters="prd_nameSet"
       :filter-method="filter" align="center"></el-table-column>
@@ -73,6 +77,12 @@
           </template>
         </el-table-column>
         <el-table-column prop="prd_present_num" sortable label="现存量" align="center"></el-table-column>
+        <el-table-column prop="prd_remarks" sortable label="备注" align="center">
+          <template slot-scope="props">
+            <el-input type="textarea" v-model="props.row.prd_remarks" rows="3" :disabled="!ifchange"
+              placeholder="请输入200字以内的描述" maxlength="200" show-word-limit clearable @input="find"></el-input>
+          </template>
+        </el-table-column>
         <el-table-column label="操作" align="center" v-if="ifchange">
           <template slot-scope="scope">
             <el-button
@@ -101,8 +111,8 @@
       </div>
     </div>
     <!-- 新增弹出框 -->
-    <el-dialog title="新增物料" :visible.sync="addVisible" width="90%" append-to-body>
-      <Prdadd @add="addPrd" :tableHas="tableData" :formadd="formadd" :ifhasorga="ifhasorga"></Prdadd>
+    <el-dialog title="新增物料" :visible.sync="addVisible" width="90%" append-to-body :close-on-click-modal="false" :destroy-on-close="true">
+      <Prdadd ref="Prdadd" @add="addPrd" @save="getData" :tableHas="tableData" :formadd="formadd" :orga_name="orga_name" :ifhasorga="ifhasorga"></Prdadd>
     </el-dialog>
   </div>
 </template>
@@ -112,8 +122,8 @@ import {postAPI} from '../../../api/api'
 import Prdadd from './ReqPurPrdAdd'
 
 export default {
-  name: 'req_pur_prd',
-  props: ['formadd', 'ifchange'],
+  name: 'pr_prd',
+  props: ['formadd', 'ifchange', 'orga_name', 'prds'],
   components: {
     Prdadd
   },
@@ -138,59 +148,63 @@ export default {
   },
   created () {
     this.getData()
-    this.$nextTick(function () {
-      if (!this.formadd.req_pur_orga) {
-        this.addVisible = true
-      }
-    })
+    // this.$nextTick(function () {
+    //   if (!this.formadd.orga_name) {
+    //     this.addVisible = true
+    //   }
+    // })
   },
   methods: {
     getData () {
-      if (this.formadd.req_pur_iden === '') {
+      if (this.formadd.pr_iden === '') {
         return
       }
       let _this = this
-      postAPI('/req_pur_prd', this.formadd).then(function (res) {
-        _this.tableData = res.data.list
-        _this.find()
-        let nameset = new Set()
-        let specificationset = new Set()
-        let modelset = new Set()
-        let meterageset = new Set()
-        for (let i in _this.tableData) {
-          nameset.add(_this.tableData[i]['prd_name'])
-          specificationset.add(_this.tableData[i]['prd_specification'])
-          modelset.add(_this.tableData[i]['prd_model'])
-          meterageset.add(_this.tableData[i]['prd_meterage'])
-        }
-        for (let i of nameset) {
-          _this.prd_nameSet.push({
-            text: i,
-            value: i
-          })
-        }
-        for (let i of meterageset) {
-          _this.prd_meterageSet.push({
-            text: i,
-            value: i
-          })
-        }
-        for (let i of specificationset) {
-          _this.prd_specificationSet.push({
-            text: i,
-            value: i
-          })
-        }
-        for (let i of modelset) {
-          _this.prd_modelSet.push({
-            text: i,
-            value: i
-          })
-        }
-        _this.pageTotal = res.data.list.length
-      }).catch(function (err) {
-        console.log(err)
-      })
+      console.log(_this.prds)
+      if (!_this.prds || _this.prds.length === 0) {
+        return
+      }
+      _this.tableData = _this.prds
+      _this.pageTotal = _this.tableData.length
+      _this.find()
+      _this.prd_nameSet = []
+      _this.prd_specificationSet = []
+      _this.prd_modelSet = []
+      _this.prd_meterageSet = []
+      let nameset = new Set()
+      let specificationset = new Set()
+      let modelset = new Set()
+      let meterageset = new Set()
+      for (let i in _this.tableData) {
+        nameset.add(_this.tableData[i]['prd_name'])
+        specificationset.add(_this.tableData[i]['prd_specification'])
+        modelset.add(_this.tableData[i]['prd_model'])
+        meterageset.add(_this.tableData[i]['prd_meterage'])
+      }
+      for (let i of nameset) {
+        _this.prd_nameSet.push({
+          text: i,
+          value: i
+        })
+      }
+      for (let i of meterageset) {
+        _this.prd_meterageSet.push({
+          text: i,
+          value: i
+        })
+      }
+      for (let i of specificationset) {
+        _this.prd_specificationSet.push({
+          text: i,
+          value: i
+        })
+      }
+      for (let i of modelset) {
+        _this.prd_modelSet.push({
+          text: i,
+          value: i
+        })
+      }
     },
     // 表格每行的class样式
     tableRowClassName ({row, rowIndex}) {
@@ -221,17 +235,16 @@ export default {
     // 新增
     add () {
       this.addVisible = true
-      if (this.formadd.req_pur_orga === '') {
+      if (this.formadd.orga_name === '') {
         this.ifhasorga = false
       } else {
         this.ifhasorga = true
       }
+      let _this = this
+      this.$nextTick(() => _this.$refs.Prdadd.getData())
     },
     // 新增物料
     addPrd (val) {
-      for (let i in val) {
-        val[i].prd_num = 1
-      }
       this.tableData = this.tableData.concat(val)
       this.find()
       let message = '新增' + val.length + '条'
@@ -244,6 +257,8 @@ export default {
       if (num.substr(0, 1) === '0' && num.length === 2) {
         num = num.substr(1, num.length)
       }
+      console.log(num)
+      this.find()
       return num
     },
     changenum (num) {
@@ -310,6 +325,103 @@ export default {
             message: '取消删除'
           })
         })
+    },
+    // 保存
+    save (callback = null) {
+      let _this = this
+      _this.$emit('saveall', val => {
+        if (val) {
+          let data = {
+            prds: _this.tableData,
+            pr_iden: _this.formadd.pr_iden
+          }
+          postAPI('/purchaseRequest/prdSave', data).then(function (res) {
+            console.log(res.data)
+            if (res.data.signal === 0) {
+              _this.$message.success(`保存物料明细成功`)
+              if (typeof (callback) === 'function') {
+                let back = true
+                callback(back)
+              }
+            } else {
+              _this.$message.error('保存物料明细失败')
+              if (typeof (callback) === 'function') {
+                let back = false
+                callback(back)
+              }
+            }
+          }).catch(function (err) {
+            _this.$message.error('保存物料明细失败')
+            console.log(err)
+            if (typeof (callback) === 'function') {
+              let back = false
+              callback(back)
+            }
+          })
+        } else {
+          if (typeof (callback) === 'function') {
+            let back = false
+            callback(back)
+          }
+        }
+      })
+      // if (this.formadd.pr_iden === '' || this.formadd.pr_department === '' ||
+      //   this.formadd.orga_name === '' || this.formadd.pr_type === '' || this.formadd.pr_date === '') {
+      //   this.$message.error(`请填写完主明细信息`)
+      //   return
+      // }
+      // let data = {
+      //   prds: this.tableData,
+      //   pr_iden: this.formadd.pr_iden
+      // }
+      // postAPI('/purchaseRequest/prdSave', data).then(function (res) {
+      //   console.log(res.data)
+      //   if (res.data.signal === 0) {
+      //     _this.$message.success(`保存物料明细成功`)
+      //     _this.$emit('save')
+      //   } else {
+      //     _this.$message.error('保存物料明细失败')
+      //   }
+      // }).catch(function (err) {
+      //   _this.$message.error('保存物料明细失败')
+      //   console.log(err)
+      // })
+    },
+    // 提交
+    commit () {
+      let _this = this
+      this.$confirm('确定要提交吗？', '提示', {
+        type: 'warning'
+      })
+        .then(() => {
+          _this.save(val => {
+            if (val) {
+              postAPI('/purchaseRequest/prdSubmit', _this.formadd).then(function (res) {
+                console.log(res.data)
+                if (res.data.signal === 0) {
+                  _this.$message.success(`提交成功`)
+                  _this.$emit('save')
+                  _this.$emit('commit')
+                } else {
+                  _this.$message.error('提交失败')
+                }
+              }).catch(function (err) {
+                _this.$message.error('提交失败')
+                console.log(err)
+              })
+            }
+          })
+        })
+        .catch(() => {
+          _this.$message({
+            type: 'info',
+            message: '取消提交'
+          })
+        })
+    },
+    // 新增窗口弹出
+    addShow () {
+      this.addVisible = true
     }
   }
 }

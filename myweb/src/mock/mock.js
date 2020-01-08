@@ -2,9 +2,9 @@ const Mock = require('mockjs')
 
 Mock.mock('/base/login', 'post', require('./json/login'))
 
-Mock.mock('/req_pur_check', 'post', require('./json/req_pur_check'))
-Mock.mock('/req_pur_prd', 'post', require('./json/req_pur_prd'))
-Mock.mock('/req_pur_prd_add', 'post', require('./json/req_pur_prd_add'))
+Mock.mock('/pr_check', 'post', require('./json/pr_check'))
+Mock.mock('/pr_prd', 'post', require('./json/pr_prd'))
+Mock.mock('/pr_prd_add', 'post', require('./json/pr_prd_add'))
 
 Mock.mock('/so_check', 'post', require('./json/so_check'))
 Mock.mock('/so_sod', 'post', require('./json/so_sod'))

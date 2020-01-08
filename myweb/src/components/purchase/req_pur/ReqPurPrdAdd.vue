@@ -9,8 +9,8 @@
     </div>
     <div class="container">
       <div class="handle-box">
-        <el-select v-model="formadd.req_pur_orga" placeholder="请选择库存组织" :disabled="ifhasorga">
-          <el-option v-for="item in form_req_pur_orga" v-bind:key="item" :label="item" :value="item"></el-option>
+        <el-select v-model="formadd.orga_name" placeholder="请选择库存组织" :disabled="ifhasorga" @change="changeOrga">
+          <el-option v-for="item in orga_name" v-bind:key="item" :label="item" :value="item"></el-option>
         </el-select>
         <el-input
           placeholder="关键字搜索"
@@ -38,16 +38,16 @@
         size="mini"
       >
         <el-table-column type="selection" :selectable="selectable" width="55"></el-table-column>
-        <el-table-column prop="prd_iden" sortable label="物料编码" align="center"></el-table-column>
-        <el-table-column prop="prd_name" sortable label="物料名称" :filters="prd_nameSet"
+        <el-table-column prop="material_iden" sortable label="物料编码" align="center"></el-table-column>
+        <el-table-column prop="material_name" sortable label="物料名称" :filters="material_nameSet"
       :filter-method="filter" align="center"></el-table-column>
-        <el-table-column prop="prd_specification" sortable label="规格" :filters="prd_specificationSet"
+        <el-table-column prop="material_specification" sortable label="规格" :filters="material_specificationSet"
       :filter-method="filter" align="center"></el-table-column>
-        <el-table-column prop="prd_model" sortable label="型号" :filters="prd_modelSet"
+        <el-table-column prop="material_model" sortable label="型号" :filters="material_modelSet"
       :filter-method="filter" align="center"></el-table-column>
-        <el-table-column prop="prd_meterage" sortable label="计量单位" :filters="prd_meterageSet"
+        <el-table-column prop="meterage_name" sortable label="计量单位" :filters="meterage_nameSet"
       :filter-method="filter" align="center"></el-table-column>
-        <el-table-column prop="prd_attr" sortable label="存货属性" :filters="prd_attrSet"
+        <el-table-column prop="material_attr" sortable label="存货属性" :filters="material_attrSet"
       :filter-method="filter" align="center">
         </el-table-column>
         <el-table-column prop="prd_present_num" sortable label="现存量" align="center"></el-table-column>
@@ -73,8 +73,8 @@
 import {postAPI} from '../../../api/api'
 
 export default {
-  name: 'req_pur_prd',
-  props: ['tableHas', 'formadd', 'ifhasorga'],
+  name: 'pr_prd',
+  props: ['tableHas', 'formadd', 'ifhasorga', 'orga_name'],
   data () {
     return {
       query: {
@@ -85,16 +85,13 @@ export default {
       tableData: [],
       tableDataNew: [],
       multipleSelection: [],
-      prd_nameSet: [],
-      prd_specificationSet: [],
-      prd_modelSet: [],
-      prd_meterageSet: [],
-      prd_attrSet: [],
+      material_nameSet: [],
+      material_specificationSet: [],
+      material_modelSet: [],
+      meterage_nameSet: [],
+      material_attrSet: [],
       pageTotal: 0,
-      ifshowadd: true,
-      form_req_pur_orga: [
-        '合肥工业大学'
-      ]
+      ifshowadd: true
     }
   },
   created () {
@@ -102,53 +99,73 @@ export default {
   },
   methods: {
     getData () {
+      if (this.formadd.orga_name === '') {
+        return
+      }
       let _this = this
-      postAPI('/req_pur_prd_add', this.formadd.req_pur_orga).then(function (res) {
-        _this.tableData = res.data.list
+      postAPI('/purchaseRequest/prdNew', {'orga_name': _this.formadd.orga_name}).then(function (res) {
+        console.log(res.data)
+        _this.tableData = res.data.materials
+        for (let i in _this.tableData) {
+          _this.tableData[i].prd_num = 1
+          _this.tableData[i].prd_present_num = res.data.prds_present_num[i]
+          _this.tableData[i].prd_iden = _this.tableData[i].material_iden
+          _this.tableData[i].prd_name = _this.tableData[i].material_name
+          _this.tableData[i].prd_specification = _this.tableData[i].material_specification
+          _this.tableData[i].prd_model = _this.tableData[i].material_model
+          _this.tableData[i].prd_meterage = _this.tableData[i].meterage_name
+          _this.tableData[i].prd_remarks = ''
+        }
+        console.log(_this.tableData)
+        _this.pageTotal = res.data.materials.length
         _this.find()
+        _this.material_nameSet = []
+        _this.material_specificationSet = []
+        _this.material_modelSet = []
+        _this.meterage_nameSet = []
+        _this.material_attrSet = []
         let nameset = new Set()
         let specificationset = new Set()
         let modelset = new Set()
         let meterageset = new Set()
         let attrset = new Set()
         for (let i in _this.tableData) {
-          nameset.add(_this.tableData[i]['prd_name'])
-          specificationset.add(_this.tableData[i]['prd_specification'])
-          modelset.add(_this.tableData[i]['prd_model'])
-          meterageset.add(_this.tableData[i]['prd_meterage'])
-          attrset.add(_this.tableData[i]['prd_attr'])
+          nameset.add(_this.tableData[i]['material_name'])
+          specificationset.add(_this.tableData[i]['material_specification'])
+          modelset.add(_this.tableData[i]['material_model'])
+          meterageset.add(_this.tableData[i]['meterage_name'])
+          attrset.add(_this.tableData[i]['material_attr'])
         }
         for (let i of nameset) {
-          _this.prd_nameSet.push({
+          _this.material_nameSet.push({
             text: i,
             value: i
           })
         }
         for (let i of meterageset) {
-          _this.prd_meterageSet.push({
+          _this.meterage_nameSet.push({
             text: i,
             value: i
           })
         }
         for (let i of specificationset) {
-          _this.prd_specificationSet.push({
+          _this.material_specificationSet.push({
             text: i,
             value: i
           })
         }
         for (let i of modelset) {
-          _this.prd_modelSet.push({
+          _this.material_modelSet.push({
             text: i,
             value: i
           })
         }
         for (let i of attrset) {
-          _this.prd_attrSet.push({
+          _this.material_attrSet.push({
             text: i,
             value: i
           })
         }
-        _this.pageTotal = res.data.list.length
       }).catch(function (err) {
         console.log(err)
       })
@@ -174,11 +191,11 @@ export default {
       this.pageTotal = 0
       this.tableDataNew = this.tableData.filter(data => (this.ifshowadd || this.selectable(data, 0)) &&
         (!this.search ||
-        data.prd_iden.toLowerCase().includes(this.search.toLowerCase()) ||
-        data.prd_name.toLowerCase().includes(this.search.toLowerCase()) ||
-        data.prd_specification.toLowerCase().includes(this.search.toLowerCase()) ||
-        data.prd_model.toLowerCase().includes(this.search.toLowerCase()) ||
-        data.prd_meterage.toLowerCase().includes(this.search.toLowerCase())))
+        data.material_iden.toLowerCase().includes(this.search.toLowerCase()) ||
+        data.material_name.toLowerCase().includes(this.search.toLowerCase()) ||
+        data.material_specification.toLowerCase().includes(this.search.toLowerCase()) ||
+        data.material_model.toLowerCase().includes(this.search.toLowerCase()) ||
+        data.meterage_name.toLowerCase().includes(this.search.toLowerCase())))
     },
     // 分页导航
     handlePageChange (val) {
@@ -198,7 +215,7 @@ export default {
     // 可选项
     selectable (row, index) {
       for (let i in this.tableHas) {
-        if (this.tableHas[i].prd_iden === row.prd_iden) {
+        if (this.tableHas[i].prd_iden === row.material_iden) {
           return false
         }
       }
@@ -209,6 +226,11 @@ export default {
       this.$emit('add', this.multipleSelection)
       this.multipleSelection = []
       this.$refs.multipleTable.clearSelection()
+    },
+    // 选择组织
+    changeOrga () {
+      console.log(this.formadd.orga_name)
+      this.getData()
     }
   }
 }

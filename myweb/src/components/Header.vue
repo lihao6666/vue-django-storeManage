@@ -19,12 +19,36 @@
                         <i class="el-icon-caret-bottom"></i>
                     </span>
           <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item>修改密码</el-dropdown-item>
+            <el-dropdown-item command="changePassword">修改密码</el-dropdown-item>
             <el-dropdown-item divided command="loginout">退出登录</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
       </div>
     </div>
+    <!-- 修改弹出框 -->
+    <el-dialog title="修改密码" :visible.sync="editVisible" width="30%" :close-on-click-modal="false">
+      <div class="container">
+        <el-form ref="form" :model="editform" label-width="100px">
+          <el-form-item label="原密码">
+            <el-input type="password" v-model="editform.old_password"></el-input>
+          </el-form-item>
+          <el-form-item label="新密码">
+            <el-input type="password" v-model="editform.new_password"></el-input>
+          </el-form-item>
+          <el-form-item label="重复新密码">
+            <el-input type="password" v-model="editform.again_password"></el-input>
+          </el-form-item>
+        </el-form>
+      </div>
+      <el-row :gutter="20" class="el-row-button-save">
+        <el-col :span="1" :offset="14">
+          <el-button @click="editVisible = false">取 消</el-button>
+        </el-col>
+        <el-col :span="1" :offset="4">
+          <el-button type="primary" @click="changePassword">确 定</el-button>
+        </el-col>
+      </el-row>
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -36,7 +60,13 @@ export default {
       collapse: false,
       fullscreen: false,
       name: 'Mars456',
-      message: 2
+      message: 2,
+      editVisible: false,
+      editform: {
+        old_password: '',
+        new_password: '',
+        again_password: ''
+      }
     }
   },
   computed: {
@@ -60,12 +90,30 @@ export default {
         }).catch(function (err) {
           console.log(err)
         })
+      } else if (command === 'changePassword') {
+        this.editVisible = true
       }
     },
     // 侧边栏折叠
     collapseChage () {
       this.collapse = !this.collapse
       bus.$emit('collapse', this.collapse)
+    },
+    // 修改密码
+    changePassword () {
+      if (!this.editform.old_password || !this.editform.new_password || !this.editform.again_password) {
+        this.$message.error(`请填写完信息`)
+        return
+      }
+      if (this.editform.new_password !== this.editform.again_password) {
+        this.$message.error(`两次密码不一致`)
+        return
+      }
+      this.$message.success(`修改密码成功`)
+      this.editform.old_password = ''
+      this.editform.new_password = ''
+      this.editform.again_password = ''
+      this.editVisible = false
     }
   },
   mounted () {

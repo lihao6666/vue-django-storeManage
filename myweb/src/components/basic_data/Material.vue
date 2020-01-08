@@ -279,6 +279,7 @@ export default {
           return
         }
         _this.tableData = res.data.materials
+        _this.pageTotal = res.data.materials.length
         _this.find()
         _this.material_specSet = []
         _this.material_nameSet = []
@@ -336,7 +337,6 @@ export default {
             value: i
           })
         }
-        _this.pageTotal = res.data.materials.length
       }).catch(function (err) {
         console.log(err)
       })
@@ -365,7 +365,6 @@ export default {
     clearform () {
       this.form.material_attr = ''
       this.form.material_iden = ''
-      this.form.meterage_name = ''
       this.form.material_model = ''
       this.form.material_specification = ''
       this.form.material_name = ''

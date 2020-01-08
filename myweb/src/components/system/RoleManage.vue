@@ -139,8 +139,8 @@
       </el-row>
     </el-dialog>
     <!-- 授权弹出框 -->
-    <el-dialog title="授权" :visible.sync="powerVisible" width="40%"  :close-on-click-modal="false" :destroy-on-close="true" :before-close="closeRolePower">
-      <RolePower ref="RolePower" :powerform="powerform"></RolePower>
+    <el-dialog title="授权" :visible.sync="powerVisible" width="40%" :close-on-click-modal="false" :destroy-on-close="true" :before-close="closeRolePower">
+      <RolePower ref="RolePower" :powerform="powerform" @closePower="closePower"></RolePower>
       <el-row :gutter="20" class="el-row-button-save">
         <el-col :span="1" :offset="16">
           <el-button @click="closeRolePower">取 消</el-button>
@@ -197,7 +197,6 @@ export default {
   methods: {
     getData () {
       let _this = this
-      console.log(getAPI('/base/roles'))
       getAPI('/base/roles').then(function (res) {
         if (!res.data.roles) {
           return
@@ -205,6 +204,7 @@ export default {
         _this.role_creatorSet = []
         _this.role_roleSet = []
         _this.tableData = res.data.roles
+        _this.pageTotal = res.data.roles.length
         _this.find()
         console.log(res.data)
         let roleset = new Set()
@@ -225,7 +225,6 @@ export default {
             value: i
           })
         }
-        _this.pageTotal = res.data.roles.length
       }).catch(function (err) {
         console.log(err)
       })
@@ -271,7 +270,6 @@ export default {
       })
         .then(() => {
           row.role_status = 0
-          console.log(row)
           let _this = this
           postAPI('/base/roleStatus', row).then(function (res) {
             console.log(res.data)
@@ -361,7 +359,7 @@ export default {
       }
       let data = {
         'role': this.form.role,
-        'role_power': '1',
+        'role_power': '00000000000000000000000000',
         'role_description': this.form.role_description,
         'role_status': 0,
         'role_creator': 'yq'
@@ -411,9 +409,11 @@ export default {
     },
     // 保存授权
     savePower () {
-      if (this.$refs.RolePower.save()) {
-        this.powerVisible = false
-      }
+      this.$refs.RolePower.save()
+    },
+    closePower () {
+      this.powerVisible = false
+      this.getData()
     }
   }
 }

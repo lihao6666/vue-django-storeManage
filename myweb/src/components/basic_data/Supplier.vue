@@ -234,10 +234,11 @@ export default {
     getData () {
       let _this = this
       getAPI('/base/suppliers').then(function (res) {
-        if (res.data.message) {
+        if (!res.data.suppliers) {
           return
         }
         _this.tableData = res.data.suppliers
+        _this.pageTotal = res.data.suppliers.length
         _this.find()
         _this.supply_nameSet = []
         _this.supply_typeSet = []
@@ -268,7 +269,6 @@ export default {
             value: i
           })
         }
-        _this.pageTotal = res.data.suppliers.length
       }).catch(function (err) {
         console.log(err)
       })
