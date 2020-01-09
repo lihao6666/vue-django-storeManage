@@ -17,8 +17,8 @@
           clearable
           v-model="search">
         </el-input>
-        <el-button type="primary" icon="el-icon-plus" class="button-plus" @click="addpc">按采购合同</el-button>
-        <el-button type="primary" icon="el-icon-plus" class="button-plus" @click="addrp">按请购单</el-button>
+        <el-button v-if="power==='2'||power==='3'" type="primary" icon="el-icon-plus" class="button-plus" @click="addpc">按采购合同</el-button>
+        <el-button v-if="power==='2'||power==='3'" type="primary" icon="el-icon-plus" class="button-plus" @click="addrp">按请购单</el-button>
       </div>
       <el-table
         :data="tableDataNew"
@@ -49,8 +49,8 @@
       :filter-method="filter" align="center">
           <template slot-scope="scope">
             <el-tag
-              :type="scope.row.po_status==='已审批'?'success':''"
-            >{{scope.row.po_status}}
+              :type="scope.row.po_status===1?'success':''"
+            >{{status[scope.row.po_status].label}}
             </el-tag>
           </template>
         </el-table-column>
@@ -63,7 +63,7 @@
               type="text"
               icon="el-icon-edit"
               @click="handleEdit(scope.$index, scope.row)"
-              v-if="scope.row.po_status==='草稿'"
+              v-if="scope.row.po_status===0"
             >编辑
             </el-button>
             <el-button
@@ -71,7 +71,7 @@
               icon="el-icon-delete"
               class="red"
               @click="handleDelete(scope.$index, scope.row)"
-              v-if="scope.row.po_status==='草稿'"
+              v-if="scope.row.po_status===0"
             >删除
             </el-button>
             <el-button
@@ -79,7 +79,7 @@
               icon="el-icon-postcard"
               class="green"
               @click="handleMore(scope.$index, scope.row)"
-              v-if="scope.row.po_status==='已审批'"
+              v-if="scope.row.po_status===1"
             >详情
             </el-button>
           </template>
@@ -100,16 +100,16 @@
       </div>
     </div>
     <!-- 按请购单弹出框 -->
-    <el-dialog title="新增" :visible.sync="addrpVisible" width="90%" :close-on-click-modal="false">
-      <Poadd ref="poaddrp" :editform="addrpform" :ifchange="true"></Poadd>
+    <el-dialog title="新增" :visible.sync="addrpVisible" width="90%" :close-on-click-modal="false" :destroy-on-close="true" :before-close="closepoaddrp">
+      <Poadd ref="poaddrp" @commit="addrpVisible = false" @save="getData" :editform="addrpform" :ifchange="true"></Poadd>
     </el-dialog>
     <!-- 按采购合同弹出框 -->
-    <el-dialog title="新增" :visible.sync="addpcVisible" width="90%" :close-on-click-modal="false">
-      <Poadd ref="poaddpc" :editform="addpcform" :ifchange="true"></Poadd>
+    <el-dialog title="新增" :visible.sync="addpcVisible" width="90%" :close-on-click-modal="false" :destroy-on-close="true" :before-close="closepoaddpc">
+      <Poadd ref="poaddpc" @commit="addpcVisible = false" @save="getData" :editform="addpcform" :ifchange="true"></Poadd>
     </el-dialog>
     <!-- 编辑弹出框 -->
     <el-dialog title="编辑" :visible.sync="editVisible" width="90%" :close-on-click-modal="false" :destroy-on-close="true" :before-close="closepoedit">
-      <Poadd ref="poedit" :editform="editform" :ifchange="true"></Poadd>
+      <Poadd ref="poedit" @commit="editVisible = false" @save="getData" :editform="editform" :ifchange="true"></Poadd>
     </el-dialog>
     <!-- 详情弹出框 -->
     <el-dialog title="详情" :visible.sync="moreVisible" width="90%" :destroy-on-close="true">
@@ -162,7 +162,20 @@ export default {
         po_remarks: '',
         po_date: '',
         po_sum: 0
-      }
+      },
+      status: [
+        {
+          value: 0,
+          label: '草稿',
+          type: ''
+        },
+        {
+          value: 1,
+          label: '已审批',
+          type: 'success'
+        }
+      ],
+      power: localStorage.getItem('user_power').charAt(3)
     }
   },
   components: {
@@ -174,9 +187,21 @@ export default {
   methods: {
     getData () {
       let _this = this
-      postAPI('/base/po_check').then(function (res) {
-        _this.tableData = res.data.list
+      let data = {
+        power: this.power
+      }
+      postAPI('/purchase/pcs', data).then(function (res) {
+        if (!res.data.pos) {
+          return
+        }
+        _this.tableData = res.data.pos
+        _this.pageTotal = res.data.pos.length
         _this.find()
+        _this.po_orgaSet = []
+        _this.po_supplySet = []
+        _this.po_contractFromSet = []
+        _this.po_statusSet = []
+        _this.po_creatorSet = []
         let orgaset = new Set()
         let nameset = new Set()
         let statusset = new Set()
@@ -219,7 +244,6 @@ export default {
             value: i
           })
         }
-        _this.pageTotal = res.data.list.length
       }).catch(function (err) {
         console.log(err)
       })
@@ -253,9 +277,17 @@ export default {
     // 新增
     addrp () {
       this.addrpVisible = true
+      let _this = this
+      this.$nextTick(() => _this.$refs.poaddrp.getList())
+      this.$nextTick(() => _this.$refs.poaddrp.getForm())
+      this.$nextTick(() => _this.$refs.poaddrp.addShow())
     },
     addpc () {
       this.addpcVisible = true
+      let _this = this
+      this.$nextTick(() => _this.$refs.poaddpc.getList())
+      this.$nextTick(() => _this.$refs.poaddpc.getForm())
+      this.$nextTick(() => _this.$refs.poaddpc.addShow())
     },
     // 删除操作
     handleDelete (index, row) {
@@ -264,12 +296,20 @@ export default {
         type: 'warning'
       })
         .then(() => {
-          this.$message.success('删除成功')
-          this.tableData.splice(index, 1)
-          let pageIndexNew = Math.ceil((this.pageTotal - 1) / this.query.pageSize) // 新的页面数量
-          this.query.pageIndex = (this.query.pageIndex > pageIndexNew) ? pageIndexNew : this.query.pageIndex
-          this.query.pageIndex = (this.query.pageIndex === 0) ? 1 : this.query.pageIndex
-          this.find()
+          let _this = this
+
+          postAPI('/purchase/poDelete', row).then(function (res) {
+            console.log(res.data)
+            if (res.data.signal === 0) {
+              _this.$message.success(`删除成功`)
+              _this.getData()
+            } else {
+              _this.$message.error(res.data.message)
+            }
+          }).catch(function (err) {
+            _this.$message.error('删除失败')
+            console.log(err)
+          })
         })
         .catch(() => {
           this.$message({
@@ -283,6 +323,7 @@ export default {
       this.editform = row
       let _this = this
       this.$nextTick(() => _this.$refs.poedit.getForm())
+      this.$nextTick(() => _this.$refs.poedit.getList())
       this.editVisible = true
     },
     // 详情操作
@@ -291,29 +332,6 @@ export default {
       let _this = this
       this.$nextTick(() => _this.$refs.pomore.getForm())
       this.moreVisible = true
-    },
-    // 关闭操作
-    handleClose (index, row) {
-      this.$prompt('请输入关闭原因', '关闭', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消'
-      }).then(({ value }) => {
-        this.$confirm('确定要关闭吗？', '提示', {
-          type: 'warning'
-        }).then(() => {
-          this.$message.success('关闭成功')
-        }).catch(() => {
-          this.$message({
-            type: 'info',
-            message: '取消关闭'
-          })
-        })
-      }).catch(() => {
-        this.$message({
-          type: 'info',
-          message: '取消关闭'
-        })
-      })
     },
     // 分页导航
     handlePageChange (val) {
@@ -332,6 +350,28 @@ export default {
         })
         .catch(() => {
           this.editVisible = true
+        })
+    },
+    closepoaddrp () {
+      this.$confirm('确定要关闭吗？', '提示', {
+        type: 'warning'
+      })
+        .then(() => {
+          this.addVisible = false
+        })
+        .catch(() => {
+          this.addVisible = true
+        })
+    },
+    closepoaddpc () {
+      this.$confirm('确定要关闭吗？', '提示', {
+        type: 'warning'
+      })
+        .then(() => {
+          this.addVisible = false
+        })
+        .catch(() => {
+          this.addVisible = true
         })
     }
   }

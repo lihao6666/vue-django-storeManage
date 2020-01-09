@@ -46,12 +46,13 @@
         </el-row>
       </el-form>
     </div>
-    <Pood :formadd="formadd" :ifchange="ifchange"></Pood>
+    <Pood :formadd="formadd" :ods="ods" :orga_name="form_orga_name" :ifchange="ifchange"></Pood>
   </div>
 </template>
 
 <script>
 import Pood from './PurOrdOd'
+import {postAPI} from '../../../api/api'
 export default {
   name: 'po_add',
   props: ['editform', 'ifchange'],
@@ -91,14 +92,35 @@ export default {
         po_date: this.editform.po_date,
         po_sum: this.editform.po_sum
       },
-      form_po_supply: [
-        '礼品',
-        '教学用品',
-        '销售商品'
-      ]
+      form_orga_name: [],
+      form_po_supply: [],
+      ods: []
     }
   },
   methods: {
+    getList (row = {}) {
+      let _this = this
+
+      postAPI('/purchase/poNew', row).then(function (res) {
+        console.log(res.data)
+        _this.form_po_supply = []
+        for (let i in res.data.supply_names) {
+          _this.form_po_supply.push(res.data.supply_names[i][1])
+        }
+        _this.form_orga_name = []
+        for (let i in res.data.orga_names) {
+          _this.form_orga_name.push(res.data.orga_names[i][1])
+        }
+        if (res.data.cds) {
+          _this.cds = res.data.cds
+        }
+        if (res.data.pays) {
+          _this.pays = res.data.pays
+        }
+      }).catch(function (err) {
+        console.log(err)
+      })
+    },
     getForm () {
       this.formadd.po_iden = this.editform.po_iden
       this.formadd.po_orga = this.editform.po_orga
@@ -107,6 +129,57 @@ export default {
       this.formadd.po_remarks = this.editform.po_remarks
       this.formadd.po_date = this.editform.po_date
       this.formadd.po_sum = this.editform.po_sum
+    },
+    saveReqPurAdd (callback = null) {
+
+      if (this.formadd.po_department === '' || this.formadd.orga_name === '' ||
+        this.formadd.po_type === '' || this.formadd.po_date === '') {
+        this.$message.error(`请填写完主明细信息`)
+        if (typeof (callback) === 'function') {
+          let back = false
+          callback(back)
+        }
+        return
+      }
+      let _this = this
+      console.log(_this.formadd)
+      if (_this.formadd.po_iden === '') {
+        delete _this.formadd.po_iden
+      }
+      postAPI('/purchase/poUpdate', this.formadd).then(function (res) {
+        console.log(res.data)
+        if (res.data.signal === 0) {
+          _this.$message.success(`保存主明细成功`)
+          if (res.data.po_new_iden) {
+            _this.formadd.po_iden = res.data.po_new_iden
+          }
+          _this.$emit('save')
+          if (typeof (callback) === 'function') {
+            let back = true
+            callback(back)
+          }
+        } else {
+          _this.$message.error('保存主明细失败')
+          if (typeof (callback) === 'function') {
+            let back = false
+            callback(back)
+          }
+        }
+      }).catch(function (err) {
+        _this.$message.error('保存主明细失败')
+        console.log(err)
+        if (typeof (callback) === 'function') {
+          let back = false
+          callback(back)
+        }
+      })
+    },
+    // 新增窗口弹出
+    addShow () {
+      let _this = this
+      this.$nextTick(function () {
+        _this.$refs.Pccd.addShow()
+      })
     }
   }
 }

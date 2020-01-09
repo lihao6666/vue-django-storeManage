@@ -17,7 +17,7 @@
           clearable
           v-model="search">
         </el-input>
-        <el-button type="primary" icon="el-icon-plus" class="button-plus" @click="add">新增</el-button>
+        <el-button v-if="power==='2'||power==='3'" type="primary" icon="el-icon-plus" class="button-plus" @click="add">新增</el-button>
       </div>
       <el-table
         :data="tableDataNew"
@@ -36,11 +36,11 @@
           </template>
         </el-table-column>
         <el-table-column prop="pc_iden" sortable label="合同编号" align="center"></el-table-column>
-        <el-table-column prop="pc_orga" sortable label="库存组织" :filters="pc_orgaSet"
+        <el-table-column prop="orga_name" sortable label="库存组织" :filters="orga_nameSet"
       :filter-method="filter" align="center"></el-table-column>
         <el-table-column prop="pc_name" sortable label="合同名称" :filters="pc_nameSet"
       :filter-method="filter" align="center"></el-table-column>
-        <el-table-column prop="pc_supply" sortable label="供应商" :filters="pc_supplySet"
+        <el-table-column prop="supply_name" sortable label="供应商" :filters="supply_nameSet"
       :filter-method="filter" align="center"></el-table-column>
         <el-table-column prop="pc_date" sortable label="签订日期" align="center"></el-table-column>
         <el-table-column prop="pc_sum" sortable label="合同金额" align="center"></el-table-column>
@@ -48,8 +48,8 @@
       :filter-method="filter" align="center">
           <template slot-scope="scope">
             <el-tag
-              :type="scope.row.pc_status==='已审批'?'success':''"
-            >{{scope.row.pc_status}}
+              :type="scope.row.pc_status===0?'success':''"
+            >{{status[scope.row.pc_status].label}}
             </el-tag>
           </template>
         </el-table-column>
@@ -62,7 +62,7 @@
               type="text"
               icon="el-icon-edit"
               @click="handleEdit(scope.$index, scope.row)"
-              v-if="scope.row.pc_status==='草稿'"
+              v-if="scope.row.pc_status===0"
             >编辑
             </el-button>
             <el-button
@@ -70,7 +70,7 @@
               icon="el-icon-delete"
               class="red"
               @click="handleDelete(scope.$index, scope.row)"
-              v-if="scope.row.pc_status==='草稿'"
+              v-if="scope.row.pc_status===0"
             >删除
             </el-button>
             <el-button
@@ -78,7 +78,7 @@
               icon="el-icon-postcard"
               class="green"
               @click="handleMore(scope.$index, scope.row)"
-              v-if="scope.row.pc_status==='已审批'"
+              v-if="scope.row.pc_status===1"
             >详情
             </el-button>
           </template>
@@ -99,12 +99,12 @@
       </div>
     </div>
     <!-- 新增弹出框 -->
-    <el-dialog title="新增" :visible.sync="addVisible" width="90%" :close-on-click-modal="false">
-      <Pcadd ref="Pcadd" :editform="addform" :ifchange="true"></Pcadd>
+    <el-dialog title="新增" :visible.sync="addVisible" width="90%" :close-on-click-modal="false" :destroy-on-close="true" :before-close="closePcadd">
+      <Pcadd ref="Pcadd" @commit="addVisible = false" @save="getData" :editform="addform" :ifchange="true"></Pcadd>
     </el-dialog>
     <!-- 编辑弹出框 -->
     <el-dialog title="编辑" :visible.sync="editVisible" width="90%" :close-on-click-modal="false" :destroy-on-close="true" :before-close="closePcedit">
-      <Pcadd ref="Pcedit" :editform="editform" :ifchange="true"></Pcadd>
+      <Pcadd ref="Pcedit" @commit="editVisible = false" @save="getData" :editform="editform" :ifchange="true"></Pcadd>
     </el-dialog>
     <!-- 详情弹出框 -->
     <el-dialog title="详情" :visible.sync="moreVisible" width="90%" :destroy-on-close="true">
@@ -115,7 +115,7 @@
 
 <script>
 import Pcadd from './PurConAdd'
-import {getAPI} from '../../../api/api'
+import {postAPI} from '../../../api/api'
 
 export default {
   name: 'pc_check',
@@ -128,9 +128,9 @@ export default {
       search: '',
       tableData: [],
       tableDataNew: [],
-      pc_orgaSet: [],
+      orga_nameSet: [],
       pc_nameSet: [],
-      pc_supplySet: [],
+      supply_nameSet: [],
       pc_statusSet: [],
       pc_creatorSet: [],
       editVisible: false,
@@ -141,13 +141,26 @@ export default {
       addVisible: false,
       addform: {
         pc_iden: '',
-        pc_orga: '',
-        pc_supply: '',
+        orga_name: '',
+        supply_name: '',
         pc_name: '',
         pc_remarks: '',
         pc_date: '',
         pc_sum: 0
-      }
+      },
+      status: [
+        {
+          value: 0,
+          label: '草稿',
+          type: ''
+        },
+        {
+          value: 1,
+          label: '已审批',
+          type: 'success'
+        }
+      ],
+      power: localStorage.getItem('user_power').charAt(2)
     }
   },
   components: {
@@ -159,29 +172,41 @@ export default {
   methods: {
     getData () {
       let _this = this
-      getAPI('/base/pc_check').then(function (res) {
-        _this.tableData = res.data.list
+      let data = {
+        power: this.power
+      }
+      postAPI('/purchase/pcs', data).then(function (res) {
+        if (!res.data.pcs) {
+          return
+        }
+        _this.tableData = res.data.pcs
+        _this.pageTotal = res.data.pcs.length
         _this.find()
+        _this.orga_nameSet = []
+        _this.supply_nameSet = []
+        _this.pc_nameSet = []
+        _this.pc_statusSet = []
+        _this.pc_creatorSet = []
         let orgaset = new Set()
         let nameset = new Set()
         let statusset = new Set()
         let supplyset = new Set()
         let creatorset = new Set()
         for (let i in _this.tableData) {
-          orgaset.add(_this.tableData[i]['pc_orga'])
-          supplyset.add(_this.tableData[i]['pc_supply'])
+          orgaset.add(_this.tableData[i]['orga_name'])
+          supplyset.add(_this.tableData[i]['supply_name'])
           nameset.add(_this.tableData[i]['pc_name'])
           statusset.add(_this.tableData[i]['pc_status'])
           creatorset.add(_this.tableData[i]['pc_creator'])
         }
         for (let i of orgaset) {
-          _this.pc_orgaSet.push({
+          _this.orga_nameSet.push({
             text: i,
             value: i
           })
         }
         for (let i of supplyset) {
-          _this.pc_supplySet.push({
+          _this.supply_nameSet.push({
             text: i,
             value: i
           })
@@ -204,7 +229,6 @@ export default {
             value: i
           })
         }
-        _this.pageTotal = res.data.list.length
       }).catch(function (err) {
         console.log(err)
       })
@@ -230,14 +254,18 @@ export default {
       this.pageTotal = 0
       this.tableDataNew = this.tableData.filter(data => !this.search ||
         data.pc_iden.toLowerCase().includes(this.search.toLowerCase()) ||
-        data.pc_orga.toLowerCase().includes(this.search.toLowerCase()) ||
+        data.orga_name.toLowerCase().includes(this.search.toLowerCase()) ||
         data.pc_name.toLowerCase().includes(this.search.toLowerCase()) ||
-        data.pc_supply.toLowerCase().includes(this.search.toLowerCase()) ||
+        data.supply_name.toLowerCase().includes(this.search.toLowerCase()) ||
         data.pc_creator.toLowerCase().includes(this.search.toLowerCase()))
     },
     // 新增
     add () {
       this.addVisible = true
+      let _this = this
+      this.$nextTick(() => _this.$refs.Pcadd.getList())
+      this.$nextTick(() => _this.$refs.Pcadd.getForm())
+      this.$nextTick(() => _this.$refs.Pcadd.addShow())
     },
     // 删除操作
     handleDelete (index, row) {
@@ -246,12 +274,20 @@ export default {
         type: 'warning'
       })
         .then(() => {
-          this.$message.success('删除成功')
-          this.tableData.splice(index, 1)
-          let pageIndexNew = Math.ceil((this.pageTotal - 1) / this.query.pageSize) // 新的页面数量
-          this.query.pageIndex = (this.query.pageIndex > pageIndexNew) ? pageIndexNew : this.query.pageIndex
-          this.query.pageIndex = (this.query.pageIndex === 0) ? 1 : this.query.pageIndex
-          this.find()
+          let _this = this
+
+          postAPI('/purchase/pcDelete', row).then(function (res) {
+            console.log(res.data)
+            if (res.data.signal === 0) {
+              _this.$message.success(`删除成功`)
+              _this.getData()
+            } else {
+              _this.$message.error(res.data.message)
+            }
+          }).catch(function (err) {
+            _this.$message.error('删除失败')
+            console.log(err)
+          })
         })
         .catch(() => {
           this.$message({
@@ -265,6 +301,7 @@ export default {
       this.editform = row
       let _this = this
       this.$nextTick(() => _this.$refs.Pcedit.getForm())
+      this.$nextTick(() => _this.$refs.Pcedit.getList())
       this.editVisible = true
     },
     // 详情操作
@@ -273,29 +310,6 @@ export default {
       let _this = this
       this.$nextTick(() => _this.$refs.Pcmore.getForm())
       this.moreVisible = true
-    },
-    // 关闭操作
-    handleClose (index, row) {
-      this.$prompt('请输入关闭原因', '关闭', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消'
-      }).then(({ value }) => {
-        this.$confirm('确定要关闭吗？', '提示', {
-          type: 'warning'
-        }).then(() => {
-          this.$message.success('关闭成功')
-        }).catch(() => {
-          this.$message({
-            type: 'info',
-            message: '取消关闭'
-          })
-        })
-      }).catch(() => {
-        this.$message({
-          type: 'info',
-          message: '取消关闭'
-        })
-      })
     },
     // 分页导航
     handlePageChange (val) {
@@ -314,6 +328,17 @@ export default {
         })
         .catch(() => {
           this.editVisible = true
+        })
+    },
+    closePcadd () {
+      this.$confirm('确定要关闭吗？', '提示', {
+        type: 'warning'
+      })
+        .then(() => {
+          this.addVisible = false
+        })
+        .catch(() => {
+          this.addVisible = true
         })
     }
   }

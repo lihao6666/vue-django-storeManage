@@ -9,8 +9,8 @@
     </div>
     <div class="container">
       <div class="handle-box">
-        <el-select v-model="formadd.pc_orga" placeholder="请选择库存组织" :disabled="ifhasorga">
-          <el-option v-for="item in form_pc_orga" v-bind:key="item" :label="item" :value="item"></el-option>
+        <el-select v-model="formadd.pc_orga" placeholder="请选择库存组织" :disabled="ifhasorga" @change="getData">
+          <el-option v-for="item in orga_name" v-bind:key="item" :label="item" :value="item"></el-option>
         </el-select>
         <el-input
           placeholder="关键字搜索"
@@ -42,24 +42,24 @@
           <template slot-scope="props">
             <el-form label-position="left" inline class="demo-table-expand">
               <el-form-item label="备注">
-                <span>{{props.row.cd_prd_remarks}}</span>
+                <span>{{props.row.prd_remarks}}</span>
               </el-form-item>
             </el-form>
           </template>
         </el-table-column>
-        <el-table-column prop="cd_iden" sortable label="物料编码" :filters="cd_idenSet"
+        <el-table-column prop="prd_iden" sortable label="物料编码" :filters="prd_idenSet"
       :filter-method="filter" align="center"></el-table-column>
-        <el-table-column prop="cd_name" sortable label="物料名称" :filters="cd_nameSet"
+        <el-table-column prop="prd_name" sortable label="物料名称" :filters="prd_nameSet"
       :filter-method="filter" align="center"></el-table-column>
-        <el-table-column prop="cd_specification" sortable label="规格" :filters="cd_specificationSet"
+        <el-table-column prop="prd_specification" sortable label="规格" :filters="prd_specificationSet"
       :filter-method="filter" align="center"></el-table-column>
-        <el-table-column prop="cd_model" sortable label="型号" :filters="cd_modelSet"
+        <el-table-column prop="prd_model" sortable label="型号" :filters="prd_modelSet"
       :filter-method="filter" align="center"></el-table-column>
-        <el-table-column prop="cd_meterage" sortable label="单位" :filters="cd_meterageSet"
+        <el-table-column prop="prd_meterage" sortable label="单位" :filters="prd_meterageSet"
       :filter-method="filter" align="center"></el-table-column>
-        <el-table-column prop="cd_prd_num" sortable label="申请数量" align="center"></el-table-column>
-        <el-table-column prop="cd_present_num" sortable label="现存量" align="center"></el-table-column>
-        <el-table-column prop="cd_rp_iden" sortable label="请购单号" :filters="cd_rp_idenSet"
+        <el-table-column prop="prd_num" sortable label="申请数量" align="center"></el-table-column>
+        <el-table-column prop="prd_present_num" sortable label="现存量" align="center"></el-table-column>
+        <el-table-column prop="pr_iden" sortable label="请购单号" :filters="pr_idenSet"
       :filter-method="filter" align="center"></el-table-column>
         <el-table-column prop="cd_rp_date" sortable label="请购日期" align="center"></el-table-column>
         <el-table-column prop="cd_rp_from" sortable label="申请部门" :filters="cd_rp_fromSet"
@@ -89,7 +89,7 @@ import {postAPI} from '../../../api/api'
 
 export default {
   name: 'pc_cd_add',
-  props: ['tableHas', 'formadd', 'ifhasorga'],
+  props: ['tableHas', 'formadd', 'ifhasorga', 'orga_name'],
   data () {
     return {
       query: {
@@ -100,20 +100,17 @@ export default {
       tableData: [],
       tableDataNew: [],
       multipleSelection: [],
-      cd_idenSet: [],
-      cd_nameSet: [],
-      cd_specificationSet: [],
-      cd_modelSet: [],
-      cd_meterageSet: [],
+      prd_idenSet: [],
+      prd_nameSet: [],
+      prd_specificationSet: [],
+      prd_modelSet: [],
+      prd_meterageSet: [],
       cd_attrSet: [],
-      cd_rp_idenSet: [],
+      pr_idenSet: [],
       cd_rp_fromSet: [],
       cd_rp_creatorSet: [],
       pageTotal: 0,
-      ifshowadd: true,
-      form_pc_orga: [
-        '合肥工业大学'
-      ]
+      ifshowadd: true
     }
   },
   created () {
@@ -121,10 +118,32 @@ export default {
   },
   methods: {
     getData () {
+      if (this.formadd.orga_name === '') {
+        return
+      }
       let _this = this
-      postAPI('/base/pc_cd_add', this.formadd.po_orga).then(function (res) {
-        _this.tableData = res.data.list
+      postAPI('/purchase/cdNew', {'orga_name': _this.formadd.orga_name}).then(function (res) {
+        if (!res.data.pr_prds) {
+          return
+        }
+        _this.tableData = []
+        // for (let i in res.data.pr_prds) {
+        //   for (let j in res.data.pr_prds[i]) {
+        //
+        //   }
+        //   _this.tableData.push(res.data.pr_prds[i])
+        // }
+        _this.pageTotal = _this.tableData.length
         _this.find()
+        _this.prd_idenSet = []
+        _this.prd_nameSet = []
+        _this.prd_specificationSet = []
+        _this.prd_modelSet = []
+        _this.prd_meterageSet = []
+        _this.cd_attrSet = []
+        _this.pr_idenSet = []
+        _this.cd_rp_fromSet = []
+        _this.cd_rp_creatorSet = []
         let nameset = new Set()
         let specificationset = new Set()
         let modelset = new Set()
@@ -135,36 +154,36 @@ export default {
         let rpfromset = new Set()
         let rpcreatorset = new Set()
         for (let i in _this.tableData) {
-          nameset.add(_this.tableData[i]['cd_name'])
-          specificationset.add(_this.tableData[i]['cd_specification'])
-          modelset.add(_this.tableData[i]['cd_model'])
-          meterageset.add(_this.tableData[i]['cd_meterage'])
+          nameset.add(_this.tableData[i]['prd_name'])
+          specificationset.add(_this.tableData[i]['prd_specification'])
+          modelset.add(_this.tableData[i]['prd_model'])
+          meterageset.add(_this.tableData[i]['prd_meterage'])
           attrset.add(_this.tableData[i]['cd_attr'])
-          rpidenset.add(_this.tableData[i]['cd_rp_iden'])
+          rpidenset.add(_this.tableData[i]['pr_iden'])
           rpfromset.add(_this.tableData[i]['cd_rp_from'])
           rpcreatorset.add(_this.tableData[i]['cd_rp_creator'])
-          idenset.add(_this.tableData[i]['cd_iden'])
+          idenset.add(_this.tableData[i]['prd_iden'])
         }
         for (let i of nameset) {
-          _this.cd_nameSet.push({
+          _this.prd_nameSet.push({
             text: i,
             value: i
           })
         }
         for (let i of meterageset) {
-          _this.cd_meterageSet.push({
+          _this.prd_meterageSet.push({
             text: i,
             value: i
           })
         }
         for (let i of specificationset) {
-          _this.cd_specificationSet.push({
+          _this.prd_specificationSet.push({
             text: i,
             value: i
           })
         }
         for (let i of modelset) {
-          _this.cd_modelSet.push({
+          _this.prd_modelSet.push({
             text: i,
             value: i
           })
@@ -176,13 +195,13 @@ export default {
           })
         }
         for (let i of rpidenset) {
-          _this.cd_rp_idenSet.push({
+          _this.pr_idenSet.push({
             text: i,
             value: i
           })
         }
         for (let i of idenset) {
-          _this.cd_idenSet.push({
+          _this.prd_idenSet.push({
             text: i,
             value: i
           })
@@ -199,7 +218,6 @@ export default {
             value: i
           })
         }
-        _this.pageTotal = res.data.list.length
       }).catch(function (err) {
         console.log(err)
       })
@@ -225,14 +243,14 @@ export default {
       this.pageTotal = 0
       this.tableDataNew = this.tableData.filter(data => (this.ifshowadd || this.selectable(data, 0)) &&
         (!this.search ||
-        String(data.cd_iden).toLowerCase().includes(this.search.toLowerCase()) ||
-        String(data.cd_name).toLowerCase().includes(this.search.toLowerCase()) ||
-        String(data.cd_specification).toLowerCase().includes(this.search.toLowerCase()) ||
-        String(data.cd_model).toLowerCase().includes(this.search.toLowerCase()) ||
-        String(data.cd_rp_iden).toLowerCase().includes(this.search.toLowerCase()) ||
+        String(data.prd_iden).toLowerCase().includes(this.search.toLowerCase()) ||
+        String(data.prd_name).toLowerCase().includes(this.search.toLowerCase()) ||
+        String(data.prd_specification).toLowerCase().includes(this.search.toLowerCase()) ||
+        String(data.prd_model).toLowerCase().includes(this.search.toLowerCase()) ||
+        String(data.pr_iden).toLowerCase().includes(this.search.toLowerCase()) ||
         String(data.cd_rp_from).toLowerCase().includes(this.search.toLowerCase()) ||
         String(data.cd_rp_creator).toLowerCase().includes(this.search.toLowerCase()) ||
-        String(data.cd_meterage).toLowerCase().includes(this.search.toLowerCase())))
+        String(data.prd_meterage).toLowerCase().includes(this.search.toLowerCase())))
     },
     // 分页导航
     handlePageChange (val) {
@@ -252,7 +270,7 @@ export default {
     // 可选项
     selectable (row, index) {
       for (let i in this.tableHas) {
-        if (this.tableHas[i].cd_iden === row.cd_iden && this.tableHas[i].cd_rp_iden === row.cd_rp_iden) {
+        if (this.tableHas[i].prd_iden === row.prd_iden && this.tableHas[i].pr_iden === row.pr_iden) {
           return false
         }
       }

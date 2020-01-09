@@ -9,8 +9,8 @@
     </div>
     <div class="container">
       <div class="handle-box">
-        <el-select v-model="formadd.po_orga" placeholder="请选择库存组织" :disabled="ifhasorga">
-          <el-option v-for="item in form_po_orga" v-bind:key="item" :label="item" :value="item"></el-option>
+        <el-select v-model="formadd.po_orga" placeholder="请选择库存组织" :disabled="ifhasorga" @change="changeOrga">
+          <el-option v-for="item in orga_name" v-bind:key="item" :label="item" :value="item"></el-option>
         </el-select>
         <el-input
           placeholder="关键字搜索"
@@ -87,7 +87,7 @@ import {postAPI} from '../../../api/api'
 
 export default {
   name: 'pc_cd_add',
-  props: ['tableHas', 'formadd', 'ifhasorga'],
+  props: ['tableHas', 'formadd', 'ifhasorga', 'orga_name'],
   data () {
     return {
       query: {
@@ -108,9 +108,6 @@ export default {
       od_rp_fromSet: [],
       pageTotal: 0,
       ifshowadd: true,
-      form_po_orga: [
-        '合肥工业大学'
-      ]
     }
   },
   created () {
@@ -118,9 +115,20 @@ export default {
   },
   methods: {
     getData () {
+      if (this.formadd.orga_name === '') {
+        return
+      }
       let _this = this
-      postAPI('/purchase/po_od_add_rp', this.formadd.po_orga).then(function (res) {
+      postAPI('/purchase/odnew', {'orga_name': _this.formadd.orga_name}).then(function (res) {
         _this.tableData = res.data.list
+        _this.pageTotal = res.data.list.length
+        _this.od_idenSet = []
+        _this.od_nameSet = []
+        _this.od_specificationSet = []
+        _this.od_modelSet = []
+        _this.od_meterageSet = []
+        _this.od_rp_idenSet = []
+        _this.od_rp_fromSet = []
         _this.find()
         let nameset = new Set()
         let specificationset = new Set()
@@ -188,7 +196,6 @@ export default {
             value: i
           })
         }
-        _this.pageTotal = res.data.list.length
       }).catch(function (err) {
         console.log(err)
       })
@@ -251,6 +258,11 @@ export default {
       this.$emit('add', this.multipleSelection)
       this.multipleSelection = []
       this.$refs.multipleTable.clearSelection()
+    },
+    // 选择组织
+    changeOrga () {
+      console.log(this.formadd.orga_name)
+      this.getData()
     }
   }
 }
