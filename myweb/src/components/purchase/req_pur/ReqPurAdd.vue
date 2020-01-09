@@ -41,8 +41,8 @@
       </el-form>
     </div>
     <Reqprd ref="Reqprd" :formadd="formadd" :prds="prds"
-            @commit="this.$emit('commit')"
-            @save="this.$emit('save')" @saveall="saveReqPurAdd"
+            @commit="commit"
+            @save="save" @saveall="saveReqPurAdd"
             :orga_name="form_orga_name" :ifchange="ifchange"></Reqprd>
   </div>
 </template>
@@ -116,9 +116,10 @@ export default {
         if (res.data.prds) {
           _this.prds = res.data.prds
           for (let i in res.data.prds_present_num) {
-            _this.prds[i].prd_present_num = res.data.prds_present_num[i]
+            _this.prds[i].prd_present_num = res.data.prds_present_num[i].prd_present_num
           }
         }
+        _this.$nextTick(() => _this.$refs.Reqprd.getData())
       }).catch(function (err) {
         console.log(err)
       })
@@ -181,6 +182,12 @@ export default {
       this.$nextTick(function () {
         _this.$refs.Reqprd.addShow()
       })
+    },
+    commit () {
+      this.$emit('commit')
+    },
+    save () {
+      this.$emit('save')
     }
   }
 }

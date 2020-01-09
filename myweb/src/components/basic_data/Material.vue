@@ -469,11 +469,11 @@ export default {
           return
         }
       }
-      parent.push({
-        value: child[0],
-        label: child[1],
-        children: []
-      })
+      // parent.push({
+      //   value: child[0],
+      //   label: child[1],
+      //   children: []
+      // })
     },
     // 获取列表
     getlist () {

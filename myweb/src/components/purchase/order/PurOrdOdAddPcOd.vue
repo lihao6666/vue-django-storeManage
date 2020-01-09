@@ -74,7 +74,6 @@
 </template>
 
 <script>
-import {postAPI} from '../../../api/api'
 
 export default {
   name: 'pc_cd_add',

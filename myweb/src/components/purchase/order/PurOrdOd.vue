@@ -125,7 +125,7 @@
       :filter-method="filter" align="center"></el-table-column>
         <el-table-column prop="od_prd_remarks" sortable label="备注" align="center">
           <template slot-scope="props">
-            <el-input type="textarea" v-model="props.row.cd_remarks" rows="3" :disabled="!ifchange"
+            <el-input type="textarea" v-model="props.row.od_remarks" rows="3" :disabled="!ifchange"
               placeholder="请输入200字以内的描述" maxlength="200" show-word-limit clearable @input="find"></el-input>
           </template>
         </el-table-column>

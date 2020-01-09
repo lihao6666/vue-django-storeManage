@@ -42,11 +42,13 @@
             <el-input type="textarea" v-model="formadd.po_remarks" rows="3" class="form-item-from" :disabled="!ifchange"
                       placeholder="请输入200字以内的描述" maxlength="200" show-word-limit clearable></el-input>
           </el-form-item>
-          <el-button type="primary" class="form-item-save" v-if="ifchange">保 存</el-button>
+          <el-tooltip content="保存主明细数据" placement="bottom" effect="light">
+            <el-button type="primary" class="form-item-save" v-if="ifchange" @click="saveReqPurAdd">保 存</el-button>
+          </el-tooltip>
         </el-row>
       </el-form>
     </div>
-    <Pood :formadd="formadd" :ods="ods" :orga_name="form_orga_name" :ifchange="ifchange"></Pood>
+    <Pood ref="Pood" :formadd="formadd" :ods="ods" :orga_name="form_orga_name" :ifchange="ifchange"></Pood>
   </div>
 </template>
 
@@ -117,6 +119,7 @@ export default {
         if (res.data.pays) {
           _this.pays = res.data.pays
         }
+        _this.$nextTick(() => _this.$refs.Pood.getData())
       }).catch(function (err) {
         console.log(err)
       })
@@ -131,7 +134,6 @@ export default {
       this.formadd.po_sum = this.editform.po_sum
     },
     saveReqPurAdd (callback = null) {
-
       if (this.formadd.po_department === '' || this.formadd.orga_name === '' ||
         this.formadd.po_type === '' || this.formadd.po_date === '') {
         this.$message.error(`请填写完主明细信息`)
@@ -178,7 +180,7 @@ export default {
     addShow () {
       let _this = this
       this.$nextTick(function () {
-        _this.$refs.Pccd.addShow()
+        _this.$refs.Pood.addShow()
       })
     }
   }
