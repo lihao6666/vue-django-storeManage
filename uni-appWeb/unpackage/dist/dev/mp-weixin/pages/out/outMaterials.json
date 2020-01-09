@@ -1,0 +1,12 @@
+{
+  "navigationBarTitleText": "选择物料",
+  "usingComponents": {
+    "uni-segmented-control": "/components/uni-segmented-control/uni-segmented-control",
+    "uni-card": "/components/uni-card/uni-card",
+    "uni-section": "/components/uni-section/uni-section",
+    "drag-button": "/components/drag-button/anotherButton",
+    "uni-number-box": "/components/uni-number-box/uni-number-box",
+    "uni-nav-bar": "/components/uni-nav-bar/uni-nav-bar",
+    "uni-icons": "/components/uni-icons/uni-icons"
+  }
+}

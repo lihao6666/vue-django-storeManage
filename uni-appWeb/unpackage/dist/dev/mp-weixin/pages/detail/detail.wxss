@@ -36,7 +36,7 @@ page {
           align-items: center;
   position: relative;
   padding: 0 30rpx;
-  height: 100rpx;
+  height: 92rpx;
   background: #fff;
   border-bottom: 1rpx solid #F8F8F8;
 }

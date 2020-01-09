@@ -737,7 +737,7 @@ function initData(vueOptions, context) {
     try {
       data = data.call(context); // 支持 Vue.prototype 上挂的数据
     } catch (e) {
-      if (Object({"VUE_APP_PLATFORM":"mp-weixin","NODE_ENV":"development","BASE_URL":"/"}).VUE_APP_DEBUG) {
+      if (Object({"NODE_ENV":"development","VUE_APP_PLATFORM":"mp-weixin","BASE_URL":"/"}).VUE_APP_DEBUG) {
         console.warn('根据 Vue 的 data 函数初始化小程序 data 失败，请尽量确保 data 函数中不访问 vm 对象，否则可能影响首次数据渲染速度。', data);
       }
     }
@@ -1534,7 +1534,7 @@ uni$1;exports.default = _default;
 
 /***/ }),
 
-/***/ 127:
+/***/ 124:
 /*!*************************************************************!*\
   !*** C:/Users/流宇/Desktop/git/uni-appWeb/data/outDetails.js ***!
   \*************************************************************/
@@ -1573,53 +1573,6 @@ var data = [
   msod_num: '50',
   msod_present_num: '200',
   msod_remarks: '上美术课借用器材' }];
-
-
-
-module.exports = {
-  data: data };
-
-/***/ }),
-
-/***/ 136:
-/*!******************************************************************!*\
-  !*** C:/Users/流宇/Desktop/git/uni-appWeb/data/purchaseDetails.js ***!
-  \******************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-var data = [
-{
-  id: 1,
-  prd_iden: '010100001',
-  prd_name: '钢琴',
-  prd_specification: '16键',
-  prd_model: '圆形',
-  prd_meterage: '台',
-  prd_num: '20',
-  prd_present_num: '50',
-  prd_remarks: '上音乐课借用器材' },
-{
-  id: 2,
-  prd_iden: '020100003',
-  prd_name: '足球',
-  prd_specification: '黑白',
-  prd_model: '签名款',
-  prd_meterage: '个',
-  prd_num: '30',
-  prd_present_num: '50',
-  prd_remarks: '上体育课借用器材' },
-{
-  id: 3,
-  prd_iden: '030100018',
-  prd_name: '画纸',
-  prd_specification: 'A4',
-  prd_model: '宣纸',
-  prd_meterage: '张',
-  prd_num: '50',
-  prd_present_num: '200',
-  prd_remarks: '上美术课借用器材' }];
 
 
 
@@ -1749,7 +1702,7 @@ function normalizeComponent (
 
 /***/ }),
 
-/***/ 145:
+/***/ 142:
 /*!**************************************************************!*\
   !*** C:/Users/流宇/Desktop/git/uni-appWeb/data/sellDetails.js ***!
   \**************************************************************/
@@ -1837,7 +1790,7 @@ store;exports.default = _default;
 
 /***/ }),
 
-/***/ 154:
+/***/ 151:
 /*!******************************************************************!*\
   !*** C:/Users/流宇/Desktop/git/uni-appWeb/data/exchangeDetails.js ***!
   \******************************************************************/
@@ -2832,6 +2785,79 @@ var index_esm = {
 
 /* harmony default export */ __webpack_exports__["default"] = (index_esm);
 
+
+/***/ }),
+
+/***/ 168:
+/*!***************************************************************!*\
+  !*** C:/Users/流宇/Desktop/git/uni-appWeb/data/outMaterials.js ***!
+  \***************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+var data = [
+{
+  id: 1,
+  material_iden: '00100001',
+  material_name: '舞鞋',
+  material_specification: '31码',
+  material_model: '1234',
+  material_meterage: '双',
+  material_attr: '208' },
+{
+  id: 2,
+  material_iden: '00100002',
+  material_name: '舞裙',
+  material_specification: 'X',
+  material_model: '1234',
+  material_meterage: '件',
+  material_attr: '123' },
+{
+  id: 3,
+  material_iden: '00100003',
+  material_name: '毛笔',
+  material_specification: '狼毫',
+  material_model: '1234',
+  material_meterage: '支',
+  material_attr: '321' },
+{
+  id: 4,
+  material_iden: '00100004',
+  material_name: '颜料',
+  material_specification: '水彩',
+  material_model: '1234',
+  material_meterage: '盒',
+  material_attr: '200' },
+{
+  id: 5,
+  material_iden: '00100005',
+  material_name: '颜料',
+  material_specification: '油画棒',
+  material_model: '1234',
+  material_meterage: '盒',
+  material_attr: '200' },
+{
+  id: 6,
+  material_iden: '00100006',
+  material_name: '演出服',
+  material_specification: 'x',
+  material_model: '1234',
+  material_meterage: '双',
+  material_attr: '802' },
+{
+  id: 7,
+  material_iden: '00100001',
+  material_name: '宣纸',
+  material_specification: 'A4',
+  material_model: '1234',
+  material_meterage: '副',
+  material_attr: '200' }];
+
+
+
+module.exports = {
+  data: data };
 
 /***/ }),
 
@@ -8434,7 +8460,7 @@ function type(obj) {
 
 function flushCallbacks$1(vm) {
     if (vm.__next_tick_callbacks && vm.__next_tick_callbacks.length) {
-        if (Object({"VUE_APP_PLATFORM":"mp-weixin","NODE_ENV":"development","BASE_URL":"/"}).VUE_APP_DEBUG) {
+        if (Object({"NODE_ENV":"development","VUE_APP_PLATFORM":"mp-weixin","BASE_URL":"/"}).VUE_APP_DEBUG) {
             var mpInstance = vm.$scope;
             console.log('[' + (+new Date) + '][' + (mpInstance.is || mpInstance.route) + '][' + vm._uid +
                 ']:flushCallbacks[' + vm.__next_tick_callbacks.length + ']');
@@ -8455,14 +8481,14 @@ function nextTick$1(vm, cb) {
     //1.nextTick 之前 已 setData 且 setData 还未回调完成
     //2.nextTick 之前存在 render watcher
     if (!vm.__next_tick_pending && !hasRenderWatcher(vm)) {
-        if(Object({"VUE_APP_PLATFORM":"mp-weixin","NODE_ENV":"development","BASE_URL":"/"}).VUE_APP_DEBUG){
+        if(Object({"NODE_ENV":"development","VUE_APP_PLATFORM":"mp-weixin","BASE_URL":"/"}).VUE_APP_DEBUG){
             var mpInstance = vm.$scope;
             console.log('[' + (+new Date) + '][' + (mpInstance.is || mpInstance.route) + '][' + vm._uid +
                 ']:nextVueTick');
         }
         return nextTick(cb, vm)
     }else{
-        if(Object({"VUE_APP_PLATFORM":"mp-weixin","NODE_ENV":"development","BASE_URL":"/"}).VUE_APP_DEBUG){
+        if(Object({"NODE_ENV":"development","VUE_APP_PLATFORM":"mp-weixin","BASE_URL":"/"}).VUE_APP_DEBUG){
             var mpInstance$1 = vm.$scope;
             console.log('[' + (+new Date) + '][' + (mpInstance$1.is || mpInstance$1.route) + '][' + vm._uid +
                 ']:nextMPTick');
@@ -8538,7 +8564,7 @@ var patch = function(oldVnode, vnode) {
     });
     var diffData = diff(data, mpData);
     if (Object.keys(diffData).length) {
-      if (Object({"VUE_APP_PLATFORM":"mp-weixin","NODE_ENV":"development","BASE_URL":"/"}).VUE_APP_DEBUG) {
+      if (Object({"NODE_ENV":"development","VUE_APP_PLATFORM":"mp-weixin","BASE_URL":"/"}).VUE_APP_DEBUG) {
         console.log('[' + (+new Date) + '][' + (mpInstance.is || mpInstance.route) + '][' + this._uid +
           ']差量更新',
           JSON.stringify(diffData));
@@ -8933,15 +8959,76 @@ internalMixin(Vue);
 
 /***/ }),
 
-/***/ 218:
-/*!*************************************************************************!*\
-  !*** C:/Users/流宇/Desktop/git/uni-appWeb/components/evan-icons/icons.js ***!
-  \*************************************************************************/
+/***/ 201:
+/*!********************************************************************!*\
+  !*** C:/Users/流宇/Desktop/git/uni-appWeb/data/exchangeMaterials.js ***!
+  \********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var _default = { "glass": "\uF000", "music": "\uF001", "search": "\uF002", "envelope-o": "\uF003", "heart": "\uF004", "star": "\uF005", "star-o": "\uF006", "user": "\uF007", "film": "\uF008", "th-large": "\uF009", "th": "\uF00A", "th-list": "\uF00B", "check": "\uF00C", "remove": "\uF00D", "close": "\uF00D", "times": "\uF00D", "search-plus": "\uF00E", "search-minus": "\uF010", "power-off": "\uF011", "signal": "\uF012", "gear": "\uF013", "cog": "\uF013", "trash-o": "\uF014", "home": "\uF015", "file-o": "\uF016", "clock-o": "\uF017", "road": "\uF018", "download": "\uF019", "arrow-circle-o-down": "\uF01A", "arrow-circle-o-up": "\uF01B", "inbox": "\uF01C", "play-circle-o": "\uF01D", "rotate-right": "\uF01E", "repeat": "\uF01E", "refresh": "\uF021", "list-alt": "\uF022", "lock": "\uF023", "flag": "\uF024", "headphones": "\uF025", "volume-off": "\uF026", "volume-down": "\uF027", "volume-up": "\uF028", "qrcode": "\uF029", "barcode": "\uF02A", "tag": "\uF02B", "tags": "\uF02C", "book": "\uF02D", "bookmark": "\uF02E", "print": "\uF02F", "camera": "\uF030", "font": "\uF031", "bold": "\uF032", "italic": "\uF033", "text-height": "\uF034", "text-width": "\uF035", "align-left": "\uF036", "align-center": "\uF037", "align-right": "\uF038", "align-justify": "\uF039", "list": "\uF03A", "dedent": "\uF03B", "outdent": "\uF03B", "indent": "\uF03C", "video-camera": "\uF03D", "photo": "\uF03E", "image": "\uF03E", "picture-o": "\uF03E", "pencil": "\uF040", "map-marker": "\uF041", "adjust": "\uF042", "tint": "\uF043", "edit": "\uF044", "pencil-square-o": "\uF044", "share-square-o": "\uF045", "check-square-o": "\uF046", "arrows": "\uF047", "step-backward": "\uF048", "fast-backward": "\uF049", "backward": "\uF04A", "play": "\uF04B", "pause": "\uF04C", "stop": "\uF04D", "forward": "\uF04E", "fast-forward": "\uF050", "step-forward": "\uF051", "eject": "\uF052", "chevron-left": "\uF053", "chevron-right": "\uF054", "plus-circle": "\uF055", "minus-circle": "\uF056", "times-circle": "\uF057", "check-circle": "\uF058", "question-circle": "\uF059", "info-circle": "\uF05A", "crosshairs": "\uF05B", "times-circle-o": "\uF05C", "check-circle-o": "\uF05D", "ban": "\uF05E", "arrow-left": "\uF060", "arrow-right": "\uF061", "arrow-up": "\uF062", "arrow-down": "\uF063", "mail-forward": "\uF064", "share": "\uF064", "expand": "\uF065", "compress": "\uF066", "plus": "\uF067", "minus": "\uF068", "asterisk": "\uF069", "exclamation-circle": "\uF06A", "gift": "\uF06B", "leaf": "\uF06C", "fire": "\uF06D", "eye": "\uF06E", "eye-slash": "\uF070", "warning": "\uF071", "exclamation-triangle": "\uF071", "plane": "\uF072", "calendar": "\uF073", "random": "\uF074", "comment": "\uF075", "magnet": "\uF076", "chevron-up": "\uF077", "chevron-down": "\uF078", "retweet": "\uF079", "shopping-cart": "\uF07A", "folder": "\uF07B", "folder-open": "\uF07C", "arrows-v": "\uF07D", "arrows-h": "\uF07E", "bar-chart-o": "\uF080", "bar-chart": "\uF080", "twitter-square": "\uF081", "facebook-square": "\uF082", "camera-retro": "\uF083", "key": "\uF084", "gears": "\uF085", "cogs": "\uF085", "comments": "\uF086", "thumbs-o-up": "\uF087", "thumbs-o-down": "\uF088", "star-half": "\uF089", "heart-o": "\uF08A", "sign-out": "\uF08B", "linkedin-square": "\uF08C", "thumb-tack": "\uF08D", "external-link": "\uF08E", "sign-in": "\uF090", "trophy": "\uF091", "github-square": "\uF092", "upload": "\uF093", "lemon-o": "\uF094", "phone": "\uF095", "square-o": "\uF096", "bookmark-o": "\uF097", "phone-square": "\uF098", "twitter": "\uF099", "facebook-f": "\uF09A", "facebook": "\uF09A", "github": "\uF09B", "unlock": "\uF09C", "credit-card": "\uF09D", "feed": "\uF09E", "rss": "\uF09E", "hdd-o": "\uF0A0", "bullhorn": "\uF0A1", "bell-o": "\uF0A2", "certificate": "\uF0A3", "hand-o-right": "\uF0A4", "hand-o-left": "\uF0A5", "hand-o-up": "\uF0A6", "hand-o-down": "\uF0A7", "arrow-circle-left": "\uF0A8", "arrow-circle-right": "\uF0A9", "arrow-circle-up": "\uF0AA", "arrow-circle-down": "\uF0AB", "globe": "\uF0AC", "wrench": "\uF0AD", "tasks": "\uF0AE", "filter": "\uF0B0", "briefcase": "\uF0B1", "arrows-alt": "\uF0B2", "group": "\uF0C0", "users": "\uF0C0", "chain": "\uF0C1", "link": "\uF0C1", "cloud": "\uF0C2", "flask": "\uF0C3", "cut": "\uF0C4", "scissors": "\uF0C4", "copy": "\uF0C5", "files-o": "\uF0C5", "paperclip": "\uF0C6", "save": "\uF0C7", "floppy-o": "\uF0C7", "square": "\uF0C8", "navicon": "\uF0C9", "reorder": "\uF0C9", "bars": "\uF0C9", "list-ul": "\uF0CA", "list-ol": "\uF0CB", "strikethrough": "\uF0CC", "underline": "\uF0CD", "table": "\uF0CE", "magic": "\uF0D0", "truck": "\uF0D1", "pinterest": "\uF0D2", "pinterest-square": "\uF0D3", "google-plus-square": "\uF0D4", "google-plus": "\uF0D5", "money": "\uF0D6", "caret-down": "\uF0D7", "caret-up": "\uF0D8", "caret-left": "\uF0D9", "caret-right": "\uF0DA", "columns": "\uF0DB", "unsorted": "\uF0DC", "sort": "\uF0DC", "sort-down": "\uF0DD", "sort-desc": "\uF0DD", "sort-up": "\uF0DE", "sort-asc": "\uF0DE", "envelope": "\uF0E0", "linkedin": "\uF0E1", "rotate-left": "\uF0E2", "undo": "\uF0E2", "legal": "\uF0E3", "gavel": "\uF0E3", "dashboard": "\uF0E4", "tachometer": "\uF0E4", "comment-o": "\uF0E5", "comments-o": "\uF0E6", "flash": "\uF0E7", "bolt": "\uF0E7", "sitemap": "\uF0E8", "umbrella": "\uF0E9", "paste": "\uF0EA", "clipboard": "\uF0EA", "lightbulb-o": "\uF0EB", "exchange": "\uF0EC", "cloud-download": "\uF0ED", "cloud-upload": "\uF0EE", "user-md": "\uF0F0", "stethoscope": "\uF0F1", "suitcase": "\uF0F2", "bell": "\uF0F3", "coffee": "\uF0F4", "cutlery": "\uF0F5", "file-text-o": "\uF0F6", "building-o": "\uF0F7", "hospital-o": "\uF0F8", "ambulance": "\uF0F9", "medkit": "\uF0FA", "fighter-jet": "\uF0FB", "beer": "\uF0FC", "h-square": "\uF0FD", "plus-square": "\uF0FE", "angle-double-left": "\uF100", "angle-double-right": "\uF101", "angle-double-up": "\uF102", "angle-double-down": "\uF103", "angle-left": "\uF104", "angle-right": "\uF105", "angle-up": "\uF106", "angle-down": "\uF107", "desktop": "\uF108", "laptop": "\uF109", "tablet": "\uF10A", "mobile-phone": "\uF10B", "mobile": "\uF10B", "circle-o": "\uF10C", "quote-left": "\uF10D", "quote-right": "\uF10E", "spinner": "\uF110", "circle": "\uF111", "mail-reply": "\uF112", "reply": "\uF112", "github-alt": "\uF113", "folder-o": "\uF114", "folder-open-o": "\uF115", "smile-o": "\uF118", "frown-o": "\uF119", "meh-o": "\uF11A", "gamepad": "\uF11B", "keyboard-o": "\uF11C", "flag-o": "\uF11D", "flag-checkered": "\uF11E", "terminal": "\uF120", "code": "\uF121", "mail-reply-all": "\uF122", "reply-all": "\uF122", "star-half-empty": "\uF123", "star-half-full": "\uF123", "star-half-o": "\uF123", "location-arrow": "\uF124", "crop": "\uF125", "code-fork": "\uF126", "unlink": "\uF127", "chain-broken": "\uF127", "question": "\uF128", "info": "\uF129", "exclamation": "\uF12A", "superscript": "\uF12B", "subscript": "\uF12C", "eraser": "\uF12D", "puzzle-piece": "\uF12E", "microphone": "\uF130", "microphone-slash": "\uF131", "shield": "\uF132", "calendar-o": "\uF133", "fire-extinguisher": "\uF134", "rocket": "\uF135", "maxcdn": "\uF136", "chevron-circle-left": "\uF137", "chevron-circle-right": "\uF138", "chevron-circle-up": "\uF139", "chevron-circle-down": "\uF13A", "html5": "\uF13B", "css3": "\uF13C", "anchor": "\uF13D", "unlock-alt": "\uF13E", "bullseye": "\uF140", "ellipsis-h": "\uF141", "ellipsis-v": "\uF142", "rss-square": "\uF143", "play-circle": "\uF144", "ticket": "\uF145", "minus-square": "\uF146", "minus-square-o": "\uF147", "level-up": "\uF148", "level-down": "\uF149", "check-square": "\uF14A", "pencil-square": "\uF14B", "external-link-square": "\uF14C", "share-square": "\uF14D", "compass": "\uF14E", "toggle-down": "\uF150", "caret-square-o-down": "\uF150", "toggle-up": "\uF151", "caret-square-o-up": "\uF151", "toggle-right": "\uF152", "caret-square-o-right": "\uF152", "fa-euro": "\uF153", "fa-eur": "\uF153", "gbp": "\uF154", "dollar": "\uF155", "usd": "\uF155", "rupee": "\uF156", "inr": "\uF156", "cny": "\uF157", "rmb": "\uF157", "yen": "\uF157", "jpy": "\uF157", "ruble": "\uF158", "rouble": "\uF158", "rub": "\uF158", "won": "\uF159", "krw": "\uF159", "bitcoin": "\uF15A", "btc": "\uF15A", "file": "\uF15B", "file-text": "\uF15C", "sort-alpha-asc": "\uF15D", "sort-alpha-desc": "\uF15E", "sort-amount-asc": "\uF160", "sort-amount-desc": "\uF161", "sort-numeric-asc": "\uF162", "sort-numeric-desc": "\uF163", "thumbs-up": "\uF164", "thumbs-down": "\uF165", "youtube-square": "\uF166", "youtube": "\uF167", "xing": "\uF168", "xing-square": "\uF169", "youtube-play": "\uF16A", "dropbox": "\uF16B", "stack-overflow": "\uF16C", "instagram": "\uF16D", "flickr": "\uF16E", "adn": "\uF170", "bitbucket": "\uF171", "bitbucket-square": "\uF172", "tumblr": "\uF173", "tumblr-square": "\uF174", "long-arrow-down": "\uF175", "long-arrow-up": "\uF176", "long-arrow-left": "\uF177", "long-arrow-right": "\uF178", "apple": "\uF179", "windows": "\uF17A", "android": "\uF17B", "linux": "\uF17C", "dribbble": "\uF17D", "skype": "\uF17E", "foursquare": "\uF180", "trello": "\uF181", "female": "\uF182", "male": "\uF183", "gittip": "\uF184", "gratipay": "\uF184", "sun-o": "\uF185", "moon-o": "\uF186", "archive": "\uF187", "bug": "\uF188", "vk": "\uF189", "weibo": "\uF18A", "renren": "\uF18B", "pagelines": "\uF18C", "stack-exchange": "\uF18D", "arrow-circle-o-right": "\uF18E", "arrow-circle-o-left": "\uF190", "toggle-left": "\uF191", "caret-square-o-left": "\uF191", "dot-circle-o": "\uF192", "wheelchair": "\uF193", "vimeo-square": "\uF194", "turkish-lira": "\uF195", "try": "\uF195", "plus-square-o": "\uF196", "space-shuttle": "\uF197", "slack": "\uF198", "envelope-square": "\uF199", "wordpress": "\uF19A", "openid": "\uF19B", "institution": "\uF19C", "bank": "\uF19C", "university": "\uF19C", "mortar-board": "\uF19D", "graduation-cap": "\uF19D", "yahoo": "\uF19E", "google": "\uF1A0", "reddit": "\uF1A1", "reddit-square": "\uF1A2", "stumbleupon-circle": "\uF1A3", "stumbleupon": "\uF1A4", "delicious": "\uF1A5", "digg": "\uF1A6", "pied-piper-pp": "\uF1A7", "pied-piper-alt": "\uF1A8", "drupal": "\uF1A9", "joomla": "\uF1AA", "language": "\uF1AB", "fax": "\uF1AC", "building": "\uF1AD", "child": "\uF1AE", "paw": "\uF1B0", "spoon": "\uF1B1", "cube": "\uF1B2", "cubes": "\uF1B3", "behance": "\uF1B4", "behance-square": "\uF1B5", "steam": "\uF1B6", "steam-square": "\uF1B7", "recycle": "\uF1B8", "automobile": "\uF1B9", "car": "\uF1B9", "cab": "\uF1BA", "taxi": "\uF1BA", "tree": "\uF1BB", "spotify": "\uF1BC", "deviantart": "\uF1BD", "soundcloud": "\uF1BE", "database": "\uF1C0", "file-pdf-o": "\uF1C1", "file-word-o": "\uF1C2", "file-excel-o": "\uF1C3", "file-powerpoint-o": "\uF1C4", "file-photo-o": "\uF1C5", "file-picture-o": "\uF1C5", "file-image-o": "\uF1C5", "file-zip-o": "\uF1C6", "file-archive-o": "\uF1C6", "file-sound-o": "\uF1C7", "file-audio-o": "\uF1C7", "file-movie-o": "\uF1C8", "file-video-o": "\uF1C8", "file-code-o": "\uF1C9", "vine": "\uF1CA", "codepen": "\uF1CB", "jsfiddle": "\uF1CC", "life-bouy": "\uF1CD", "life-buoy": "\uF1CD", "life-saver": "\uF1CD", "support": "\uF1CD", "life-ring": "\uF1CD", "circle-o-notch": "\uF1CE", "ra": "\uF1D0", "resistance": "\uF1D0", "rebel": "\uF1D0", "ge": "\uF1D1", "empire": "\uF1D1", "git-square": "\uF1D2", "git": "\uF1D3", "y-combinator-square": "\uF1D4", "yc-square": "\uF1D4", "hacker-news": "\uF1D4", "tencent-weibo": "\uF1D5", "qq": "\uF1D6", "wechat": "\uF1D7", "weixin": "\uF1D7", "send": "\uF1D8", "paper-plane": "\uF1D8", "send-o": "\uF1D9", "paper-plane-o": "\uF1D9", "history": "\uF1DA", "circle-thin": "\uF1DB", "header": "\uF1DC", "paragraph": "\uF1DD", "sliders": "\uF1DE", "share-alt": "\uF1E0", "share-alt-square": "\uF1E1", "bomb": "\uF1E2", "soccer-ball-o": "\uF1E3", "futbol-o": "\uF1E3", "tty": "\uF1E4", "binoculars": "\uF1E5", "plug": "\uF1E6", "slideshare": "\uF1E7", "twitch": "\uF1E8", "yelp": "\uF1E9", "newspaper-o": "\uF1EA", "wifi": "\uF1EB", "calculator": "\uF1EC", "paypal": "\uF1ED", "google-wallet": "\uF1EE", "cc-visa": "\uF1F0", "cc-mastercard": "\uF1F1", "cc-discover": "\uF1F2", "cc-amex": "\uF1F3", "cc-paypal": "\uF1F4", "cc-stripe": "\uF1F5", "bell-slash": "\uF1F6", "bell-slash-o": "\uF1F7", "trash": "\uF1F8", "copyright": "\uF1F9", "at": "\uF1FA", "eyedropper": "\uF1FB", "paint-brush": "\uF1FC", "birthday-cake": "\uF1FD", "area-chart": "\uF1FE", "pie-chart": "\uF200", "line-chart": "\uF201", "lastfm": "\uF202", "lastfm-square": "\uF203", "toggle-off": "\uF204", "toggle-on": "\uF205", "bicycle": "\uF206", "bus": "\uF207", "ioxhost": "\uF208", "angellist": "\uF209", "cc": "\uF20A", "shekel": "\uF20B", "sheqel": "\uF20B", "ils": "\uF20B", "meanpath": "\uF20C", "buysellads": "\uF20D", "connectdevelop": "\uF20E", "dashcube": "\uF210", "forumbee": "\uF211", "leanpub": "\uF212", "sellsy": "\uF213", "shirtsinbulk": "\uF214", "simplybuilt": "\uF215", "skyatlas": "\uF216", "cart-plus": "\uF217", "cart-arrow-down": "\uF218", "diamond": "\uF219", "ship": "\uF21A", "user-secret": "\uF21B", "motorcycle": "\uF21C", "street-view": "\uF21D", "heartbeat": "\uF21E", "venus": "\uF221", "mars": "\uF222", "mercury": "\uF223", "intersex": "\uF224", "transgender": "\uF224", "transgender-alt": "\uF225", "venus-double": "\uF226", "mars-double": "\uF227", "venus-mars": "\uF228", "mars-stroke": "\uF229", "mars-stroke-v": "\uF22A", "mars-stroke-h": "\uF22B", "neuter": "\uF22C", "genderless": "\uF22D", "facebook-official": "\uF230", "pinterest-p": "\uF231", "whatsapp": "\uF232", "server": "\uF233", "user-plus": "\uF234", "user-times": "\uF235", "hotel": "\uF236", "bed": "\uF236", "viacoin": "\uF237", "train": "\uF238", "subway": "\uF239", "medium": "\uF23A", "yc": "\uF23B", "y-combinator": "\uF23B", "optin-monster": "\uF23C", "opencart": "\uF23D", "expeditedssl": "\uF23E", "battery-4": "\uF240", "battery": "\uF240", "battery-full": "\uF240", "battery-3": "\uF241", "battery-three-quarters": "\uF241", "battery-2": "\uF242", "battery-half": "\uF242", "battery-1": "\uF243", "battery-quarter": "\uF243", "battery-0": "\uF244", "battery-empty": "\uF244", "mouse-pointer": "\uF245", "i-cursor": "\uF246", "object-group": "\uF247", "object-ungroup": "\uF248", "sticky-note": "\uF249", "sticky-note-o": "\uF24A", "cc-jcb": "\uF24B", "cc-diners-club": "\uF24C", "clone": "\uF24D", "balance-scale": "\uF24E", "hourglass-o": "\uF250", "hourglass-1": "\uF251", "hourglass-start": "\uF251", "hourglass-2": "\uF252", "hourglass-half": "\uF252", "hourglass-3": "\uF253", "hourglass-end": "\uF253", "hourglass": "\uF254", "hand-grab-o": "\uF255", "hand-rock-o": "\uF255", "hand-stop-o": "\uF256", "hand-paper-o": "\uF256", "hand-scissors-o": "\uF257", "hand-lizard-o": "\uF258", "hand-spock-o": "\uF259", "hand-pointer-o": "\uF25A", "hand-peace-o": "\uF25B", "trademark": "\uF25C", "registered": "\uF25D", "creative-commons": "\uF25E", "gg": "\uF260", "gg-circle": "\uF261", "tripadvisor": "\uF262", "odnoklassniki": "\uF263", "odnoklassniki-square": "\uF264", "get-pocket": "\uF265", "wikipedia-w": "\uF266", "safari": "\uF267", "chrome": "\uF268", "firefox": "\uF269", "opera": "\uF26A", "internet-explorer": "\uF26B", "tv": "\uF26C", "television": "\uF26C", "contao": "\uF26D", "500px": "\uF26E", "amazon": "\uF270", "calendar-plus-o": "\uF271", "calendar-minus-o": "\uF272", "calendar-times-o": "\uF273", "calendar-check-o": "\uF274", "industry": "\uF275", "map-pin": "\uF276", "map-signs": "\uF277", "map-o": "\uF278", "map": "\uF279", "commenting": "\uF27A", "commenting-o": "\uF27B", "houzz": "\uF27C", "vimeo": "\uF27D", "black-tie": "\uF27E", "fonticons": "\uF280", "reddit-alien": "\uF281", "edge": "\uF282", "credit-card-alt": "\uF283", "codiepie": "\uF284", "modx": "\uF285", "fort-awesome": "\uF286", "usb": "\uF287", "product-hunt": "\uF288", "mixcloud": "\uF289", "scribd": "\uF28A", "pause-circle": "\uF28B", "pause-circle-o": "\uF28C", "stop-circle": "\uF28D", "stop-circle-o": "\uF28E", "shopping-bag": "\uF290", "shopping-basket": "\uF291", "hashtag": "\uF292", "bluetooth": "\uF293", "bluetooth-b": "\uF294", "percent": "\uF295", "gitlab": "\uF296", "wpbeginner": "\uF297", "wpforms": "\uF298", "envira": "\uF299", "universal-access": "\uF29A", "wheelchair-alt": "\uF29B", "question-circle-o": "\uF29C", "blind": "\uF29D", "audio-description": "\uF29E", "volume-control-phone": "\uF2A0", "braille": "\uF2A1", "assistive-listening-systems": "\uF2A2", "asl-interpreting": "\uF2A3", "american-sign-language-interpreting": "\uF2A3", "deafness": "\uF2A4", "hard-of-hearing": "\uF2A4", "deaf": "\uF2A4", "glide": "\uF2A5", "glide-g": "\uF2A6", "signing": "\uF2A7", "sign-language": "\uF2A7", "low-vision": "\uF2A8", "viadeo": "\uF2A9", "viadeo-square": "\uF2AA", "snapchat": "\uF2AB", "snapchat-ghost": "\uF2AC", "snapchat-square": "\uF2AD", "pied-piper": "\uF2AE", "first-order": "\uF2B0", "yoast": "\uF2B1", "themeisle": "\uF2B2", "google-plus-circle": "\uF2B3", "google-plus-official": "\uF2B3", "fa": "\uF2B4", "font-awesome": "\uF2B4", "handshake-o": "\uF2B5", "envelope-open": "\uF2B6", "envelope-open-o": "\uF2B7", "linode": "\uF2B8", "address-book": "\uF2B9", "address-book-o": "\uF2BA", "vcard": "\uF2BB", "address-card": "\uF2BB", "vcard-o": "\uF2BC", "address-card-o": "\uF2BC", "user-circle": "\uF2BD", "user-circle-o": "\uF2BE", "user-o": "\uF2C0", "id-badge": "\uF2C1", "drivers-license": "\uF2C2", "id-card": "\uF2C2", "drivers-license-o": "\uF2C3", "id-card-o": "\uF2C3", "quora": "\uF2C4", "free-code-camp": "\uF2C5", "telegram": "\uF2C6", "thermometer-4": "\uF2C7", "thermometer": "\uF2C7", "thermometer-full": "\uF2C7", "thermometer-3": "\uF2C8", "thermometer-three-quarters": "\uF2C8", "thermometer-2": "\uF2C9", "thermometer-half": "\uF2C9", "thermometer-1": "\uF2CA", "thermometer-quarter": "\uF2CA", "thermometer-0": "\uF2CB", "thermometer-empty": "\uF2CB", "shower": "\uF2CC", "bathtub": "\uF2CD", "s15": "\uF2CD", "bath": "\uF2CD", "podcast": "\uF2CE", "window-maximize": "\uF2D0", "window-minimize": "\uF2D1", "window-restore": "\uF2D2", "times-rectangle": "\uF2D3", "window-close": "\uF2D3", "times-rectangle-o": "\uF2D4", "window-close-o": "\uF2D4", "bandcamp": "\uF2D5", "grav": "\uF2D6", "etsy": "\uF2D7", "imdb": "\uF2D8", "ravelry": "\uF2D9", "eercast": "\uF2DA", "microchip": "\uF2DB", "snowflake-o": "\uF2DC", "superpowers": "\uF2DD", "wpexplorer": "\uF2DE", "meetup": "\uF2E0" };exports.default = _default;
+var data = [
+{
+  id: 1,
+  material_iden: '00100001',
+  material_name: '舞鞋',
+  material_specification: '31码',
+  material_model: '1234',
+  material_meterage: '双',
+  material_attr: '208' },
+{
+  id: 2,
+  material_iden: '00100002',
+  material_name: '舞鞋',
+  material_specification: '30码',
+  material_model: '1234',
+  material_meterage: '双',
+  material_attr: '200' },
+{
+  id: 3,
+  material_iden: '00100003',
+  material_name: '毛笔',
+  material_specification: '狼毫',
+  material_model: '1234',
+  material_meterage: '支',
+  material_attr: '200' },
+{
+  id: 4,
+  material_iden: '00100004',
+  material_name: '颜料',
+  material_specification: '水彩',
+  material_model: '1234',
+  material_meterage: '盒',
+  material_attr: '200' },
+{
+  id: 5,
+  material_iden: '00100005',
+  material_name: '颜料',
+  material_specification: '油画棒',
+  material_model: '1234',
+  material_meterage: '盒',
+  material_attr: '200' },
+{
+  id: 6,
+  material_iden: '00100006',
+  material_name: '演出服',
+  material_specification: 'x',
+  material_model: '1234',
+  material_meterage: '双',
+  material_attr: '200' },
+{
+  id: 7,
+  material_iden: '00100001',
+  material_name: '舞鞋',
+  material_specification: '29码',
+  material_model: '1234',
+  material_meterage: '双',
+  material_attr: '200' }];
+
+
+
+module.exports = {
+  data: data };
 
 /***/ }),
 
@@ -8966,7 +9053,50 @@ module.exports = {
 
 /***/ }),
 
-/***/ 268:
+/***/ 265:
+/*!*************************************************************************!*\
+  !*** C:/Users/流宇/Desktop/git/uni-appWeb/components/evan-icons/icons.js ***!
+  \*************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var _default = { "glass": "\uF000", "music": "\uF001", "search": "\uF002", "envelope-o": "\uF003", "heart": "\uF004", "star": "\uF005", "star-o": "\uF006", "user": "\uF007", "film": "\uF008", "th-large": "\uF009", "th": "\uF00A", "th-list": "\uF00B", "check": "\uF00C", "remove": "\uF00D", "close": "\uF00D", "times": "\uF00D", "search-plus": "\uF00E", "search-minus": "\uF010", "power-off": "\uF011", "signal": "\uF012", "gear": "\uF013", "cog": "\uF013", "trash-o": "\uF014", "home": "\uF015", "file-o": "\uF016", "clock-o": "\uF017", "road": "\uF018", "download": "\uF019", "arrow-circle-o-down": "\uF01A", "arrow-circle-o-up": "\uF01B", "inbox": "\uF01C", "play-circle-o": "\uF01D", "rotate-right": "\uF01E", "repeat": "\uF01E", "refresh": "\uF021", "list-alt": "\uF022", "lock": "\uF023", "flag": "\uF024", "headphones": "\uF025", "volume-off": "\uF026", "volume-down": "\uF027", "volume-up": "\uF028", "qrcode": "\uF029", "barcode": "\uF02A", "tag": "\uF02B", "tags": "\uF02C", "book": "\uF02D", "bookmark": "\uF02E", "print": "\uF02F", "camera": "\uF030", "font": "\uF031", "bold": "\uF032", "italic": "\uF033", "text-height": "\uF034", "text-width": "\uF035", "align-left": "\uF036", "align-center": "\uF037", "align-right": "\uF038", "align-justify": "\uF039", "list": "\uF03A", "dedent": "\uF03B", "outdent": "\uF03B", "indent": "\uF03C", "video-camera": "\uF03D", "photo": "\uF03E", "image": "\uF03E", "picture-o": "\uF03E", "pencil": "\uF040", "map-marker": "\uF041", "adjust": "\uF042", "tint": "\uF043", "edit": "\uF044", "pencil-square-o": "\uF044", "share-square-o": "\uF045", "check-square-o": "\uF046", "arrows": "\uF047", "step-backward": "\uF048", "fast-backward": "\uF049", "backward": "\uF04A", "play": "\uF04B", "pause": "\uF04C", "stop": "\uF04D", "forward": "\uF04E", "fast-forward": "\uF050", "step-forward": "\uF051", "eject": "\uF052", "chevron-left": "\uF053", "chevron-right": "\uF054", "plus-circle": "\uF055", "minus-circle": "\uF056", "times-circle": "\uF057", "check-circle": "\uF058", "question-circle": "\uF059", "info-circle": "\uF05A", "crosshairs": "\uF05B", "times-circle-o": "\uF05C", "check-circle-o": "\uF05D", "ban": "\uF05E", "arrow-left": "\uF060", "arrow-right": "\uF061", "arrow-up": "\uF062", "arrow-down": "\uF063", "mail-forward": "\uF064", "share": "\uF064", "expand": "\uF065", "compress": "\uF066", "plus": "\uF067", "minus": "\uF068", "asterisk": "\uF069", "exclamation-circle": "\uF06A", "gift": "\uF06B", "leaf": "\uF06C", "fire": "\uF06D", "eye": "\uF06E", "eye-slash": "\uF070", "warning": "\uF071", "exclamation-triangle": "\uF071", "plane": "\uF072", "calendar": "\uF073", "random": "\uF074", "comment": "\uF075", "magnet": "\uF076", "chevron-up": "\uF077", "chevron-down": "\uF078", "retweet": "\uF079", "shopping-cart": "\uF07A", "folder": "\uF07B", "folder-open": "\uF07C", "arrows-v": "\uF07D", "arrows-h": "\uF07E", "bar-chart-o": "\uF080", "bar-chart": "\uF080", "twitter-square": "\uF081", "facebook-square": "\uF082", "camera-retro": "\uF083", "key": "\uF084", "gears": "\uF085", "cogs": "\uF085", "comments": "\uF086", "thumbs-o-up": "\uF087", "thumbs-o-down": "\uF088", "star-half": "\uF089", "heart-o": "\uF08A", "sign-out": "\uF08B", "linkedin-square": "\uF08C", "thumb-tack": "\uF08D", "external-link": "\uF08E", "sign-in": "\uF090", "trophy": "\uF091", "github-square": "\uF092", "upload": "\uF093", "lemon-o": "\uF094", "phone": "\uF095", "square-o": "\uF096", "bookmark-o": "\uF097", "phone-square": "\uF098", "twitter": "\uF099", "facebook-f": "\uF09A", "facebook": "\uF09A", "github": "\uF09B", "unlock": "\uF09C", "credit-card": "\uF09D", "feed": "\uF09E", "rss": "\uF09E", "hdd-o": "\uF0A0", "bullhorn": "\uF0A1", "bell-o": "\uF0A2", "certificate": "\uF0A3", "hand-o-right": "\uF0A4", "hand-o-left": "\uF0A5", "hand-o-up": "\uF0A6", "hand-o-down": "\uF0A7", "arrow-circle-left": "\uF0A8", "arrow-circle-right": "\uF0A9", "arrow-circle-up": "\uF0AA", "arrow-circle-down": "\uF0AB", "globe": "\uF0AC", "wrench": "\uF0AD", "tasks": "\uF0AE", "filter": "\uF0B0", "briefcase": "\uF0B1", "arrows-alt": "\uF0B2", "group": "\uF0C0", "users": "\uF0C0", "chain": "\uF0C1", "link": "\uF0C1", "cloud": "\uF0C2", "flask": "\uF0C3", "cut": "\uF0C4", "scissors": "\uF0C4", "copy": "\uF0C5", "files-o": "\uF0C5", "paperclip": "\uF0C6", "save": "\uF0C7", "floppy-o": "\uF0C7", "square": "\uF0C8", "navicon": "\uF0C9", "reorder": "\uF0C9", "bars": "\uF0C9", "list-ul": "\uF0CA", "list-ol": "\uF0CB", "strikethrough": "\uF0CC", "underline": "\uF0CD", "table": "\uF0CE", "magic": "\uF0D0", "truck": "\uF0D1", "pinterest": "\uF0D2", "pinterest-square": "\uF0D3", "google-plus-square": "\uF0D4", "google-plus": "\uF0D5", "money": "\uF0D6", "caret-down": "\uF0D7", "caret-up": "\uF0D8", "caret-left": "\uF0D9", "caret-right": "\uF0DA", "columns": "\uF0DB", "unsorted": "\uF0DC", "sort": "\uF0DC", "sort-down": "\uF0DD", "sort-desc": "\uF0DD", "sort-up": "\uF0DE", "sort-asc": "\uF0DE", "envelope": "\uF0E0", "linkedin": "\uF0E1", "rotate-left": "\uF0E2", "undo": "\uF0E2", "legal": "\uF0E3", "gavel": "\uF0E3", "dashboard": "\uF0E4", "tachometer": "\uF0E4", "comment-o": "\uF0E5", "comments-o": "\uF0E6", "flash": "\uF0E7", "bolt": "\uF0E7", "sitemap": "\uF0E8", "umbrella": "\uF0E9", "paste": "\uF0EA", "clipboard": "\uF0EA", "lightbulb-o": "\uF0EB", "exchange": "\uF0EC", "cloud-download": "\uF0ED", "cloud-upload": "\uF0EE", "user-md": "\uF0F0", "stethoscope": "\uF0F1", "suitcase": "\uF0F2", "bell": "\uF0F3", "coffee": "\uF0F4", "cutlery": "\uF0F5", "file-text-o": "\uF0F6", "building-o": "\uF0F7", "hospital-o": "\uF0F8", "ambulance": "\uF0F9", "medkit": "\uF0FA", "fighter-jet": "\uF0FB", "beer": "\uF0FC", "h-square": "\uF0FD", "plus-square": "\uF0FE", "angle-double-left": "\uF100", "angle-double-right": "\uF101", "angle-double-up": "\uF102", "angle-double-down": "\uF103", "angle-left": "\uF104", "angle-right": "\uF105", "angle-up": "\uF106", "angle-down": "\uF107", "desktop": "\uF108", "laptop": "\uF109", "tablet": "\uF10A", "mobile-phone": "\uF10B", "mobile": "\uF10B", "circle-o": "\uF10C", "quote-left": "\uF10D", "quote-right": "\uF10E", "spinner": "\uF110", "circle": "\uF111", "mail-reply": "\uF112", "reply": "\uF112", "github-alt": "\uF113", "folder-o": "\uF114", "folder-open-o": "\uF115", "smile-o": "\uF118", "frown-o": "\uF119", "meh-o": "\uF11A", "gamepad": "\uF11B", "keyboard-o": "\uF11C", "flag-o": "\uF11D", "flag-checkered": "\uF11E", "terminal": "\uF120", "code": "\uF121", "mail-reply-all": "\uF122", "reply-all": "\uF122", "star-half-empty": "\uF123", "star-half-full": "\uF123", "star-half-o": "\uF123", "location-arrow": "\uF124", "crop": "\uF125", "code-fork": "\uF126", "unlink": "\uF127", "chain-broken": "\uF127", "question": "\uF128", "info": "\uF129", "exclamation": "\uF12A", "superscript": "\uF12B", "subscript": "\uF12C", "eraser": "\uF12D", "puzzle-piece": "\uF12E", "microphone": "\uF130", "microphone-slash": "\uF131", "shield": "\uF132", "calendar-o": "\uF133", "fire-extinguisher": "\uF134", "rocket": "\uF135", "maxcdn": "\uF136", "chevron-circle-left": "\uF137", "chevron-circle-right": "\uF138", "chevron-circle-up": "\uF139", "chevron-circle-down": "\uF13A", "html5": "\uF13B", "css3": "\uF13C", "anchor": "\uF13D", "unlock-alt": "\uF13E", "bullseye": "\uF140", "ellipsis-h": "\uF141", "ellipsis-v": "\uF142", "rss-square": "\uF143", "play-circle": "\uF144", "ticket": "\uF145", "minus-square": "\uF146", "minus-square-o": "\uF147", "level-up": "\uF148", "level-down": "\uF149", "check-square": "\uF14A", "pencil-square": "\uF14B", "external-link-square": "\uF14C", "share-square": "\uF14D", "compass": "\uF14E", "toggle-down": "\uF150", "caret-square-o-down": "\uF150", "toggle-up": "\uF151", "caret-square-o-up": "\uF151", "toggle-right": "\uF152", "caret-square-o-right": "\uF152", "fa-euro": "\uF153", "fa-eur": "\uF153", "gbp": "\uF154", "dollar": "\uF155", "usd": "\uF155", "rupee": "\uF156", "inr": "\uF156", "cny": "\uF157", "rmb": "\uF157", "yen": "\uF157", "jpy": "\uF157", "ruble": "\uF158", "rouble": "\uF158", "rub": "\uF158", "won": "\uF159", "krw": "\uF159", "bitcoin": "\uF15A", "btc": "\uF15A", "file": "\uF15B", "file-text": "\uF15C", "sort-alpha-asc": "\uF15D", "sort-alpha-desc": "\uF15E", "sort-amount-asc": "\uF160", "sort-amount-desc": "\uF161", "sort-numeric-asc": "\uF162", "sort-numeric-desc": "\uF163", "thumbs-up": "\uF164", "thumbs-down": "\uF165", "youtube-square": "\uF166", "youtube": "\uF167", "xing": "\uF168", "xing-square": "\uF169", "youtube-play": "\uF16A", "dropbox": "\uF16B", "stack-overflow": "\uF16C", "instagram": "\uF16D", "flickr": "\uF16E", "adn": "\uF170", "bitbucket": "\uF171", "bitbucket-square": "\uF172", "tumblr": "\uF173", "tumblr-square": "\uF174", "long-arrow-down": "\uF175", "long-arrow-up": "\uF176", "long-arrow-left": "\uF177", "long-arrow-right": "\uF178", "apple": "\uF179", "windows": "\uF17A", "android": "\uF17B", "linux": "\uF17C", "dribbble": "\uF17D", "skype": "\uF17E", "foursquare": "\uF180", "trello": "\uF181", "female": "\uF182", "male": "\uF183", "gittip": "\uF184", "gratipay": "\uF184", "sun-o": "\uF185", "moon-o": "\uF186", "archive": "\uF187", "bug": "\uF188", "vk": "\uF189", "weibo": "\uF18A", "renren": "\uF18B", "pagelines": "\uF18C", "stack-exchange": "\uF18D", "arrow-circle-o-right": "\uF18E", "arrow-circle-o-left": "\uF190", "toggle-left": "\uF191", "caret-square-o-left": "\uF191", "dot-circle-o": "\uF192", "wheelchair": "\uF193", "vimeo-square": "\uF194", "turkish-lira": "\uF195", "try": "\uF195", "plus-square-o": "\uF196", "space-shuttle": "\uF197", "slack": "\uF198", "envelope-square": "\uF199", "wordpress": "\uF19A", "openid": "\uF19B", "institution": "\uF19C", "bank": "\uF19C", "university": "\uF19C", "mortar-board": "\uF19D", "graduation-cap": "\uF19D", "yahoo": "\uF19E", "google": "\uF1A0", "reddit": "\uF1A1", "reddit-square": "\uF1A2", "stumbleupon-circle": "\uF1A3", "stumbleupon": "\uF1A4", "delicious": "\uF1A5", "digg": "\uF1A6", "pied-piper-pp": "\uF1A7", "pied-piper-alt": "\uF1A8", "drupal": "\uF1A9", "joomla": "\uF1AA", "language": "\uF1AB", "fax": "\uF1AC", "building": "\uF1AD", "child": "\uF1AE", "paw": "\uF1B0", "spoon": "\uF1B1", "cube": "\uF1B2", "cubes": "\uF1B3", "behance": "\uF1B4", "behance-square": "\uF1B5", "steam": "\uF1B6", "steam-square": "\uF1B7", "recycle": "\uF1B8", "automobile": "\uF1B9", "car": "\uF1B9", "cab": "\uF1BA", "taxi": "\uF1BA", "tree": "\uF1BB", "spotify": "\uF1BC", "deviantart": "\uF1BD", "soundcloud": "\uF1BE", "database": "\uF1C0", "file-pdf-o": "\uF1C1", "file-word-o": "\uF1C2", "file-excel-o": "\uF1C3", "file-powerpoint-o": "\uF1C4", "file-photo-o": "\uF1C5", "file-picture-o": "\uF1C5", "file-image-o": "\uF1C5", "file-zip-o": "\uF1C6", "file-archive-o": "\uF1C6", "file-sound-o": "\uF1C7", "file-audio-o": "\uF1C7", "file-movie-o": "\uF1C8", "file-video-o": "\uF1C8", "file-code-o": "\uF1C9", "vine": "\uF1CA", "codepen": "\uF1CB", "jsfiddle": "\uF1CC", "life-bouy": "\uF1CD", "life-buoy": "\uF1CD", "life-saver": "\uF1CD", "support": "\uF1CD", "life-ring": "\uF1CD", "circle-o-notch": "\uF1CE", "ra": "\uF1D0", "resistance": "\uF1D0", "rebel": "\uF1D0", "ge": "\uF1D1", "empire": "\uF1D1", "git-square": "\uF1D2", "git": "\uF1D3", "y-combinator-square": "\uF1D4", "yc-square": "\uF1D4", "hacker-news": "\uF1D4", "tencent-weibo": "\uF1D5", "qq": "\uF1D6", "wechat": "\uF1D7", "weixin": "\uF1D7", "send": "\uF1D8", "paper-plane": "\uF1D8", "send-o": "\uF1D9", "paper-plane-o": "\uF1D9", "history": "\uF1DA", "circle-thin": "\uF1DB", "header": "\uF1DC", "paragraph": "\uF1DD", "sliders": "\uF1DE", "share-alt": "\uF1E0", "share-alt-square": "\uF1E1", "bomb": "\uF1E2", "soccer-ball-o": "\uF1E3", "futbol-o": "\uF1E3", "tty": "\uF1E4", "binoculars": "\uF1E5", "plug": "\uF1E6", "slideshare": "\uF1E7", "twitch": "\uF1E8", "yelp": "\uF1E9", "newspaper-o": "\uF1EA", "wifi": "\uF1EB", "calculator": "\uF1EC", "paypal": "\uF1ED", "google-wallet": "\uF1EE", "cc-visa": "\uF1F0", "cc-mastercard": "\uF1F1", "cc-discover": "\uF1F2", "cc-amex": "\uF1F3", "cc-paypal": "\uF1F4", "cc-stripe": "\uF1F5", "bell-slash": "\uF1F6", "bell-slash-o": "\uF1F7", "trash": "\uF1F8", "copyright": "\uF1F9", "at": "\uF1FA", "eyedropper": "\uF1FB", "paint-brush": "\uF1FC", "birthday-cake": "\uF1FD", "area-chart": "\uF1FE", "pie-chart": "\uF200", "line-chart": "\uF201", "lastfm": "\uF202", "lastfm-square": "\uF203", "toggle-off": "\uF204", "toggle-on": "\uF205", "bicycle": "\uF206", "bus": "\uF207", "ioxhost": "\uF208", "angellist": "\uF209", "cc": "\uF20A", "shekel": "\uF20B", "sheqel": "\uF20B", "ils": "\uF20B", "meanpath": "\uF20C", "buysellads": "\uF20D", "connectdevelop": "\uF20E", "dashcube": "\uF210", "forumbee": "\uF211", "leanpub": "\uF212", "sellsy": "\uF213", "shirtsinbulk": "\uF214", "simplybuilt": "\uF215", "skyatlas": "\uF216", "cart-plus": "\uF217", "cart-arrow-down": "\uF218", "diamond": "\uF219", "ship": "\uF21A", "user-secret": "\uF21B", "motorcycle": "\uF21C", "street-view": "\uF21D", "heartbeat": "\uF21E", "venus": "\uF221", "mars": "\uF222", "mercury": "\uF223", "intersex": "\uF224", "transgender": "\uF224", "transgender-alt": "\uF225", "venus-double": "\uF226", "mars-double": "\uF227", "venus-mars": "\uF228", "mars-stroke": "\uF229", "mars-stroke-v": "\uF22A", "mars-stroke-h": "\uF22B", "neuter": "\uF22C", "genderless": "\uF22D", "facebook-official": "\uF230", "pinterest-p": "\uF231", "whatsapp": "\uF232", "server": "\uF233", "user-plus": "\uF234", "user-times": "\uF235", "hotel": "\uF236", "bed": "\uF236", "viacoin": "\uF237", "train": "\uF238", "subway": "\uF239", "medium": "\uF23A", "yc": "\uF23B", "y-combinator": "\uF23B", "optin-monster": "\uF23C", "opencart": "\uF23D", "expeditedssl": "\uF23E", "battery-4": "\uF240", "battery": "\uF240", "battery-full": "\uF240", "battery-3": "\uF241", "battery-three-quarters": "\uF241", "battery-2": "\uF242", "battery-half": "\uF242", "battery-1": "\uF243", "battery-quarter": "\uF243", "battery-0": "\uF244", "battery-empty": "\uF244", "mouse-pointer": "\uF245", "i-cursor": "\uF246", "object-group": "\uF247", "object-ungroup": "\uF248", "sticky-note": "\uF249", "sticky-note-o": "\uF24A", "cc-jcb": "\uF24B", "cc-diners-club": "\uF24C", "clone": "\uF24D", "balance-scale": "\uF24E", "hourglass-o": "\uF250", "hourglass-1": "\uF251", "hourglass-start": "\uF251", "hourglass-2": "\uF252", "hourglass-half": "\uF252", "hourglass-3": "\uF253", "hourglass-end": "\uF253", "hourglass": "\uF254", "hand-grab-o": "\uF255", "hand-rock-o": "\uF255", "hand-stop-o": "\uF256", "hand-paper-o": "\uF256", "hand-scissors-o": "\uF257", "hand-lizard-o": "\uF258", "hand-spock-o": "\uF259", "hand-pointer-o": "\uF25A", "hand-peace-o": "\uF25B", "trademark": "\uF25C", "registered": "\uF25D", "creative-commons": "\uF25E", "gg": "\uF260", "gg-circle": "\uF261", "tripadvisor": "\uF262", "odnoklassniki": "\uF263", "odnoklassniki-square": "\uF264", "get-pocket": "\uF265", "wikipedia-w": "\uF266", "safari": "\uF267", "chrome": "\uF268", "firefox": "\uF269", "opera": "\uF26A", "internet-explorer": "\uF26B", "tv": "\uF26C", "television": "\uF26C", "contao": "\uF26D", "500px": "\uF26E", "amazon": "\uF270", "calendar-plus-o": "\uF271", "calendar-minus-o": "\uF272", "calendar-times-o": "\uF273", "calendar-check-o": "\uF274", "industry": "\uF275", "map-pin": "\uF276", "map-signs": "\uF277", "map-o": "\uF278", "map": "\uF279", "commenting": "\uF27A", "commenting-o": "\uF27B", "houzz": "\uF27C", "vimeo": "\uF27D", "black-tie": "\uF27E", "fonticons": "\uF280", "reddit-alien": "\uF281", "edge": "\uF282", "credit-card-alt": "\uF283", "codiepie": "\uF284", "modx": "\uF285", "fort-awesome": "\uF286", "usb": "\uF287", "product-hunt": "\uF288", "mixcloud": "\uF289", "scribd": "\uF28A", "pause-circle": "\uF28B", "pause-circle-o": "\uF28C", "stop-circle": "\uF28D", "stop-circle-o": "\uF28E", "shopping-bag": "\uF290", "shopping-basket": "\uF291", "hashtag": "\uF292", "bluetooth": "\uF293", "bluetooth-b": "\uF294", "percent": "\uF295", "gitlab": "\uF296", "wpbeginner": "\uF297", "wpforms": "\uF298", "envira": "\uF299", "universal-access": "\uF29A", "wheelchair-alt": "\uF29B", "question-circle-o": "\uF29C", "blind": "\uF29D", "audio-description": "\uF29E", "volume-control-phone": "\uF2A0", "braille": "\uF2A1", "assistive-listening-systems": "\uF2A2", "asl-interpreting": "\uF2A3", "american-sign-language-interpreting": "\uF2A3", "deafness": "\uF2A4", "hard-of-hearing": "\uF2A4", "deaf": "\uF2A4", "glide": "\uF2A5", "glide-g": "\uF2A6", "signing": "\uF2A7", "sign-language": "\uF2A7", "low-vision": "\uF2A8", "viadeo": "\uF2A9", "viadeo-square": "\uF2AA", "snapchat": "\uF2AB", "snapchat-ghost": "\uF2AC", "snapchat-square": "\uF2AD", "pied-piper": "\uF2AE", "first-order": "\uF2B0", "yoast": "\uF2B1", "themeisle": "\uF2B2", "google-plus-circle": "\uF2B3", "google-plus-official": "\uF2B3", "fa": "\uF2B4", "font-awesome": "\uF2B4", "handshake-o": "\uF2B5", "envelope-open": "\uF2B6", "envelope-open-o": "\uF2B7", "linode": "\uF2B8", "address-book": "\uF2B9", "address-book-o": "\uF2BA", "vcard": "\uF2BB", "address-card": "\uF2BB", "vcard-o": "\uF2BC", "address-card-o": "\uF2BC", "user-circle": "\uF2BD", "user-circle-o": "\uF2BE", "user-o": "\uF2C0", "id-badge": "\uF2C1", "drivers-license": "\uF2C2", "id-card": "\uF2C2", "drivers-license-o": "\uF2C3", "id-card-o": "\uF2C3", "quora": "\uF2C4", "free-code-camp": "\uF2C5", "telegram": "\uF2C6", "thermometer-4": "\uF2C7", "thermometer": "\uF2C7", "thermometer-full": "\uF2C7", "thermometer-3": "\uF2C8", "thermometer-three-quarters": "\uF2C8", "thermometer-2": "\uF2C9", "thermometer-half": "\uF2C9", "thermometer-1": "\uF2CA", "thermometer-quarter": "\uF2CA", "thermometer-0": "\uF2CB", "thermometer-empty": "\uF2CB", "shower": "\uF2CC", "bathtub": "\uF2CD", "s15": "\uF2CD", "bath": "\uF2CD", "podcast": "\uF2CE", "window-maximize": "\uF2D0", "window-minimize": "\uF2D1", "window-restore": "\uF2D2", "times-rectangle": "\uF2D3", "window-close": "\uF2D3", "times-rectangle-o": "\uF2D4", "window-close-o": "\uF2D4", "bandcamp": "\uF2D5", "grav": "\uF2D6", "etsy": "\uF2D7", "imdb": "\uF2D8", "ravelry": "\uF2D9", "eercast": "\uF2DA", "microchip": "\uF2DB", "snowflake-o": "\uF2DC", "superpowers": "\uF2DD", "wpexplorer": "\uF2DE", "meetup": "\uF2E0" };exports.default = _default;
+
+/***/ }),
+
+/***/ 3:
+/*!***********************************!*\
+  !*** (webpack)/buildin/global.js ***!
+  \***********************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+var g;
+
+// This works in non-strict mode
+g = (function() {
+	return this;
+})();
+
+try {
+	// This works if eval is allowed (see CSP)
+	g = g || new Function("return this")();
+} catch (e) {
+	// This works if the window reference is available
+	if (typeof window === "object") g = window;
+}
+
+// g can still be undefined, but nothing to do about it...
+// We return undefined, instead of nothing here, so it's
+// easier to handle this case. if(!global) { ...}
+
+module.exports = g;
+
+
+/***/ }),
+
+/***/ 315:
 /*!************************************************************************************!*\
   !*** C:/Users/流宇/Desktop/git/uni-appWeb/components/w-picker/city-data/province.js ***!
   \************************************************************************************/
@@ -9116,7 +9246,7 @@ provinceData;exports.default = _default;
 
 /***/ }),
 
-/***/ 269:
+/***/ 316:
 /*!********************************************************************************!*\
   !*** C:/Users/流宇/Desktop/git/uni-appWeb/components/w-picker/city-data/city.js ***!
   \********************************************************************************/
@@ -10630,7 +10760,7 @@ cityData;exports.default = _default;
 
 /***/ }),
 
-/***/ 270:
+/***/ 317:
 /*!********************************************************************************!*\
   !*** C:/Users/流宇/Desktop/git/uni-appWeb/components/w-picker/city-data/area.js ***!
   \********************************************************************************/
@@ -23183,7 +23313,7 @@ areaData;exports.default = _default;
 
 /***/ }),
 
-/***/ 271:
+/***/ 318:
 /*!**************************************************************************!*\
   !*** C:/Users/流宇/Desktop/git/uni-appWeb/components/w-picker/w-picker.js ***!
   \**************************************************************************/
@@ -23844,7 +23974,7 @@ initPicker;exports.default = _default;
 
 /***/ }),
 
-/***/ 279:
+/***/ 326:
 /*!*********************************************************************************!*\
   !*** C:/Users/流宇/Desktop/git/uni-appWeb/components/lb-picker/style/picker.scss ***!
   \*********************************************************************************/
@@ -23855,7 +23985,7 @@ initPicker;exports.default = _default;
 
 /***/ }),
 
-/***/ 280:
+/***/ 327:
 /*!************************************************************************!*\
   !*** C:/Users/流宇/Desktop/git/uni-appWeb/components/lb-picker/utils.js ***!
   \************************************************************************/
@@ -23871,48 +24001,6 @@ function getIndicatorHeight() {
   return Math.round(uni.getSystemInfoSync().screenWidth / (750 / 100));
 }
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 1)["default"]))
-
-/***/ }),
-
-/***/ 3:
-/*!***********************************!*\
-  !*** (webpack)/buildin/global.js ***!
-  \***********************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-var g;
-
-// This works in non-strict mode
-g = (function() {
-	return this;
-})();
-
-try {
-	// This works if eval is allowed (see CSP)
-	g = g || new Function("return this")();
-} catch (e) {
-	// This works if the window reference is available
-	if (typeof window === "object") g = window;
-}
-
-// g can still be undefined, but nothing to do about it...
-// We return undefined, instead of nothing here, so it's
-// easier to handle this case. if(!global) { ...}
-
-module.exports = g;
-
-
-/***/ }),
-
-/***/ 300:
-/*!**************************************************************************************!*\
-  !*** C:/Users/流宇/Desktop/git/uni-appWeb/components/lb-picker/style/picker-item.scss ***!
-  \**************************************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-// extracted by mini-css-extract-plugin
 
 /***/ }),
 
@@ -24014,6 +24102,17 @@ var data = [
 
 module.exports = {
   data: data };
+
+/***/ }),
+
+/***/ 347:
+/*!**************************************************************************************!*\
+  !*** C:/Users/流宇/Desktop/git/uni-appWeb/components/lb-picker/style/picker-item.scss ***!
+  \**************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+// extracted by mini-css-extract-plugin
 
 /***/ }),
 
@@ -24236,253 +24335,32 @@ module.exports = {
 "use strict";
 var data = [
 {
-  id: 1,
-  stock_iden: '001',
-  total_iden: '2020001',
-  total_name: '视听说',
-  total_specification: '长:20cm 宽:15cm 高:2cm',
-  total_model: '中等',
-  total_meterage: '本',
-  total_attr: '存货',
-  total_present_num: '200' },
-{
-  id: 2,
-  stock_iden: '001',
-  total_iden: '2020002',
-  total_name: '新概念',
-  total_specification: '长:20cm 宽:15cm 高:2cm',
-  total_model: '中等',
-  total_meterage: '本',
-  total_attr: '存货',
-  total_present_num: '200' },
-{
-  id: 3,
-  stock_iden: '001',
-  total_iden: '2020003',
-  total_name: '阅读进阶',
-  total_specification: '长:20cm 宽:15cm 高:2cm',
-  total_model: '中等',
-  total_meterage: '本',
-  total_attr: '存货',
-  total_present_num: '200' },
-{
-  id: 4,
-  stock_iden: '001',
-  total_iden: '2020004',
-  total_name: '疯狂英语',
-  total_specification: '长:20cm 宽:15cm 高:2cm',
-  total_model: '中等',
-  total_meterage: '本',
-  total_attr: '存货',
-  total_present_num: '200' },
-{
-  id: 5,
-  stock_iden: '001',
-  total_iden: '2020005',
-  total_name: '英语读写',
-  total_specification: '长:20cm 宽:15cm 高:2cm',
-  total_model: '中等',
-  total_meterage: '本',
-  total_attr: '存货',
-  total_present_num: '200' }];
+  total_iden: '001',
+  total_name: '合肥仓',
+  orga_iden: '2020001',
+  orga_name: '合肥艺朝艺夕艺术有限公司',
+  material_iden: '222111',
+  material_name: '新概念',
+  material_specification: '1KG',
+  material_model: '书本',
+  material_meterage: '本',
+  ts_present_num: '200',
+  ts_present_price: '80',
+  ts_present_sum: '16000' },
 
-
-module.exports = {
-  data: data };
-
-/***/ }),
-
-/***/ 47:
-/*!*************************************************************!*\
-  !*** C:/Users/流宇/Desktop/git/uni-appWeb/data/technology.js ***!
-  \*************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-var data = [
 {
-  id: 1,
-  stock_iden: '001',
-  total_iden: '2020100',
-  total_name: '视听说',
-  total_specification: '长:20cm 宽:15cm 高:2cm',
-  total_model: '中等',
-  total_meterage: '本',
-  total_attr: '存货',
-  total_present_num: '200' },
-{
-  id: 2,
-  stock_iden: '001',
-  total_iden: '2020101',
-  total_name: '视听说',
-  total_specification: '长:20cm 宽:15cm 高:2cm',
-  total_model: '中等',
-  total_meterage: '本',
-  total_attr: '存货',
-  total_present_num: '200' },
-{
-  id: 3,
-  stock_iden: '001',
-  total_iden: '2020102',
-  total_name: '视听说',
-  total_specification: '长:20cm 宽:15cm 高:2cm',
-  total_model: '中等',
-  total_meterage: '本',
-  total_attr: '存货',
-  total_present_num: '200' },
-{
-  id: 4,
-  stock_iden: '001',
-  total_iden: '2020103',
-  total_name: '视听说',
-  total_specification: '长:20cm 宽:15cm 高:2cm',
-  total_model: '中等',
-  total_meterage: '本',
-  total_attr: '存货',
-  total_present_num: '200' },
-{
-  id: 5,
-  stock_iden: '001',
-  total_iden: '2020104',
-  total_name: '视听说',
-  total_specification: '长:20cm 宽:15cm 高:2cm',
-  total_model: '中等',
-  total_meterage: '本',
-  total_attr: '存货',
-  total_present_num: '200' }];
-
-
-module.exports = {
-  data: data };
-
-/***/ }),
-
-/***/ 48:
-/*!******************************************************!*\
-  !*** C:/Users/流宇/Desktop/git/uni-appWeb/data/art.js ***!
-  \******************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-var data = [
-{
-  id: 1,
-  stock_iden: '001',
-  total_iden: '2020001',
-  total_name: '视听说',
-  total_specification: '长:20cm 宽:15cm 高:2cm',
-  total_model: '中等',
-  total_meterage: '本',
-  total_attr: '存货',
-  total_present_num: '200' },
-{
-  id: 2,
-  stock_iden: '001',
-  total_iden: '2020002',
-  total_name: '新概念',
-  total_specification: '长:20cm 宽:15cm 高:2cm',
-  total_model: '中等',
-  total_meterage: '本',
-  total_attr: '存货',
-  total_present_num: '200' },
-{
-  id: 3,
-  stock_iden: '001',
-  total_iden: '2020003',
-  total_name: '阅读进阶',
-  total_specification: '长:20cm 宽:15cm 高:2cm',
-  total_model: '中等',
-  total_meterage: '本',
-  total_attr: '存货',
-  total_present_num: '200' },
-{
-  id: 4,
-  stock_iden: '001',
-  total_iden: '2020004',
-  total_name: '疯狂英语',
-  total_specification: '长:20cm 宽:15cm 高:2cm',
-  total_model: '中等',
-  total_meterage: '本',
-  total_attr: '存货',
-  total_present_num: '200' },
-{
-  id: 5,
-  stock_iden: '001',
-  total_iden: '2020005',
-  total_name: '英语读写',
-  total_specification: '长:20cm 宽:15cm 高:2cm',
-  total_model: '中等',
-  total_meterage: '本',
-  total_attr: '存货',
-  total_present_num: '200' }];
-
-
-module.exports = {
-  data: data };
-
-/***/ }),
-
-/***/ 49:
-/*!*********************************************************!*\
-  !*** C:/Users/流宇/Desktop/git/uni-appWeb/data/sports.js ***!
-  \*********************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-var data = [
-{
-  id: 1,
-  stock_iden: '001',
-  total_iden: '20200010',
-  total_name: '视听说',
-  total_specification: '长:20cm 宽:15cm 高:2cm',
-  total_model: '中等',
-  total_meterage: '本',
-  total_attr: '存货',
-  total_present_num: '200' },
-{
-  id: 2,
-  stock_iden: '001',
-  total_iden: '2020011',
-  total_name: '视听说',
-  total_specification: '长:20cm 宽:15cm 高:2cm',
-  total_model: '中等',
-  total_meterage: '本',
-  total_attr: '存货',
-  total_present_num: '200' },
-{
-  id: 3,
-  stock_iden: '001',
-  total_iden: '2020012',
-  total_name: '视听说',
-  total_specification: '长:20cm 宽:15cm 高:2cm',
-  total_model: '中等',
-  total_meterage: '本',
-  total_attr: '存货',
-  total_present_num: '200' },
-{
-  id: 4,
-  stock_iden: '001',
-  total_iden: '2020013',
-  total_name: '视听说',
-  total_specification: '长:20cm 宽:15cm 高:2cm',
-  total_model: '中等',
-  total_meterage: '本',
-  total_attr: '存货',
-  total_present_num: '200' },
-{
-  id: 5,
-  stock_iden: '001',
-  total_iden: '2020014',
-  total_name: '视听说',
-  total_specification: '长:20cm 宽:15cm 高:2cm',
-  total_model: '中等',
-  total_meterage: '本',
-  total_attr: '存货',
-  total_present_num: '200' }];
+  total_iden: '002',
+  total_name: '南京仓',
+  orga_iden: '2020001',
+  orga_name: '合肥艺朝艺夕艺术有限公司',
+  material_iden: '222112',
+  material_name: '视听说',
+  material_specification: '1KG',
+  material_model: '书本',
+  material_meterage: '本',
+  ts_present_num: '200',
+  ts_present_price: '80',
+  ts_present_sum: '16000' }];
 
 
 module.exports = {
@@ -25388,7 +25266,7 @@ module.exports = {"_from":"@dcloudio/uni-stat@alpha","_id":"@dcloudio/uni-stat@2
 
 /***/ }),
 
-/***/ 66:
+/***/ 63:
 /*!*****************************************************!*\
   !*** C:/Users/流宇/Desktop/git/uni-appWeb/service.js ***!
   \*****************************************************/
@@ -25433,14 +25311,14 @@ var addUser = function addUser(userInfo) {
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var _default = { "pages": { "pages/login/login": { "navigationBarTitleText": "登录" }, "pages/main/main": { "navigationBarTitleText": "主页" }, "pages/index/index": { "navigationBarTitleText": "仓库" }, "pages/user/user": { "navigationBarTitleText": "我的" }, "pages/reg/reg": { "navigationBarTitleText": "注册" }, "pages/pwd/pwd": { "navigationBarTitleText": "找回密码" }, "pages/requisitions/requisitions": { "navigationBarTitleText": "请购" }, "pages/requisitions/start": { "navigationBarTitleText": "新建" }, "pages/user/phoneus": { "navigationBarTitleText": "联系我们" }, "pages/user/setting": { "navigationBarTitleText": "系统设置" }, "pages/user/myinfo": { "navigationBarTitleText": "我的信息" }, "pages/detail/detail": { "navigationBarTitleText": "货物详情" }, "pages/detail/outDetails": { "navigationBarTitleText": "出库单详情" }, "pages/detail/purchaseDetails": { "navigationBarTitleText": "请购单详情" }, "pages/detail/sellDetails": { "navigationBarTitleText": "销售单详情" }, "pages/detail/exchangeDetails": { "navigationBarTitleText": "转库申请单详情" } }, "globalStyle": { "navigationBarTextStyle": "white", "navigationBarBackgroundColor": "#20a0ff", "backgroundColor": "#fbf9fe" } };exports.default = _default;
+Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var _default = { "pages": { "pages/login/login": { "navigationBarTitleText": "登录" }, "pages/main/main": { "navigationBarTitleText": "主页" }, "pages/index/index": { "navigationBarTitleText": "仓库" }, "pages/user/user": { "navigationBarTitleText": "我的" }, "pages/reg/reg": { "navigationBarTitleText": "注册" }, "pages/pwd/pwd": { "navigationBarTitleText": "找回密码" }, "pages/purchase/purchaseMaterials": { "navigationBarTitleText": "选择物料" }, "pages/purchase/purchase": { "navigationBarTitleText": "新建请购单" }, "pages/user/phoneus": { "navigationBarTitleText": "联系我们" }, "pages/user/setting": { "navigationBarTitleText": "系统设置" }, "pages/user/myinfo": { "navigationBarTitleText": "我的信息" }, "pages/detail/detail": { "navigationBarTitleText": "货物详情" }, "pages/detail/outDetails": { "navigationBarTitleText": "出库单详情" }, "pages/detail/purchaseDetails": { "navigationBarTitleText": "请购单详情" }, "pages/detail/sellDetails": { "navigationBarTitleText": "销售单详情" }, "pages/detail/exchangeDetails": { "navigationBarTitleText": "转库申请单详情" }, "pages/out/out": { "navigationBarTitleText": "新建出库单" }, "pages/out/outMaterials": { "navigationBarTitleText": "选择物料" }, "pages/sell/sell": { "navigationBarTitleText": "新建销售单" }, "pages/sell/sellMaterials": { "navigationBarTitleText": "物料选择" }, "pages/exchange/exchange": { "navigationBarTitleText": "新建转库单" }, "pages/exchange/exchangeMaterials": { "navigationBarTitleText": "物料选择" } }, "globalStyle": { "navigationBarTextStyle": "white", "navigationBarBackgroundColor": "#20a0ff", "backgroundColor": "#fbf9fe" } };exports.default = _default;
 
 /***/ }),
 
-/***/ 79:
-/*!***************************************************************!*\
-  !*** C:/Users/流宇/Desktop/git/uni-appWeb/data/materialData.js ***!
-  \***************************************************************/
+/***/ 76:
+/*!********************************************************************!*\
+  !*** C:/Users/流宇/Desktop/git/uni-appWeb/data/purchaseMaterials.js ***!
+  \********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -25522,7 +25400,7 @@ Object.defineProperty(exports, "__esModule", { value: true });exports.default = 
 
 /***/ }),
 
-/***/ 88:
+/***/ 85:
 /*!************************************************************!*\
   !*** C:/Users/流宇/Desktop/git/uni-appWeb/common/catUtil.js ***!
   \************************************************************/

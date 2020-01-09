@@ -1,5 +1,5 @@
 {
-  "navigationBarTitleText": "新建",
+  "navigationBarTitleText": "新建出库单",
   "usingComponents": {
     "w-picker": "/components/w-picker/w-picker",
     "lb-picker": "/components/lb-picker/index"

@@ -1,0 +1,8 @@
+{
+  "navigationBarTitleText": "新建请购单",
+  "usingComponents": {
+    "w-picker": "/components/w-picker/w-picker",
+    "lb-picker": "/components/lb-picker/index",
+    "uni-card": "/components/uni-card/uni-card"
+  }
+}

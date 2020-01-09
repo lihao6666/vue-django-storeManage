@@ -6,8 +6,8 @@
     "pages/user/user",
     "pages/reg/reg",
     "pages/pwd/pwd",
-    "pages/requisitions/requisitions",
-    "pages/requisitions/start",
+    "pages/purchase/purchaseMaterials",
+    "pages/purchase/purchase",
     "pages/user/phoneus",
     "pages/user/setting",
     "pages/user/myinfo",
@@ -15,7 +15,13 @@
     "pages/detail/outDetails",
     "pages/detail/purchaseDetails",
     "pages/detail/sellDetails",
-    "pages/detail/exchangeDetails"
+    "pages/detail/exchangeDetails",
+    "pages/out/out",
+    "pages/out/outMaterials",
+    "pages/sell/sell",
+    "pages/sell/sellMaterials",
+    "pages/exchange/exchange",
+    "pages/exchange/exchangeMaterials"
   ],
   "subPackages": [],
   "window": {
@@ -49,5 +55,5 @@
     ]
   },
   "usingComponents": {},
-  "sitemapLocation": "sitemap10.json"
+  "sitemapLocation": "sitemap4.json"
 }
