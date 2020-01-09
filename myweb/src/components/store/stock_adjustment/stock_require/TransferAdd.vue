@@ -41,8 +41,7 @@
     </div>
     <Trdetail :formadd="formadd" @close="close" :ifchange="ifchange" :orga_name="form_orga_name" :trds="trds"
               :str_from="form_str_from" @commit="this.$emit('commit')"
-              @save="this.$emit('save')" @saveall="saveReqPurAdd"
-              ></Trdetail>
+              @save="this.$emit('save')" @saveall="saveReqPurAdd"></Trdetail>
   </div>
 </template>
 
