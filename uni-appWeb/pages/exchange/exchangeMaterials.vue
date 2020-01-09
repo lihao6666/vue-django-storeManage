@@ -99,6 +99,14 @@
 				disabled: {
 					type: Boolean,
 					default: false
+				},
+				max: {
+					type: Number,
+					default: 100
+				},
+				min: {
+					type: Number,
+					default: 0
 				}
 			}
 						

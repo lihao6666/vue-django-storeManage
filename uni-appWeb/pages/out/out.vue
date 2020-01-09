@@ -137,7 +137,7 @@
 			materialsDisplay (){
 				let arr = []
 				
-				arr = uni.getStorageSync('exchange_select')
+				arr = uni.getStorageSync('out_select')
 				
 				console.log(arr)
 				
