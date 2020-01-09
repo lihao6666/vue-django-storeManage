@@ -96,14 +96,6 @@
 				titleColor: '#666666',
 				materialList: materialData.data,
 				materialFilterText: '',
-				min: {
-					type: Number,
-					default: 0
-				},
-				max: {
-					type: Number,
-					default: 100
-				},
 				disabled: {
 					type: Boolean,
 					default: false
@@ -116,9 +108,6 @@
 		},
 		mounted(){
 			
-		},
-		created() {
-			this.inputValue = +this.value;
 		},
 		computed:{
 			materialAdd(){
