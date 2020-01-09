@@ -3,17 +3,17 @@
     <div class="crumbs">
       <el-breadcrumb separator="/">
         <el-breadcrumb-item>
-          <i class="el-icon-lx-cascades"></i> 物料明细
+          <i class="el-icon-lx-cascades"></i> 物料
         </el-breadcrumb-item>
       </el-breadcrumb>
     </div>
     <div class="container">
       <div class="handle-box">
-        <el-select v-model="formadd.mos_orga" placeholder="请选择库存组织" :disabled="ifhasorga">
-          <el-option v-for="item in form_mos_orga" v-bind:key="item" :label="item" :value="item"></el-option>
+        <el-select v-model="formadd.mso_orga" placeholder="请选择库存组织" :disabled="ifhasorga">
+          <el-option v-for="item in orga_name" v-bind:key="item" :label="item" :value="item"></el-option>
         </el-select>
-        <el-select v-model="formadd.mos_warehouse" placeholder="请选择出库仓库" :disabled="ifhasware">
-          <el-option v-for="item in form_mos_warehouse" v-bind:key="item" :label="item" :value="item"></el-option>
+        <el-select v-model="formadd.mso_warehouse" placeholder="请选择出库仓库" :disabled="ifhasware">
+          <el-option v-for="item in ware_name" v-bind:key="item" :label="item" :value="item"></el-option>
         </el-select>
         <el-input
           placeholder="关键字搜索"
@@ -45,22 +45,21 @@
           <template slot-scope="props">
             <el-form label-position="left" inline class="demo-table-expand">
               <el-form-item label="备注">
-                <span>{{props.row.md_remarks}}</span>
+                <span>{{props.row.material_remarks}}</span>
               </el-form-item>
             </el-form>
           </template>
         </el-table-column>
-        <el-table-column prop="md_iden" sortable label="物料编码" :filters="md_idenSet"
-                         :filter-method="filter"  align="center"></el-table-column>
-        <el-table-column prop="md_name" sortable label="物料名称" :filters="md_nameSet"
+        <el-table-column prop="material_iden" sortable label="物料编码" align="center"></el-table-column>
+        <el-table-column prop="material_name" sortable label="物料名称" :filters="material_nameSet"
                          :filter-method="filter" align="center"></el-table-column>
-        <el-table-column prop="md_specification" sortable label="规格" :filters="md_specificationSet"
+        <el-table-column prop="material_specification" sortable label="规格" :filters="material_specificationSet"
                          :filter-method="filter" align="center"></el-table-column>
-        <el-table-column prop="md_model" sortable label="型号" :filters="md_modelSet"
+        <el-table-column prop="material_model" sortable label="型号" :filters="material_modelSet"
                          :filter-method="filter" align="center"></el-table-column>
-        <el-table-column prop="md_meterage" sortable label="单位" :filters="md_meterageSet"
+        <el-table-column prop="meterage_name" sortable label="单位" :filters="meterage_nameSet"
                          :filter-method="filter" align="center"></el-table-column>
-        <el-table-column prop="md_num" sortable label="现存量" align="center"></el-table-column>
+        <el-table-column prop="msod_present_num" sortable label="现存量" align="center"></el-table-column>
       </el-table>
       <!-- 分页 -->
       <div class="pagination">
@@ -83,8 +82,8 @@
 import { postAPI } from '../../../../api/api'
 
 export default {
-  name: 'mos_md_add',
-  props: ['tableHas', 'formadd', 'ifhasorga', 'ifhasware'],
+  name: 'mso_material_add',
+  props: ['tableHas', 'formadd', 'ifhasorga', 'ifhasware', 'orga_name', 'ware_name'],
   data () {
     return {
       query: {
@@ -95,19 +94,12 @@ export default {
       tableData: [],
       tableDataNew: [],
       multipleSelection: [],
-      md_idenSet: [],
-      md_nameSet: [],
-      md_specificationSet: [],
-      md_modelSet: [],
-      md_meterageSet: [],
+      material_nameSet: [],
+      material_specificationSet: [],
+      material_modelSet: [],
+      meterage_nameSet: [],
       pageTotal: 0,
-      ifshowadd: true,
-      form_mos_orga: [
-        '合肥工业大学'
-      ],
-      form_mos_warehouse: [
-        'a'
-      ]
+      ifshowadd: true
     }
   },
   created () {
@@ -116,47 +108,42 @@ export default {
   methods: {
     getData () {
       let _this = this
-      postAPI('/mos_md_add', this.formadd.mos_orga).then(function (res) {
+      if (this.formadd.orga_name === '') {
+        return
+      }
+      postAPI('/mso_material_add', {'orga_name': _this.formadd.mso_orga, 'ware_name': _this.formadd.mso_warehouse}).then(function (res) {
         _this.tableData = res.data.list
         _this.find()
         let nameset = new Set()
         let specificationset = new Set()
         let modelset = new Set()
         let meterageset = new Set()
-        let idenset = new Set()
         for (let i in _this.tableData) {
-          nameset.add(_this.tableData[i]['md_name'])
-          specificationset.add(_this.tableData[i]['md_specification'])
-          modelset.add(_this.tableData[i]['md_model'])
-          meterageset.add(_this.tableData[i]['md_meterage'])
-          idenset.add(_this.tableData[i]['md_iden'])
+          nameset.add(_this.tableData[i]['material_name'])
+          specificationset.add(_this.tableData[i]['material_specification'])
+          modelset.add(_this.tableData[i]['material_model'])
+          meterageset.add(_this.tableData[i]['meterage_name'])
         }
         for (let i of nameset) {
-          _this.md_nameSet.push({
+          _this.material_nameSet.push({
             text: i,
             value: i
           })
         }
         for (let i of meterageset) {
-          _this.md_meterageSet.push({
+          _this.meterage_nameSet.push({
             text: i,
             value: i
           })
         }
         for (let i of specificationset) {
-          _this.md_specificationSet.push({
+          _this.material_specificationSet.push({
             text: i,
             value: i
           })
         }
         for (let i of modelset) {
-          _this.md_modelSet.push({
-            text: i,
-            value: i
-          })
-        }
-        for (let i of idenset) {
-          _this.md_idenSet.push({
+          _this.material_modelSet.push({
             text: i,
             value: i
           })
@@ -187,11 +174,11 @@ export default {
       this.pageTotal = 0
       this.tableDataNew = this.tableData.filter(data => (this.ifshowadd || this.selectable(data, 0)) &&
           (!this.search ||
-            data.md_iden.toLowerCase().includes(this.search.toLowerCase()) ||
-            data.md_name.toLowerCase().includes(this.search.toLowerCase()) ||
-            data.md_specification.toLowerCase().includes(this.search.toLowerCase()) ||
-            data.md_model.toLowerCase().includes(this.search.toLowerCase()) ||
-            data.md_meterage.toLowerCase().includes(this.search.toLowerCase())))
+            data.material_iden.toLowerCase().includes(this.search.toLowerCase()) ||
+            data.material_name.toLowerCase().includes(this.search.toLowerCase()) ||
+            data.material_specification.toLowerCase().includes(this.search.toLowerCase()) ||
+            data.material_model.toLowerCase().includes(this.search.toLowerCase()) ||
+            data.material_meterage.toLowerCase().includes(this.search.toLowerCase())))
     },
     // 分页导航
     handlePageChange (val) {
@@ -211,7 +198,7 @@ export default {
     // 可选项
     selectable (row, index) {
       for (let i in this.tableHas) {
-        if (this.tableHas[i].md_iden === row.md_iden && this.tableHas[i].md_rp_iden === row.md_rp_iden) {
+        if (this.tableHas[i].material_iden === row.material_iden) {
           return false
         }
       }
