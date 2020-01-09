@@ -15,8 +15,8 @@
           </el-tag>
         </el-form-item>
         <el-form-item label="转入仓库">
-          <el-select v-model="formadd.str_to" placeholder="请选择" :disabled="!ifchange">
-            <el-option v-for="item in form_str_to" v-bind:key="item" :label="item" :value="item"></el-option>
+          <el-select v-model="formadd.str_to" placeholder="请选择" :disabled="!ifchange" @change="changeTo">
+            <el-option v-for="item in form_str_from" v-bind:key="item" :label="item" :value="item"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="申请部门">
@@ -40,7 +40,7 @@
       </el-form>
     </div>
     <Trdetail :formadd="formadd" @close="close" :ifchange="ifchange" :orga_name="form_orga_name" :trds="trds"
-              :str_from="form_str_from" @commit="this.$emit('commit')"
+              :ware_name="form_str_from" @commit="this.$emit('commit')"
               @save="this.$emit('save')" @saveall="saveReqPurAdd"></Trdetail>
   </div>
 </template>
@@ -89,7 +89,6 @@ export default {
         str_req_date: this.editform.str_req_date
       },
       form_orga_name: [],
-      form_str_to: [],
       form_str_from: [],
       form_str_department: [],
       trds: []
@@ -107,6 +106,10 @@ export default {
         _this.form_orga_name = []
         for (let i in res.data.orga_names) {
           _this.form_orga_name.push(res.data.orga_names[i][1])
+        }
+        _this.form_str_from = []// 转入仓库应该和转出仓库一样
+        for (let i in res.data.str_from) {
+          _this.form_str_from.push(res.data.str_from[i][1])
         }
         if (res.data.trds) {
           _this.prds = res.data.trds
@@ -175,6 +178,9 @@ export default {
       this.$nextTick(function () {
         _this.$refs.Trdetail.addShow()
       })
+    },
+    // 选择转出仓库
+    changeTo () {
     }
   }
 }

@@ -100,11 +100,11 @@
     <!-- 编辑弹出框 -->
     <el-dialog title="编辑" :visible.sync="editVisible" width="90%" :close-on-click-modal="false"
                :destroy-on-close="true" :before-close="closeedit">
-      <Transferadd ref="Reqedit"  @commit="editVisible = false" @save="getData" :editform="editform" :ifchange="true"></Transferadd>
+      <Transferadd ref="Transferedit"  @commit="editVisible = false" @save="getData" :editform="editform" :ifchange="true"></Transferadd>
     </el-dialog>
     <!-- 详情弹出框 -->
     <el-dialog title="详情" :visible.sync="moreVisible" width="90%" :destroy-on-close="true">
-      <Transferadd ref="Reqmore" :editform="moreform" :ifchange="false"></Transferadd>
+      <Transferadd ref="Transfermore" :editform="moreform" :ifchange="false"></Transferadd>
     </el-dialog>
   </div>
 </template>

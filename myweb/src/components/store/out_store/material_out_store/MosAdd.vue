@@ -53,7 +53,7 @@
 
 <script>
 import MosDetail from './MosDetail'
-import {postAPI} from '../../../../api/api';
+import {postAPI} from '../../../../api/api'
 export default {
   name: 'mso_add',
   props: ['editform', 'ifchange'],
