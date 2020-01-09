@@ -43,7 +43,7 @@
       :filter-method="filter" align="center"></el-table-column>
         <el-table-column prop="po_date" sortable label="订单日期" align="center"></el-table-column>
         <el-table-column prop="po_sum" sortable label="价税合计" align="center"></el-table-column>
-        <el-table-column prop="po_contractFrom" sortable label="来源合同" :filters="po_contractFromSet"
+        <el-table-column prop="pc_iden" sortable label="来源合同" :filters="pc_idenSet"
       :filter-method="filter" align="center"></el-table-column>
         <el-table-column prop="po_status" sortable label="状态" :filters="po_statusSet"
       :filter-method="filter" align="center">
@@ -134,7 +134,7 @@ export default {
       tableData: [],
       tableDataNew: [],
       orga_nameSet: [],
-      po_contractFromSet: [],
+      pc_idenSet: [],
       supply_nameSet: [],
       po_statusSet: [],
       po_creatorSet: [],
@@ -149,7 +149,7 @@ export default {
         po_iden: '',
         orga_name: '',
         supply_name: '',
-        po_contractFrom: '',
+        pc_iden: '',
         po_remarks: '',
         po_date: '',
         po_sum: 0
@@ -158,7 +158,7 @@ export default {
         po_iden: '',
         orga_name: '',
         supply_name: '',
-        po_contractFrom: '1',
+        pc_iden: '1',
         po_remarks: '',
         po_date: '',
         po_sum: 0
@@ -199,7 +199,7 @@ export default {
         _this.find()
         _this.orga_nameSet = []
         _this.supply_nameSet = []
-        _this.po_contractFromSet = []
+        _this.pc_idenSet = []
         _this.po_statusSet = []
         _this.po_creatorSet = []
         let orgaset = new Set()
@@ -210,7 +210,7 @@ export default {
         for (let i in _this.tableData) {
           orgaset.add(_this.tableData[i]['orga_name'])
           supplyset.add(_this.tableData[i]['supply_name'])
-          nameset.add(_this.tableData[i]['po_contractFrom'])
+          nameset.add(_this.tableData[i]['pc_iden'])
           statusset.add(_this.tableData[i]['po_status'])
           creatorset.add(_this.tableData[i]['po_creator'])
         }
@@ -227,7 +227,7 @@ export default {
           })
         }
         for (let i of nameset) {
-          _this.po_contractFromSet.push({
+          _this.pc_idenSet.push({
             text: i,
             value: i
           })
@@ -270,7 +270,7 @@ export default {
       this.tableDataNew = this.tableData.filter(data => !this.search ||
         data.po_iden.toLowerCase().includes(this.search.toLowerCase()) ||
         data.orga_name.toLowerCase().includes(this.search.toLowerCase()) ||
-        data.po_contractFrom.toLowerCase().includes(this.search.toLowerCase()) ||
+        data.pc_iden.toLowerCase().includes(this.search.toLowerCase()) ||
         data.supply_name.toLowerCase().includes(this.search.toLowerCase()) ||
         data.po_creator.toLowerCase().includes(this.search.toLowerCase()))
     },
@@ -298,7 +298,7 @@ export default {
         .then(() => {
           let _this = this
 
-          postAPI('/purchase/poDelete', row).then(function (res) {
+          postAPI('/purchase/pODelete', row).then(function (res) {
             console.log(res.data)
             if (res.data.signal === 0) {
               _this.$message.success(`删除成功`)

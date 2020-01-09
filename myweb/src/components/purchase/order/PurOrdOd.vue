@@ -29,8 +29,8 @@
         <el-tooltip content="保存所有数据并提交" placement="bottom" effect="light">
           <el-button type="primary" class="button-save" v-if="ifchange" :disabled="!tableDataNew.length>0" @click="commit">提 交</el-button>
         </el-tooltip>
-        <el-button v-if="ifchange && !formadd.po_contractFrom" type="primary" icon="el-icon-plus" class="button-save" @click="add">选择请购单</el-button>
-        <el-button v-if="ifchange && formadd.po_contractFrom" type="primary" icon="el-icon-plus" class="button-save" @click="add">选择合同</el-button>
+        <el-button v-if="ifchange && !formadd.pc_iden" type="primary" icon="el-icon-plus" class="button-save" @click="add">选择请购单</el-button>
+        <el-button v-if="ifchange && formadd.pc_iden" type="primary" icon="el-icon-plus" class="button-save" @click="add">选择合同</el-button>
       </div>
       <el-table
         :data="tableDataNew"
@@ -157,7 +157,7 @@
     </div>
     <!-- 新增弹出框 -->
     <el-dialog title="新增采购订单物料" :visible.sync="addVisible" width="90%" append-to-body>
-      <Odaddrp v-if="!formadd.po_contractFrom" @add="addOdRp" :orga_name="orga_name" :tableHas="tableData" :formadd="formadd" :ifhasorga="ifhasorga"></Odaddrp>
+      <Odaddrp v-if="!formadd.pc_iden" @add="addOdRp" :orga_name="orga_name" :tableHas="tableData" :formadd="formadd" :ifhasorga="ifhasorga"></Odaddrp>
       <Odaddpc v-else @add="addOdPc" :tableHas="tableData" :orga_name="orga_name" :formadd="formadd" :ifhasorga="ifhasorga"></Odaddpc>
     </el-dialog>
   </div>
