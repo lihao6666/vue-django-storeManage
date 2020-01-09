@@ -26,6 +26,22 @@
 /* 文章场景相关 */
 page {
   background-color: #F8F8F8;
+  width: 100%;
+}
+.order {
+  height: 50vh;
+  box-sizing: border-box;
+  margin-bottom: 10rpx;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -webkit-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-flex: 1;
+  -webkit-flex: 1;
+          flex: 1;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: flex;
 }
 .address-item {
   display: -webkit-box;
@@ -53,6 +69,9 @@ page {
             flex: 1;
     font-size: 32rpx;
     color: black;
+}
+.card {
+  font-size: 25rpx;
 }
 .remarks {
   display: -webkit-box;
@@ -153,5 +172,25 @@ page {
   color: #fff;
   background-color: #1aa034;
   border-radius: 10rpx;
+}
+.address-add-btn4 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+          align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+          justify-content: center;
+  width: 690rpx;
+  height: 80rpx;
+  margin: 60rpx auto;
+  font-size: 32rpx;
+  color: #fff;
+  background-color: #f9cc9d;
+  border-radius: 10rpx;
+  position: relative;
+  bottom: 22px;
 }
 
