@@ -1,7 +1,7 @@
 <template>
 	<view class="content">
 		<view class="content-content">
-			<view v-for="item in detailList" :key="item.id" class="card-set">
+			<view v-for="(item,index) in detailFilterList" :key="index" class="card-set">
 				<uni-card
 					:title="item.prd_name"
 					mode="basic" 
@@ -42,8 +42,21 @@ export default {
 		
 	},
 	onLoad: function() {
-		var myinfo = uni.getStorageSync('viewpurchase');
-		this.order_iden = myinfo;
+		let _this = this
+		let myinfo = uni.getStorageSync('user_info')
+		let pr_info = uni.getStorageSync('order_info')
+		uni.removeStorageSync('order_info')
+		let msg = {}
+		msg.pr_iden = pr_info.iden
+	    msg.orga_name = pr_info.orga
+		msg.user_now_iden = myinfo.data.user.username
+		this.$http.post('/purchaseRequest/prNew', msg).then(([err,res]) => {
+			if (res.data.signal === 1) {
+				_this.detailList = res.data.prds
+		    } else {
+				
+		    }
+		})
 	}
 }
 </script>
