@@ -18,7 +18,7 @@
           clearable
           v-model="search">
         </el-input>
-        <el-button type="primary" icon="el-icon-plus" class="button-plus" @click="add">新增</el-button>
+        <el-button v-if="power==='2'||power==='3'" type="primary" icon="el-icon-plus" class="button-plus" @click="add">新增</el-button>
       </div>
       <el-table
         :data="tableDataNew"
@@ -28,7 +28,7 @@
         :row-class-name="tableRowClassName"
       >
         <el-table-column prop="str_iden" sortable label="订单编号" align="center"></el-table-column>
-        <el-table-column prop="str_orga" sortable label="库存组织" :filters="str_orgaSet"
+        <el-table-column prop="orga_name" sortable label="库存组织" :filters="str_orgaSet"
                          :filter-method="filter" align="center"></el-table-column>
         <el-table-column prop="str_to" sortable label="转入仓库" :filters="str_toSet"
                          :filter-method="filter" align="center"></el-table-column>
@@ -42,7 +42,7 @@
           <template slot-scope="scope">
             <el-tag
               :type="scope.row.str_status==='已审批'?'success':''"
-            >{{scope.row.str_status}}
+            >{{[scope.row.str_status].label}}
             </el-tag>
           </template>
         </el-table-column>
@@ -55,7 +55,7 @@
               type="text"
               icon="el-icon-edit"
               @click="handleEdit(scope.$index, scope.row)"
-              v-if="scope.row.str_status==='草稿'"
+              v-if="scope.row.str_status===0"
             >编辑
             </el-button>
             <el-button
@@ -63,7 +63,7 @@
               icon="el-icon-delete"
               class="red"
               @click="handleDelete(scope.$index, scope.row)"
-              v-if="scope.row.str_status==='草稿'"
+              v-if="scope.row.str_status===0"
             >删除
             </el-button>
             <el-button
@@ -71,7 +71,7 @@
               icon="el-icon-postcard"
               class="green"
               @click="handleMore(scope.$index, scope.row)"
-              v-if="scope.row.str_status==='已审批'"
+              v-if="scope.row.str_status===1"
             >详情
             </el-button>
           </template>
@@ -91,20 +91,21 @@
         </el-pagination>
       </div>
     </div>
+  </div>
+    <!-- 新增弹出框 -->
+    <div title="新增" v-if="addVisible" width="90%" :close-on-click-modal="false">
+      <el-page-header @back="back" content="新增"></el-page-header>
+      <Transferadd ref="Transferadd" @commit="back" @save="getData" :editform="addform" :ifchange="true"></Transferadd>
+    </div>
     <!-- 编辑弹出框 -->
-    <el-dialog title="编辑" :visible.sync="editVisible" width="90%" :close-on-click-modal="false" :destroy-on-close="true" :before-close="closePcedit">
-      <Transferadd ref="Reqedit" :editform="editform" :ifchange="true"></Transferadd>
+    <el-dialog title="编辑" :visible.sync="editVisible" width="90%" :close-on-click-modal="false"
+               :destroy-on-close="true" :before-close="closeedit">
+      <Transferadd ref="Reqedit"  @commit="editVisible = false" @save="getData" :editform="editform" :ifchange="true"></Transferadd>
     </el-dialog>
     <!-- 详情弹出框 -->
     <el-dialog title="详情" :visible.sync="moreVisible" width="90%" :destroy-on-close="true">
       <Transferadd ref="Reqmore" :editform="moreform" :ifchange="false"></Transferadd>
     </el-dialog>
-  </div>
-    <!-- 新增弹出框 -->
-    <div title="新增" v-if="addVisible" width="90%" :close-on-click-modal="false">
-      <el-page-header @back="back" content="新增"></el-page-header>
-      <Transferadd ref="Transferadd" @close="close" :editform="addform" :ifchange="true"></Transferadd>
-    </div>
   </div>
 </template>
 
@@ -138,11 +139,25 @@ export default {
       addVisible: false,
       addform: {
         str_iden: '',
-        str_orga: '',
+        orga_name: '',
         str_from: '',
         str_to: '',
-        str_req_date: ''
-      }
+        str_req_date: '',
+        str_req_department: ''
+      },
+      status: [
+        {
+          value: 0,
+          label: '草稿',
+          type: ''
+        },
+        {
+          value: 1,
+          label: '已审批',
+          type: 'success'
+        }
+      ],
+      power: localStorage.getItem('user_power').charAt(9)
     }
   },
   components: {
@@ -154,9 +169,13 @@ export default {
   methods: {
     getData () {
       let _this = this
-      postAPI('/str_check').then(function (res) {
+      let data = {
+        power: this.power
+      }
+      postAPI('/str_check', data).then(function (res) {
         _this.tableData = res.data.list
         _this.find()
+        _this.pageTotal = res.data.list.length
         let orgaset = new Set()
         let toset = new Set()
         let dpmset = new Set()
@@ -164,7 +183,7 @@ export default {
         let fromset = new Set()
         let creatorset = new Set()
         for (let i in _this.tableData) {
-          orgaset.add(_this.tableData[i]['str_orga'])
+          orgaset.add(_this.tableData[i]['orga_name'])
           fromset.add(_this.tableData[i]['str_from'])
           toset.add(_this.tableData[i]['str_to'])
           dpmset.add(_this.tableData[i]['str_req_department'])
@@ -197,7 +216,7 @@ export default {
         }
         for (let i of statusset) {
           _this.str_statusSet.push({
-            text: i,
+            text: _this.status[i].label,
             value: i
           })
         }
@@ -207,7 +226,6 @@ export default {
             value: i
           })
         }
-        _this.pageTotal = res.data.list.length
       }).catch(function (err) {
         console.log(err)
       })
@@ -244,15 +262,22 @@ export default {
     add () {
       this.addVisible = true
       this.checkshow = false
+      let _this = this
+      this.$nextTick(() => _this.$refs.Transferadd.getList())
+      this.$nextTick(() => _this.$refs.Transferadd.getForm())
+      this.$nextTick(() => _this.$refs.Transferadd.addShow())
     },
     // 返回
     back () {
-      this.addVisible = false
-      this.checkshow = true
-    },
-    // 关闭新增弹窗
-    close () {
-      this.addVisible = false
+      this.$confirm('确定要退出吗？', '提示', {
+        type: 'warning'
+      })
+        .then(() => {
+          this.addVisible = false
+          this.checkshow = true
+        })
+        .catch(() => {
+        })
     },
     // 删除操作
     handleDelete (index, row) {
@@ -261,9 +286,20 @@ export default {
         type: 'warning'
       })
         .then(() => {
-          this.$message.success('删除成功')
-          this.tableData.splice(index, 1)
-          this.find()
+          let _this = this
+          console.log(row)
+          postAPI('/purchaseRequest/prDelete', row).then(function (res) {
+            console.log(res.data)
+            if (res.data.signal === 0) {
+              _this.$message.success(`删除成功`)
+              _this.getData()
+            } else {
+              _this.$message.error(res.data.message)
+            }
+          }).catch(function (err) {
+            _this.$message.error('删除失败')
+            console.log(err)
+          })
         })
         .catch(() => {
           this.$message({
@@ -276,14 +312,15 @@ export default {
     handleEdit (index, row) {
       this.editform = row
       let _this = this
-      this.$nextTick(() => _this.$refs.Reqedit.getForm())
+      this.$nextTick(() => _this.$refs.Transferadd.getForm())
+      this.$nextTick(() => _this.$refs.Transferadd.getList())
       this.editVisible = true
     },
     // 详情操作
     handleMore (index, row) {
       this.moreform = row
       let _this = this
-      this.$nextTick(() => _this.$refs.Reqmore.getForm())
+      this.$nextTick(() => _this.$refs.Transferadd.getForm())
       this.moreVisible = true
     },
     // 分页导航
@@ -294,7 +331,7 @@ export default {
       this.query.pageSize = val
     },
     // 关闭窗口二次确认
-    closePcedit () {
+    closeedit () {
       this.$confirm('确定要关闭吗？', '提示', {
         type: 'warning'
       })
