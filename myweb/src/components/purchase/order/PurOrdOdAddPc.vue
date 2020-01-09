@@ -10,7 +10,7 @@
     <div class="container">
       <div class="handle-box">
         <el-select v-model="formadd.po_orga" placeholder="请选择库存组织" :disabled="ifhasorga" @change="changeSelect">
-          <el-option v-for="item in form_po_orga" v-bind:key="item" :label="item" :value="item"></el-option>
+          <el-option v-for="item in orga_name" v-bind:key="item" :label="item" :value="item"></el-option>
         </el-select>
         <el-input
           placeholder="关键字搜索"
@@ -62,7 +62,7 @@
         </el-pagination>
       </div>
     </div>
-    <Pcod @add="save"></Pcod>
+    <Pcod @add="save" :pcods="pcods"></Pcod>
   </div>
 </template>
 
@@ -72,7 +72,7 @@ import Pcod from './PurOrdOdAddPcOd'
 
 export default {
   name: 'pc_cd_add',
-  props: ['tableHas', 'formadd', 'ifhasorga'],
+  props: ['tableHas', 'formadd', 'ifhasorga', 'orga_name'],
   components: {
     Pcod
   },
@@ -85,13 +85,11 @@ export default {
       search: '',
       tableData: [],
       tableDataNew: [],
-      multipleSelection: [],
+      multipleSelection: {},
       pc_nameSet: [],
       pc_supplySet: [],
       pageTotal: 0,
-      form_po_orga: [
-        '合肥工业大学'
-      ]
+      pcods: []
     }
   },
   created () {
@@ -99,10 +97,19 @@ export default {
   },
   methods: {
     getData () {
+      if (this.formadd.orga_name === '') {
+        return
+      }
       let _this = this
-      postAPI('/po_od_add_pc', this.formadd.po_orga).then(function (res) {
+      postAPI('/purchase/odNew', {'orga_name': _this.formadd.orga_name}).then(function (res) {
+        if (!res.data) {
+          return
+        }
         _this.tableData = res.data.list
+        _this.pageTotal = res.data.list.length
         _this.find()
+        _this.pc_nameSet = []
+        _this.pc_supplySet = []
         let nameset = new Set()
         let supplyset = new Set()
         for (let i in _this.tableData) {
@@ -160,14 +167,20 @@ export default {
     // 单选操作
     handleCurrentChange (val) {
       this.multipleSelection = val
+      postAPI('/purchase/', val).then(function (res) {
+
+      }).then(function (err) {
+        console.log(err)
+      })
     },
     // 保存
     save (val) {
-      this.$emit('add', val)
+      this.$emit('add', val, this.multipleSelection)
     },
     // 选择组织
     changeSelect (val) {
       console.log(val)
+      this.getData()
     }
   }
 }

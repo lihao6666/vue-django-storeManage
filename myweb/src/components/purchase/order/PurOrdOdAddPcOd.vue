@@ -78,6 +78,7 @@ import {postAPI} from '../../../api/api'
 
 export default {
   name: 'pc_cd_add',
+  props: ['pcods'],
   data () {
     return {
       query: {
@@ -103,71 +104,74 @@ export default {
   methods: {
     getData () {
       let _this = this
-      postAPI('/po_od_add_rp').then(function (res) {
-        _this.tableData = res.data.list
-        _this.find()
-        let nameset = new Set()
-        let specificationset = new Set()
-        let modelset = new Set()
-        let meterageset = new Set()
-        let attrset = new Set()
-        let rpidenset = new Set()
-        let idenset = new Set()
-        for (let i in _this.tableData) {
-          nameset.add(_this.tableData[i]['od_name'])
-          specificationset.add(_this.tableData[i]['od_specification'])
-          modelset.add(_this.tableData[i]['od_model'])
-          meterageset.add(_this.tableData[i]['od_meterage'])
-          attrset.add(_this.tableData[i]['od_attr'])
-          rpidenset.add(_this.tableData[i]['od_rp_iden'])
-          idenset.add(_this.tableData[i]['od_iden'])
-        }
-        for (let i of nameset) {
-          _this.od_nameSet.push({
-            text: i,
-            value: i
-          })
-        }
-        for (let i of meterageset) {
-          _this.od_meterageSet.push({
-            text: i,
-            value: i
-          })
-        }
-        for (let i of specificationset) {
-          _this.od_specificationSet.push({
-            text: i,
-            value: i
-          })
-        }
-        for (let i of modelset) {
-          _this.od_modelSet.push({
-            text: i,
-            value: i
-          })
-        }
-        for (let i of rpidenset) {
-          _this.od_rp_idenset.push({
-            text: i,
-            value: i
-          })
-        }
-        for (let i of idenset) {
-          _this.od_idenSet.push({
-            text: i,
-            value: i
-          })
-        }
-        for (let i of attrset) {
-          _this.od_attrSet.push({
-            text: i,
-            value: i
-          })
-        }
-        _this.pageTotal = res.data.list.length
-      }).catch(function (err) {
-        console.log(err)
-      })
+      _this.tableData = this.pcods
+      _this.pageTotal = _this.tableData.length
+      _this.find()
+      _this.od_idenSet = []
+      _this.od_nameSet = []
+      _this.od_specificationSet = []
+      _this.od_modelSet = []
+      _this.od_meterageSet = []
+      _this.od_rp_idenSet = []
+      _this.od_attrSet = []
+      let nameset = new Set()
+      let specificationset = new Set()
+      let modelset = new Set()
+      let meterageset = new Set()
+      let attrset = new Set()
+      let rpidenset = new Set()
+      let idenset = new Set()
+      for (let i in _this.tableData) {
+        nameset.add(_this.tableData[i]['od_name'])
+        specificationset.add(_this.tableData[i]['od_specification'])
+        modelset.add(_this.tableData[i]['od_model'])
+        meterageset.add(_this.tableData[i]['od_meterage'])
+        attrset.add(_this.tableData[i]['od_attr'])
+        rpidenset.add(_this.tableData[i]['od_rp_iden'])
+        idenset.add(_this.tableData[i]['od_iden'])
+      }
+      for (let i of nameset) {
+        _this.od_nameSet.push({
+          text: i,
+          value: i
+        })
+      }
+      for (let i of meterageset) {
+        _this.od_meterageSet.push({
+          text: i,
+          value: i
+        })
+      }
+      for (let i of specificationset) {
+        _this.od_specificationSet.push({
+          text: i,
+          value: i
+        })
+      }
+      for (let i of modelset) {
+        _this.od_modelSet.push({
+          text: i,
+          value: i
+        })
+      }
+      for (let i of rpidenset) {
+        _this.od_rp_idenSet.push({
+          text: i,
+          value: i
+        })
+      }
+      for (let i of idenset) {
+        _this.od_idenSet.push({
+          text: i,
+          value: i
+        })
+      }
+      for (let i of attrset) {
+        _this.od_attrSet.push({
+          text: i,
+          value: i
+        })
+      }
     },
     // 表格每行的class样式
     tableRowClassName ({row, rowIndex}) {

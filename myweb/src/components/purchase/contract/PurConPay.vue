@@ -127,11 +127,10 @@
 </template>
 
 <script>
-import {postAPI} from '../../../api/api'
 
 export default {
   name: 'pc_pay',
-  props: ['formadd', 'ifchange'],
+  props: ['formadd', 'ifchange', 'pays'],
   data () {
     return {
       query: {
@@ -147,20 +146,13 @@ export default {
     this.getData()
   },
   methods: {
-    changeSelect (val) {
-      console.log(val)
-    },
     getData () {
       if (this.formadd.pc_iden === '') {
         return
       }
       let _this = this
-      postAPI('/base/pc_pay', this.formadd).then(function (res) {
-        _this.tableData = res.data.list
-        _this.pageTotal = res.data.list.length
-      }).catch(function (err) {
-        console.log(err)
-      })
+      _this.tableData = this.pays
+      _this.pageTotal = _this.tableData.length
     },
     // 表格每行的class样式
     tableRowClassName ({row, rowIndex}) {
