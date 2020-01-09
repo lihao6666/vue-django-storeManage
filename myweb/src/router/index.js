@@ -119,7 +119,7 @@ export default new Router({
         },
         {
           path: '/warehouse',
-          component: () => import(/* webpackChunkName: "donate" */ '../components/basic_data/warehouse.vue'),
+          component: () => import(/* webpackChunkName: "donate" */ '../components/basic_data/Warehouse.vue'),
           meta: {title: '仓库维护', key: 20}
         },
         {
