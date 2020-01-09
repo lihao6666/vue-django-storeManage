@@ -43,9 +43,6 @@ import cmdIcon from "../../components/cmd-icon/cmd-icon.vue"
 import uniNavBar from '@/components/uni-nav-bar/uni-nav-bar.vue'
 import EvanIcons from '../../components/evan-icons/evan-icons.vue'
 import EnglishData from '../../data/English.js'
-import technologyData from '../../data/technology.js'
-import artData from '../../data/art.js'
-import sportsData from '../../data/sports.js'
 var _this;
 export default {
 	
