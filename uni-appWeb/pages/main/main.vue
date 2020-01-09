@@ -4,22 +4,22 @@
 			<view class="input-view"  v-if="current === 0">
 				<uni-icons type="search" size="22" color="#666666" />
 				<input v-model="outFilterText" confirm-type="search" class="input" type="text" placeholder="输入出库单信息">
-				<uni-icons :color="'#999999'" v-if="outFilterText!==''" class="icon-clear" type="clear" size="22" @click="clear1" />
+				<uni-icons :color="'#999999'" v-if="outFilterText!==''" type="clear" size="22" @click="clear1" />
 			</view>
 			<view class="input-view"  v-if="current === 1">
 				<uni-icons type="search" size="22" color="#666666" />
 				<input v-model="purchaseFilterText" confirm-type="search" class="input" type="text" placeholder="输入请购单信息">
-				<uni-icons :color="'#999999'" v-if="purchaseFilterText!==''" class="icon-clear" type="clear" size="22" @click="clear2" />
+				<uni-icons :color="'#999999'" v-if="purchaseFilterText!==''" type="clear" size="22" @click="clear2" />
 			</view>
 			<view class="input-view"  v-if="current === 2">
 				<uni-icons type="search" size="22" color="#666666" />
 				<input v-model="sellFilterText" confirm-type="search" class="input" type="text" placeholder="输入销售订单信息">
-				<uni-icons :color="'#999999'" v-if="sellFilterText!==''" class="icon-clear" type="clear" size="22" @click="clear3" />
+				<uni-icons :color="'#999999'" v-if="sellFilterText!==''" type="clear" size="22" @click="clear3" />
 			</view>
 			<view class="input-view"  v-if="current === 3">
 				<uni-icons type="search" size="22" color="#666666" />
 				<input v-model="exchangeFilterText" confirm-type="search" class="input" type="text" placeholder="输入转库申请单信息">
-				<uni-icons :color="'#999999'" v-if="exchangeFilterText!==''" class="icon-clear" type="clear" size="22" @click="clear4" />
+				<uni-icons :color="'#999999'" v-if="exchangeFilterText!==''" type="clear" size="22" @click="clear4" />
 			</view>
 		</uni-nav-bar>
 		<view class="content-control">
@@ -34,7 +34,7 @@
 					    :is-shadow="true" 
 						:extra="item.mso_date"
 					>
-					    <view @click="viewDetail(item.mso_iden)">
+					    <view @click="viewDetail(item.mso_iden,item.mso_orga)">
 							<view>库存组织：{{ item.mso_orga }}</view>
 							<view>出库仓库：{{ item.mso_warehouse }}</view>
 							<view>出库分类：{{ item.mso_type }}</view>
@@ -49,7 +49,7 @@
 							<view class="commit" @click="commitOrder(item.mso_iden)"><evan-icons type="check" color="green" size="16"></evan-icons>提交</view>
 						</view>
 						<view v-if="judgeStatus(item.mso_status) === 1" class="button-box">
-							<view class="detail" @click="viewDetail(item.mso_iden)"><evan-icons type="reorder" size="15"></evan-icons>详情</view>
+							<view class="detail" @click="viewDetail(item.mso_iden,item.mso_orga)"><evan-icons type="reorder" size="15"></evan-icons>详情</view>
 						</view>
 					</uni-card>
 				</view>
@@ -72,7 +72,7 @@
 					    :is-shadow="true" 
 						:extra="item.rp_date"
 					>
-					    <view @click="viewDetail(item.rp_iden)">
+					    <view @click="viewDetail(item.rp_iden,item.rp_orga)">
 							<view>库存组织：{{ item.rp_orga }}</view>
 							<view>需求类型：{{ item.rp_type }}</view>
 							<view>申请部门：{{ item.rp_req_department }}</view>
@@ -86,11 +86,11 @@
 							<view class="commit" @click="commitOrder(item.rp_iden)"><evan-icons type="check" color="green" size="16"></evan-icons>提交</view>
 						</view>
 						<view v-if="judgeStatus(item.rp_status) === 1" class="button-box">
-							<view class="detail" @click="viewDetail(item.rp_iden)"><evan-icons type="reorder" size="15"></evan-icons>详情</view>
+							<view class="detail" @click="viewDetail(item.rp_iden,item.rp_orga)"><evan-icons type="reorder" size="15"></evan-icons>详情</view>
 							<view class="delete" @click="closeOrder(item.rp_iden)"><evan-icons type="close" color="red" size="16"></evan-icons>关闭</view>
 						</view>
 						<view v-if="judgeStatus(item.rp_status) === 2" class="button-box">
-							<view class="detail" @click="viewDetail(item.rp_iden)"><evan-icons type="reorder" size="15"></evan-icons>详情</view>
+							<view class="detail" @click="viewDetail(item.rp_iden,item.rp_orga)"><evan-icons type="reorder" size="15"></evan-icons>详情</view>
 						</view>
 					</uni-card>
 				</view>
@@ -110,7 +110,7 @@
 					    :is-shadow="true" 
 						:extra="item.so_date"
 					>
-					    <view @click="viewDetail(item.so_iden)">
+					    <view @click="viewDetail(item.so_iden,item.so_orga)">
 							<view>库存组织：{{ item.so_orga }}</view>
 							<view>出库分类：{{ item.so_type }}</view>
 							<view>客户：{{ item.so_custom }}</view>
@@ -125,7 +125,7 @@
 							<view class="commit" @click="commitOrder(item.so_iden)"><evan-icons type="check" color="green" size="16"></evan-icons>提交</view>
 						</view>
 						<view v-if="judgeStatus(item.so_status) === 1" class="button-box">
-							<view class="detail" @click="viewDetail(item.so_iden)"><evan-icons type="reorder" size="15"></evan-icons>详情</view>
+							<view class="detail" @click="viewDetail(item.so_iden,item.so_orga)"><evan-icons type="reorder" size="15"></evan-icons>详情</view>
 						</view>
 					</uni-card>
 				</view>
@@ -145,7 +145,7 @@
 					    :is-shadow="true" 
 						:extra="item.str_date"
 					>
-					    <view @click="viewDetail(item.str_iden)">
+					    <view @click="viewDetail(item.str_iden,item.str_orga)">
 							<view>库存组织：{{ item.str_orga }}</view>
 							<view>转入仓库：{{ item.str_to }}</view>
 							<view>转出仓库：{{ item.str_from }}</view>
@@ -159,7 +159,7 @@
 							<view class="commit" @click="commitOrder(item.str_iden)"><evan-icons type="check" color="green" size="16"></evan-icons>提交</view>
 						</view>
 						<view v-if="judgeStatus(item.str_status) === 1" class="button-box">
-							<view class="detail" @click="viewDetail(item.str_iden)"><evan-icons type="reorder" size="15"></evan-icons>详情</view>
+							<view class="detail" @click="viewDetail(item.str_iden,item.str_orga)"><evan-icons type="reorder" size="15"></evan-icons>详情</view>
 						</view>
 					</uni-card>
 				</view>
@@ -378,11 +378,14 @@ export default {
 			}
 		},
 		//查看订单详情
-		viewDetail(iden) {
+		viewDetail(iden,orga) {
 			let diff = iden[0]+iden[1]
+			let msg = {}
+			msg.iden = iden
+			msg.orga = orga
 			if(diff === "MS") {
 				try {
-				    uni.setStorageSync('viewout', iden);
+				    uni.setStorageSync('order_info', msg);
 				} catch (e) {
 				    console.log("传出库单单号失败")
 				}
@@ -391,7 +394,7 @@ export default {
 				});
 			} else if(diff === "PR") {
 				try {
-				    uni.setStorageSync('viewpurchase', iden);
+				    uni.setStorageSync('order_info', msg);
 				} catch (e) {
 				    console.log("传请购单单号失败")
 				}
@@ -400,7 +403,7 @@ export default {
 				});
 			} else if(diff === "SO") {
 				try {
-				    uni.setStorageSync('viewsell', iden);
+				    uni.setStorageSync('order_info', msg);
 				} catch (e) {
 				    console.log("传销售单单号失败")
 				}
@@ -409,7 +412,7 @@ export default {
 				});
 			} else if(diff === "ST") {
 				try {
-				    uni.setStorageSync('viewexchange', iden);
+				    uni.setStorageSync('order_info', msg);
 				} catch (e) {
 				    console.log("传转库申请单单号失败")
 				}
