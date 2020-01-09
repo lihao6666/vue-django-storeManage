@@ -109,7 +109,7 @@
 
 <script>
 import {postAPI} from '../../../../api/api'
-import BeginDetailadd from './BeginDetailadd'
+import BeginDetailadd from './BeginDetailAdd'
 
 export default {
   name: 'sell_sod',
