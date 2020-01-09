@@ -187,8 +187,8 @@ var _sellDetails = _interopRequireDefault(__webpack_require__(/*! ../../data/sel
     return {
       //将data文件夹中的数据读入
       order_iden: '',
-      // detailList: detailData.data,
-      detailList: [],
+      detailList: _sellDetails.default.data,
+      // detailList: [],
       detailFilterText: '' };
 
   },

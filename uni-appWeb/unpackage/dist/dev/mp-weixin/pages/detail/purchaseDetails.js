@@ -199,8 +199,10 @@ __webpack_require__.r(__webpack_exports__);
       return arr;
     } },
 
-  methods: {},
-
+  methods: {
+    clear: function clear() {
+      this.detailFilterText = '';
+    } },
 
   onLoad: function onLoad() {
     var _this = this;

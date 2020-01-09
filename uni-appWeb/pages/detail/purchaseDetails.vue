@@ -65,7 +65,9 @@ export default {
 		}
 	},
 	methods: {
-		
+		clear() {
+			this.detailFilterText = ''
+		},
 	},
 	onLoad: function() {
 		let _this = this
