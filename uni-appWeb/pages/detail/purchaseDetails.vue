@@ -8,7 +8,7 @@
 			</view>
 		</uni-nav-bar>
 		<view class="content-content">
-			<view v-for="item in detailFilterList" :key="item.id" class="card-set">
+			<view v-for="(item,index) in detailFilterList" :key="index" class="card-set">
 				<uni-card
 					:title="item.prd_name"
 					mode="basic" 
@@ -82,7 +82,6 @@ export default {
 		msg.user_now_iden = myinfo.data.user.username
 		this.$http.post('/purchaseRequest/prNew', msg).then(([err,res]) => {
 			if (res.data.signal === 1) {
-				console.log(res.data)
 				_this.detailList = res.data.prds
 		    } else {
 				
