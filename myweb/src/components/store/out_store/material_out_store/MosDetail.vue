@@ -23,9 +23,13 @@
           clearable
           v-model="search">
         </el-input>
-        <el-button type="primary" class="button-save" v-if="ifchange">保 存</el-button>
-        <el-button type="primary" class="button-save" v-if="ifchange" :disabled="!tableDataNew.length > 0">提 交</el-button>
-        <el-button v-if="ifchange" type="primary" icon="el-icon-plus" class="button-save" @click="add">选择物料</el-button>
+        <el-tooltip content="保存所有数据" placement="bottom" effect="light">
+        <el-button type="primary" class="button-save" v-if="ifchange" @click="save">保 存</el-button>
+        </el-tooltip>
+        <el-tooltip content="保存所有数据并提交" placement="bottom" effect="light">
+          <el-button type="primary" class="button-save" v-if="ifchange" :disabled="!tableDataNew.length > 0" @click="commit">提 交</el-button>
+        </el-tooltip>
+          <el-button v-if="ifchange" type="primary" icon="el-icon-plus" class="button-save" @click="add">选择物料</el-button>
       </div>
       <el-table
         :data="tableDataNew"
@@ -42,35 +46,31 @@
           width="55">
         </el-table-column>
         <el-table-column type="expand">
-          <template slot-scope="props">
-            <el-form label-position="left" inline class="demo-table-expand">
-              <el-form-item label="备注">
-                <el-input type="textarea" v-model="props.row.md_remarks" rows="3" :disabled="!ifchange"
-                          placeholder="请输入200字以内的描述" maxlength="200" show-word-limit clearable></el-input>
-              </el-form-item>
-            </el-form>
-          </template>
         </el-table-column>
-        <el-table-column prop="md_iden" sortable label="物料编码" :filters="md_idenSet"
-                         :filter-method="filter"  align="center"></el-table-column>
-        <el-table-column prop="md_name" sortable label="物料名称" :filters="md_nameSet"
+        <el-table-column prop="msod_iden" sortable label="物料编码"  align="center"></el-table-column>
+        <el-table-column prop="msod_name" sortable label="物料名称" :filters="msod_nameSet"
                          :filter-method="filter" align="center"></el-table-column>
-        <el-table-column prop="md_specification" sortable label="规格" :filters="md_specificationSet"
+        <el-table-column prop="msod_specification" sortable label="规格" :filters="msod_specificationSet"
                          :filter-method="filter" align="center"></el-table-column>
-        <el-table-column prop="md_model" sortable label="型号" :filters="md_modelSet"
+        <el-table-column prop="msod_model" sortable label="型号" :filters="msod_modelSet"
                          :filter-method="filter" align="center"></el-table-column>
-        <el-table-column prop="md_meterage" sortable label="单位" :filters="md_meterageSet"
+        <el-table-column prop="msod_meterage" sortable label="单位" :filters="msod_meterageSet"
                          :filter-method="filter" align="center"></el-table-column>
-        <el-table-column prop="md_present_num" sortable label="现存量" align="center"></el-table-column>
-        <el-table-column prop="md_real_num" sortable label="出库数量" align="center">
+        <el-table-column prop="msod_present_num" sortable label="现存量" align="center"></el-table-column>
+        <el-table-column prop="msod_num" sortable label="出库数量" align="center">
           <template slot-scope="scope">
             <el-input
-              placeholder="1"
               :disabled="!ifchange"
-              v-model="scope.row.md_real_num"
-              @input="scope.row.md_real_num = inputnum(scope.row.md_real_num)"
-              @change="scope.row.md_real_num = changenum(scope.row.md_real_num)">
+              v-model="scope.row.msod_num"
+              @input="scope.row.msod_num = inputnum(scope.row.msod_num)"
+              @change="scope.row.msod_num = changenum(scope.row.msod_num)">
             </el-input>
+          </template>
+        </el-table-column>
+        <el-table-column prop="msod_remarks" sortable label="备注" align="center">
+          <template slot-scope="props">
+            <el-input type="textarea" v-model="props.row.msod_remarks" rows="3" :disabled="!ifchange"
+                      placeholder="请输入200字以内的描述" maxlength="200" show-word-limit clearable @input="find"></el-input>
           </template>
         </el-table-column>
         <el-table-column label="操作" align="center" v-if="ifchange">
@@ -101,19 +101,20 @@
     </div>
     <!-- 新增弹出框 -->
     <el-dialog title="选择物料" :visible.sync="addVisible" width="90%" append-to-body>
-      <MosDetailAdd @add="addBd" :tableHas="tableData" :formadd="formadd" :ifhasorga="ifhasorga" :ifhasware="ifhasware"></MosDetailAdd>
+      <MsoDetailAdd @add="addMsod" @save="getData" :tableHas="tableData" :formadd="formadd"
+                     :orga_name="orga_name" :ware_name="ware_name" :ifhasorga="ifhasorga" :ifhasware="ifhasware"></MsoDetailAdd>
     </el-dialog>
   </div>
 </template>
 
 <script>
 import { postAPI } from '../../../../api/api'
-import MosDetailAdd from './MosDetailAdd.vue'
+import MsoDetailAdd from './MosDetailAdd.vue'
 
 export default {
-  props: ['formadd', 'ifchange'],
+  props: ['formadd', 'ifchange', 'msods', 'orga_name', 'ware_name'],
   components: {
-    MosDetailAdd
+    MsoDetailAdd
   },
   data () {
     return {
@@ -125,11 +126,11 @@ export default {
       tableData: [],
       tableDataNew: [],
       multipleSelection: [],
-      md_idenSet: [],
-      md_nameSet: [],
-      md_specificationSet: [],
-      md_modelSet: [],
-      md_meterageSet: [],
+      msod_idenSet: [],
+      msod_nameSet: [],
+      msod_specificationSet: [],
+      msod_modelSet: [],
+      msod_meterageSet: [],
       addVisible: false,
       ifhasorga: false,
       ifhasware: false,
@@ -138,11 +139,11 @@ export default {
   },
   created () {
     this.getData()
-    this.$nextTick(function () {
-      if (!this.formadd.mos_orga) {
-        this.addVisible = true
-      }
-    })
+    // this.$nextTick(function () {
+    //   if (!this.formadd.mos_orga) {
+    //     this.addVisible = true
+    //   }
+    // })
   },
   methods: {
     getData () {
@@ -150,55 +151,51 @@ export default {
         return
       }
       let _this = this
-      postAPI('/bis_bd', this.formadd).then(function (res) {
-        _this.tableData = res.data.list
-        _this.find()
-        let nameset = new Set()
-        let specificationset = new Set()
-        let modelset = new Set()
-        let meterageset = new Set()
-        let idenset = new Set()
-        for (let i in _this.tableData) {
-          nameset.add(_this.tableData[i]['md_name'])
-          specificationset.add(_this.tableData[i]['md_specification'])
-          modelset.add(_this.tableData[i]['md_model'])
-          meterageset.add(_this.tableData[i]['md_meterage'])
-          idenset.add(_this.tableData[i]['md_iden'])
-        }
-        for (let i of nameset) {
-          _this.md_nameSet.push({
-            text: i,
-            value: i
-          })
-        }
-        for (let i of idenset) {
-          _this.md_idenSet.push({
-            text: i,
-            value: i
-          })
-        }
-        for (let i of meterageset) {
-          _this.md_meterageSet.push({
-            text: i,
-            value: i
-          })
-        }
-        for (let i of specificationset) {
-          _this.md_specificationSet.push({
-            text: i,
-            value: i
-          })
-        }
-        for (let i of modelset) {
-          _this.md_modelSet.push({
-            text: i,
-            value: i
-          })
-        }
-        _this.pageTotal = res.data.list.length
-      }).catch(function (err) {
-        console.log(err)
-      })
+      console.log(_this.mosds)
+      if (!_this.mosds || _this.mosds.length === 0) {
+        return
+      }
+      _this.tableData = _this.mosds
+      _this.pageTotal = _this.tableData.length
+      _this.find()
+      _this.msod_nameSet = []
+      _this.msod_specificationSet = []
+      _this.msod_modelSet = []
+      _this.msod_meterageSet = []
+      let nameset = new Set()
+      let specificationset = new Set()
+      let modelset = new Set()
+      let meterageset = new Set()
+      for (let i in _this.tableData) {
+        nameset.add(_this.tableData[i]['msod_name'])
+        specificationset.add(_this.tableData[i]['msod_specification'])
+        modelset.add(_this.tableData[i]['msod_model'])
+        meterageset.add(_this.tableData[i]['msod_meterage'])
+      }
+      for (let i of nameset) {
+        _this.msod_nameSet.push({
+          text: i,
+          value: i
+        })
+      }
+      for (let i of meterageset) {
+        _this.msod_meterageSet.push({
+          text: i,
+          value: i
+        })
+      }
+      for (let i of specificationset) {
+        _this.msod_specificationSet.push({
+          text: i,
+          value: i
+        })
+      }
+      for (let i of modelset) {
+        _this.msod_modelSet.push({
+          text: i,
+          value: i
+        })
+      }
     },
     // 表格每行的class样式
     tableRowClassName ({row, rowIndex}) {
@@ -220,11 +217,11 @@ export default {
     find () {
       this.pageTotal = 0
       this.tableDataNew = this.tableData.filter(data => !this.search ||
-          data.md_iden.toLowerCase().includes(this.search.toLowerCase()) ||
-          data.md_name.toLowerCase().includes(this.search.toLowerCase()) ||
-          data.md_specification.toLowerCase().includes(this.search.toLowerCase()) ||
-          data.md_model.toLowerCase().includes(this.search.toLowerCase()) ||
-          data.md_meterage.toLowerCase().includes(this.search.toLowerCase()))
+          data.msod_iden.toLowerCase().includes(this.search.toLowerCase()) ||
+          data.msod_name.toLowerCase().includes(this.search.toLowerCase()) ||
+          data.msod_specification.toLowerCase().includes(this.search.toLowerCase()) ||
+          data.msod_model.toLowerCase().includes(this.search.toLowerCase()) ||
+          data.msod_meterage.toLowerCase().includes(this.search.toLowerCase()))
     },
     // 新增
     add () {
@@ -239,11 +236,13 @@ export default {
       } else {
         this.ifhasware = true
       }
+      let _this = this
+      this.$nextTick(() => _this.$refs.MsoDetailAdd.getData())
     },
     // 新增物料
-    addBd (val) {
+    addMsod (val) {
       for (let i in val) {
-        val[i].md_real_num = val[i].md_paper_num
+        val[i].msod_num = val[i].msod_present_num
       }
       this.tableData = this.tableData.concat(val)
       this.find()
@@ -365,6 +364,82 @@ export default {
             message: '取消删除'
           })
         })
+    },
+    // 保存
+    save (callback = null) {
+      let _this = this
+      _this.$emit('saveall', val => {
+        if (val) {
+          let data = {
+            msods: _this.tableData,
+            mso_iden: _this.formadd.mso_iden
+          }
+          postAPI('/purchaseRequest/msoSave', data).then(function (res) {
+            console.log(res.data)
+            if (res.data.signal === 0) {
+              _this.$message.success(`保存物料明细成功`)
+              if (typeof (callback) === 'function') {
+                let back = true
+                callback(back)
+              }
+            } else {
+              _this.$message.error('保存物料明细失败')
+              if (typeof (callback) === 'function') {
+                let back = false
+                callback(back)
+              }
+            }
+          }).catch(function (err) {
+            _this.$message.error('保存物料明细失败')
+            console.log(err)
+            if (typeof (callback) === 'function') {
+              let back = false
+              callback(back)
+            }
+          })
+        } else {
+          if (typeof (callback) === 'function') {
+            let back = false
+            callback(back)
+          }
+        }
+      })
+    },
+    // 提交
+    commit () {
+      let _this = this
+      this.$confirm('确定要提交吗？', '提示', {
+        type: 'warning'
+      })
+        .then(() => {
+          _this.save(val => {
+            if (val) {
+              postAPI('/purchaseRequest/msodsubmit', _this.formadd).then(function (res) {
+                console.log(res.data)
+                if (res.data.signal === 0) {
+                  _this.$message.success(`提交成功`)
+                  _this.$emit('save')
+                  _this.$emit('commit')
+                } else {
+                  _this.$message.error('提交失败')
+                }
+              }).catch(function (err) {
+                _this.$message.error('提交失败')
+                console.log(err)
+              })
+            }
+          })
+        })
+        .catch(() => {
+          _this.$message({
+            type: 'info',
+            message: '取消提交'
+          })
+        })
+    },
+    // 新增窗口弹出
+    addShow () {
+      this.addVisible = true
     }
   }
 }

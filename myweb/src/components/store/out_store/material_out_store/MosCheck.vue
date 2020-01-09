@@ -17,7 +17,7 @@
           clearable
           v-model="search">
         </el-input>
-        <el-button type="primary" icon="el-icon-plus" class="button-plus" @click="add">新增</el-button>
+        <el-button v-if="power==='2'||power==='3'" type="primary" icon="el-icon-plus" class="button-plus" @click="add">新增</el-button>
       </div>
       <el-table
         :data="tableDataNew"
@@ -30,38 +30,40 @@
           <template slot-scope="props">
             <el-form label-position="left" inline class="demo-table-expand">
               <el-form-item label="备注">
-                <span>{{ props.row.mos_remarks }}</span>
+                <span>{{ props.row.mso_remarks }}</span>
               </el-form-item>
             </el-form>
           </template>
         </el-table-column>
-        <el-table-column prop="mos_iden" sortable label="出库单编号" align="center"></el-table-column>
-        <el-table-column prop="mos_orga" sortable label="库存组织" :filters="mos_orgaSet"
+        <el-table-column prop="mso_iden" sortable label="出库单编号" align="center"></el-table-column>
+        <el-table-column prop="mso_orga" sortable label="库存组织" :filters="mso_orgaSet"
                          :filter-method="filter" align="center"></el-table-column>
-        <el-table-column prop="mos_warehouse" sortable label="出库仓库" :filters="mos_warehouseSet"
+        <el-table-column prop="mso_warehouse" sortable label="出库仓库" :filters="mso_warehouseSet"
                          :filter-method="filter" align="center"></el-table-column>
-        <el-table-column prop="mos_type" sortable label="出库分类" :filters="mos_typeSet"
+        <el-table-column prop="mso_type" sortable label="出库分类" :filters="mso_typeSet"
                          :filter-method="filter" align="center"></el-table-column>
-        <el-table-column prop="mos_date" sortable label="出库日期" align="center"></el-table-column>
-        <el-table-column prop="mos_status" sortable label="状态" :filters="mos_statusSet"
+        <el-table-column prop="mso_date" sortable label="出库日期" align="center"></el-table-column>
+        <el-table-column prop="mso_req_department" sortable label="申请部门" :filters="mso_dpmSet"
+                         :filter-method="filter" align="center"></el-table-column>
+        <el-table-column prop="mso_status" sortable label="状态" :filters="mso_statusSet"
                          :filter-method="filter" align="center">
           <template slot-scope="scope">
             <el-tag
-              :type="scope.row.mos_status==='已审批'?'success':''"
-            >{{scope.row.mos_status}}
+              :type="status[scope.row.mso_status].type"
+            >{{status[scope.row.mso_status].label}}
             </el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="mos_creator" sortable label="创建人" :filters="mos_creatorSet"
+        <el-table-column prop="mso_creator" sortable label="创建人" :filters="mso_creatorSet"
                          :filter-method="filter" align="center"></el-table-column>
-        <el-table-column prop="mos_createDate" sortable label="创建日期" align="center"></el-table-column>
+        <el-table-column prop="mso_createDate" sortable label="创建日期" align="center"></el-table-column>
         <el-table-column label="操作" align="center">
           <template slot-scope="scope">
             <el-button
               type="text"
               icon="el-icon-edit"
               @click="handleEdit(scope.$index, scope.row)"
-              v-if="scope.row.mos_status==='草稿'"
+              v-if="scope.row.mso_status===0"
             >编辑
             </el-button>
             <el-button
@@ -69,7 +71,7 @@
               icon="el-icon-delete"
               class="red"
               @click="handleDelete(scope.$index, scope.row)"
-              v-if="scope.row.mos_status==='草稿'"
+              v-if="scope.row.mso_status===0"
             >删除
             </el-button>
             <el-button
@@ -77,7 +79,7 @@
               icon="el-icon-postcard"
               class="green"
               @click="handleMore(scope.$index, scope.row)"
-              v-if="scope.row.mos_status==='已审批'"
+              v-if="scope.row.mso_status===1"
             >详情
             </el-button>
           </template>
@@ -98,22 +100,22 @@
       </div>
     </div>
     <!-- 新增弹出框 -->
-    <el-dialog title="新增" :visible.sync="addVisible" width="90%" :close-on-click-modal="false">
-      <MosAdd ref="poadd" :editform="addform" :ifchange="true"></MosAdd>
+    <el-dialog title="新增" :visible.sync="addVisible" width="90%" :close-on-click-modal="false" :destroy-on-close="true" :before-close="closeMcadd">
+      <MsoAdd ref="Msoadd" @commit="addVisible = false" @save="getData" :editform="addform" :ifchange="true"></MsoAdd>
     </el-dialog>
     <!-- 编辑弹出框 -->
-    <el-dialog title="编辑" :visible.sync="editVisible" width="90%" :close-on-click-modal="false" :destroy-on-close="true" :before-close="closepoedit">
-      <MosAdd ref="poedit" :editform="editform" :ifchange="true"></MosAdd>
+    <el-dialog title="编辑" :visible.sync="editVisible" width="90%" :close-on-click-modal="false" :destroy-on-close="true" :before-close="closeMcedit">
+      <MsoAdd ref="Msodit" :editform="editform" :ifchange="true"></MsoAdd>
     </el-dialog>
     <!-- 详情弹出框 -->
     <el-dialog title="详情" :visible.sync="moreVisible" width="90%" :destroy-on-close="true">
-      <MosAdd ref="pomore" :editform="moreform" :ifchange="false"></MosAdd>
+      <MsoAdd ref="Msomore" :editform="moreform" :ifchange="false"></MsoAdd>
     </el-dialog>
   </div>
 </template>
 
 <script>
-import MosAdd from './MosAdd'
+import MsoAdd from './MosAdd'
 import { postAPI } from '../../../../api/api'
 
 export default {
@@ -127,11 +129,12 @@ export default {
       search: '',
       tableData: [],
       tableDataNew: [],
-      mos_orgaSet: [],
-      mos_warehouseSet: [],
-      mos_typeSet: [],
-      mos_statusSet: [],
-      mos_creatorSet: [],
+      mso_orgaSet: [],
+      mso_warehouseSet: [],
+      mso_typeSet: [],
+      mso_dpmSet: [],
+      mso_statusSet: [],
+      mso_creatorSet: [],
       editVisible: false,
       editform: {},
       moreVisible: false,
@@ -139,17 +142,31 @@ export default {
       pageTotal: 0,
       addVisible: false,
       addform: {
-        mos_iden: '',
-        mos_orga: '',
-        mos_type: '',
-        mos_warehouse: '',
-        mos_remarks: '',
-        mos_date: ''
-      }
+        mso_iden: '',
+        mso_orga: '',
+        mso_type: '',
+        mso_req_department: '',
+        mso_warehouse: '',
+        mso_remarks: '',
+        mso_date: ''
+      },
+      status: [
+        {
+          value: 0,
+          label: '草稿',
+          type: ''
+        },
+        {
+          value: 1,
+          label: '已审批',
+          type: 'success'
+        }
+      ],
+      power: localStorage.getItem('user_power').charAt(8)
     }
   },
   components: {
-    MosAdd
+    MsoAdd
   },
   created () {
     this.getData()
@@ -157,47 +174,64 @@ export default {
   methods: {
     getData () {
       let _this = this
-      postAPI('/mos_check').then(function (res) {
-        _this.tableData = res.data.list
+      let data = {
+        power: this.power
+      }
+      postAPI('/material_so/mso', data).then(function (res) {
+        _this.tableData = res.data.mso
         _this.find()
+        _this.mso_orgaSet = []
+        _this.mso_warehouseSet = []
+        _this.mso_typeSet = []
+        _this.mso_dpmSet = []
+        _this.mso_statusSet = []
+        _this.mso_creatorSet = []
         let orgaset = new Set()
-        let nameset = new Set()
+        let wareset = new Set()
         let statusset = new Set()
         let typeset = new Set()
+        let dpmset = new Set()
         let creatorset = new Set()
         for (let i in _this.tableData) {
-          orgaset.add(_this.tableData[i]['mos_orga'])
-          typeset.add(_this.tableData[i]['mos_type'])
-          nameset.add(_this.tableData[i]['mos_warehouse'])
-          statusset.add(_this.tableData[i]['mos_status'])
-          creatorset.add(_this.tableData[i]['mos_creator'])
+          orgaset.add(_this.tableData[i]['mso_orga'])
+          typeset.add(_this.tableData[i]['mso_type'])
+          wareset.add(_this.tableData[i]['mso_warehouse'])
+          dpmset.add(_this.tableData[i]['mso_req_department'])
+          statusset.add(_this.tableData[i]['mso_status'])
+          creatorset.add(_this.tableData[i]['mso_creator'])
         }
         for (let i of orgaset) {
-          _this.mos_orgaSet.push({
+          _this.mso_orgaSet.push({
             text: i,
             value: i
           })
         }
         for (let i of typeset) {
-          _this.mos_typeSet.push({
+          _this.mso_typeSet.push({
             text: i,
             value: i
           })
         }
-        for (let i of nameset) {
-          _this.mos_warehouseSet.push({
+        for (let i of wareset) {
+          _this.mso_warehouseSet.push({
+            text: i,
+            value: i
+          })
+        }
+        for (let i of dpmset) {
+          _this.mso_dpmSet.push({
             text: i,
             value: i
           })
         }
         for (let i of statusset) {
-          _this.mos_statusSet.push({
-            text: i,
+          _this.mso_statusSet.push({
+            text: _this.status[i].label,
             value: i
           })
         }
         for (let i of creatorset) {
-          _this.mos_creatorSet.push({
+          _this.mso_creatorSet.push({
             text: i,
             value: i
           })
@@ -227,15 +261,20 @@ export default {
     find () {
       this.pageTotal = 0
       this.tableDataNew = this.tableData.filter(data => !this.search ||
-          data.mos_iden.toLowerCase().includes(this.search.toLowerCase()) ||
-          data.mos_orga.toLowerCase().includes(this.search.toLowerCase()) ||
-          data.mos_warehouse.toLowerCase().includes(this.search.toLowerCase()) ||
-          data.mos_type.toLowerCase().includes(this.search.toLowerCase()) ||
-          data.mos_creator.toLowerCase().includes(this.search.toLowerCase()))
+          data.mso_iden.toLowerCase().includes(this.search.toLowerCase()) ||
+          data.mso_orga.toLowerCase().includes(this.search.toLowerCase()) ||
+          data.mso_warehouse.toLowerCase().includes(this.search.toLowerCase()) ||
+        data.mso_req_department.toLowerCase().includes(this.search.toLowerCase()) ||
+          data.mso_type.toLowerCase().includes(this.search.toLowerCase()) ||
+          data.mso_creator.toLowerCase().includes(this.search.toLowerCase()))
     },
     // 新增
     add () {
       this.addVisible = true
+      let _this = this
+      this.$nextTick(() => _this.$refs.Msoadd.getList())
+      this.$nextTick(() => _this.$refs.Msoadd.getForm())
+      this.$nextTick(() => _this.$refs.Msoadd.addShow())
     },
     // 删除操作
     handleDelete (index, row) {
@@ -244,12 +283,20 @@ export default {
         type: 'warning'
       })
         .then(() => {
-          this.$message.success('删除成功')
-          this.tableData.splice(index, 1)
-          let pageIndexNew = Math.ceil((this.pageTotal - 1) / this.query.pageSize) // 新的页面数量
-          this.query.pageIndex = (this.query.pageIndex > pageIndexNew) ? pageIndexNew : this.query.pageIndex
-          this.query.pageIndex = (this.query.pageIndex === 0) ? 1 : this.query.pageIndex
-          this.find()
+          let _this = this
+          console.log(row)
+          postAPI('/material_so/soDelete', row).then(function (res) {
+            console.log(res.data)
+            if (res.data.signal === 0) {
+              _this.$message.success(`删除成功`)
+              _this.getData()
+            } else {
+              _this.$message.error(res.data.message)
+            }
+          }).catch(function (err) {
+            _this.$message.error('删除失败')
+            console.log(err)
+          })
         })
         .catch(() => {
           this.$message({
@@ -263,6 +310,7 @@ export default {
       this.editform = row
       let _this = this
       this.$nextTick(() => _this.$refs.poedit.getForm())
+      this.$nextTick(() => _this.$refs.Reqedit.getList())
       this.editVisible = true
     },
     // 详情操作
@@ -272,29 +320,6 @@ export default {
       this.$nextTick(() => _this.$refs.pomore.getForm())
       this.moreVisible = true
     },
-    // 关闭操作
-    handleClose (index, row) {
-      this.$prompt('请输入关闭原因', '关闭', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消'
-      }).then(({ value }) => {
-        this.$confirm('确定要关闭吗？', '提示', {
-          type: 'warning'
-        }).then(() => {
-          this.$message.success('关闭成功')
-        }).catch(() => {
-          this.$message({
-            type: 'info',
-            message: '取消关闭'
-          })
-        })
-      }).catch(() => {
-        this.$message({
-          type: 'info',
-          message: '取消关闭'
-        })
-      })
-    },
     // 分页导航
     handlePageChange (val) {
       this.query.pageIndex = val
@@ -303,7 +328,7 @@ export default {
       this.query.pageSize = val
     },
     // 关闭窗口二次确认
-    closepoedit () {
+    closeMcedit () {
       this.$confirm('确定要关闭吗？', '提示', {
         type: 'warning'
       })
@@ -312,6 +337,17 @@ export default {
         })
         .catch(() => {
           this.editVisible = true
+        })
+    },
+    closeMcadd () {
+      this.$confirm('确定要关闭吗？', '提示', {
+        type: 'warning'
+      })
+        .then(() => {
+          this.addVisible = false
+        })
+        .catch(() => {
+          this.addVisible = true
         })
     }
   }
