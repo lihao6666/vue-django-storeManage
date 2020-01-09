@@ -13,7 +13,7 @@
 			</view>
 		</uni-nav-bar>
 		
-		<view v-for="item in materialAdd" :key="item.id" class="card-set">
+		<view v-for="(item,index) in materialAdd" :key="index" class="card-set">
 			<uni-card class="card_style"
 			    :title="item.material_name"
 			    mode="basic" 
@@ -26,8 +26,16 @@
 				<view>型号：{{ item.material_model }}</view>
 				<view>计量单位：{{ item.material_meterage }}</view>
 				<view>存货量：{{ item.material_attr }}</view>
-				<view>选择数量:  <uni-number-box :max="item.material_attr" ></uni-number-box></view>
-				<view>选择：<switch class="select" color='#d81e06' @change="switchChange" type="checkbox" /></view>
+				<view>选择数量:  
+					<view @click="_calcDecValue(item)" class="uni-numbox__minus">
+						<text class="uni-numbox--text" :class="{ 'uni-numbox--disabled': item.material_num <= min || disabled }">-</text>
+					</view>
+						<input @blur="_onBlur(item)" :max="item.material_attr" class="uni-numbox__value" type="number" v-model = "item.material_num" @click="test(item)" />
+					<view @click="_calcAddValue(item)" class="uni-numbox__plus">
+						<text class="uni-numbox--text" :class="{ 'uni-numbox--disabled': item.material_num >= max || disabled }">+</text>
+					</view>
+				</view>
+				<view>选择：<switch class="select" color='#d81e06'  @change="switchChange(item)" v-model="item.material_check" type="checkbox" /></view>
 				<view>备注：<textarea class="remarks_input" maxlength="200" v-model="item.material_remarks" placeholder="请输入,限制200字" auto-height="true"></textarea></view>
 			</uni-card>
 		</view>
@@ -63,9 +71,9 @@
 	import uniCard from '../../components/uni-card/uni-card.vue'
 	import uniSection from '../../components/uni-section/uni-section.vue'
 	// import slFilter from '@/components/sl-filter/sl-filter.vue'
-	import materialData from '../../data/exchangeMaterials.js'
+	import materialData from '../../data/purchaseMaterials.js'
 	import dragButton from '../../components/drag-button/anotherButton.vue'
-	import uniNumberBox from '@/components/uni-number-box/uni-number-box.vue'
+	// import uniNumberBox from '@/components/uni-number-box/uni-number-box.vue'
 	import uniIcons from '@/components/uni-icons/uni-icons.vue'
 	import uniNavBar from '@/components/uni-nav-bar/uni-nav-bar.vue'
 	
@@ -77,7 +85,7 @@
 			uniSegmentedControl,
 			// slFilter,
 			dragButton,
-			uniNumberBox,
+			// uniNumberBox,
 			uniNavBar,
 			uniIcons
 		},
@@ -88,6 +96,10 @@
 				titleColor: '#666666',
 				materialList: materialData.data,
 				materialFilterText: '',
+				disabled: {
+					type: Boolean,
+					default: false
+				}
 			}
 						
 		},
@@ -102,12 +114,15 @@
 				var arr = []
 		
 				this.materialList.forEach((item) => {
-					var num = ''
+					var num = 1
 					var remarks = ''
+					var check = 0
 					var maxnum = parseInt(item.material_attr)
 					item.material_attr = maxnum
+					item.material_check = check 
 					item.material_remarks = remarks
 					item.material_num = num
+					
 					arr.push(item)
 				})
 				
@@ -118,36 +133,116 @@
 						item.material_model.includes(this.materialFilterText)||
 						item.material_meterage.includes(this.materialFilterText)
 					)
-				}
+				}	
+				
 				
 				return arr
-			}
+			},
 			
 		},
 		methods:{
+			materialSelect(){
+				var arr = []
+				
+				this.materialList.forEach((item) => arr.push(item))
+				
+				console.log(arr)
+				
+				arr = this.materialList.filter(item => (item.material_check == 1))
+				
+				console.log(arr)
+				
+				return arr
+			},
 			result(val) {
 				this.filterResult = JSON.stringify(val, null, 2)
 			},
 			change(item,num) {
 				this.item.material_num = num
 			},
-			switchChange(){
+			switchChange(item){
+				console.log(item.material_attr)
 				
+				console.log(item.material_check)
+				item.material_check = !(item.material_check)
+				console.log(item.material_check)
 			},
 			test(item) {
 				console.log(item.material_remarks)
 				console.log(item.material_num)
+				console.log(typeof(item.material_num))
+				console.log(item.material_check)
+				console.log(this.materialSelect())
 			},
 			newOut(){
+				let arr = []
+				arr = this.materialSelect()
+				
+				uni.setStorageSync('exchange_select',arr)
+				
 				uni.navigateTo({
 					url: './exchange',
 				});
 			},
-			value(item){
-				this.item.material_num = value
-			},
 			clear(){
 				this.materialFilterText = ''
+			},
+			
+			_onBlur(item) {
+				let value = parseInt(item.material_num);
+				let max = parseInt(item.material_attr);
+				let min = 0;
+				if (!value) {
+					return;
+				}
+				value = +value;
+				if (value > max) {
+					value = max;
+				} else if (value < min) {
+					value = min;
+				}
+				
+				console.log(max)
+				console.log(min)
+				console.log(value)
+				item.material_num =	value
+				this.$forceUpdate()
+				console.log(item.material_num)
+				
+			},
+			_calcDecValue(item){
+				let value = parseInt(item.material_num);
+				let max = parseInt(item.material_attr);
+				let min = 0;
+				value -= 1;
+				if (value < min) {
+					return;
+				}
+				if(value > max){
+					value = max
+				}
+				
+				item.material_num = value;
+				this.$forceUpdate()
+			},
+			_calcAddValue(item){
+				let value = parseInt(item.material_num);
+				let max = parseInt(item.material_attr);
+				let min = 0;
+				value += 1;
+				if (value > max) {
+					return;
+				}
+				if(value < min){
+					value = min
+				}
+				
+				item.material_num = value;
+				this.$forceUpdate()
+			},
+			inputs(num,item){
+				item.material_num = this.num
+				console.log(item.material_num)
 			}
 		}
 	}
@@ -161,10 +256,10 @@
 	}
 	
 	.card_style{
-		font-size: 14px;
+		font-size: 16px;
 		
 		.num_select{
-			float: right;
+			right: 0;
 		}
 		
 		.select{

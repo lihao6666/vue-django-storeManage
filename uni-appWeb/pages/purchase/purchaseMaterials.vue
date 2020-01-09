@@ -96,14 +96,6 @@
 				titleColor: '#666666',
 				materialList: materialData.data,
 				materialFilterText: '',
-				min: {
-					type: Number,
-					default: 0
-				},
-				max: {
-					type: Number,
-					default: 100
-				},
 				disabled: {
 					type: Boolean,
 					default: false
@@ -117,15 +109,12 @@
 		mounted(){
 			
 		},
-		created() {
-			this.inputValue = +this.value;
-		},
 		computed:{
 			materialAdd(){
 				var arr = []
 		
 				this.materialList.forEach((item) => {
-					var num = 0
+					var num = 1
 					var remarks = ''
 					var check = 0
 					var maxnum = parseInt(item.material_attr)

@@ -39,9 +39,9 @@
 				@cancle="handleCancle">
 			</lb-picker>
 		</view> 
-
+		
 		<view class="address-item ">
-			<text class="address-item-title">申请时间</text>	
+			<text class="address-item-title">请购日期</text>	
 			<text class="address-item-input" @tap="toggleTab('date')">{{label4}}</text>
 			 <w-picker
 				mode="date" 
@@ -55,6 +55,15 @@
 				themeColor="#f00"
 			  ></w-picker>
 		</view> 
+		
+		<view class="address-item ">
+			<text class="address-item-title">创建日期</text>	
+			<text class="address-item-input">{{label5}}</text>
+		</view>
+
+		
+		
+		
 
 		<view class="remarks">
 			<text class="remarks_text" >备注</text>	
@@ -80,6 +89,7 @@
 			</uni-card>
 		</view>
 	</view>
+	
 	<view class="shop">
 		<view class="cart">
 			<text class="address-add-btn4" >到底了</text>
@@ -113,6 +123,8 @@
 			wPicker,
 			lbPicker,
 			uniCard
+			
+			
 		},
 		computed:{
 			materialsDisplay (){
@@ -133,6 +145,7 @@
 				label2: '点击选择',
 				label3: '点击选择',
 				label4: formateDate(new Date(),"Y-M-D"),
+				label5: formateDate(new Date(),"Y-M-D h:min:s"),
 				remarks: '',
 				list1: [
 					{
@@ -237,7 +250,7 @@
 	}
 	
 	.order {
-		height:50vh;
+		height:60vh;
 		box-sizing: border-box;
 		margin-bottom:10rpx ;
 		flex-direction: column;

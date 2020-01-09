@@ -1,87 +1,107 @@
 <template>
   <view class="content">
-	<view class="address-item ">
-		<text class="address-item-title">库存组织</text>	
-		<text class="address-item-input" @tap="handleTap('picker1')">{{label1}}</text>
-		  <lb-picker ref="picker1"
-		    v-model="label1"
-		   mode="selector"
-		   :list="list1"
-		    @change="handleChange"
-		    @confirm="handleConfirmWithAdd"
-		    @cancle="handleCancle">
+	<view class="order" >
+		<view class="address-item ">
+			<text class="address-item-title">库存组织</text>	
+			<text class="address-item-input" @tap="handleTap('picker1')">{{label1}}</text>
+			  <lb-picker ref="picker1"
+				v-model="label1"
+			   mode="selector"
+			   :list="list1"
+				@change="handleChange"
+				@confirm="handleConfirmWithAdd"
+				@cancle="handleCancle">
+				</lb-picker>
+		</view> 
+		 
+		<view class="address-item ">
+			<text class="address-item-title">转入仓库</text>	
+			<text class="address-item-input" @tap="handleTap('picker2')">{{label2}}</text>
+			  <lb-picker ref="picker2"
+				v-model="label2"
+				mode="selector"
+				:list="list2"
+				@change="handleChange"
+				@confirm="handleConfirmWithType"
+				@cancle="handleCancle">
 			</lb-picker>
-	</view> 
-	 
-	<view class="address-item ">
-		<text class="address-item-title">订单类型</text>	
-		<text class="address-item-input" @tap="handleTap('picker2')">{{label2}}</text>
-		  <lb-picker ref="picker2"
-		    v-model="label2"
-		    mode="selector"
-		    :list="list2"
-		    @change="handleChange"
-		    @confirm="handleConfirmWithType"
-		    @cancle="handleCancle">
-		</lb-picker>
-	</view> 
-	
-	
-	<view class="address-item ">
-		<text class="address-item-title">客户</text>	
-		<text class="address-item-input" @tap="handleTap('picker3')">{{label3}}</text>
-		  <lb-picker ref="picker3"
-		    v-model="label3"
-		    mode="selector"
-		    :list="list3"
-		    @change="handleChange"
-		    @confirm="handleConfirmWithType"
-		    @cancle="handleCancle">
-		</lb-picker>
-	</view> 
-	
-	<view class="address-item ">
-		<text class="address-item-title">发货仓库</text>	
-		<text class="address-item-input" @tap="handleTap('picker4')">{{label4}}</text>
-		  <lb-picker ref="picker4"
-		    v-model="label4"
-		    mode="selector"
-		    :list="list4"
-		    @change="handleChange"
-		    @confirm="handelConfirmWithDepartment"
-		    @cancle="handleCancle">
-		</lb-picker>
-	</view> 
-	
-	<view class="address-item ">
-		<text class="address-item-title">订单时间</text>	
-		<text class="address-item-input" @tap="toggleTab('date')">{{label5}}</text>
-		 <w-picker
-		  	mode="date" 
-		  	startYear="2000" 
-		  	endYear="2030"
-		  	defaultVal="2020-01-01"
-		  	:current="false" 
-		  	@confirm="handleConfirmWithDate"
-		  	:disabledAfter="false"
-		  	ref="date" 
-		  	themeColor="#f00"
-		  ></w-picker>
-	</view> 
-	
-	<view class="address-item ">
-		<text class="address-item-title">创建日期</text>	
-		<text class="address-item-input">{{label6}}</text>
-	</view> 
-	
-	<view class="remarks">
-		<text class="remarks_text">备注</text>	
-		<textarea class="remarks_input" maxlength="200" v-model="remarks" placeholder="请输入,限制200字"></textarea>
-	</view> 
+		</view> 
+
+		<view class="address-item ">
+			<text class="address-item-title">转出仓库</text>	
+			<text class="address-item-input" @tap="handleTap('picker3')">{{label3}}</text>
+			  <lb-picker ref="picker3"
+				v-model="label3"
+				mode="selector"
+				:list="list3"
+				@change="handleChange"
+				@confirm="handelConfirmWithDepartment"
+				@cancle="handleCancle">
+			</lb-picker>
+		</view> 
+
+		<view class="address-item ">
+			<text class="address-item-title">申请部门</text>	
+			<text class="address-item-input" @tap="toggleTab('picker4')">{{label4}}</text>
+			 <lb-picker ref="picker4"
+			 	v-model="label4"
+			 	mode="selector"
+			 	:list="list4"
+			 	@change="handleChange"
+			 	@confirm="handelConfirmWithDepartment"
+			 	@cancle="handleCancle">
+			 </lb-picker>
+		</view> 
+		
+		<view class="address-item ">
+			<text class="address-item-title">申请日期</text>	
+			<text class="address-item-input" @tap="toggleTab('date')">{{label5}}</text>
+			 <w-picker
+				mode="date" 
+				startYear="2000" 
+				endYear="2030"
+				defaultVal="2020-01-01"
+				:current="false" 
+				@confirm="handleConfirmWithDate"
+				:disabledAfter="false"
+				ref="date" 
+				themeColor="#f00"
+			  ></w-picker>
+		</view>
+		
+		<view class="address-item ">
+			<text class="address-item-title">创建日期</text>	
+			<text class="address-item-input">{{label6}}</text>
+		</view>
+
+		<view class="remarks">
+			<text class="remarks_text" >备注</text>	
+			<textarea class="remarks_input" maxlength="200" v-model="remarks" placeholder="请输入,限制200字"></textarea>
+		</view> 
+	</view>  	
+	<view class = "card">
+		<view v-for="(item,index) in materialsDisplay" :key="index" class="card-item">
+			<uni-card class="card_style"
+				:title="item.material_name"
+				mode="basic" 
+				:is-shadow="true" 
+				:extra="item.material_iden"
+			>
+				<view>物料编码：{{ item.material_iden }}</view>
+				<view>物料名称：{{ item.material_name }}</view>
+				<view>规格：{{ item.material_specification }}</view>
+				<view>型号：{{ item.material_model }}</view>
+				<view>计量单位：{{ item.material_meterage }}</view>
+				<view>存货量：{{ item.material_attr }}</view>
+				<view>选择数量：{{ item.material_num }}</view>
+				<view>备注：{{item.material_remarks}}</view>
+			</uni-card>
+		</view>
+	</view>
 	
 	<view class="shop">
 		<view class="cart">
-			<button class="address-add-btn4" @click="select">选择物料</button>
+			<text class="address-add-btn4" >到底了</text>
 		</view>
 	</view>
 	
@@ -104,12 +124,26 @@
 
 <script>
 	import {formateDate} from "../../common/catUtil.js"
+	import uniCard from "../../components/uni-card/uni-card.vue"
 	import wPicker from "@/components/w-picker/w-picker.vue";
 	import lbPicker from "@/components/lb-picker"
 	export default {
 		components:{
 			wPicker,
-			lbPicker
+			lbPicker,
+			uniCard
+		},
+		computed:{
+			materialsDisplay (){
+				let arr = []
+				
+				arr = uni.getStorageSync('exchange_select')
+				
+				console.log(arr)
+				
+				return arr
+			}
+			
 		},
 		data(){
 			return {
@@ -135,23 +169,26 @@
 					}
 				],list2:[
 					{
-						label: '普通发票',
+						label: '礼品',
 						
 					},
 					{
-						label: '退换货',
+						label: '教学用品',
+						
+					},
+					{
+						label:'销售商品',
+						
+					},
+					{
+						label:'办公用品',
+						
+					},
+					{
+						label:'市场物资',
 						
 					}
 				],list3:[
-					{
-						label: '客户一',
-						
-					},
-					{
-						label: '客户二',
-						
-					}
-				],list4:[
 					{
 						label: '学习中心',
 						
@@ -189,7 +226,6 @@
 				console.log(item.item.label)
 				console.log('confirm::', item)
 			},handleConfirmWithDate(item){
-				console.log(label4)
 				console.log(item);
 				this.label4 = item.result
 			},
@@ -207,9 +243,10 @@
 			},
 			select(){
 				uni.navigateTo({
-					url: 'sellMaterials'
+					url:'purchaseMaterials'
 				})
-			}
+			},
+			
 		}
 	}
 </script>
@@ -217,8 +254,18 @@
 <style lang="scss">
 	page {
 		background-color: #F8F8F8;
+		width: 100%
 	}
-
+	
+	.order {
+		height:70vh;
+		box-sizing: border-box;
+		margin-bottom:10rpx ;
+		flex-direction: column;
+		flex: 1;
+		display: flex;
+		
+	}
 	.address-item {
 		display: flex;
 		align-items: center;
@@ -244,6 +291,10 @@
 		
 	}
 	
+	.card{
+		font-size: 25upx;
+	}
+	
 	.remarks{
 		display: flex;
 		align-items: center;
@@ -258,13 +309,29 @@
 			color: black;
 			// align-items: center;
 		}
+		   
 		
+		   
 		.remarks-input{
 			flex: 1;
 			font-size: 32upx;
 			color: black;
 		}
 	}
+	
+	// .card-item{
+	// 	display: flex;
+	// 	align-items: center;
+	// 	padding: 0 30upx;
+	// 	height: 100rpx;
+	// 	background: #fff;
+	// 	border-bottom:1upx solid #F8F8F8;
+		
+	// 	.card-style{
+	// 		font-size: 16px;
+			
+	// 	}
+	// }
 
 	.default-item {
 		.address-item-title {
@@ -276,16 +343,20 @@
 		}
 	}
 	
-	.shop .cart{
-		position: fixed;
-		bottom: 50px;
-		left: 0;
-		right: 0;
-		height: 50px;
-		z-index: 99;
-		display: flex;
-		background-color: #141d27;
-	}
+	
+	
+	// .shop .cart{
+	// 	position: fixed;
+	// 	bottom: 50px;
+	// 	left: 0;
+	// 	right: 0;
+	// 	height: 50px;
+	// 	z-index: 99;
+	// 	display: flex;
+	// 	background-color: #141d27;
+	// }
+	
+	
 	
 	.shopcart .cartBottom {
 		position: fixed;
@@ -354,4 +425,3 @@
 		bottom: 22px;
 	}
 </style>
-
