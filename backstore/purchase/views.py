@@ -35,9 +35,9 @@ class PCsView(APIView):
         power = json_data['power']
         print(power)
 
-        if power == 1:
+        if power == '1':
             pcs = models.PurchaseContract.objects.filter(~Q(pc_status=0), organization__area_name=self.area_name).all()
-        elif power == 2:
+        elif power == '2':
             pcs = models.PurchaseContract.objects.filter(pc_creator_iden=user_now_iden,
                                                          organization__area_name=self.area_name).all()
         else:
@@ -52,7 +52,7 @@ class PCsView(APIView):
             return Response({"message": "未查询到信息"})
 
 
-class PCNew(APIView):
+class PCNewView(APIView):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.user_now_name = ""
@@ -71,7 +71,7 @@ class PCNew(APIView):
             pc_iden = json_data['pc_iden']
             orga_name = json_data['orga_name']
         except:
-            return Response({"orga_names": orga_names, "supply_names": supply_names, "signal": 0})
+            return Response({"orga_names":orga_names,"signal":0})
         else:
             cds = models.CdDetail.objects.filter(purchase_contract__pc_iden=pc_iden)
             cds_serializer = CdDSerializer(cds, many=True)
@@ -158,8 +158,11 @@ class CdDetailSaveView(APIView):
         cds = json_data['cds']
         pc_iden = json_data['pc_iden']
         pays = json_data['pays']
+        models.CdDetail.objects.filter(purchase_contract__pc_iden=pc_iden).delete()
+        pc = models.PurchaseContract.objects.get(pc_iden=pc_iden)
         for cd in cds:
             cd_iden = cd['cd_iden']
+            material = Material.objects.get(material_iden=cd_iden)
             cd_num = cd['cd_num']  # 销售数量
             cd_taxRate = cd['cd_taxRate']
             cd_tax_unitPrice = cd['cd_tax_unitPrice']
@@ -172,11 +175,13 @@ class CdDetailSaveView(APIView):
             # PrDetail.objects.filter(purchase_request__pr_iden=pc_iden, prd_iden=cd_iden).update(prd_uesd=1)
             # 更新请购单物料使用状态
             try:
-                if models.CdDetail.objects.filter(purchase_contract__pc_iden=pc_iden, cd_iden=cd_iden).update(
-                        cd_num=cd_num, cd_taxRate=cd_taxRate, cd_tax_unitPrice=cd_tax_unitPrice,
-                        cd_unitPrice=cd_unitPrice,
-                        cd_tax_sum=cd_tax_sum, cd_sum=cd_sum, cd_tax_price=cd_tax_price, cd_pr_iden=cd_pr_iden,
-                        cd_prd_remarks=cd_prd_remarks):
+                if models.CdDetail.objects.create(purchase_contract=pc, material=material,
+                                                  cd_num=cd_num, cd_taxRate=cd_taxRate,
+                                                  cd_tax_unitPrice=cd_tax_unitPrice,
+                                                  cd_unitPrice=cd_unitPrice,
+                                                  cd_tax_sum=cd_tax_sum, cd_sum=cd_sum, cd_tax_price=cd_tax_price,
+                                                  cd_pr_iden=cd_pr_iden,
+                                                  cd_prd_remarks=cd_prd_remarks):
                     pass
                 else:
                     self.message = "合同详情保存失败"
@@ -188,7 +193,6 @@ class CdDetailSaveView(APIView):
                 self.message = "合同详情保存失败"
                 self.signal = 1
         models.CdPayDetail.objects.filter(purchase_contract__pc_iden=pc_iden).delete()
-        pc = models.PurchaseContract.objects.get(pc_iden=pc_iden)
         for pay in pays:
             pay_batch = pay['pay_batch']
             pay_rate = pay['pay_rate']
@@ -228,6 +232,15 @@ class CdDetailSubmitView(APIView):
             self.area_name = user_now.area_name
         pc_iden = json_data['pc_iden']
         cds = json_data['cds']
+        try:
+            if models.PurchaseContract.objects.filter(pc_iden=pc_iden).update(pc_status=1):
+                pass
+            else:
+                self.message = "请购单提交失败"
+                self.signal = 1
+        except:
+            self.message = "请购单提交失败"
+            self.signal = 1
 
         for cd in cds:
             cd_iden = cd['cd_iden']
@@ -248,59 +261,71 @@ class CdDetailSubmitView(APIView):
 
 
 class CdDetailNewView(APIView):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.user_now_name = ""
+        self.area_name = ""
 
     def post(self, request):
         json_data = json.loads(self.request.body.decode("utf-8"))
-        organization_name = json_data['orga_name']
-        prs = PurchaseRequest.objects.filter(organization__orga_name=organization_name, pr_status=1)
-        prs_serializer = PurchaseRequestSerializer(prs, many=True)
-        pr_prds = []
-        if prs:
-            for pr in prs:
-                pr_iden = pr.pr_iden
-                prds = PrDetail.objects.filter(purchase_request__pr_iden=pr_iden, prd_used=0)  # 发送所有没有使用的请购单详情
-                prds_serializer = PrDetailSerializer(prds, many=True)
-                pr_prds.append(prds.data)
-            return Response({"prs": prs_serializer.data, "pr_prds": pr_prds, "signal": 0})
+        user_now_iden = json_data['user_now_iden']
+        user_now = UserNow.objects.get(user_iden=user_now_iden)
+        if user_now:
+            self.user_now_name = user_now.user_name
+            self.area_name = user_now.area_name
+
+        try:
+            orga_name = json_data['orga_name']
+        except:
+            prds = PrDetail.objects.filter(purchase_request__organization__area_name=self.area_name,
+                                           purchase_request__pr_status=1,
+                                           prd_used=0).all()
+            prds_serializer = PrDetailSerializer(prds, many=True)
+            return {"prds": prds_serializer.data, 'signal': 0}
         else:
-            return Response({"message": "莫有请购单，怎么办？"})
+            prds = PrDetail.objects.filter(purchase_request__organization__orga_name=orga_name,
+                                           purchase_request__organization__area_name=self.area_name,
+                                           purchase_request__pr_status=1,
+                                           prd_used=0).all()
+            prds_serializer = PrDetailSerializer(prds, many=True)
+            return {"prds": prds_serializer.data, 'signal': 0}
 
 
-class CdDetailNewSaveView(APIView):
+# class CdDetailNewSaveView(APIView):
+#
+#     def post(self):
+#         json_data = json.loads(self.request.body.decode("utf-8"))
+#         pc_iden = json_data['pc_iden']
+#         pc = models.PurchaseContract.objects.get(pc_iden=pc_iden)
+#         pr_iden = json_data['pr_iden']
+#         prds = json_data['prds']
+#         for prd in prds:
+#             prd_iden = prd['prd_iden']
+#             prd_num = prd['prd_num']
+#             material = Material.objects.get(material_iden=prd_iden)
+#             # pr = PurchaseRequest.objects.get(pr_iden=pr_iden)
+#             # 这里面请购单的userd状态还没有改，后面要判断
+#             try:
+#                 models.CdDetail.objects.create(purchase_contract=pc, material=material,
+#                                                cd_num=prd_num, cd_pr_iden=pr_iden)
+#             except:
+#                 return Response({"message": "新建合同物料详情出现错误"})
+#         return Response({"message": "新建合同物料详情成功", "signal": 0})
 
-    def post(self):
-        json_data = json.loads(self.request.body.decode("utf-8"))
-        pc_iden = json_data['pc_iden']
-        pc = models.PurchaseContract.objects.get(pc_iden=pc_iden)
-        pr_iden = json_data['pr_iden']
-        prds = json_data['prds']
-        for prd in prds:
-            prd_iden = prd['prd_iden']
-            prd_num = prd['prd_num']
-            material = Material.objects.get(material_iden=prd_iden)
-            # pr = PurchaseRequest.objects.get(pr_iden=pr_iden)
-            # 这里面请购单的userd状态还没有改，后面要判断
-            try:
-                models.CdDetail.objects.create(purchase_contract=pc, material=material,
-                                               cd_num=prd_num, cd_pr_iden=pr_iden)
-            except:
-                return Response({"message": "新建合同物料详情出现错误"})
-        return Response({"message": "新建合同物料详情成功", "signal": 0})
 
-
-class CdDetailDeleteView(APIView):
-
-    def post(self, request):
-        json_data = json.loads(self.request.body.decode("utf-8"))
-        cds = json_data['cds']
-        for cd in cds:
-            # cd_rp_iden = cd['cd_rp_iden'] # 请购单号
-            cd_iden = cd['cd_iden']  # 物料编码
-            try:
-                models.CdDetail.objects.filter(cd_iden=cd_iden).delete()
-            except:
-                return Response({"message": "删除物料错误"})
-        return Response({"message": "删除物料成功", "signal": 0})
+# class CdDetailDeleteView(APIView):
+#
+#     def post(self, request):
+#         json_data = json.loads(self.request.body.decode("utf-8"))
+#         cds = json_data['cds']
+#         for cd in cds:
+#             # cd_rp_iden = cd['cd_rp_iden'] # 请购单号
+#             cd_iden = cd['cd_iden']  # 物料编码
+#             try:
+#                 models.CdDetail.objects.filter(cd_iden=cd_iden).delete()
+#             except:
+#                 return Response({"message": "删除物料错误"})
+#         return Response({"message": "删除物料成功", "signal": 0})
 
 
 class PcDeleteView(APIView):
@@ -317,7 +342,11 @@ class PcDeleteView(APIView):
         pc_iden = json_data['pc_iden']
 
         try:
-            models.PurchaseContract.objects.filter(pc_iden=pc_iden).delete()
+            if models.PurchaseContract.objects.filter(pc_iden=pc_iden).delete()[0]:
+                pass
+            else:
+                self.message = "删除合同失败"
+                self.signal = 1
         except:
             self.message = "删除合同失败"
             self.signal = 1
@@ -349,9 +378,9 @@ class POsView(APIView):
         power = json_data['power']
         print(power)
 
-        if power == 1:
+        if power == '1':
             pos = models.PurchaseOrder.objects.filter(~Q(po_status=0), organization__area_name=self.area_name).all()
-        elif power == 2:
+        elif power == '2':
             pos = models.PurchaseOrder.objects.filter(po_creator_iden=user_now_iden,
                                                       organization__area_name=self.area_name).all()
         else:
@@ -379,30 +408,55 @@ class PONewByPrView(APIView):
         if user_now:
             self.user_now_name = user_now.user_name
             self.area_name = user_now.area_name
+
         try:
             po_iden = json_data['po_iden']
 
         except:
-            try:
-                orga_name = json_data['orga_name']
-            except:
-                prds = PrDetail.objects.filter(purchase_request__organization__area_name=self.area_name,
-                                               purchase_request__pr_status=1,
-                                               prd_used=0).all()
-                prds_serializer = PrDetailSerializer(prds, many=True)
-                return {"prds": prds_serializer.data, 'signal': 0}
-            else:
-                prds = PrDetail.objects.filter(purchase_request__organization__orga_name=orga_name,
-                                               purchase_request__organization__area_name=self.area_name,
-                                               purchase_request__pr_status=1,
-                                               prd_used=0).all()
-                prds_serializer = PrDetailSerializer(prds, many=True)
-                return {"prds": prds_serializer.data, 'signal': 0}
+
+            prds = PrDetail.objects.filter(purchase_request__organization__area_name=self.area_name,
+                                           purchase_request__pr_status=1,
+                                           prd_used=0).all()
+            prds_serializer = PrDetailSerializer(prds, many=True)
+            return {"prds": prds_serializer.data, 'signal': 0}
+
         else:
             supply_names = Supplier.objects.filter(supply_status=1).values_list('id', 'supply_name')
             ords = models.OrDetail.objects.filter(purchase_order__po_iden=po_iden).all()
             ords_serializer = OrDSerializer(ords, many=True)
             return {"supply_names": supply_names, "ords": ords_serializer.data, "signal": 1}
+
+
+class PrChoiceView(APIView):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.user_now_name = ""
+        self.area_name = ""
+        self.prds_serializer = ""
+
+    def post(self, request):
+        json_data = json.loads(self.request.body.decode("utf-8"))
+        user_now_iden = json_data['user_now_iden']
+        user_now = UserNow.objects.get(user_iden=user_now_iden)
+        if user_now:
+            self.user_now_name = user_now.user_name
+            self.area_name = user_now.area_name
+
+        try:
+            orga_name = json_data['orga_name']
+        except:
+            prds = PrDetail.objects.filter(purchase_request__organization__area_name=self.area_name,
+                                           purchase_request__pr_status=1,
+                                           prd_used=0).all()
+            self.prds_serializer = PrDetailSerializer(prds, many=True)
+        else:
+            prds = PrDetail.objects.filter(purchase_request__organization__orga_name=orga_name,
+                                           purchase_request__organization__area_name=self.area_name,
+                                           purchase_request__pr_status=1,
+                                           prd_used=0).all()
+            self.prds_serializer = PrDetailSerializer(prds, many=True)
+        finally:
+            return {"prds": self.prds_serializer.data, 'signal': 0}
 
 
 class PONewByPcView(APIView):
@@ -422,28 +476,54 @@ class PONewByPcView(APIView):
         try:
             po_iden = json_data['po_iden']
         except:
-            try:
-                orga_name = json_data['orga_name']
-            except:
-                self.pcs = models.PurchaseContract.objects.filter(organization__area_name=self.area_name,
-                                                                  pc_status=1).all()
-            else:
-                self.pcs = models.PurchaseContract.objects.filter(organization__area_name=self.area_name,
-                                                                  organization__orga_name=orga_name,
-                                                                  pc_status=1).all()
-            finally:
-                pcs_serializer = PCSerializer(self.pcs, many=True)
-                cds_list = []
-                for pc in self.pcs:
-                    pc_iden = pc.pc_iden
-                    cds = models.CdDetail.objects.filter(purchase_contract__pc_iden=pc_iden).all()
-                    cds_serializer = CdDSerializer(cds, many=True)
-                    cds_list.append(cds_serializer.data)
-                return Response({"pcs": pcs_serializer.data, "cds": cds_list, "signal": 0})  # 合同和对应的合同明细
+            self.pcs = models.PurchaseContract.objects.filter(organization__area_name=self.area_name,
+                                                              pc_status=1).all()
+            pcs_serializer = PCSerializer(self.pcs, many=True)
+            cds_list = []
+            for pc in self.pcs:
+                pc_iden = pc.pc_iden
+                cds = models.CdDetail.objects.filter(purchase_contract__pc_iden=pc_iden).all()
+                cds_serializer = CdDSerializer(cds, many=True)
+                cds_list.append(cds_serializer.data)
+            return Response({"pcs": pcs_serializer.data, "cds": cds_list, "signal": 0})  # 合同和对应的合同明细
         else:
             ods = models.OrDetail.objects.filter(purchase_order__po_iden=po_iden).all()
             ods_serializer = OrDSerializer(ods, many=True)
             return Response({"ods": ods_serializer.data, "signal": 1})
+
+
+class PcChoiceView(APIView):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.user_now_name = ""
+        self.area_name = ""
+        self.pcs = ""
+
+    def post(self, request):
+        json_data = json.loads(self.request.body.decode("utf-8"))
+        user_now_iden = json_data['user_now_iden']
+        user_now = UserNow.objects.get(user_iden=user_now_iden)
+        if user_now:
+            self.user_now_name = user_now.user_name
+            self.area_name = user_now.area_name
+        try:
+            orga_name = json_data['orga_name']
+        except:
+            self.pcs = models.PurchaseContract.objects.filter(organization__area_name=self.area_name,
+                                                              pc_status=1).all()
+        else:
+            self.pcs = models.PurchaseContract.objects.filter(organization__area_name=self.area_name,
+                                                              organization__orga_name=orga_name,
+                                                              pc_status=1).all()
+        finally:
+            pcs_serializer = PCSerializer(self.pcs, many=True)
+            cds_list = []
+            for pc in self.pcs:
+                pc_iden = pc.pc_iden
+                cds = models.CdDetail.objects.filter(purchase_contract__pc_iden=pc_iden).all()
+                cds_serializer = CdDSerializer(cds, many=True)
+                cds_list.append(cds_serializer.data)
+            return Response({"pcs": pcs_serializer.data, "cds": cds_list, "signal": 0})  # 合同和对应的合同明细
 
 
 class POUpdateView(APIView):
@@ -573,3 +653,59 @@ class POSubmitView(APIView):
         if user_now:
             self.user_now_name = user_now.user_name
             self.area_name = user_now.area_name
+        po_iden = json_data['po_iden']
+        ods = json_data['ods']
+        pc_iden = json_data['pc_iden']  # 标识是来自合同还是请购单
+
+        try:
+            if models.PurchaseOrder.objects.filter(po_iden=po_iden).update(po_status=1):
+                pass
+            else:
+                self.message = "请购单提交失败"
+                self.signal = 1
+        except:
+            self.message = "请购单提交失败"
+            self.signal = 1
+
+        if pc_iden:
+            pass
+        else:
+            for od in ods:
+                od_iden = od['od_iden']
+                od_pr_iden = od['od_pr_iden']
+                PrDetail.objects.filter(purchase_request__pr_iden=od_pr_iden, prd_iden=od_iden).update(prd_uesd=1)
+                prds = PrDetail.objects.filter(purchase_request__pr_iden=od_pr_iden).all()
+                pr = PurchaseRequest.objects.filter(pr_iden=od_pr_iden)
+                flag = 0
+                for prd in prds:
+                    if prd.prd_used == 0:
+                        flag = 1
+                if flag == 0:
+                    pr.update(pr_status=2, pr_closer=self.user_now_name, pr_closer_iden=user_now_iden,
+                              pr_closeDate=timezone.now(), pr_closeReason="自动关闭")
+
+                # 更新请购单物料使用状态
+
+
+class PODeleteView(APIView):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.message = "删除采购订单成功"
+        self.signal = 0
+
+    def post(self, request):
+
+        json_data = json.loads(self.request.body.decode("utf-8"))
+        po_iden = json_data['po_iden']
+
+        try:
+            if models.PurchaseOrder.objects.filter(po_iden=po_iden).delete()[0]:
+                pass
+            else:
+                self.message = "删除采购订单失败"
+                self.signal = 1
+
+        except:
+            self.message = "删除采购订单失败"
+            self.signal = 1
+        return Response({'message': self.message, 'signal': self.signal})

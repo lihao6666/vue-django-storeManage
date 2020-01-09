@@ -35,11 +35,17 @@ class SellOrdersView(APIView):
 
         power = json_data['power']
         sos = ""
-        if power == 2:
-            sos = models.SellOrder.objects.filter(pr_creator_iden=user_now_iden,
+        if power == '1':
+            sos = models.SellOrder.objects.filter(~Q(so_status=0), organization__area_name=self.area_name).all()
+
+        if power == '2':
+            sos = models.SellOrder.objects.filter(so_creator_iden=user_now_iden,
                                                   organization__area_name=self.area_name).all()
-        elif power == 3:
-            sos = models.SellOrder.objects.filter(~Q(pr_status=0), organization__area_name=self.area_name).all()
+        elif power == '3':
+            sos1 = models.SellOrder.objects.filter(~Q(so_status=0), organization__area_name=self.area_name).all()
+            sos2 = models.SellOrder.objects.filter(so_creator_iden=user_now_iden,
+                                                   organization__area_name=self.area_name).all()
+            sos = sos1 | sos2
         if sos:
             sos_serializer = SellOrderSerializer(sos, many=True)
             return Response({"sos": sos_serializer.data, "signal": 0})
@@ -66,13 +72,14 @@ class SellOrderNewView(APIView):
             self.user_now_name = user_now.user_name
             self.area_name = user_now.area_name
         organizations = Organization.objects.filter(area_name=self.area_name).values_list("id", "orga_name")
-        customers = Customer.objects.values_list("id", "customer_name")
-        deliver_ware_houses = TotalWareHouse.objects.filter(organization__area_name=self.area_name). \
+        customers = Customer.objects.filter(customer_status=1)values_list("id", "customer_name")
+        deliver_ware_houses = TotalWareHouse.objects.filter(organization__area_name=self.area_name,total_status=1). \
             values_list("id", "total_name", "organization__orga_name")
 
         try:
             so_iden = json_data['so_iden']
             orga_name = json_data['orga_name']
+            deliver_ware_house = json_data['deliver_ware_house']
         except:
             return Response(
                 {"organizations": organizations, "customers": customers, "deliver_ware_houses": deliver_ware_houses,
@@ -83,15 +90,18 @@ class SellOrderNewView(APIView):
             sods_present_num = []
             for sod in sods:
                 material = sod.material
-                sod_present_num = TotalStock.objects.filter(material=material,
-                                                            totalwarehouse__organization__area_name=self.area_name,
-                                                            totalwarehouse__organization__orga_name=orga_name) \
-                    .aggregate(sod_present_num=Sum('ts_present_num'))
+                try:
+                    sod_present_num = TotalStock.objects.get(totalwarehouse__organization__orga_name=orga_name,
+                                                             totalwarehouse__organization__area_name=self.area_name,
+                                                             totalwarehouse__total_name=deliver_ware_house,
+                                                             material=material).ts_present_num
+                except:
+                    sod_present_num = 0
                 sods_present_num.append(sod_present_num)
 
             return Response(
                 {"organizations": organizations, "customers": customers, "deliver_ware_houses": deliver_ware_houses,
-                 "sods": sods_serializers.data, "signal": 1})
+                 "sods": sods_serializers.data, "sods_present_num": sods_present_num, "signal": 1})
 
 
 class SellOrderUpdateView(APIView):
@@ -183,9 +193,13 @@ class SoDetailSaveView(APIView):
         json_data = json.loads(self.request.body.decode("utf-8"))
         so_iden = json_data['so_iden']
         sods = json_data['sods']
+        models.SoDetail.objects.filter(sell_order__so_iden=so_iden).delete()
+
+        so = models.SellOrder.objects.get(so_iden=so_iden)
         for sod in sods:
             # id = sod['id']
             sod_iden = sod['sod_iden']  # 物料编码
+            material = Material.objects.get(material_iden=sod_iden)
             sod_num = sod['sod_num']  # 销售数量
             sod_taxRate = sod['sod_taxRate']
             sod_tax_unitPrice = sod['sod_tax_unitPrice']
@@ -196,15 +210,15 @@ class SoDetailSaveView(APIView):
             sod_remarks = sod['sod_remarks']
 
             try:
-                if models.SoDetail.objects.filter(sell_order__so_iden=so_iden, sod_iden=sod_iden).update(
-                        sod_num=sod_num,
-                        sod_taxRate=sod_taxRate,
-                        sod_tax_unitPrice=sod_tax_unitPrice,
-                        sod_unitPrice=sod_unitPrice,
-                        sod_tax_sum=sod_tax_sum,
-                        sod_sum=sod_sum,
-                        sod_tax_price=sod_tax_price,
-                        sod_remarks=sod_remarks):
+                if models.SoDetail.objects.create(sell_order=so, material=material,
+                                                  sod_num=sod_num,
+                                                  sod_taxRate=sod_taxRate,
+                                                  sod_tax_unitPrice=sod_tax_unitPrice,
+                                                  sod_unitPrice=sod_unitPrice,
+                                                  sod_tax_sum=sod_tax_sum,
+                                                  sod_sum=sod_sum,
+                                                  sod_tax_price=sod_tax_price,
+                                                  sod_remarks=sod_remarks):
                     pass
                 else:
                     self.message = "销售订单详情保存失败"
@@ -241,58 +255,75 @@ class SoDetailSubmitView(APIView):
 
 
 class SoDetailNewView(APIView):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.user_now_name = ""
+        self.area_name = ""
 
-    def get(self, request):
-        materials = Material.objects.filter(material_status=1).all()
-        if materials:
-            materials_serializer = MaterialSerializer(materials, many=True)
-            # 现存量单独统计，单独发送字段
+    def post(self, request):
+        json_data = json.loads(self.request.body.decode("utf-8"))
+        user_now_iden = json_data['user_now_iden']
+        user_now = UserNow.objects.get(user_iden=user_now_iden)
+        if user_now:
+            self.user_now_name = user_now.user_name
+            self.area_name = user_now.area_name
 
-            return Response({"materials": materials_serializer.data, "prd_present_num": ""})
+        orga_name = json_data['orga_name']
+        deliver_ware_house = json_data['deliver_ware_house']
+
+        total_ware_house = TotalWareHouse.objects.filter(organization__orga_name=orga_name,
+                                                         organization__area_name=self.area_name,
+                                                         total_name=deliver_ware_house)
+
+        total_stocks = total_ware_house.total_ware_house_ts.all()
+        if total_stocks:
+
+            total_stocks_serializer = TotalStockSerializer(total_stocks, many=True)
+            return Response({"materials": total_stocks_serializer.data})
         else:
-            return Response({"message": "空空如也你不服？"})
+            return Response({"message": "仓库空空如也"})
 
 
-class SoDetailNewSaveView(APIView):
+# class SoDetailNewSaveView(APIView):
+#
+#     def post(self, request):
+#         json_data = json.loads(self.request.body.decode("utf-8"))
+#         so_iden = json_data['so_iden']
+#         sods = json_data['sods']
+#         for sod in sods:
+#             sod_iden = sod['sod_iden']  # 物料编码
+#             material = Material.objects.get(material_iden=sod_iden)
+#             so = models.SellOrder.objects.get(so_iden=so_iden)
+#             try:
+#                 if models.SoDetail.objects.create(sell_order=so, material=material, sod_num=0):
+#                     pass
+#                 else:
+#                     return Response({"message": "新建物料错误"})
+#             except:
+#                 return Response({"message": "新建物料错误"})
+#
+#         return Response({"message": "新建物料详情成功", "signal": 0})
 
-    def post(self, request):
-        json_data = json.loads(self.request.body.decode("utf-8"))
-        so_iden = json_data['so_iden']
-        sods = json_data['sods']
-        for sod in sods:
-            sod_iden = sod['sod_iden']  # 物料编码
-            material = Material.objects.get(material_iden=sod_iden)
-            so = models.SellOrder.objects.get(so_iden=so_iden)
-            try:
-                if models.SoDetail.objects.create(sell_order=so, material=material, sod_num=0):
-                    pass
-                else:
-                    return Response({"message": "新建物料错误"})
-            except:
-                return Response({"message": "新建物料错误"})
-
-        return Response({"message": "新建物料详情成功", "signal": 0})
-
-
-class SoDetailDeleteView(APIView):
-    def post(self, request):
-        """
-        需要获取物料编号就可以了
-        """
-        json_data = json.loads(self.request.body.decode("utf-8"))
-
-        sods = json_data['sods']
-        for sod in sods:
-            sod_iden = sod['sod_iden']
-            try:
-                if models.SoDetail.objects.filter(sod_iden=sod_iden).delete()[0]:
-                    pass
-                else:
-                    return Response({"message": "删除物料错误"})
-            except:
-                return Response({"message": "删除物料错误"})
-
-        return Response({"message": "删除物料成功"})
+#
+# class SoDetailDeleteView(APIView):
+#     def post(self, request):
+#         """
+#         需要获取物料编号就可以了
+#         """
+#         json_data = json.loads(self.request.body.decode("utf-8"))
+#
+#         sods = json_data['sods']
+#         for sod in sods:
+#             sod_iden = sod['sod_iden']
+#             try:
+#                 if models.SoDetail.objects.filter(sod_iden=sod_iden).delete()[0]:
+#                     pass
+#                 else:
+#                     return Response({"message": "删除物料错误"})
+#             except:
+#                 return Response({"message": "删除物料错误"})
+#
+#         return Response({"message": "删除物料成功"})
 
 
 class SellOrderDeleteView(APIView):

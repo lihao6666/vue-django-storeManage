@@ -11,7 +11,7 @@ urlpatterns = [
     path('soDetailSubmit', views.SoDetailSubmitView.as_view(), name='soDetailSubmit'),
     path('soDetailSave', views.SoDetailSaveView.as_view(), name='soDetailSave'),
     path('soDetailNew', views.SoDetailNewView.as_view(), name='soDetailNew'),
-    path('soDetailNewSave', views.SoDetailNewSaveView.as_view(), name='soDetailNewSave'),
-    path('soDetailDelete', views.SoDetailDeleteView.as_view(), name='soDetailDelete'),
+    # path('soDetailNewSave', views.SoDetailNewSaveView.as_view(), name='soDetailNewSave'),
+    # path('soDetailDelete', views.SoDetailDeleteView.as_view(), name='soDetailDelete'),
     path('sellOrderDelete', views.SellOrderDeleteView.as_view(), name='sellOrderDelete'),
 ]

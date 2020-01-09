@@ -43,11 +43,11 @@ class PrsView(APIView):
             self.area_name = user_now.area_name
 
         power = json_data['power']
-
+        print(power)
         # 判断是个人还是采购专员
-        if power == 1:
+        if power == '1':
             prs = models.PurchaseRequest.objects.filter(~Q(pr_status=0), organization__area_name=self.area_name).all()
-        elif power == 2:
+        elif power == '2':
             prs = models.PurchaseRequest.objects.filter(pr_creator_iden=user_now_iden,
                                                         organization__area_name=self.area_name).all()
         else:
@@ -211,6 +211,9 @@ class PrdSaveView(APIView):
         json_data = json.loads(self.request.body.decode("utf-8"))
         pr_iden = json_data['pr_iden']
         prds = json_data['prds']
+        models.PrDetail.objects.filter(purchase_request__pr_iden=pr_iden).delete()
+        pr = models.PurchaseRequest.objects.get(pr_iden=pr_iden)
+
         for prd in prds:
             prd_iden = prd['prd_iden']  # 物料编码
             # id = prd['prd_id']  # 物料id
@@ -218,8 +221,8 @@ class PrdSaveView(APIView):
             prd_present_num = prd['prd_present_num']  # 实际库存数量
             prd_remarks = prd['prd_remarks']
             try:
-                if models.PrDetail.objects.filter(purchase_request__pr_iden=pr_iden, prd_iden=prd_iden). \
-                        update(prd_num=prd_num, prd_present_num=prd_present_num, prd_remarks=prd_remarks):
+                if models.PrDetail.objects.create(purchase_request=pr, prd_num=prd_num, prd_present_num=prd_present_num,
+                                                  prd_remarks=prd_remarks):
                     pass
                 else:
                     self.message = "请购单详情保存失败"
@@ -256,18 +259,27 @@ class PrdSubmitView(APIView):
 
 
 class PrdNewView(APIView):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.user_now_name = ""
+        self.area_name = ""
 
     def post(self, request):
         json_data = json.loads(self.request.body.decode("utf-8"))
-        organization_name = json_data['orga_name']
+        user_now_iden = json_data['user_now_iden']
+        user_now = UserNow.objects.get(user_iden=user_now_iden)
+        if user_now:
+            self.user_now_name = user_now.user_name
+            self.area_name = user_now.area_name
+        orga_name = json_data['orga_name']
         materials = Material.objects.filter(material_status=1).all()
+
         if materials:
             materials_serializer = MaterialSerializer(materials, many=True)
             prds_present_num = []
             for material in materials:
-                # print(material)
-                # try:
-                prd_present_num = TotalStock.objects.filter(totalwarehouse__organization__orga_name=organization_name,
+                prd_present_num = TotalStock.objects.filter(totalwarehouse__organization__orga_name=orga_name,
+                                                            totalwarehouse__organization__area_name=self.area_name,
                                                             material=material).aggregate(
                     prd_present_num=Sum('ts_present_num'))['prd_present_num']
                 if prd_present_num:
@@ -275,58 +287,57 @@ class PrdNewView(APIView):
                 else:
                     prd_present_num = 0
                 prds_present_num.append(prd_present_num)
-            # 现存量单独统计，单独发送字段
 
             return Response({"materials": materials_serializer.data, "prds_present_num": prds_present_num, "signal": 0})
         else:
             return Response({"message": "空空如也你不服？"})
 
 
-class PrdNewSaveView(APIView):
-    def post(self, request):
-        """
-        需要获取物料详情(iden ,现存量，请购量就可以了)，请购单编号
-        """
-        json_data = json.loads(self.request.body.decode("utf-8"))
-        pr_iden = json_data['pr_iden']
-        prds = json_data['prds']
-        for prd in prds:
-            prd_iden = prd['prd_iden']
-            # prd_num = prd['prd_num']
-            prd_present_num = prd['prd_present_num']
-            material = Material.objects.get(material_iden=prd_iden)
-            pr = models.PurchaseRequest.objects.get(pr_iden=pr_iden)
-            try:
-                if models.PrDetail.objects.create(purchase_request=pr, material=material, prd_num=prd_present_num,
-                                                  prd_present_num=prd_present_num, prd_used=0):
-                    pass
-                else:
-                    return Response({"message": "新建物料出现错误"})
-            except:
-                return Response({"message": "新建物料出现错误"})
+# class PrdNewSaveView(APIView):
+#     def post(self, request):
+#         """
+#         需要获取物料详情(iden ,现存量，请购量就可以了)，请购单编号
+#         """
+#         json_data = json.loads(self.request.body.decode("utf-8"))
+#         pr_iden = json_data['pr_iden']
+#         prds = json_data['prds']
+#         for prd in prds:
+#             prd_iden = prd['prd_iden']
+#             # prd_num = prd['prd_num']
+#             prd_present_num = prd['prd_present_num']
+#             material = Material.objects.get(material_iden=prd_iden)
+#             pr = models.PurchaseRequest.objects.get(pr_iden=pr_iden)
+#             try:
+#                 if models.PrDetail.objects.create(purchase_request=pr, material=material, prd_num=prd_present_num,
+#                                                   prd_present_num=prd_present_num, prd_used=0):
+#                     pass
+#                 else:
+#                     return Response({"message": "新建物料出现错误"})
+#             except:
+#                 return Response({"message": "新建物料出现错误"})
+#
+#         return Response({"message": "新建物料详情成功", "signal": 0})
 
-        return Response({"message": "新建物料详情成功", "signal": 0})
 
-
-class PrdDeleteView(APIView):
-    def post(self, request):
-        """
-        需要获取物料编号就可以了
-        """
-        json_data = json.loads(self.request.body.decode("utf-8"))
-
-        prds = json_data['prds']
-        for prd in prds:
-            prd_iden = prd['prd_iden']
-            try:
-                if models.PrDetail.objects.filter(prd_iden=prd_iden).delete()[0]:
-                    pass
-                else:
-                    return Response({"message": "删除物料错误"})
-            except:
-                return Response({"message": "删除物料错误"})
-
-        return Response({"message": "删除物料成功", "signal": 0})
+# class PrdDeleteView(APIView):
+#     def post(self, request):
+#         """
+#         需要获取物料编号就可以了
+#         """
+#         json_data = json.loads(self.request.body.decode("utf-8"))
+#
+#         prds = json_data['prds']
+#         for prd in prds:
+#             prd_iden = prd['prd_iden']
+#             try:
+#                 if models.PrDetail.objects.filter(prd_iden=prd_iden).delete()[0]:
+#                     pass
+#                 else:
+#                     return Response({"message": "删除物料错误"})
+#             except:
+#                 return Response({"message": "删除物料错误"})
+#
+#         return Response({"message": "删除物料成功", "signal": 0})
 
 
 class PrDeleteView(APIView):
@@ -358,20 +369,26 @@ class PrDeleteView(APIView):
 class PrCloseView(APIView):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.message = "关闭请购单成功"
+        self.message = "更新成功"
         self.signal = 0
+        self.user_now_name = ""
+        self.area_name = ""
+        self.pr_new_iden = ""
 
     def post(self, request):
-        """
-        需要数据为请购单编号、关闭人、关闭原因
-        """
         json_data = json.loads(self.request.body.decode("utf-8"))
+        user_now_iden = json_data['user_now_iden']
+        user_now = UserNow.objects.get(user_iden=user_now_iden)
+        if user_now:
+            self.user_now_name = user_now.user_name
+            self.area_name = user_now.area_name
+
         pr_iden = json_data['pr_iden']
-        pr_closer = json_data['pr_closer']
         pr_closerReason = json_data['pr_closerReason']
 
         try:
-            if models.PurchaseRequest.objects.filter(pr_iden=pr_iden).update(pr_status=2, pr_closer=pr_closer,
+            if models.PurchaseRequest.objects.filter(pr_iden=pr_iden).update(pr_status=2, pr_closer=self.user_now_name,
+                                                                             pr_closer_iden = user_now_iden,
                                                                              pr_closerReason=pr_closerReason):
                 pass
             else:
