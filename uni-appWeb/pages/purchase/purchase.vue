@@ -288,7 +288,9 @@
 			color: black;
 			// align-items: center;
 		}
+		   
 		
+		   
 		.remarks-input{
 			flex: 1;
 			font-size: 32upx;
