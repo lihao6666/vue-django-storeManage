@@ -1,5 +1,7 @@
 from django.db import models
 import django.utils.timezone as timezone
+
+
 # Create your models here.
 
 class BuyInStore(models.Model):
@@ -19,9 +21,9 @@ class BuyInStore(models.Model):
                                        on_delete=models.CASCADE)
     supplier = models.ForeignKey('base.Supplier', verbose_name='供应商', related_name='supplier_bis',
                                  on_delete=models.CASCADE)
-    bis_date = models.DateTimeField(default=timezone.now(),verbose_name='采购入库日期')
+    bis_date = models.DateTimeField(default=timezone.now, verbose_name='采购入库日期')
     bis_remarks = models.TextField(max_length=400, verbose_name='采购入库单备注')
-    bis_status = models.IntegerField(choices=BIS_STATUS_CHOICES,default=0, verbose_name='采购入库单状态')
+    bis_status = models.IntegerField(choices=BIS_STATUS_CHOICES, default=0, verbose_name='采购入库单状态')
     bis_creator = models.CharField(max_length=20, verbose_name='采购入库单创建人名字')
     bis_creator_iden = models.CharField(max_length=20, verbose_name='采购入库单创建人工号')
     bis_createDate = models.DateTimeField(auto_now_add=True, verbose_name='采购入库单创建日期')
@@ -69,18 +71,20 @@ class BisDetail(models.Model):
 #     )
 #     id = models.AutoField(primary_key=True)
 #     osi_iden = models.CharField(max_length=15, verbose_name='其它入库单编号')
+#     osi_serial = models.CharField(max_length=4, verbose_name='其它入库单流水号')
 #     organization = models.ForeignKey('base.Organization', verbose_name='组织', related_name='orga_osi',
 #                                      on_delete=models.CASCADE)
 #     transfer = models.OneToOneField('Transfer', verbose_name='转库单', on_delete=models.CASCADE)  # 如果不行保存为转库单iden
 #     inventory = models.OneToOneField('Inventory', verbose_name='库存盘点单', on_delete=models.CASCADE)  # 同上
-#     osi_house = models.CharField(max_length=15, verbose_name='其它入库仓库编号')
+#     osi_ware_house = models.CharField(max_length=15, verbose_name='其它入库仓库名字')
 #
 #     osi_type = models.IntegerField(choices=OSI_TYPE_CHOICES, verbose_name='其它入库单类型')
 #     osi_date = models.DateField(auto_now_add=True, verbose_name='其它出库日期')
 #     osi_remarks = models.TextField(max_length=400, verbose_name='其它出库单备注')
 #
-#     osi_status = models.IntegerField(choices=OSI_STATUS_CHOICES, verbose_name='其它出库单状态')
+#     osi_status = models.IntegerField(choices=OSI_STATUS_CHOICES, default=0, verbose_name='其它出库单状态')
 #     osi_creator = models.CharField(max_length=20, verbose_name='其它出库单创建人')
+#
 #     osi_createDate = models.DateTimeField(auto_now_add=True, verbose_name='其它出库单创建日期')
 #
 #     class Meta:

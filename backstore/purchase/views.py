@@ -79,7 +79,7 @@ class PCNewView(APIView):
             pays_serializer = CdPaySerializer(pays, many=True)
             return Response(
                 {"orga_names": orga_names, "supply_names": supply_names, "cds": cds_serializer.data,
-                 "pays": pays_serializer, "signal": 1})
+                 "pays": pays_serializer.data, "signal": 1})
 
 
 class PcUpdateView(APIView):
@@ -122,7 +122,7 @@ class PcUpdateView(APIView):
             pc_new_iden = pre_iden + pc_serial
             self.pc_new_iden = pc_new_iden
             try:
-                if models.PurchaseContract.objects.create(pc_iden=pc_new_iden, pc_serial=pc_serial,
+                if models.PurchaseContract.objects.create(pc_iden=self.pc_new_iden, pc_serial=pc_serial,
                                                           organization=organization, pc_name=pc_name, supplier=supplier,
                                                           pc_date=pc_date, pc_sum=pc_sum, pc_remarks=pc_remarks,
                                                           pc_status=0, pc_creator=self.user_now_name,
@@ -160,6 +160,8 @@ class CdDetailSaveView(APIView):
         pays = json_data['pays']
         models.CdDetail.objects.filter(purchase_contract__pc_iden=pc_iden).delete()
         pc = models.PurchaseContract.objects.get(pc_iden=pc_iden)
+        pc_sum = json_data['pc_sum']
+        models.PurchaseContract.objects.filter(pc_iden=pc_iden).update(pc_sum=pc_sum)
         for cd in cds:
             cd_iden = cd['cd_iden']
             material = Material.objects.get(material_iden=cd_iden)
@@ -171,7 +173,7 @@ class CdDetailSaveView(APIView):
             cd_sum = cd['cd_sum']
             cd_tax_price = cd['cd_tax_price']
             cd_pr_iden = cd['cd_pr_iden']
-            cd_prd_remarks = cd['cd_remarks']
+            cd_prd_remarks = cd['cd_prd_remarks']
             # PrDetail.objects.filter(purchase_request__pr_iden=pc_iden, prd_iden=cd_iden).update(prd_uesd=1)
             # 更新请购单物料使用状态
             try:
@@ -198,12 +200,12 @@ class CdDetailSaveView(APIView):
             pay_rate = pay['pay_rate']
             pay_price = pay['pay_price']
             pay_planDate = pay['pay_planDate']
-            pay_preay = pay['pay_preay']
+            pay_prepay = pay['pay_prepay']
             pay_remarks = pay['pay_remarks']
             try:
                 if models.CdPayDetail.objects.create(purchase_contract=pc, pay_batch=pay_batch, pay_rate=pay_rate,
                                                      pay_price=pay_price, pay_planDate=pay_planDate,
-                                                     pay_preay=pay_preay,
+                                                     pay_prepay=pay_prepay,
                                                      pay_remarks=pay_remarks):
                     pass
                 else:
@@ -220,7 +222,7 @@ class CdDetailSubmitView(APIView):
         super().__init__(**kwargs)
         self.user_now_name = ""
         self.area_name = ""
-        self.message = "请购单提交成功"
+        self.message = "合同明细提交成功"
         self.signal = 0
 
     def post(self, request):
@@ -236,10 +238,10 @@ class CdDetailSubmitView(APIView):
             if models.PurchaseContract.objects.filter(pc_iden=pc_iden).update(pc_status=1):
                 pass
             else:
-                self.message = "请购单提交失败"
+                self.message = "合同明细提交失败"
                 self.signal = 1
         except:
-            self.message = "请购单提交失败"
+            self.message = "合同明细提交失败"
             self.signal = 1
 
         for cd in cds:
@@ -254,7 +256,7 @@ class CdDetailSubmitView(APIView):
                     flag = 1
             if flag == 0:
                 pr.update(pr_status=2, pr_closer=self.user_now_name, pr_closer_iden=user_now_iden,
-                          pr_closeDate=timezone.now(), pr_closeReason="自动关闭")
+                          pr_closeDate=timezone.now, pr_closeReason="自动关闭")
             # 更新请购单物料使用状态
 
         return Response({'message': self.message, 'signal': self.signal})
@@ -395,7 +397,7 @@ class POsView(APIView):
             return Response({"message": "未查询到信息"})
 
 
-class PONewByPrView(APIView):
+class PONewView(APIView):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.user_now_name = ""
@@ -412,7 +414,6 @@ class PONewByPrView(APIView):
         supply_names = Supplier.objects.filter(supply_status=1).values_list('id', 'supply_name')
         try:
             po_iden = json_data['po_iden']
-
         except:
 
             return Response({"orga_names": orga_names, "supply_names": supply_names, "signal": 0})
@@ -454,37 +455,39 @@ class PrChoiceView(APIView):
             return Response({"prds": self.prds_serializer.data, 'signal': 0})
 
 
-class PONewByPcView(APIView):
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-        self.user_now_name = ""
-        self.area_name = ""
-        self.pcs = ""
-
-    def post(self, request):
-        json_data = json.loads(self.request.body.decode("utf-8"))
-        user_now_iden = json_data['user_now_iden']
-        user_now = UserNow.objects.get(user_iden=user_now_iden)
-        if user_now:
-            self.user_now_name = user_now.user_name
-            self.area_name = user_now.area_name
-        try:
-            po_iden = json_data['po_iden']
-        except:
-            self.pcs = models.PurchaseContract.objects.filter(organization__area_name=self.area_name,
-                                                              pc_status=1).all()
-            pcs_serializer = PCSerializer(self.pcs, many=True)
-            cds_list = []
-            for pc in self.pcs:
-                pc_iden = pc.pc_iden
-                cds = models.CdDetail.objects.filter(purchase_contract__pc_iden=pc_iden).all()
-                cds_serializer = CdDSerializer(cds, many=True)
-                cds_list.append(cds_serializer.data)
-            return Response({"pcs": pcs_serializer.data, "cds": cds_list, "signal": 0})  # 合同和对应的合同明细
-        else:
-            ods = models.OrDetail.objects.filter(purchase_order__po_iden=po_iden).all()
-            ods_serializer = OrDSerializer(ods, many=True)
-            return Response({"ods": ods_serializer.data, "signal": 1})
+# class PONewByPcView(APIView):
+#     def __init__(self, **kwargs):
+#         super().__init__(**kwargs)
+#         self.user_now_name = ""
+#         self.area_name = ""
+#         self.pcs = ""
+#
+#     def post(self, request):
+#         json_data = json.loads(self.request.body.decode("utf-8"))
+#         user_now_iden = json_data['user_now_iden']
+#         user_now = UserNow.objects.get(user_iden=user_now_iden)
+#         if user_now:
+#             self.user_now_name = user_now.user_name
+#             self.area_name = user_now.area_name
+#         orga_names =
+#         try:
+#             po_iden = json_data['po_iden']
+#         except:
+#             # self.pcs = models.PurchaseContract.objects.filter(organization__area_name=self.area_name,
+#             #                                                   pc_status=1).all()
+#             # pcs_serializer = PCSerializer(self.pcs, many=True)
+#             # cds_list = []
+#             # for pc in self.pcs:
+#             #     pc_iden = pc.pc_iden
+#             #     cds = models.CdDetail.objects.filter(purchase_contract__pc_iden=pc_iden).all()
+#             #     cds_serializer = CdDSerializer(cds, many=True)
+#             #     cds_list.append(cds_serializer.data)
+#             # return Response({"pcs": pcs_serializer.data, "cds": cds_list, "signal": 0})  # 合同和对应的合同明细
+#             return Response({})
+#         else:
+#             ods = models.OrDetail.objects.filter(purchase_order__po_iden=po_iden).all()
+#             ods_serializer = OrDSerializer(ods, many=True)
+#             return Response({"ods": ods_serializer.data, "signal": 1})
 
 
 class PcChoiceView(APIView):

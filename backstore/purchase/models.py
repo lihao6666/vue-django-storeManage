@@ -21,7 +21,7 @@ class PurchaseContract(models.Model):
     pc_name = models.CharField(max_length=20, verbose_name='合同名称')
     supplier = models.ForeignKey('base.Supplier', verbose_name='供应商', related_name='supplier_pc',
                                  on_delete=models.CASCADE)
-    pc_date = models.DateTimeField(auto_now_add=True, verbose_name='合同签订日期')
+    pc_date = models.DateTimeField(default=timezone.now, verbose_name='合同签订日期')
     pc_sum = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='合同总额')
     pc_remarks = models.TextField(max_length=400, verbose_name='合同备注', null=True)
     pc_status = models.IntegerField(choices=PC_STATUS_CHOICES, default=0, verbose_name='合同状态')
@@ -71,9 +71,9 @@ class CdPayDetail(models.Model):
     """
     合同付款协议
     """
-    PAY_PREAY_CHOICES = (
-        (0, '是'),
-        (1, '否')
+    PAY_PREPAY_CHOICES = (
+        (0, '否'),
+        (1, '是')
     )
     id = models.AutoField(primary_key=True)
     purchase_contract = models.ForeignKey('PurchaseContract', verbose_name='采购合同', related_name='pc_pay',
@@ -82,7 +82,7 @@ class CdPayDetail(models.Model):
     pay_rate = models.IntegerField(verbose_name='付款比率')
     pay_price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='付款金额')
     pay_planDate = models.DateField(verbose_name='计划付款日期')
-    pay_preay = models.IntegerField(choices=PAY_PREAY_CHOICES, verbose_name='是否预付款')
+    pay_prepay = models.IntegerField(choices=PAY_PREPAY_CHOICES, verbose_name='是否预付款')
     pay_remarks = models.TextField(max_length=400, verbose_name='付款备注', null=True)
 
     class Meta:
@@ -107,7 +107,7 @@ class PurchaseOrder(models.Model):
                                      on_delete=models.CASCADE)
     supplier = models.ForeignKey('base.Supplier', verbose_name='供应商', related_name='supplier_po',
                                  on_delete=models.CASCADE)
-    po_date = models.DateTimeField(default=timezone.now(),verbose_name='采购订单生效日期')
+    po_date = models.DateTimeField(default=timezone.now,verbose_name='采购订单生效日期')
     po_sum = models.IntegerField(verbose_name='采购订单总额')
     po_remarks = models.TextField(max_length=400, verbose_name='采购订单备注')
     # purchase_contract = models.ForeignKey('PurchaseContract', verbose_name='采购合同', related_name='pc_po',

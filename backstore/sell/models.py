@@ -24,9 +24,9 @@ class SellOrder(models.Model):
     so_type = models.IntegerField(choices=SELL_ORDER_CHOICES, verbose_name='订单类型')
     customer = models.ForeignKey('base.Customer', verbose_name='客户', related_name='customer_so',
                                  on_delete=models.CASCADE)
-    so_date = models.DateTimeField(default=timezone.now(), verbose_name='订单日期')
+    so_date = models.DateTimeField(default=timezone.now, verbose_name='订单日期')
     deliver_ware_house = models.CharField(max_length=20, verbose_name='发货仓库名字')
-    deliver_ware_house_iden = models.CharField(max_length=6, verbose_name='发货仓库编码')
+    # deliver_ware_house_iden = models.CharField(max_length=6, verbose_name='发货仓库编码')
     so_remarks = models.TextField(max_length=400, verbose_name='订单备注')
     so_status = models.IntegerField(choices=SO_STATUS_CHOICES, verbose_name='销售订单状态')
     so_creator = models.CharField(max_length=20, verbose_name='订单创建人名字')

@@ -71,10 +71,15 @@ class SellOrderNewView(APIView):
         if user_now:
             self.user_now_name = user_now.user_name
             self.area_name = user_now.area_name
-        organizations = Organization.objects.filter(area_name=self.area_name).values_list("id", "orga_name")
+        orga_ware_houses = {}
+        organizations = Organization.objects.filter(area_name=self.area_name, orga_status=1)
+        for organization in organizations:
+            orga_name = organization.orga_name
+            deliver_ware_houses = TotalWareHouse.objects.filter(organization=organization, total_status=1). \
+                values_list("total_name", flat=True)
+            orga_ware_houses[orga_name] = deliver_ware_houses
+
         customers = Customer.objects.filter(customer_status=1).values_list("id", "customer_name")
-        deliver_ware_houses = TotalWareHouse.objects.filter(organization__area_name=self.area_name,total_status=1). \
-            values_list("id", "total_name", "organization__orga_name")
 
         try:
             so_iden = json_data['so_iden']
@@ -82,8 +87,7 @@ class SellOrderNewView(APIView):
             deliver_ware_house = json_data['deliver_ware_house']
         except:
             return Response(
-                {"organizations": organizations, "customers": customers, "deliver_ware_houses": deliver_ware_houses,
-                 "signal": 0})
+                {"orga_ware_houses": orga_ware_houses, "customers": customers, "signal": 0})
         else:
             sods = models.SoDetail.objects.filter(sell_order__so_iden=so_iden)
             sods_serializers = SoDetailSerializer(sods, many=True)
@@ -100,7 +104,7 @@ class SellOrderNewView(APIView):
                 sods_present_num.append(sod_present_num)
 
             return Response(
-                {"organizations": organizations, "customers": customers, "deliver_ware_houses": deliver_ware_houses,
+                {"orga_ware_houses": orga_ware_houses, "customers": customers,
                  "sods": sods_serializers.data, "sods_present_num": sods_present_num, "signal": 1})
 
 
@@ -124,13 +128,11 @@ class SellOrderUpdateView(APIView):
         if user_now:
             self.user_now_name = user_now.user_name
             self.area_name = user_now.area_name
-        orga_id = json_data['organization']['id']
-        organization = Organization.objects.get(id=orga_id)
-        customer_id = json_data['customer']['id']
-        customer = Customer.objects.get(id=customer_id)
-        deliver_ware_house_id = json_data['deliver_ware_house']['id']
-        deliver_ware_house = TotalWareHouse.objects.get(id=deliver_ware_house_id).total_name
-        deliver_ware_house_iden = TotalWareHouse.objects.get(id=deliver_ware_house_id).total_iden
+        orga_name = json_data['orga_name']
+        organization = Organization.objects.get(orga_name=orga_name, area_name=self.area_name)
+        customer_name = json_data['customer_name']
+        customer = Customer.objects.get(customer_name=customer_name)
+        deliver_ware_house = json_data['deliver_ware_house']
         so_type = json_data['so_type']
         so_date = json_data['so_date']
         so_remarks = json_data['so_remarks']
@@ -152,7 +154,6 @@ class SellOrderUpdateView(APIView):
                 if models.SellOrder.objects.create(so_iden=so_new_iden, so_serial=so_serial, organization=organization,
                                                    so_type=so_type, customer=customer, so_date=so_date,
                                                    deliver_ware_house=deliver_ware_house,
-                                                   deliver_ware_house_iden=deliver_ware_house_iden,
                                                    so_remarks=so_remarks,
                                                    so_status=0, so_creator=self.user_now_name,
                                                    so_creator_iden=user_now_iden):
@@ -170,8 +171,7 @@ class SellOrderUpdateView(APIView):
             so = models.SellOrder.objects.get(so_iden=so_iden)
             if so:
                 if so.update(organization=organization, so_type=so_type, customer=customer, so_date=so_date,
-                             deliver_ware_house=deliver_ware_house,
-                             deliver_ware_house_iden=deliver_ware_house_iden, so_remarks=so_remarks):
+                             deliver_ware_house=deliver_ware_house, so_remarks=so_remarks):
                     pass
                 else:
                     self.message = "更新失败"

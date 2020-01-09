@@ -41,7 +41,7 @@ class Migration(migrations.Migration):
                 ('pay_rate', models.IntegerField(verbose_name='付款比率')),
                 ('pay_price', models.DecimalField(decimal_places=2, max_digits=10, verbose_name='付款金额')),
                 ('pay_planDate', models.DateField(verbose_name='计划付款日期')),
-                ('pay_preay', models.IntegerField(choices=[(0, '是'), (1, '否')], verbose_name='是否预付款')),
+                ('pay_prepay', models.IntegerField(choices=[(0, '是'), (1, '否')], verbose_name='是否预付款')),
                 ('pay_remarks', models.TextField(max_length=400, null=True, verbose_name='付款备注')),
                 ('purchase_contract', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='pc_pay', to='purchase.PurchaseContract', verbose_name='采购合同')),
             ],
