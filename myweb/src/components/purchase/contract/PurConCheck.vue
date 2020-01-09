@@ -143,6 +143,7 @@ export default {
         pc_iden: '',
         orga_name: '',
         supply_name: '',
+        supply_iden: '',
         pc_name: '',
         pc_remarks: '',
         pc_date: '',
@@ -175,7 +176,7 @@ export default {
       let data = {
         power: this.power
       }
-      postAPI('/purchase/pcs', data).then(function (res) {
+      postAPI('/purchase/pCs', data).then(function (res) {
         if (!res.data.pcs) {
           return
         }
@@ -219,7 +220,7 @@ export default {
         }
         for (let i of statusset) {
           _this.pc_statusSet.push({
-            text: i,
+            text: _this.status[i].label,
             value: i
           })
         }
@@ -275,7 +276,6 @@ export default {
       })
         .then(() => {
           let _this = this
-
           postAPI('/purchase/pcDelete', row).then(function (res) {
             console.log(res.data)
             if (res.data.signal === 0) {
@@ -301,7 +301,7 @@ export default {
       this.editform = row
       let _this = this
       this.$nextTick(() => _this.$refs.Pcedit.getForm())
-      this.$nextTick(() => _this.$refs.Pcedit.getList())
+      this.$nextTick(() => _this.$refs.Pcedit.getList(row))
       this.editVisible = true
     },
     // 详情操作
@@ -309,6 +309,7 @@ export default {
       this.moreform = row
       let _this = this
       this.$nextTick(() => _this.$refs.Pcmore.getForm())
+      this.$nextTick(() => _this.$refs.Pcmore.getList(row))
       this.moreVisible = true
     },
     // 分页导航

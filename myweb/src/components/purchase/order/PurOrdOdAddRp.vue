@@ -107,7 +107,7 @@ export default {
       od_rp_idenSet: [],
       od_rp_fromSet: [],
       pageTotal: 0,
-      ifshowadd: true,
+      ifshowadd: true
     }
   },
   created () {

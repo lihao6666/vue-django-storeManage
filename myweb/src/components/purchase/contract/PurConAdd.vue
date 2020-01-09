@@ -13,8 +13,8 @@
                     placeholder="请输入合同名称" clearable></el-input>
         </el-form-item>
         <el-form-item label="供应商">
-          <el-select v-model="formadd.pc_supply" placeholder="请选择" :disabled="!ifchange">
-            <el-option v-for="item in form_pc_supply" v-bind:key="item" :label="item" :value="item"></el-option>
+          <el-select v-model="formadd.supply_iden" placeholder="请选择" :disabled="!ifchange">
+            <el-option v-for="item in form_supply_name" v-bind:key="item.value" :label="item.label" :value="item.value"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="签订日期">
@@ -39,21 +39,24 @@
             <el-input type="textarea" v-model="formadd.pc_remarks" rows="3" class="form-item-from" :disabled="!ifchange"
                       placeholder="请输入200字以内的描述" maxlength="200" show-word-limit clearable></el-input>
           </el-form-item>
-        <el-button type="primary" class="form-item-save" v-if="ifchange" @click="saveReqPurAdd">保 存</el-button>
+          <el-tooltip content="保存主明细数据" placement="bottom" effect="light">
+            <el-button type="primary" class="form-item-save" v-if="ifchange" @click="saveReqPurAdd">保 存</el-button>
+          </el-tooltip>
         </el-row>
       </el-form>
     </div>
     <Pccd ref="Pccd" :cds="cds" :orga_name="form_orga_name" :formadd="formadd" :ifchange="ifchange"></Pccd>
     <Pcpay ref="Pcpay" :pays="pays" :formadd="formadd" :ifchange="ifchange"></Pcpay>
     <el-row :gutter="20" v-if="ifchange" class="el-row-button">
-      <el-col :span="1" :offset="18">
-        <el-button @click="this.$emit('commit')">取 消</el-button>
+      <el-col :span="1" :offset="19">
+        <el-tooltip content="保存所有数据并提交" placement="bottom" effect="light">
+          <el-button v-if="ifchange" type="primary">提 交</el-button>
+        </el-tooltip>
       </el-col>
       <el-col :span="1" :offset="1">
-        <el-button type="primary">提 交</el-button>
-      </el-col>
-      <el-col :span="1" :offset="1">
-        <el-button type="primary">保 存</el-button>
+        <el-tooltip content="保存所有数据" placement="bottom" effect="light">
+          <el-button v-if="ifchange" type="primary">保 存</el-button>
+        </el-tooltip>
       </el-col>
     </el-row>
   </div>
@@ -98,13 +101,13 @@ export default {
         pc_iden: this.editform.pc_iden,
         pc_orga: this.editform.pc_orga,
         pc_name: this.editform.pc_name,
-        pc_supply: this.editform.pc_supply,
+        supply_name: this.editform.supply_name,
         pc_remarks: this.editform.pc_remarks,
         pc_date: this.editform.pc_date,
         pc_sum: this.editform.pc_sum
       },
       form_orga_name: [],
-      form_pc_supply: [],
+      form_supply_name: [],
       cds: [],
       pays: []
     }
@@ -112,12 +115,14 @@ export default {
   methods: {
     getList (row = {}) {
       let _this = this
-
-      postAPI('/purchase/pcNew', row).then(function (res) {
+      postAPI('/purchase/pCNew', row).then(function (res) {
         console.log(res.data)
-        _this.form_pc_supply = []
+        _this.form_supply_name = []
         for (let i in res.data.supply_names) {
-          _this.form_pc_supply.push(res.data.supply_names[i][1])
+          _this.form_supply_name.push({
+            label: res.data.supply_names[i][1],
+            value: res.data.supply_names[i][0]
+          })
         }
         _this.form_orga_name = []
         for (let i in res.data.orga_names) {
@@ -129,6 +134,8 @@ export default {
         if (res.data.pays) {
           _this.pays = res.data.pays
         }
+        _this.$nextTick(() => _this.$refs.Pccd.getData())
+        _this.$nextTick(() => _this.$refs.Pcpay.getData())
       }).catch(function (err) {
         console.log(err)
       })
@@ -137,13 +144,12 @@ export default {
       this.formadd.pc_iden = this.editform.pc_iden
       this.formadd.pc_orga = this.editform.pc_orga
       this.formadd.pc_name = this.editform.pc_name
-      this.formadd.pc_supply = this.editform.pc_supply
+      this.formadd.supply_name = this.editform.supply_name
       this.formadd.pc_remarks = this.editform.pc_remarks
       this.formadd.pc_date = this.editform.pc_date
       this.formadd.pc_sum = this.editform.pc_sum
     },
     saveReqPurAdd (callback = null) {
-
       if (this.formadd.pc_department === '' || this.formadd.orga_name === '' ||
         this.formadd.pc_type === '' || this.formadd.pc_date === '') {
         this.$message.error(`请填写完主明细信息`)

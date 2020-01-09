@@ -116,7 +116,6 @@ export default {
           _this.tableData[i].prd_meterage = _this.tableData[i].meterage_name
           _this.tableData[i].prd_remarks = ''
         }
-        console.log(_this.tableData)
         _this.pageTotal = res.data.materials.length
         _this.find()
         _this.material_nameSet = []
@@ -229,7 +228,6 @@ export default {
     },
     // 选择组织
     changeOrga () {
-      console.log(this.formadd.orga_name)
       this.getData()
     }
   }

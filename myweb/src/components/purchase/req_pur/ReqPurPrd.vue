@@ -156,6 +156,7 @@ export default {
   },
   methods: {
     getData () {
+      console.log(this.prds)
       if (this.formadd.pr_iden === '') {
         return
       }
@@ -365,27 +366,6 @@ export default {
           }
         }
       })
-      // if (this.formadd.pr_iden === '' || this.formadd.pr_department === '' ||
-      //   this.formadd.orga_name === '' || this.formadd.pr_type === '' || this.formadd.pr_date === '') {
-      //   this.$message.error(`请填写完主明细信息`)
-      //   return
-      // }
-      // let data = {
-      //   prds: this.tableData,
-      //   pr_iden: this.formadd.pr_iden
-      // }
-      // postAPI('/purchaseRequest/prdSave', data).then(function (res) {
-      //   console.log(res.data)
-      //   if (res.data.signal === 0) {
-      //     _this.$message.success(`保存物料明细成功`)
-      //     _this.$emit('save')
-      //   } else {
-      //     _this.$message.error('保存物料明细失败')
-      //   }
-      // }).catch(function (err) {
-      //   _this.$message.error('保存物料明细失败')
-      //   console.log(err)
-      // })
     },
     // 提交
     commit () {

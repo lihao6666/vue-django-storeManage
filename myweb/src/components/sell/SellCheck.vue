@@ -17,7 +17,7 @@
           clearable
           v-model="search">
         </el-input>
-        <el-button type="primary" icon="el-icon-plus" class="button-plus" @click="add">新增</el-button>
+        <el-button v-if="power==='2'||power==='3'" type="primary" icon="el-icon-plus" class="button-plus" @click="add">新增</el-button>
       </div>
       <el-table
         :data="tableDataNew"
@@ -45,21 +45,21 @@
           </template>
         </el-table-column>
         <el-table-column prop="so_iden" sortable label="销售订单号" align="center"></el-table-column>
-        <el-table-column prop="so_orga" sortable label="库存组织" :filters="so_orgaSet"
+        <el-table-column prop="orga_name" sortable label="库存组织" :filters="orga_nameSet"
       :filter-method="filter" align="center"></el-table-column>
         <el-table-column prop="so_type" sortable label="订单类型" :filters="so_typeSet"
       :filter-method="filter" align="center"></el-table-column>
-        <el-table-column prop="so_custom" sortable label="客户" :filters="so_customSet"
+        <el-table-column prop="customer_name" sortable label="客户" :filters="customer_nameSet"
       :filter-method="filter" align="center"></el-table-column>
-        <el-table-column prop="so_warehouse" sortable label="发货仓库" :filters="so_warehouseSet"
+        <el-table-column prop="deliver_ware_house" sortable label="发货仓库" :filters="deliver_ware_houseSet"
       :filter-method="filter" align="center"></el-table-column>
         <el-table-column prop="so_date" sortable label="订单日期" align="center"></el-table-column>
         <el-table-column prop="so_status" sortable label="状态" :filters="so_statusSet"
       :filter-method="filter" align="center">
           <template slot-scope="scope">
             <el-tag
-              :type="scope.row.so_status==='已审批'?'success':''"
-            >{{scope.row.so_status}}
+              :type="scope.row.so_status===1?'success':''"
+            >{{status[scope.row.so_status].label}}
             </el-tag>
           </template>
         </el-table-column>
@@ -72,7 +72,7 @@
               type="text"
               icon="el-icon-edit"
               @click="handleEdit(scope.$index, scope.row)"
-              v-if="scope.row.so_status==='草稿'"
+              v-if="scope.row.so_status===0"
             >编辑
             </el-button>
             <el-button
@@ -80,7 +80,7 @@
               icon="el-icon-delete"
               class="red"
               @click="handleDelete(scope.$index, scope.row)"
-              v-if="scope.row.so_status==='草稿'"
+              v-if="scope.row.so_status===1"
             >删除
             </el-button>
             <el-button
@@ -88,7 +88,7 @@
               icon="el-icon-postcard"
               class="green"
               @click="handleMore(scope.$index, scope.row)"
-              v-if="scope.row.so_status==='已审批'"
+              v-if="scope.row.so_status===1"
             >详情
             </el-button>
           </template>
@@ -109,12 +109,12 @@
       </div>
     </div>
     <!-- 新增弹出框 -->
-    <el-dialog title="新增" :visible.sync="addVisible" width="90%" :close-on-click-modal="false">
-      <Soadd ref="Soadd" :editform="addform" :ifchange="true"></Soadd>
+    <el-dialog title="新增" :visible.sync="addVisible" width="90%" :close-on-click-modal="false" :destroy-on-close="true" :before-close="closePcadd">
+      <Soadd ref="Soadd" @commit="editVisible = false" @save="getData" :editform="addform" :ifchange="true"></Soadd>
     </el-dialog>
     <!-- 编辑弹出框 -->
     <el-dialog title="编辑" :visible.sync="editVisible" width="90%" :close-on-click-modal="false" :destroy-on-close="true" :before-close="closePcedit">
-      <Soadd ref="Soedit" :editform="editform" :ifchange="true"></Soadd>
+      <Soadd ref="Soedit" @commit="editVisible = false" @save="getData" :editform="editform" :ifchange="true"></Soadd>
     </el-dialog>
     <!-- 详情弹出框 -->
     <el-dialog title="详情" :visible.sync="moreVisible" width="90%" :destroy-on-close="true">
@@ -138,10 +138,10 @@ export default {
       search: '',
       tableData: [],
       tableDataNew: [],
-      so_orgaSet: [],
+      orga_nameSet: [],
       so_typeSet: [],
-      so_customSet: [],
-      so_warehouseSet: [],
+      customer_nameSet: [],
+      deliver_ware_houseSet: [],
       so_statusSet: [],
       so_creatorSet: [],
       editVisible: false,
@@ -152,13 +152,26 @@ export default {
       addVisible: false,
       addform: {
         so_iden: '',
-        so_orga: '',
-        so_custom: '',
-        so_warehouse: '',
+        orga_name: '',
+        customer_name: '',
+        deliver_ware_house: '',
         so_type: '',
         so_remarks: '',
         so_date: ''
-      }
+      },
+      status: [
+        {
+          value: 0,
+          label: '草稿',
+          type: ''
+        },
+        {
+          value: 1,
+          label: '已审批',
+          type: 'success'
+        }
+      ],
+      power: localStorage.getItem('user_power').charAt(0)
     }
   },
   components: {
@@ -170,9 +183,22 @@ export default {
   methods: {
     getData () {
       let _this = this
-      postAPI('/so_check').then(function (res) {
-        _this.tableData = res.data.list
+      let data = {
+        power: this.power
+      }
+      postAPI('/sell/sellOrders', data).then(function (res) {
+        if (!res.data.sos) {
+          return
+        }
+        _this.tableData = res.data.sos
+        _this.pageTotal = res.data.sos.length
         _this.find()
+        _this.orga_nameSet = []
+        _this.so_typeSet = []
+        _this.customer_nameSet = []
+        _this.deliver_ware_houseSet = []
+        _this.so_statusSet = []
+        _this.so_creatorSet = []
         let orgaset = new Set()
         let typeset = new Set()
         let statusset = new Set()
@@ -180,27 +206,27 @@ export default {
         let warehouseset = new Set()
         let creatorset = new Set()
         for (let i in _this.tableData) {
-          orgaset.add(_this.tableData[i]['so_orga'])
-          customset.add(_this.tableData[i]['so_custom'])
-          warehouseset.add(_this.tableData[i]['so_warehouse'])
+          orgaset.add(_this.tableData[i]['orga_name'])
+          customset.add(_this.tableData[i]['customer_name'])
+          warehouseset.add(_this.tableData[i]['deliver_ware_house'])
           typeset.add(_this.tableData[i]['so_type'])
           statusset.add(_this.tableData[i]['so_status'])
           creatorset.add(_this.tableData[i]['so_creator'])
         }
         for (let i of orgaset) {
-          _this.so_orgaSet.push({
+          _this.orga_nameSet.push({
             text: i,
             value: i
           })
         }
         for (let i of customset) {
-          _this.so_customSet.push({
+          _this.customer_nameSet.push({
             text: i,
             value: i
           })
         }
         for (let i of warehouseset) {
-          _this.so_warehouseSet.push({
+          _this.deliver_ware_houseSet.push({
             text: i,
             value: i
           })
@@ -213,7 +239,7 @@ export default {
         }
         for (let i of statusset) {
           _this.so_statusSet.push({
-            text: i,
+            text: _this.status[i].label,
             value: i
           })
         }
@@ -223,7 +249,6 @@ export default {
             value: i
           })
         }
-        _this.pageTotal = res.data.list.length
       }).catch(function (err) {
         console.log(err)
       })
@@ -249,15 +274,19 @@ export default {
       this.pageTotal = 0
       this.tableDataNew = this.tableData.filter(data => !this.search ||
         data.so_iden.toLowerCase().includes(this.search.toLowerCase()) ||
-        data.so_orga.toLowerCase().includes(this.search.toLowerCase()) ||
+        data.orga_name.toLowerCase().includes(this.search.toLowerCase()) ||
         data.so_type.toLowerCase().includes(this.search.toLowerCase()) ||
-        data.so_custom.toLowerCase().includes(this.search.toLowerCase()) ||
-        data.so_warehouse.toLowerCase().includes(this.search.toLowerCase()) ||
+        data.customer_name.toLowerCase().includes(this.search.toLowerCase()) ||
+        data.deliver_ware_house.toLowerCase().includes(this.search.toLowerCase()) ||
         data.so_creator.toLowerCase().includes(this.search.toLowerCase()))
     },
     // 新增
     add () {
       this.addVisible = true
+      let _this = this
+      this.$nextTick(() => _this.$refs.Soadd.getList())
+      this.$nextTick(() => _this.$refs.Soadd.getForm())
+      this.$nextTick(() => _this.$refs.Soadd.addShow())
     },
     // 删除操作
     handleDelete (index, row) {
@@ -266,12 +295,20 @@ export default {
         type: 'warning'
       })
         .then(() => {
-          this.$message.success('删除成功')
-          this.tableData.splice(index, 1)
-          let pageIndexNew = Math.ceil((this.pageTotal - 1) / this.query.pageSize) // 新的页面数量
-          this.query.pageIndex = (this.query.pageIndex > pageIndexNew) ? pageIndexNew : this.query.pageIndex
-          this.query.pageIndex = (this.query.pageIndex === 0) ? 1 : this.query.pageIndex
-          this.find()
+          let _this = this
+          console.log(row)
+          postAPI('/sell/sellOrderDelete', row).then(function (res) {
+            console.log(res.data)
+            if (res.data.signal === 0) {
+              _this.$message.success(`删除成功`)
+              _this.getData()
+            } else {
+              _this.$message.error(res.data.message)
+            }
+          }).catch(function (err) {
+            _this.$message.error('删除失败')
+            console.log(err)
+          })
         })
         .catch(() => {
           this.$message({
@@ -285,6 +322,7 @@ export default {
       this.editform = row
       let _this = this
       this.$nextTick(() => _this.$refs.Soedit.getForm())
+      this.$nextTick(() => _this.$refs.Soedit.getList(row))
       this.editVisible = true
     },
     // 详情操作
@@ -292,6 +330,7 @@ export default {
       this.moreform = row
       let _this = this
       this.$nextTick(() => _this.$refs.Somore.getForm())
+      this.$nextTick(() => _this.$refs.Somore.getList(row))
       this.moreVisible = true
     },
     // 分页导航
@@ -311,6 +350,17 @@ export default {
         })
         .catch(() => {
           this.editVisible = true
+        })
+    },
+    closePcadd () {
+      this.$confirm('确定要关闭吗？', '提示', {
+        type: 'warning'
+      })
+        .then(() => {
+          this.addVisible = false
+        })
+        .catch(() => {
+          this.addVisible = true
         })
     }
   }

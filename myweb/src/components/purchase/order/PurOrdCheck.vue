@@ -37,9 +37,9 @@
           </template>
         </el-table-column>
         <el-table-column prop="po_iden" sortable label="订单编号" align="center"></el-table-column>
-        <el-table-column prop="po_orga" sortable label="库存组织" :filters="po_orgaSet"
+        <el-table-column prop="orga_name" sortable label="库存组织" :filters="orga_nameSet"
       :filter-method="filter" align="center"></el-table-column>
-        <el-table-column prop="po_supply" sortable label="供应商" :filters="po_supplySet"
+        <el-table-column prop="supply_name" sortable label="供应商" :filters="supply_nameSet"
       :filter-method="filter" align="center"></el-table-column>
         <el-table-column prop="po_date" sortable label="订单日期" align="center"></el-table-column>
         <el-table-column prop="po_sum" sortable label="价税合计" align="center"></el-table-column>
@@ -133,9 +133,9 @@ export default {
       search: '',
       tableData: [],
       tableDataNew: [],
-      po_orgaSet: [],
+      orga_nameSet: [],
       po_contractFromSet: [],
-      po_supplySet: [],
+      supply_nameSet: [],
       po_statusSet: [],
       po_creatorSet: [],
       editVisible: false,
@@ -147,8 +147,8 @@ export default {
       addpcVisible: false,
       addrpform: {
         po_iden: '',
-        po_orga: '',
-        po_supply: '',
+        orga_name: '',
+        supply_name: '',
         po_contractFrom: '',
         po_remarks: '',
         po_date: '',
@@ -156,8 +156,8 @@ export default {
       },
       addpcform: {
         po_iden: '',
-        po_orga: '',
-        po_supply: '',
+        orga_name: '',
+        supply_name: '',
         po_contractFrom: '1',
         po_remarks: '',
         po_date: '',
@@ -190,15 +190,15 @@ export default {
       let data = {
         power: this.power
       }
-      postAPI('/purchase/pcs', data).then(function (res) {
+      postAPI('/purchase/pOs', data).then(function (res) {
         if (!res.data.pos) {
           return
         }
         _this.tableData = res.data.pos
         _this.pageTotal = res.data.pos.length
         _this.find()
-        _this.po_orgaSet = []
-        _this.po_supplySet = []
+        _this.orga_nameSet = []
+        _this.supply_nameSet = []
         _this.po_contractFromSet = []
         _this.po_statusSet = []
         _this.po_creatorSet = []
@@ -208,20 +208,20 @@ export default {
         let supplyset = new Set()
         let creatorset = new Set()
         for (let i in _this.tableData) {
-          orgaset.add(_this.tableData[i]['po_orga'])
-          supplyset.add(_this.tableData[i]['po_supply'])
+          orgaset.add(_this.tableData[i]['orga_name'])
+          supplyset.add(_this.tableData[i]['supply_name'])
           nameset.add(_this.tableData[i]['po_contractFrom'])
           statusset.add(_this.tableData[i]['po_status'])
           creatorset.add(_this.tableData[i]['po_creator'])
         }
         for (let i of orgaset) {
-          _this.po_orgaSet.push({
+          _this.orga_nameSet.push({
             text: i,
             value: i
           })
         }
         for (let i of supplyset) {
-          _this.po_supplySet.push({
+          _this.supply_nameSet.push({
             text: i,
             value: i
           })
@@ -234,7 +234,7 @@ export default {
         }
         for (let i of statusset) {
           _this.po_statusSet.push({
-            text: i,
+            text: _this.status[i].label,
             value: i
           })
         }
@@ -269,9 +269,9 @@ export default {
       this.pageTotal = 0
       this.tableDataNew = this.tableData.filter(data => !this.search ||
         data.po_iden.toLowerCase().includes(this.search.toLowerCase()) ||
-        data.po_orga.toLowerCase().includes(this.search.toLowerCase()) ||
+        data.orga_name.toLowerCase().includes(this.search.toLowerCase()) ||
         data.po_contractFrom.toLowerCase().includes(this.search.toLowerCase()) ||
-        data.po_supply.toLowerCase().includes(this.search.toLowerCase()) ||
+        data.supply_name.toLowerCase().includes(this.search.toLowerCase()) ||
         data.po_creator.toLowerCase().includes(this.search.toLowerCase()))
     },
     // 新增
@@ -323,7 +323,7 @@ export default {
       this.editform = row
       let _this = this
       this.$nextTick(() => _this.$refs.poedit.getForm())
-      this.$nextTick(() => _this.$refs.poedit.getList())
+      this.$nextTick(() => _this.$refs.poedit.getList(row))
       this.editVisible = true
     },
     // 详情操作
@@ -331,6 +331,7 @@ export default {
       this.moreform = row
       let _this = this
       this.$nextTick(() => _this.$refs.pomore.getForm())
+      this.$nextTick(() => _this.$refs.pomore.getList(row))
       this.moreVisible = true
     },
     // 分页导航
@@ -357,10 +358,10 @@ export default {
         type: 'warning'
       })
         .then(() => {
-          this.addVisible = false
+          this.addrpVisible = false
         })
         .catch(() => {
-          this.addVisible = true
+          this.addrpVisible = true
         })
     },
     closepoaddpc () {
@@ -368,10 +369,10 @@ export default {
         type: 'warning'
       })
         .then(() => {
-          this.addVisible = false
+          this.addpcVisible = false
         })
         .catch(() => {
-          this.addVisible = true
+          this.addpcVisible = true
         })
     }
   }

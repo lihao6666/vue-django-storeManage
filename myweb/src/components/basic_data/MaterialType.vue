@@ -194,6 +194,7 @@ export default {
   methods: {
     // 获取级联选择器
     optionsAdd (parent, child, length, end) {
+      console.log(child)
       if (length === end) {
         parent.push({
           value: child[0],
@@ -209,11 +210,11 @@ export default {
           return
         }
       }
-      parent.push({
-        value: child[0],
-        label: child[1],
-        children: []
-      })
+      // parent.push({
+      //   value: child[0],
+      //   label: child[1],
+      //   children: []
+      // })
     },
     // 获取列表
     getlist () {
