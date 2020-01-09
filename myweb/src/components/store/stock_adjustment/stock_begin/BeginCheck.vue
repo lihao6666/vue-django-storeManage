@@ -106,7 +106,7 @@
 
 <script>
 import { postAPI } from '../../../../api/api'
-import Beginadd from './Beginadd'
+import Beginadd from './BeginAdd'
 
 export default {
   name: 'oi_check',

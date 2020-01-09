@@ -110,7 +110,7 @@
 
 <script>
 import { postAPI } from '../../../../api/api'
-import Changeadd from './Changeadd'
+import Changeadd from './ChangeAdd'
 
 export default {
   name: 'st_check',

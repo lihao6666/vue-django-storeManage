@@ -106,7 +106,7 @@
 
 <script>
 import { postAPI } from '../../../../api/api'
-import Confirmadd from './Confirmadd'
+import Confirmadd from './ConfirmAdd'
 export default {
   name: 'sta_check',
   data () {

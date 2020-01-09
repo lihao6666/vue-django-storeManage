@@ -3,17 +3,17 @@
     <div class="crumbs">
       <el-breadcrumb separator="/">
         <el-breadcrumb-item>
-          <i class="el-icon-lx-cascades"></i> 明细
+          <i class="el-icon-lx-cascades"></i> 物料
         </el-breadcrumb-item>
       </el-breadcrumb>
     </div>
     <div class="container">
       <div class="handle-box">
-        <el-select v-model="formadd.str_orga" placeholder="请选择库存组织" :disabled="ifhasorga">
-          <el-option v-for="item in form_trd_orga" v-bind:key="item" :label="item" :value="item"></el-option>
+        <el-select v-model="formadd.str_orga" placeholder="请选择库存组织" :disabled="ifhasorga"  @change="changeOrga">
+          <el-option v-for="item in orga_name" v-bind:key="item" :label="item" :value="item"></el-option>
         </el-select>
-        <el-select v-model="formadd.str_from" placeholder="请选择转出仓库" :disabled="ifhasfrom">
-          <el-option v-for="item in form_trd_from" v-bind:key="item" :label="item" :value="item"></el-option>
+        <el-select v-model="formadd.str_from" placeholder="请选择转出仓库" :disabled="ifhasfrom" @change="changeFrom">
+          <el-option v-for="item in ware_name" v-bind:key="item" :label="item" :value="item"></el-option>
         </el-select>
         <el-input
           placeholder="关键字搜索"
@@ -74,7 +74,7 @@ import {postAPI} from '../../../../api/api'
 
 export default {
   name: 'req_pur_sod',
-  props: ['tableHas', 'formadd', 'ifhasorga', 'ifhasfrom'],
+  props: ['tableHas', 'formadd', 'ifhasorga', 'ifhasfrom', 'orga_name', 'ware_name'],
   data () {
     return {
       query: {
@@ -89,21 +89,8 @@ export default {
       trd_specificationSet: [],
       trd_modelSet: [],
       trd_meterageSet: [],
-      trd_attrSet: [],
       pageTotal: 0,
-      ifshowadd: true,
-      form_trd_orga: [
-        '合肥工业大学',
-        '清华大学'
-      ],
-      form_trd_to: [
-        'A',
-        'B'
-      ],
-      form_trd_from: [
-        'A',
-        'B'
-      ]
+      ifshowadd: true
     }
   },
   created () {
@@ -111,22 +98,41 @@ export default {
   },
   methods: {
     getData () {
+      if (this.formadd.str_from === '') {
+        return
+      }
       let _this = this
-      postAPI('/str_detail_add', this.formadd).then(function (res) {
+      let data = {
+        'orga_name': _this.formadd.orga_name,
+        'from_name': _this.formadd.str_from
+      }
+      postAPI('/str_detail_add', data).then(function (res) {
         _this.tableData = res.data.list
+        for (let i in _this.tableData) {
+          _this.tableData[i].trd_num = 1
+          _this.tableData[i].trd_present_num = res.data.trds_present_num[i]
+          _this.tableData[i].trd_iden = _this.tableData[i].material_iden
+          _this.tableData[i].trd_name = _this.tableData[i].material_name
+          _this.tableData[i].trd_specification = _this.tableData[i].material_specification
+          _this.tableData[i].trd_model = _this.tableData[i].material_model
+          _this.tableData[i].trd_meterage = _this.tableData[i].meterage_name
+        }
+        _this.pageTotal = res.data.list.length
         _this.find()
         let nameset = new Set()
         let specificationset = new Set()
         let modelset = new Set()
         let meterageset = new Set()
-        let attrset = new Set()
         for (let i in _this.tableData) {
           nameset.add(_this.tableData[i]['trd_name'])
           specificationset.add(_this.tableData[i]['trd_specification'])
           modelset.add(_this.tableData[i]['trd_model'])
           meterageset.add(_this.tableData[i]['trd_meterage'])
-          attrset.add(_this.tableData[i]['trd_attr'])
         }
+        _this.trd_nameSet = []
+        _this.trd_specificationSet = []
+        _this.trd_modelSet = []
+        _this.trd_nameSet = []
         for (let i of nameset) {
           _this.trd_nameSet.push({
             text: i,
@@ -151,13 +157,6 @@ export default {
             value: i
           })
         }
-        for (let i of attrset) {
-          _this.trd_attrSet.push({
-            text: i,
-            value: i
-          })
-        }
-        _this.pageTotal = res.data.list.length
       }).catch(function (err) {
         console.log(err)
       })
@@ -178,8 +177,6 @@ export default {
       }
       return false
     },
-    // 获取表单
-    getlist () {},
     // 查询
     find () {
       this.pageTotal = 0
@@ -220,6 +217,13 @@ export default {
       this.$emit('add', this.multipleSelection)
       this.multipleSelection = []
       this.$refs.multipleTable.clearSelection()
+    },
+    // 选择组织
+    changeOrga () {
+      // this.getData()
+    },
+    // 选择转出仓库
+    changeFrom () {
     }
   }
 }
