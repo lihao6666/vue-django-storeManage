@@ -3,7 +3,7 @@
 		<uni-nav-bar :fixed="true" background-color="#20a0ff" :border="false">
 			<view class="input-view">
 				<uni-icons type="search" size="22" color="#666666" />
-				<input v-model="detailFilterText" confirm-type="search" class="input" type="text" placeholder="输入销售订单信息">
+				<input v-model="detailFilterText" confirm-type="search" class="input" type="text" placeholder="输入物料信息">
 				<uni-icons :color="'#999999'" v-if="detailFilterText!==''" type="clear" size="22" @click="clear" />
 			</view>
 		</uni-nav-bar>
@@ -52,8 +52,8 @@ export default {
 		return {
 			//将data文件夹中的数据读入
 			order_iden: '',
-			// detailList: detailData.data,
-			detailList: [],
+			detailList: detailData.data,
+			// detailList: [],
 			detailFilterText: ''
 		}
 	},

@@ -31,16 +31,6 @@
           v-if="ifchange"
           width="55">
         </el-table-column>
-        <el-table-column type="expand">
-          <template slot-scope="props">
-            <el-form label-position="left" inline class="demo-table-expand">
-              <el-form-item label="备注">
-                <el-input type="textarea" v-model="props.row.pay_remarks" rows="3" :disabled="!ifchange"
-                    placeholder="请输入200字以内的描述" maxlength="200" show-word-limit clearable></el-input>
-              </el-form-item>
-            </el-form>
-          </template>
-        </el-table-column>
         <el-table-column prop="pay_batch" sortable label="付款批次" align="center">
           <template slot-scope="scope">
             <el-input
@@ -92,9 +82,14 @@
         <el-table-column prop="pay_prepay" sortable label="是否预付款" align="center">
           <template slot-scope="scope">
             <el-select v-model="scope.row.pay_prepay" placeholder="请选择" class="little" :disabled="!ifchange">
-              <el-option key="1" label="是" value="1"></el-option>
-              <el-option key="0" label="否" value="0"></el-option>
+              <el-option v-for="item in pay_prepays" v-bind:key="item.value" :label="item.label" :value="item.value"></el-option>
             </el-select>
+          </template>
+        </el-table-column>
+        <el-table-column prop="pay_remarks" sortable label="备注" align="center">
+          <template slot-scope="props">
+            <el-input type="textarea" v-model="props.row.pay_remarks" rows="3" :disabled="!ifchange"
+              placeholder="请输入200字以内的描述" maxlength="200" show-word-limit clearable @input="find"></el-input>
           </template>
         </el-table-column>
         <el-table-column label="操作" align="center" v-if="ifchange">
@@ -139,7 +134,17 @@ export default {
       },
       tableData: [],
       multipleSelection: [],
-      pageTotal: 0
+      pageTotal: 0,
+      pay_prepays: [
+        {
+          value: 1,
+          label: '是'
+        },
+        {
+          value: 0,
+          label: '否'
+        }
+      ]
     }
   },
   created () {
@@ -170,9 +175,20 @@ export default {
       }
       return false
     },
+    // 刷新
+    find () {
+      this.$forceUpdate()
+    },
     // 新增
     add () {
-      this.tableData.push({})
+      this.tableData.push({
+        'pay_batch': this.tableData.length + 1,
+        'pay_rate': 0,
+        'pay_price': 0.00,
+        'pay_planDate': '2020-01-01',
+        'pay_prepay': 0,
+        'pay_remarks': ''
+      })
     },
     // 修改
     inputPayPrepay (num) {
@@ -183,12 +199,17 @@ export default {
       if (num.substr(0, 1) === '0' && num.length === 2) {
         num = num.substr(1, num.length)
       }
+      this.find()
       return num
     },
     changePayPrepay (num) {
       if (num === '') {
         num = 1
       }
+      if (num > 10) {
+        num = 10
+      }
+      this.find()
       return num
     },
     inputPayRate (num) {
@@ -199,12 +220,14 @@ export default {
       if (num.substr(0, 1) === '0' && num.length === 2) {
         num = num.substr(1, num.length)
       }
+      this.find()
       return num
     },
     changePayRate (num) {
       if (num === '') {
         num = 1
       }
+      this.find()
       return num
     },
     inputPayPrice (num) {
@@ -287,6 +310,9 @@ export default {
             message: '取消删除'
           })
         })
+    },
+    getTable () {
+      return this.tableData
     }
   }
 }

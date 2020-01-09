@@ -5,7 +5,7 @@
         <el-form-item label="库存组织">
           <el-tag
             :type="'success'"
-          >{{formadd.pc_orga}}
+          >{{formadd.orga_name}}
           </el-tag>
         </el-form-item>
         <el-form-item label="合同名称">
@@ -13,8 +13,8 @@
                     placeholder="请输入合同名称" clearable></el-input>
         </el-form-item>
         <el-form-item label="供应商">
-          <el-select v-model="formadd.supply_iden" placeholder="请选择" :disabled="!ifchange">
-            <el-option v-for="item in form_supply_name" v-bind:key="item.value" :label="item.label" :value="item.value"></el-option>
+          <el-select v-model="formadd.supply_name" placeholder="请选择" :disabled="!ifchange">
+            <el-option v-for="item in form_supply_name" v-bind:key="item.label" :label="item.label" :value="item.label"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="签订日期">
@@ -50,12 +50,12 @@
     <el-row :gutter="20" v-if="ifchange" class="el-row-button">
       <el-col :span="1" :offset="19">
         <el-tooltip content="保存所有数据并提交" placement="bottom" effect="light">
-          <el-button v-if="ifchange" type="primary">提 交</el-button>
+          <el-button v-if="ifchange" type="primary" @click="commit">提 交</el-button>
         </el-tooltip>
       </el-col>
       <el-col :span="1" :offset="1">
         <el-tooltip content="保存所有数据" placement="bottom" effect="light">
-          <el-button v-if="ifchange" type="primary">保 存</el-button>
+          <el-button v-if="ifchange" type="primary" @click="save">保 存</el-button>
         </el-tooltip>
       </el-col>
     </el-row>
@@ -99,7 +99,7 @@ export default {
       },
       formadd: {
         pc_iden: this.editform.pc_iden,
-        pc_orga: this.editform.pc_orga,
+        orga_name: this.editform.orga_name,
         pc_name: this.editform.pc_name,
         supply_name: this.editform.supply_name,
         pc_remarks: this.editform.pc_remarks,
@@ -142,7 +142,7 @@ export default {
     },
     getForm () {
       this.formadd.pc_iden = this.editform.pc_iden
-      this.formadd.pc_orga = this.editform.pc_orga
+      this.formadd.orga_name = this.editform.orga_name
       this.formadd.pc_name = this.editform.pc_name
       this.formadd.supply_name = this.editform.supply_name
       this.formadd.pc_remarks = this.editform.pc_remarks
@@ -150,8 +150,8 @@ export default {
       this.formadd.pc_sum = this.editform.pc_sum
     },
     saveReqPurAdd (callback = null) {
-      if (this.formadd.pc_department === '' || this.formadd.orga_name === '' ||
-        this.formadd.pc_type === '' || this.formadd.pc_date === '') {
+      if (this.formadd.supply_name === '' || this.formadd.orga_name === '' ||
+        this.formadd.pc_name === '' || this.formadd.pc_date === '') {
         this.$message.error(`请填写完主明细信息`)
         if (typeof (callback) === 'function') {
           let back = false
@@ -198,6 +198,105 @@ export default {
       this.$nextTick(function () {
         _this.$refs.Pccd.addShow()
       })
+    },
+    // 保存
+    save (callback = null) {
+      let _this = this
+      _this.saveReqPurAdd(val => {
+        if (val) {
+          let _cds = _this.$refs.Pccd.getTable()
+          let pcnum = 0
+          for (let i in _cds) {
+            pcnum += _cds[i].cd_tax_sum
+          }
+          let data = {
+            cds: _cds,
+            pays: _this.$refs.Pcpay.getTable(),
+            pc_iden: _this.formadd.pc_iden,
+            pc_num: pcnum
+          }
+          console.log(data)
+          postAPI('/purchase/cdDetailSave', data).then(function (res) {
+            console.log(res.data)
+            if (res.data.signal === 0) {
+              _this.$message.success(`保存合同明细成功`)
+              if (typeof (callback) === 'function') {
+                let back = true
+                callback(back)
+              }
+            } else {
+              _this.$message.error(res.data.message)
+              if (typeof (callback) === 'function') {
+                let back = false
+                callback(back)
+              }
+            }
+          }).catch(function (err) {
+            _this.$message.error('保存合同明细失败')
+            console.log(err)
+            if (typeof (callback) === 'function') {
+              let back = false
+              callback(back)
+            }
+          })
+        } else {
+          if (typeof (callback) === 'function') {
+            let back = false
+            callback(back)
+          }
+        }
+      })
+    },
+    // 提交
+    commit () {
+      let _this = this
+      let _cds = _this.$refs.Pccd.getTable()
+      let _pays = _this.$refs.Pcpay.getTable()
+      if (_cds.length === 0) {
+        _this.$message.error('物料明细不能为空')
+        return
+      }
+      if (_pays.length === 0) {
+        _this.$message.error('付款协议不能为空')
+        return
+      }
+      let sum = 0
+      for (let i in _pays) {
+        sum += _pays[i].pay_rate
+      }
+      if (sum !== 100) {
+        _this.$message.error('付款协议付款比例和不为100%')
+        return
+      }
+      this.$confirm('确定要提交吗？', '提示', {
+        type: 'warning'
+      })
+        .then(() => {
+          _this.save(val => {
+            if (val) {
+              _this.formadd.cds = _cds
+              postAPI('/purchase/cdDetailSubmit', _this.formadd).then(function (res) {
+                console.log(res.data)
+                if (res.data.signal === 0) {
+                  _this.$message.success(`提交成功`)
+                  _this.$emit('save')
+                  _this.$emit('commit')
+                } else {
+                  _this.$message.error('提交失败')
+                }
+              }).catch(function (err) {
+                _this.$message.error('提交失败')
+                console.log(err)
+              })
+            }
+          })
+        })
+        .catch(() => {
+          _this.$message({
+            type: 'info',
+            message: '取消提交'
+          })
+        })
     }
   }
 }

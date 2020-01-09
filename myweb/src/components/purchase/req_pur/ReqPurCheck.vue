@@ -32,13 +32,13 @@
               <el-form-item label="备注">
                 <span>{{ props.row.pr_remarks }}</span>
               </el-form-item>
-              <el-form-item v-if="props.row.pr_status==='已关闭'" label="关闭人">
+              <el-form-item v-if="props.row.pr_status===2" label="关闭人">
                 <span>{{ props.row.pr_closer }}</span>
               </el-form-item>
-              <el-form-item v-if="props.row.pr_status==='已关闭'" label="关闭时间">
+              <el-form-item v-if="props.row.pr_status===2" label="关闭时间">
                 <span>{{ props.row.pr_closeDate }}</span>
               </el-form-item>
-              <el-form-item v-if="props.row.pr_status==='已关闭'" label="关闭原因">
+              <el-form-item v-if="props.row.pr_status===2" label="关闭原因">
                 <span>{{ props.row.pr_closeReason}}</span>
               </el-form-item>
             </el-form>
@@ -209,6 +209,7 @@ export default {
           return
         }
         _this.tableData = res.data.prs
+        _this.pageTotal = res.data.prs.length
         _this.find()
         _this.orga_nameSet = []
         _this.pr_typeSet = []
@@ -257,7 +258,6 @@ export default {
             value: i
           })
         }
-        _this.pageTotal = res.data.prs.length
       }).catch(function (err) {
         console.log(err)
       })
