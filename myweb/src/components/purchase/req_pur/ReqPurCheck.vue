@@ -94,7 +94,7 @@
               icon="el-icon-postcard"
               class="green"
               @click="handleMore(scope.$index, scope.row)"
-              v-if="scope.row.pr_status==='1' || scope.row.pr_status===2"
+              v-if="scope.row.pr_status===1 || scope.row.pr_status===2"
             >详情
             </el-button>
             <el-button
@@ -330,7 +330,7 @@ export default {
       this.editform = row
       let _this = this
       this.$nextTick(() => _this.$refs.Reqedit.getForm())
-      this.$nextTick(() => _this.$refs.Reqedit.getList())
+      this.$nextTick(() => _this.$refs.Reqedit.getList(row))
       this.editVisible = true
     },
     // 详情操作
@@ -338,6 +338,7 @@ export default {
       this.moreform = row
       let _this = this
       this.$nextTick(() => _this.$refs.Reqmore.getForm())
+      this.$nextTick(() => _this.$refs.Reqmore.getList(row))
       this.moreVisible = true
     },
     // 关闭操作
@@ -349,7 +350,6 @@ export default {
         this.$confirm('确定要关闭吗？', '提示', {
           type: 'warning'
         }).then(() => {
-          this.$message.success('关闭成功')
           let _this = this
           console.log(value)
           let data = row

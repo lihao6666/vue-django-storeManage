@@ -160,7 +160,7 @@
     </div>
     <!-- 新增弹出框 -->
     <el-dialog title="新增物料" :visible.sync="addVisible" width="90%" append-to-body :close-on-click-modal="false" :destroy-on-close="true">
-      <Cdadd @add="addPrd" :tableHas="tableData" :formadd="formadd" :ifhasorga="ifhasorga" :orga_name="orga_name"></Cdadd>
+      <Cdadd ref="Cdadd" @add="addPrd" :tableHas="tableData" :formadd="formadd" :ifhasorga="ifhasorga" :orga_name="orga_name"></Cdadd>
     </el-dialog>
   </div>
 </template>
@@ -299,7 +299,7 @@ export default {
     // 新增
     add () {
       this.addVisible = true
-      if (this.formadd.pc_orga === '') {
+      if (!this.formadd.pc_orga || this.formadd.pc_orga === '') {
         this.ifhasorga = false
       } else {
         this.ifhasorga = true

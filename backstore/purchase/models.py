@@ -1,4 +1,5 @@
 from django.db import models
+import django.utils.timezone as timezone
 
 
 # Create your models here.
@@ -106,7 +107,7 @@ class PurchaseOrder(models.Model):
                                      on_delete=models.CASCADE)
     supplier = models.ForeignKey('base.Supplier', verbose_name='供应商', related_name='supplier_po',
                                  on_delete=models.CASCADE)
-    po_date = models.DateTimeField(auto_now_add=True, verbose_name='采购订单生效日期')
+    po_date = models.DateTimeField(default=timezone.now(),verbose_name='采购订单生效日期')
     po_sum = models.IntegerField(verbose_name='采购订单总额')
     po_remarks = models.TextField(max_length=400, verbose_name='采购订单备注')
     # purchase_contract = models.ForeignKey('PurchaseContract', verbose_name='采购合同', related_name='pc_po',

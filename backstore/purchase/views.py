@@ -7,7 +7,7 @@ from django.utils import timezone
 from django.shortcuts import render, redirect
 from purchase import models
 from purchaseRequest.models import PurchaseRequest, PrDetail
-from purchaseRequest.Serializer import PurchaseRequestSerializer, PrDetailSerializer
+from purchaseRequest.Serializer import PurchaseRequestSerializer, PrDetailSerializer, PrDetail2Serializer
 from base.models import Organization, Material, Department, UserNow, Supplier
 from base.Serializer import MaterialSerializer
 from storeManage.models import TotalStock
@@ -71,7 +71,7 @@ class PCNewView(APIView):
             pc_iden = json_data['pc_iden']
             orga_name = json_data['orga_name']
         except:
-            return Response({"orga_names":orga_names,"signal":0})
+            return Response({"orga_names": orga_names, "supply_names": supply_names, "signal": 0})
         else:
             cds = models.CdDetail.objects.filter(purchase_contract__pc_iden=pc_iden)
             cds_serializer = CdDSerializer(cds, many=True)
@@ -101,8 +101,8 @@ class PcUpdateView(APIView):
 
         orga_name = json_data['orga_name']
         organization = Organization.objects.get(area_name=self.area_name, orga_name=orga_name)
-        supply_id = json_data['supply_id']
-        supplier = Supplier.objects.get(id=supply_id)
+        supply_name = json_data['supply_name']
+        supplier = Supplier.objects.get(supply_name=supply_name)
         pc_name = json_data['pc_name']
         pc_date = json_data['pc_date']
         pc_sum = json_data['pc_sum']
@@ -280,15 +280,15 @@ class CdDetailNewView(APIView):
             prds = PrDetail.objects.filter(purchase_request__organization__area_name=self.area_name,
                                            purchase_request__pr_status=1,
                                            prd_used=0).all()
-            prds_serializer = PrDetailSerializer(prds, many=True)
-            return {"prds": prds_serializer.data, 'signal': 0}
+            prds_serializer = PrDetail2Serializer(prds, many=True)
+            return Response({"prds": prds_serializer.data, 'signal': 0})
         else:
             prds = PrDetail.objects.filter(purchase_request__organization__orga_name=orga_name,
                                            purchase_request__organization__area_name=self.area_name,
                                            purchase_request__pr_status=1,
                                            prd_used=0).all()
-            prds_serializer = PrDetailSerializer(prds, many=True)
-            return {"prds": prds_serializer.data, 'signal': 0}
+            prds_serializer = PrDetail2Serializer(prds, many=True)
+            return Response({"prds": prds_serializer.data, 'signal': 0})
 
 
 # class CdDetailNewSaveView(APIView):
@@ -389,7 +389,7 @@ class POsView(APIView):
                                                        organization__area_name=self.area_name).all()
             pos = pos1 | pos2
         if pos:
-            pos_serializer = PCSerializer(pos, many=True)
+            pos_serializer = POSerializer(pos, many=True)
             return Response({"pos": pos_serializer.data, "signal": 0})
         else:
             return Response({"message": "未查询到信息"})
@@ -408,23 +408,18 @@ class PONewByPrView(APIView):
         if user_now:
             self.user_now_name = user_now.user_name
             self.area_name = user_now.area_name
-
+        orga_names = Organization.objects.filter(area_name=self.area_name, orga_status=1).values_list('id', 'orga_name')
+        supply_names = Supplier.objects.filter(supply_status=1).values_list('id', 'supply_name')
         try:
             po_iden = json_data['po_iden']
 
         except:
 
-            prds = PrDetail.objects.filter(purchase_request__organization__area_name=self.area_name,
-                                           purchase_request__pr_status=1,
-                                           prd_used=0).all()
-            prds_serializer = PrDetailSerializer(prds, many=True)
-            return {"prds": prds_serializer.data, 'signal': 0}
-
+            return Response({"orga_names": orga_names, "supply_names": supply_names, "signal": 0})
         else:
-            supply_names = Supplier.objects.filter(supply_status=1).values_list('id', 'supply_name')
             ords = models.OrDetail.objects.filter(purchase_order__po_iden=po_iden).all()
             ords_serializer = OrDSerializer(ords, many=True)
-            return {"supply_names": supply_names, "ords": ords_serializer.data, "signal": 1}
+            return Response({"supply_names": supply_names, "ords": ords_serializer.data, "signal": 1})
 
 
 class PrChoiceView(APIView):
@@ -448,15 +443,15 @@ class PrChoiceView(APIView):
             prds = PrDetail.objects.filter(purchase_request__organization__area_name=self.area_name,
                                            purchase_request__pr_status=1,
                                            prd_used=0).all()
-            self.prds_serializer = PrDetailSerializer(prds, many=True)
+            self.prds_serializer = PrDetail2Serializer(prds, many=True)
         else:
             prds = PrDetail.objects.filter(purchase_request__organization__orga_name=orga_name,
                                            purchase_request__organization__area_name=self.area_name,
                                            purchase_request__pr_status=1,
                                            prd_used=0).all()
-            self.prds_serializer = PrDetailSerializer(prds, many=True)
+            self.prds_serializer = PrDetail2Serializer(prds, many=True)
         finally:
-            return {"prds": self.prds_serializer.data, 'signal': 0}
+            return Response({"prds": self.prds_serializer.data, 'signal': 0})
 
 
 class PONewByPcView(APIView):

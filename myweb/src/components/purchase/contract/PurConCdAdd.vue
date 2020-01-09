@@ -9,7 +9,7 @@
     </div>
     <div class="container">
       <div class="handle-box">
-        <el-select v-model="formadd.pc_orga" placeholder="请选择库存组织" :disabled="ifhasorga" @change="getData">
+        <el-select v-model="formadd.orga_name" placeholder="请选择库存组织" :disabled="ifhasorga" @change="getData">
           <el-option v-for="item in orga_name" v-bind:key="item" :label="item" :value="item"></el-option>
         </el-select>
         <el-input
@@ -118,15 +118,17 @@ export default {
   },
   methods: {
     getData () {
-      if (this.formadd.orga_name === '') {
+      console.log(this.formadd.orga_name)
+      if (!this.formadd.orga_name || this.formadd.orga_name === '') {
         return
       }
       let _this = this
-      postAPI('/purchase/cdNew', {'orga_name': _this.formadd.orga_name}).then(function (res) {
-        if (!res.data.pr_prds) {
+      postAPI('/purchase/cdDetailNew', {'orga_name': _this.formadd.orga_name}).then(function (res) {
+        console.log(res.data)
+        if (!res.data.prds) {
           return
         }
-        _this.tableData = []
+        _this.tableData = res.data.prds
         // for (let i in res.data.pr_prds) {
         //   for (let j in res.data.pr_prds[i]) {
         //

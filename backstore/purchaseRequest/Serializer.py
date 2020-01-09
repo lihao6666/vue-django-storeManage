@@ -26,3 +26,23 @@ class PrDetailSerializer(serializers.ModelSerializer):
         model = models.PrDetail
         fields = ('id', 'prd_iden', 'orga_name' 'pr_iden', 'prd_name', 'prd_specification', 'prd_model', 'prd_meterage',
                   'prd_num', 'prd_present_num', 'prd_remarks', 'prd_used')
+
+
+class PrDetail2Serializer(serializers.ModelSerializer):
+    pr_iden = serializers.CharField(source='purchase_request.pr_iden')
+    pr_date = serializers.DateField(source='purchase_request.pr_type')
+    pr_department = serializers.CharField(source='purchase_request.pr_department')
+    pr_creator = serializers.CharField(source='purchase_request.pr_creator')
+    pr_creator_iden = serializers.CharField(source='purchase_request.pr_creator_iden')
+
+    prd_iden = serializers.CharField(source='material.material_iden')
+    prd_name = serializers.CharField(source='material.material_name')
+    prd_specification = serializers.CharField(source='material.material_specification')
+    prd_model = serializers.CharField(source='material.material_model')
+    prd_meterage = serializers.CharField(source='material.meterage_name')
+
+    class Meta:
+        model = models.PrDetail
+        fields = ('id', 'pr_iden', 'pr_date', 'pr_department', 'pr_creator', 'pr_creator_iden',
+                  'prd_iden', 'prd_name', 'prd_specification', 'prd_model', 'prd_meterage',
+                  'prd_num', 'prd_present_num', 'prd_remarks')

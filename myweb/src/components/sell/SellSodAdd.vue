@@ -9,11 +9,11 @@
     </div>
     <div class="container">
       <div class="handle-box">
-        <el-select v-model="formadd.so_orga" placeholder="请选择库存组织" :disabled="ifhasorga">
-          <el-option v-for="item in form_so_orga" v-bind:key="item" :label="item" :value="item"></el-option>
+        <el-select v-model="formadd.orga_name" placeholder="请选择库存组织" :disabled="ifhasorga">
+          <el-option v-for="item in form_orga_name" v-bind:key="item" :label="item" :value="item"></el-option>
         </el-select>
-        <el-select v-model="formadd.so_warehouse" placeholder="请选择发货仓库" :disabled="ifhasorga">
-          <el-option v-for="item in form_so_warehouse" v-bind:key="item" :label="item" :value="item"></el-option>
+        <el-select v-model="formadd.deliver_ware_house" placeholder="请选择发货仓库" :disabled="ifhasorga">
+          <el-option v-for="item in form_deliver_ware_house" v-bind:key="item" :label="item" :value="item"></el-option>
         </el-select>
         <el-input
           placeholder="关键字搜索"
@@ -95,11 +95,11 @@ export default {
       sod_attrSet: [],
       pageTotal: 0,
       ifshowadd: true,
-      form_so_orga: [
+      form_orga_name: [
         '合肥工业大学',
         '清华大学'
       ],
-      form_so_warehouse: [
+      form_deliver_ware_house: [
         'A',
         'B'
       ]
