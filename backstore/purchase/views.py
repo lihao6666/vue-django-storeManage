@@ -71,11 +71,7 @@ class PCNewView(APIView):
             pc_iden = json_data['pc_iden']
             orga_name = json_data['orga_name']
         except:
-            prds = PrDetail.objects.filter(purchase_request__organization__area_name=self.area_name,
-                                           purchase_request__pr_status=1,
-                                           prd_used=0).all()
-            prds_serializer = PrDetailSerializer(prds, many=True)
-            return {"prds": prds_serializer.data, 'signal': 0}
+            return Response({"orga_names":orga_names,"signal":0})
         else:
             cds = models.CdDetail.objects.filter(purchase_contract__pc_iden=pc_iden)
             cds_serializer = CdDSerializer(cds, many=True)

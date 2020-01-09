@@ -259,9 +259,18 @@ class PrdSubmitView(APIView):
 
 
 class PrdNewView(APIView):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.user_now_name = ""
+        self.area_name = ""
 
     def post(self, request):
         json_data = json.loads(self.request.body.decode("utf-8"))
+        user_now_iden = json_data['user_now_iden']
+        user_now = UserNow.objects.get(user_iden=user_now_iden)
+        if user_now:
+            self.user_now_name = user_now.user_name
+            self.area_name = user_now.area_name
         orga_name = json_data['orga_name']
         materials = Material.objects.filter(material_status=1).all()
 
@@ -269,9 +278,8 @@ class PrdNewView(APIView):
             materials_serializer = MaterialSerializer(materials, many=True)
             prds_present_num = []
             for material in materials:
-                # print(material)
-                # try:
                 prd_present_num = TotalStock.objects.filter(totalwarehouse__organization__orga_name=orga_name,
+                                                            totalwarehouse__organization__area_name=self.area_name,
                                                             material=material).aggregate(
                     prd_present_num=Sum('ts_present_num'))['prd_present_num']
                 if prd_present_num:
@@ -279,7 +287,6 @@ class PrdNewView(APIView):
                 else:
                     prd_present_num = 0
                 prds_present_num.append(prd_present_num)
-            # 现存量单独统计，单独发送字段
 
             return Response({"materials": materials_serializer.data, "prds_present_num": prds_present_num, "signal": 0})
         else:
@@ -362,20 +369,26 @@ class PrDeleteView(APIView):
 class PrCloseView(APIView):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.message = "关闭请购单成功"
+        self.message = "更新成功"
         self.signal = 0
+        self.user_now_name = ""
+        self.area_name = ""
+        self.pr_new_iden = ""
 
     def post(self, request):
-        """
-        需要数据为请购单编号、关闭人、关闭原因
-        """
         json_data = json.loads(self.request.body.decode("utf-8"))
+        user_now_iden = json_data['user_now_iden']
+        user_now = UserNow.objects.get(user_iden=user_now_iden)
+        if user_now:
+            self.user_now_name = user_now.user_name
+            self.area_name = user_now.area_name
+
         pr_iden = json_data['pr_iden']
-        pr_closer = json_data['pr_closer']
         pr_closerReason = json_data['pr_closerReason']
 
         try:
-            if models.PurchaseRequest.objects.filter(pr_iden=pr_iden).update(pr_status=2, pr_closer=pr_closer,
+            if models.PurchaseRequest.objects.filter(pr_iden=pr_iden).update(pr_status=2, pr_closer=self.user_now_name,
+                                                                             pr_closer_iden = user_now_iden,
                                                                              pr_closerReason=pr_closerReason):
                 pass
             else:
