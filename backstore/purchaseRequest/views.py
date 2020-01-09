@@ -11,6 +11,7 @@ from base.Serializer import MaterialSerializer
 from storeManage.models import TotalStock
 import json
 from django.db.models import Q, Sum
+import traceback
 
 """
 请购单模块接口
@@ -84,15 +85,19 @@ class PrNewView(APIView):
         except:
             return Response({"orga_names": orga_names, "dpms": dpms, "signal": 0})
         else:
-            prds = models.PrDetail.objects.filter(request_order__so_iden=pr_iden)
+            prds = models.PrDetail.objects.filter(purchase_request__pr_iden=pr_iden)
             prds_serializers = PrDetailSerializer(prds, many=True)
             prds_present_num = []
             for prd in prds:
                 material = prd.material
-                prd_present_num = TotalStock.objects.filter(material=material,
+                prd_present_num = TotalStock.objects.filter(totalwarehouse__organization__orga_name=orga_name,
                                                             totalwarehouse__organization__area_name=self.area_name,
-                                                            totalwarehouse__organization__orga_name=orga_name) \
-                    .aggregate(prd_present_num=Sum('ts_present_num'))
+                                                            material=material).aggregate(
+                    prd_present_num=Sum('ts_present_num'))['prd_present_num']
+                if prd_present_num:
+                    pass
+                else:
+                    prd_present_num = 0
                 prds_present_num.append(prd_present_num)
 
             return Response({"orga_names": orga_names, 'dpms': dpms, "prds": prds_serializers.data,
@@ -210,18 +215,22 @@ class PrdSaveView(APIView):
         """
         json_data = json.loads(self.request.body.decode("utf-8"))
         pr_iden = json_data['pr_iden']
+
         prds = json_data['prds']
         models.PrDetail.objects.filter(purchase_request__pr_iden=pr_iden).delete()
         pr = models.PurchaseRequest.objects.get(pr_iden=pr_iden)
-
         for prd in prds:
             prd_iden = prd['prd_iden']  # 物料编码
             # id = prd['prd_id']  # 物料id
             prd_num = prd['prd_num']  # 请购数量
             prd_present_num = prd['prd_present_num']  # 实际库存数量
             prd_remarks = prd['prd_remarks']
+            material = Material.objects.get(material_iden=prd_iden)
             try:
-                if models.PrDetail.objects.create(purchase_request=pr, prd_num=prd_num, prd_present_num=prd_present_num,
+                if models.PrDetail.objects.create(purchase_request=pr, prd_num=prd_num,
+                                                  material=material,
+                                                  prd_used=0,
+                                                  prd_present_num=prd_present_num,
                                                   prd_remarks=prd_remarks):
                     pass
                 else:
@@ -253,6 +262,7 @@ class PrdSubmitView(APIView):
                 self.message = "请购单提交保存失败"
                 self.signal = 1
         except:
+            traceback.print_exc()
             self.message = "请购单提交保存失败"
             self.signal = 1
         return Response({'message': self.message, 'signal': self.signal})
@@ -361,6 +371,7 @@ class PrDeleteView(APIView):
                 self.message = "删除请购单失败"
                 self.signal = 1
         except:
+            traceback.print_exc()
             self.message = "删除请购单失败"
             self.signal = 1
         return Response({'message': self.message, 'signal': self.signal})
@@ -388,13 +399,14 @@ class PrCloseView(APIView):
 
         try:
             if models.PurchaseRequest.objects.filter(pr_iden=pr_iden).update(pr_status=2, pr_closer=self.user_now_name,
-                                                                             pr_closer_iden = user_now_iden,
-                                                                             pr_closerReason=pr_closerReason):
+                                                                             pr_closer_iden=user_now_iden,
+                                                                             pr_closeReason=pr_closerReason):
                 pass
             else:
                 self.message = "关闭请购单失败"
                 self.signal = 1
         except:
+            traceback.print_exc()
             self.message = "关闭请购单失败"
             self.signal = 1
         return Response({'message': self.message, 'signal': self.signal})

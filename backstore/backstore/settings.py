@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'purchase',
     # 'orderManage',
     'storeManage',
+    'storeIn',
 ]
 
 MIDDLEWARE = [
