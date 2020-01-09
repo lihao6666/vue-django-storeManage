@@ -76,7 +76,7 @@
               placeholder="13"
               :disabled="!ifchange"
               v-model="scope.row.cd_taxRate"
-              @input="scope.row.cd_taxRate = inputcdTaxRate(scope.row.cd_taxRate)"
+              @input="scope.row.cd_taxRate = inputcdTaxRate(scope.row.cd_taxRate,scope.$index)"
               @change="scope.row.cd_taxRate = changecdTaxRate(scope.row.cd_taxRate)">
             </el-input>
           </template>
@@ -100,7 +100,7 @@
             </el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="cd_tax_unitPrice*cd_num*" sortable label="含税金额" align="center">
+        <el-table-column prop="cd_tax_unitPrice*cd_num" sortable label="含税金额" align="center">
           <template slot-scope="scope">
             <el-tag
               :type="'success'"
@@ -124,7 +124,7 @@
             </el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="cd_rp_iden" sortable label="请购单号" :filters="cd_rpidenset"
+        <el-table-column prop="cd_pr_iden" sortable label="请购单号" :filters="cd_rpidenset"
       :filter-method="filter" align="center"></el-table-column>
         <el-table-column prop="cd_prd_remarks" sortable label="备注" align="center">
           <template slot-scope="props">
@@ -199,7 +199,7 @@ export default {
   created () {
     this.getData()
     // this.$nextTick(function () {
-    //   if (!this.formadd.pc_orga) {
+    //   if (!this.formadd.orga_name) {
     //     this.addVisible = true
     //   }
     // })
@@ -218,7 +218,7 @@ export default {
       _this.cd_specificationSet = []
       _this.cd_modelSet = []
       _this.cd_meterageSet = []
-      _this.cd_rp_idenset = []
+      _this.cd_pr_idenset = []
       let nameset = new Set()
       let specificationset = new Set()
       let modelset = new Set()
@@ -230,7 +230,7 @@ export default {
         specificationset.add(_this.tableData[i]['cd_specification'])
         modelset.add(_this.tableData[i]['cd_model'])
         meterageset.add(_this.tableData[i]['cd_meterage'])
-        rpidenset.add(_this.tableData[i]['cd_rp_iden'])
+        rpidenset.add(_this.tableData[i]['cd_pr_iden'])
         idenset.add(_this.tableData[i]['cd_iden'])
       }
       for (let i of nameset) {
@@ -252,7 +252,7 @@ export default {
         })
       }
       for (let i of rpidenset) {
-        _this.cd_rp_idenset.push({
+        _this.cd_pr_idenset.push({
           text: i,
           value: i
         })
@@ -299,7 +299,7 @@ export default {
     // 新增
     add () {
       this.addVisible = true
-      if (!this.formadd.pc_orga || this.formadd.pc_orga === '') {
+      if (!this.formadd.orga_name || this.formadd.orga_name === '') {
         this.ifhasorga = false
       } else {
         this.ifhasorga = true
@@ -310,9 +310,16 @@ export default {
     // 新增物料
     addPrd (val) {
       for (let i in val) {
-        val[i].cd_num = '1'
+        val[i].cd_num = val[i].prd_num
         val[i].cd_taxRate = '13'
         val[i].cd_tax_unitPrice = '0.00'
+        val[i].cd_iden = val[i].prd_iden
+        val[i].cd_name = val[i].prd_name
+        val[i].cd_specification = val[i].prd_specification
+        val[i].cd_model = val[i].prd_model
+        val[i].cd_meterage = val[i].prd_meterage
+        val[i].cd_pr_iden = val[i].pr_iden
+        val[i].cd_pcd_prd_remarksr_iden = val[i].prd_remarks
       }
       this.tableData = this.tableData.concat(val)
       this.find()
@@ -339,11 +346,9 @@ export default {
       this.find()
       return num
     },
-    inputcdTaxRate (num) {
+    inputcdTaxRate (num, index) {
+      console.log(index)
       num = num.replace(/[^\d]/g, '')
-      if (num > 16) {
-        num = 16
-      }
       if (num.substr(0, 1) === '0' && num.length === 2) {
         num = num.substr(1, num.length)
       }
@@ -353,6 +358,9 @@ export default {
     changecdTaxRate (num) {
       if (num === '') {
         num = 13
+      }
+      if (num > 16) {
+        num = 16
       }
       this.find()
       return num
@@ -516,6 +524,15 @@ export default {
     // 新增窗口弹出
     addShow () {
       this.addVisible = true
+    },
+    getTable () {
+      for (let i in this.tableData) {
+        this.tableData[i].cd_unitPrice = this.tableData[i].cd_tax_unitPrice / (1 + this.tableData[i].cd_taxRate / 100)
+        this.tableData[i].cd_tax_sum = this.tableData[i].cd_tax_unitPrice * this.tableData[i].cd_num
+        this.tableData[i].cd_sum = this.tableData[i].cd_tax_unitPrice * this.tableData[i].cd_num / (1 + this.tableData[i].cd_taxRate / 100)
+        this.tableData[i].cd_tax_price = this.tableData[i].cd_tax_unitPrice * this.tableData[i].cd_num * this.tableData[i].cd_taxRate / 100 / (1 + this.tableData[i].cd_taxRate / 100)
+      }
+      return this.tableData
     }
   }
 }

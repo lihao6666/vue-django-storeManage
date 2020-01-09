@@ -61,10 +61,10 @@
         <el-table-column prop="prd_present_num" sortable label="现存量" align="center"></el-table-column>
         <el-table-column prop="pr_iden" sortable label="请购单号" :filters="pr_idenSet"
       :filter-method="filter" align="center"></el-table-column>
-        <el-table-column prop="cd_rp_date" sortable label="请购日期" align="center"></el-table-column>
-        <el-table-column prop="cd_rp_from" sortable label="申请部门" :filters="cd_rp_fromSet"
+        <el-table-column prop="pr_date" sortable label="请购日期" align="center"></el-table-column>
+        <el-table-column prop="pr_department" sortable label="申请部门" :filters="pr_departmentSet"
       :filter-method="filter" align="center"></el-table-column>
-        <el-table-column prop="cd_rp_creator" sortable label="申请人" :filters="cd_rp_creatorSet"
+        <el-table-column prop="pr_creator" sortable label="申请人" :filters="pr_creatorSet"
       :filter-method="filter" align="center"></el-table-column>
       </el-table>
       <!-- 分页 -->
@@ -107,8 +107,8 @@ export default {
       prd_meterageSet: [],
       cd_attrSet: [],
       pr_idenSet: [],
-      cd_rp_fromSet: [],
-      cd_rp_creatorSet: [],
+      pr_departmentSet: [],
+      pr_creatorSet: [],
       pageTotal: 0,
       ifshowadd: true
     }
@@ -129,12 +129,6 @@ export default {
           return
         }
         _this.tableData = res.data.prds
-        // for (let i in res.data.pr_prds) {
-        //   for (let j in res.data.pr_prds[i]) {
-        //
-        //   }
-        //   _this.tableData.push(res.data.pr_prds[i])
-        // }
         _this.pageTotal = _this.tableData.length
         _this.find()
         _this.prd_idenSet = []
@@ -144,8 +138,8 @@ export default {
         _this.prd_meterageSet = []
         _this.cd_attrSet = []
         _this.pr_idenSet = []
-        _this.cd_rp_fromSet = []
-        _this.cd_rp_creatorSet = []
+        _this.pr_departmentSet = []
+        _this.pr_creatorSet = []
         let nameset = new Set()
         let specificationset = new Set()
         let modelset = new Set()
@@ -162,8 +156,8 @@ export default {
           meterageset.add(_this.tableData[i]['prd_meterage'])
           attrset.add(_this.tableData[i]['cd_attr'])
           rpidenset.add(_this.tableData[i]['pr_iden'])
-          rpfromset.add(_this.tableData[i]['cd_rp_from'])
-          rpcreatorset.add(_this.tableData[i]['cd_rp_creator'])
+          rpfromset.add(_this.tableData[i]['pr_department'])
+          rpcreatorset.add(_this.tableData[i]['pr_creator'])
           idenset.add(_this.tableData[i]['prd_iden'])
         }
         for (let i of nameset) {
@@ -209,13 +203,13 @@ export default {
           })
         }
         for (let i of rpfromset) {
-          _this.cd_rp_fromSet.push({
+          _this.pr_departmentSet.push({
             text: i,
             value: i
           })
         }
         for (let i of rpcreatorset) {
-          _this.cd_rp_creatorSet.push({
+          _this.pr_creatorSet.push({
             text: i,
             value: i
           })
@@ -250,8 +244,8 @@ export default {
         String(data.prd_specification).toLowerCase().includes(this.search.toLowerCase()) ||
         String(data.prd_model).toLowerCase().includes(this.search.toLowerCase()) ||
         String(data.pr_iden).toLowerCase().includes(this.search.toLowerCase()) ||
-        String(data.cd_rp_from).toLowerCase().includes(this.search.toLowerCase()) ||
-        String(data.cd_rp_creator).toLowerCase().includes(this.search.toLowerCase()) ||
+        String(data.pr_department).toLowerCase().includes(this.search.toLowerCase()) ||
+        String(data.pr_creator).toLowerCase().includes(this.search.toLowerCase()) ||
         String(data.prd_meterage).toLowerCase().includes(this.search.toLowerCase())))
     },
     // 分页导航
@@ -272,7 +266,7 @@ export default {
     // 可选项
     selectable (row, index) {
       for (let i in this.tableHas) {
-        if (this.tableHas[i].prd_iden === row.prd_iden && this.tableHas[i].pr_iden === row.pr_iden) {
+        if (this.tableHas[i].cd_iden === row.prd_iden && this.tableHas[i].cd_pr_iden === row.pr_iden) {
           return false
         }
       }

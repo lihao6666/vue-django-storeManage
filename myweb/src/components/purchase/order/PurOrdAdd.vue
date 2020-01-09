@@ -9,7 +9,7 @@
           </el-tag>
         </el-form-item>
         <el-form-item label="供应商">
-          <el-select v-if="!formadd.po_contractFrom" v-model="formadd.po_supply" placeholder="请选择" :disabled="!ifchange">
+          <el-select v-if="!formadd.pc_iden" v-model="formadd.po_supply" placeholder="请选择" :disabled="!ifchange">
             <el-option v-for="item in form_po_supply" v-bind:key="item" :label="item" :value="item"></el-option>
           </el-select>
           <el-tag v-else :type="'success'">{{formadd.po_supply}}</el-tag>
@@ -34,7 +34,7 @@
         <el-form-item label="来源合同">
           <el-tag
             :type="'success'"
-          >{{formadd.po_contractFrom}}
+          >{{formadd.pc_iden}}
           </el-tag>
         </el-form-item>
         <el-row>
@@ -88,7 +88,7 @@ export default {
       formadd: {
         po_iden: this.editform.po_iden,
         po_orga: this.editform.po_orga,
-        po_contractFrom: this.editform.po_contractFrom,
+        pc_iden: this.editform.pc_iden,
         po_supply: this.editform.po_supply,
         po_remarks: this.editform.po_remarks,
         po_date: this.editform.po_date,
@@ -103,7 +103,7 @@ export default {
     getList (row = {}) {
       let _this = this
 
-      postAPI('/purchase/poNew', row).then(function (res) {
+      postAPI('/purchase/pONewByPr', row).then(function (res) {
         console.log(res.data)
         _this.form_po_supply = []
         for (let i in res.data.supply_names) {
@@ -127,7 +127,7 @@ export default {
     getForm () {
       this.formadd.po_iden = this.editform.po_iden
       this.formadd.po_orga = this.editform.po_orga
-      this.formadd.po_contractFrom = this.editform.po_contractFrom
+      this.formadd.pc_iden = this.editform.pc_iden
       this.formadd.po_supply = this.editform.po_supply
       this.formadd.po_remarks = this.editform.po_remarks
       this.formadd.po_date = this.editform.po_date
