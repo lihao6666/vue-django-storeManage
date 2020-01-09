@@ -114,6 +114,8 @@
 			wPicker,
 			lbPicker,
 			uniCard
+			
+			
 		},
 		computed:{
 			materialsDisplay (){
