@@ -1,7 +1,14 @@
 <template>
 	<view class="content">
+		<uni-nav-bar :fixed="true" background-color="#20a0ff" :border="false">
+			<view class="input-view">
+				<uni-icons type="search" size="22" color="#666666" />
+				<input v-model="detailFilterText" confirm-type="search" class="input" type="text" placeholder="输入物料信息">
+				<uni-icons :color="'#999999'" v-if="detailFilterText!==''" type="clear" size="22" @click="clear" />
+			</view>
+		</uni-nav-bar>
 		<view class="content-content">
-			<view v-for="item in detailList" :key="item.id" class="card-set">
+			<view v-for="(item,index) in detailFilterList" :key="index" class="card-set">
 				<uni-card
 					:title="item.trd_name"
 					mode="basic" 
@@ -25,25 +32,61 @@
 <script>
 import uniCard from '../../components/uni-card/uni-card.vue'
 import detailData from '../../data/exchangeDetails.js'
+import uniNavBar from '@/components/uni-nav-bar/uni-nav-bar.vue'
+import uniIcons from '@/components/uni-icons/uni-icons.vue'
 
 
 export default {
 	components: {
-		uniCard
+		uniCard,
+		uniNavBar,
+		uniIcons
 	},
 	data() {
 		return {
 			//将data文件夹中的数据读入
 			order_iden: '',
-			detailList: detailData.data
+			detailList: detailData.data,
+			// detailList: [],
+			detailFilterText: ''
+		}
+	},
+	computed: {
+		detailFilterList () {
+			let arr = []
+			this.detailList.forEach((item) => arr.push(item))
+			if (this.detailFilterText) {
+				arr = this.detailList.filter(item => item.trd_name.includes(this.detailFilterText)||
+					item.trd_iden.includes(this.detailFilterText)||
+					item.trd_remarks.includes(this.detailFilterText)||
+					item.trd_specification.includes(this.detailFilterText)||
+					item.trd_model.includes(this.detailFilterText)
+				)
+			}
+			return arr
 		}
 	},
 	methods: {
-		
+		clear() {
+			this.detailFilterText = ''
+		},
 	},
 	onLoad: function() {
-		var myinfo = uni.getStorageSync('viewexchange');
-		this.order_iden = myinfo;
+		// let _this = this
+		// let myinfo = uni.getStorageSync('user_info')
+		// let tr_info = uni.getStorageSync('order_info')
+		// uni.removeStorageSync('order_info')
+		// let msg = {}
+		// msg.tr_iden = tr_info.iden
+	 //    msg.orga_name = tr_info.orga
+		// msg.user_now_iden = myinfo.data.user.username
+		// this.$http.post('/exchange/trNew', msg).then(([err,res]) => {
+		// 	if (res.data.signal === 1) {
+		// 		_this.detailList = res.data.trds
+		//     } else {
+				
+		//     }
+		// })
 	}
 }
 </script>
@@ -69,5 +112,25 @@ export default {
 		justify-content: center;
 		align-items: center;
 		text-align: left;
+	}
+	.input-view {
+		align-items: center;
+		justify-content: center;
+		width: 100%;
+		display: flex;
+		background-color: #e7e7e7;
+		height: 30px;
+		border-radius: 15px;
+		padding: 0 4%;
+		flex-wrap: nowrap;
+		margin: 7px 10rpx;
+		line-height: 30px;
+		background: #f5f5f5;
+	}
+	.input-view .input {
+		height: 30px;
+		line-height: 30px;
+		width: 94%;
+		padding: 0 3%;
 	}
 </style>
