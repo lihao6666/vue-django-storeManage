@@ -72,13 +72,14 @@ class SellOrderNewView(APIView):
             self.user_now_name = user_now.user_name
             self.area_name = user_now.area_name
         organizations = Organization.objects.filter(area_name=self.area_name).values_list("id", "orga_name")
-        customers = Customer.objects.values_list("id", "customer_name")
-        deliver_ware_houses = TotalWareHouse.objects.filter(organization__area_name=self.area_name). \
+        customers = Customer.objects.filter(customer_status=1)values_list("id", "customer_name")
+        deliver_ware_houses = TotalWareHouse.objects.filter(organization__area_name=self.area_name,total_status=1). \
             values_list("id", "total_name", "organization__orga_name")
 
         try:
             so_iden = json_data['so_iden']
             orga_name = json_data['orga_name']
+            deliver_ware_house = json_data['deliver_ware_house']
         except:
             return Response(
                 {"organizations": organizations, "customers": customers, "deliver_ware_houses": deliver_ware_houses,
@@ -88,16 +89,19 @@ class SellOrderNewView(APIView):
             sods_serializers = SoDetailSerializer(sods, many=True)
             sods_present_num = []
             for sod in sods:
-                material = sod.material             `
-                sod_present_num = TotalStock.objects.filter(material=material,
-                                                            totalwarehouse__organization__area_name=self.area_name,
-                                                            totalwarehouse__organization__orga_name=orga_name) \
-                    .aggregate(sod_present_num=Sum('ts_present_num'))
+                material = sod.material
+                try:
+                    sod_present_num = TotalStock.objects.get(totalwarehouse__organization__orga_name=orga_name,
+                                                             totalwarehouse__organization__area_name=self.area_name,
+                                                             totalwarehouse__total_name=deliver_ware_house,
+                                                             material=material).ts_present_num
+                except:
+                    sod_present_num = 0
                 sods_present_num.append(sod_present_num)
 
             return Response(
                 {"organizations": organizations, "customers": customers, "deliver_ware_houses": deliver_ware_houses,
-                 "sods": sods_serializers.data, "signal": 1})
+                 "sods": sods_serializers.data, "sods_present_num": sods_present_num, "signal": 1})
 
 
 class SellOrderUpdateView(APIView):
@@ -251,21 +255,33 @@ class SoDetailSubmitView(APIView):
 
 
 class SoDetailNewView(APIView):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.user_now_name = ""
+        self.area_name = ""
 
     def post(self, request):
-
         json_data = json.loads(self.request.body.decode("utf-8"))
+        user_now_iden = json_data['user_now_iden']
+        user_now = UserNow.objects.get(user_iden=user_now_iden)
+        if user_now:
+            self.user_now_name = user_now.user_name
+            self.area_name = user_now.area_name
 
         orga_name = json_data['orga_name']
+        deliver_ware_house = json_data['deliver_ware_house']
 
-        materials = Material.objects.filter(material_status=1).all()
-        if materials:
-            materials_serializer = MaterialSerializer(materials, many=True)
-            # 现存量单独统计，单独发送字段
+        total_ware_house = TotalWareHouse.objects.filter(organization__orga_name=orga_name,
+                                                         organization__area_name=self.area_name,
+                                                         total_name=deliver_ware_house)
 
-            return Response({"materials": materials_serializer.data, "prd_present_num": ""})
+        total_stocks = total_ware_house.total_ware_house_ts.all()
+        if total_stocks:
+
+            total_stocks_serializer = TotalStockSerializer(total_stocks, many=True)
+            return Response({"materials": total_stocks_serializer.data})
         else:
-            return Response({"message": "空空如也你不服？"})
+            return Response({"message": "仓库空空如也"})
 
 
 # class SoDetailNewSaveView(APIView):
