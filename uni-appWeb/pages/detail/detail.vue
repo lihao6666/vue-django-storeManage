@@ -1,7 +1,5 @@
 <template>
-	<view class="content">
-<!-- 		<view v-for="item in detailList" :key="item.id" class="card-set"> -->
-		
+	<view class="content">	
 		<view class="material">
 			<text class="material-title">物料编号</text>
 			<text class="material-input">
@@ -79,7 +77,6 @@
 </template>
 
 <script>
-	// import detailData from '../../data/English.js'
 	var _this;
 export default {
 	data() {
