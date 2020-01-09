@@ -28,7 +28,7 @@
 </template>
 
 <script>
-import Changedetail from './Changedetail'
+import Changedetail from './ChangeDetail'
 export default {
   props: ['editform', 'ifchange', 'ifdirect'],
   components: {
