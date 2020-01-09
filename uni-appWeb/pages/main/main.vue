@@ -237,7 +237,7 @@ export default {
 	computed: {
 		// 单据列表
 		outFilterList () {
-			var arr = []
+			let arr = []
 			this.outList.forEach((item) => arr.push(item))
 			if (this.outFilterText) {
 				arr = this.outList.filter(item => item.mso_orga.includes(this.outFilterText)||
@@ -251,7 +251,7 @@ export default {
 			return arr
 		},
 		purchaseFilterList () {
-			var arr = []
+			let arr = []
 			this.purchaseList.forEach((item) => arr.push(item))
 			if (this.purchaseFilterText) {
 				arr = this.purchaseList.filter(item => item.rp_orga.includes(this.purchaseFilterText)||
@@ -265,7 +265,7 @@ export default {
 			return arr
 		},
 		sellFilterList () {
-			var arr = []
+			let arr = []
 			this.sellList.forEach((item) => arr.push(item))
 			if (this.sellFilterText) {
 				arr = this.sellList.filter(item => item.so_orga.includes(this.sellFilterText)||
@@ -280,7 +280,7 @@ export default {
 			return arr
 		},
 		exchangeFilterList () {
-			var arr = []
+			let arr = []
 			this.exchangeList.forEach((item) => arr.push(item))
 			if (this.exchangeFilterText) {
 				arr = this.exchangeList.filter(item => item.str_orga.includes(this.exchangeFilterText)||
@@ -302,7 +302,7 @@ export default {
 			}
 			
 			if(e.currentIndex === 0){
-				// var mes = this.judgeMes(0)
+				// let mes = this.judgeMes(0)
 				// this.$http.post('/outRequest/oss', mes).then(([err,res]) => {
 				// 	if (res.data.signal === '0') {
 				// 		_this.outList = res.data.prs
@@ -315,7 +315,7 @@ export default {
 				//     }
 				// })
 			} else if(e.currentIndex === 1){
-				var mes = this.judgeMes(1)
+				let mes = this.judgeMes(1)
 				this.$http.post('/purchaseRequest/prs', mes).then(([err,res]) => {
 					if (res.data.signal === '0') {
 						_this.purchaseList = res.data.prs
@@ -328,7 +328,7 @@ export default {
 				    }
 				})
 			} else if(e.currentIndex === 2){
-				var mes = this.judgeMes(2)
+				let mes = this.judgeMes(2)
 				this.$http.post('/sell/sellOrders', mes).then(([err,res]) => {
 					if (res.data.signal === '0') {
 						_this.sellList = res.data.sos
@@ -341,7 +341,7 @@ export default {
 				    }
 				})
 			} else if(e.currentIndex === 3){
-				// var mes = this.judgeMes(3)
+				// let mes = this.judgeMes(3)
 				// this.$http.post('/exchangeRequest/eos', mes).then(([err,res]) => {
 				// 	if (res.data.signal === '0') {
 				// 		_this.exchangeList = res.data.prs
@@ -357,9 +357,9 @@ export default {
 		},
 		//单据显示信息判断(根据权限)
 		judgeMes(orderIndex) {
-			var myinfo = uni.getStorageSync('user_info')
-			var power = uni.getStorageSync('power')
-			var mes = {}
+			let myinfo = uni.getStorageSync('user_info')
+			let power = uni.getStorageSync('power')
+			let mes = {}
 			mes.area_name = myinfo.data.user.area_name			mes.user_now_iden = myinfo.data.user.username
 			mes.power = power[orderIndex]
 			
@@ -379,7 +379,7 @@ export default {
 		},
 		//查看订单详情
 		viewDetail(iden) {
-			var diff = iden[0]+iden[1]
+			let diff = iden[0]+iden[1]
 			if(diff === "MS") {
 				try {
 				    uni.setStorageSync('viewout', iden);
@@ -440,15 +440,15 @@ export default {
 		},
 		//删除单据
 		deleteOrder(iden) {
-			var diff = iden[0]+iden[1]
-			var _this = this
+			let diff = iden[0]+iden[1]
+			let _this = this
 			if(diff === "MS") {
 				uni.showModal({
 				    title: '提示',
 				    content: '确认删除草稿：'+iden+" ?",
 				    success: function (Res) {
 				    //     if (Res.confirm) {
-				    //     	var mso_iden = iden
+				    //     	let mso_iden = iden
 				    //     	_this.$http.post('/outRequest/soDelete', {mso_iden}).then(([err,res]) => {
 								// if(res.data.signal === 0){
 								// 	_this.outList = _this.outList.filter(item => !(item.mso_iden.includes(mso_iden)))
@@ -470,7 +470,7 @@ export default {
 				    content: '确认删除草稿：'+iden+" ?",
 				    success: function (Res) {
 				        if (Res.confirm) {
-							var pr_iden = iden
+							let pr_iden = iden
 							_this.$http.post('/purchaseRequest/prDelete', {pr_iden}).then(([err,res]) => {
 								//删除列表中该单据信息
 								if(res.data.signal === 0) {
@@ -493,7 +493,7 @@ export default {
 				    content: '确认删除草稿：'+iden+" ?",
 				    success: function (Res) {
 				        if (Res.confirm) {
-							var so_iden = iden
+							let so_iden = iden
 							_this.$http.post('/sell/sellOrderDelete', {so_iden}).then(([err,res]) => {
 								if(res.data.signal === 0) {
 									_this.sellList = _this.sellList.filter(item => !(item.so_iden.includes(so_iden)))
@@ -515,7 +515,7 @@ export default {
 				    content: '确认删除草稿：'+iden+" ?",
 				    success: function (Res) {
 				        if (Res.confirm) {
-				    //     	var str_iden = iden
+				    //     	let str_iden = iden
 				    //     	_this.$http.post('/exchangeRequest/strDelete', {str_iden}).then(([err,res]) => {
 				    //     		if(res.data.signal === 0) {
 								// 	_this.exchangeList = _this.exchangeList.filter(item => !(item.str_iden.includes(str_iden)))
@@ -535,19 +535,19 @@ export default {
 		},
 		//提交草稿
 		commitOrder(iden) {
-			var diff = iden[0]+iden[1]
-			var _this = this
+			let diff = iden[0]+iden[1]
+			let _this = this
 			if(diff === "MS") {
 				uni.showModal({
 				    title: '提示',
 				    content: '确认提交草稿：'+iden+" ?",
 				    success: function (Res) {
 				        if (Res.confirm) {
-				        	// var mso_iden = iden
+				        	// let mso_iden = iden
 				        	// _this.$http.post('/outRequest/sodSubmit', {mso_iden}).then(([err,res]) => {
 				        	// 	//修改列表中该单据信息
 				        	// 	if(res.data.signal === 0) {
-				        	// 		for(var i=0; i<_this.outList.length; i++) {
+				        	// 		for(let i=0; i<_this.outList.length; i++) {
 				        	// 			if(_this.outList[i].mso_iden === iden){
 				        	// 				_this.outList[i].mso_status = '已审批'
 				        	// 				break
@@ -571,11 +571,11 @@ export default {
 				    content: '确认提交草稿：'+iden+" ?",
 				    success: function (Res) {
 				       if (Res.confirm) {
-							var pr_iden = iden
+							let pr_iden = iden
 							_this.$http.post('/purchaseRequest/prdSubmit', {pr_iden}).then(([err,res]) => {
 								//修改列表中该单据信息
 								if(res.data.signal === 0) {
-									for(var i=0; i<_this.purchaseList.length; i++) {
+									for(let i=0; i<_this.purchaseList.length; i++) {
 										if(_this.purchaseList[i].rp_iden === iden){
 											_this.purchaseList[i].rp_status = '已审批'
 											break
@@ -599,11 +599,11 @@ export default {
 				    content: '确认提交草稿：'+iden+" ?",
 				    success: function (Res) {
 				        if (Res.confirm) {
-				        	var so_iden = iden
+				        	let so_iden = iden
 				        	_this.$http.post('/sell/soDetailSubmit', {so_iden}).then(([err,res]) => {
 				        		//修改列表中该单据信息
 				        		if(res.data.signal === 0) {
-				        			for(var i=0; i<_this.sellList.length; i++) {
+				        			for(let i=0; i<_this.sellList.length; i++) {
 				        				if(_this.sellList[i].so_iden === iden){
 				        					_this.sellList[i].so_status = '已审批'
 				        					break
@@ -627,11 +627,11 @@ export default {
 				    content: '确认提交草稿：'+iden+" ?",
 				    success: function (Res) {
 				        if (Res.confirm) {
-				        	// var str_iden = iden
+				        	// let str_iden = iden
 				        	// _this.$http.post('/exchangeRequest/strdSubmit', {str_iden}).then(([err,res]) => {
 				        	// 	//修改列表中该单据信息
 				        	// 	if(res.data.signal === 0) {
-				        	// 		for(var i=0; i<_this.exchangeList.length; i++) {
+				        	// 		for(let i=0; i<_this.exchangeList.length; i++) {
 				        	// 			if(_this.exchangeList[i].str_iden === iden){
 				        	// 				_this.exchangeList[i].str_status = '已审批'
 				        	// 				break
@@ -653,7 +653,7 @@ export default {
 		},
 		//编辑草稿
 		editOrder(iden) {
-			var diff = iden[0]+iden[1]
+			let diff = iden[0]+iden[1]
 			if(diff === "MS") {
 				uni.navigateTo({
 				    url: '../user/myinfo',
@@ -695,21 +695,21 @@ export default {
 		},
 		// 输入框确定按钮
 		confirm(){
-			var _this = this
-			var myinfo = uni.getStorageSync('user_info')
+			let _this = this
+			let myinfo = uni.getStorageSync('user_info')
 			uni.showModal({
 			    title: '提示',
 			    content: '确认关闭请购单：'+_this.closeIden+" ?",
 			    success: function (Res) {
 			        if (Res.confirm) {
-						var msg = {}
+						let msg = {}
 						msg.pr_iden = _this.closeIden
-						msg.pr_closer = myinfo.data.user.user_name
+						msg.user_now_iden = myinfo.data.user.username
 						msg.pr_closerReason = _this.closeReason
 						_this.$http.post('/purchaseRequest/prClose', msg).then(([err,res]) => {
 							//修改列表中该单据信息
 							if(res.data.signal === 0) {
-								for(var i =0; i<_this.purchaseList.length; i++) {
+								for(let i =0; i<_this.purchaseList.length; i++) {
 									if(_this.purchaseList[i].rp_iden === _this.closeIden){
 										_this.purchaseList[i].rp_status = '已关闭'
 										break
@@ -735,14 +735,47 @@ export default {
 		},
 		//判断权限
 		judgePower() {
-			var myinfo = uni.getStorageSync('user_info')
-			var power = ['0','0','0','0']
-			for(var i=0; i<myinfo.data.roles.length; i++){
-				var po = myinfo.data.roles[i][1]
+			let myinfo = uni.getStorageSync('user_info')
+			let power = [0,0,0,0]
+			for(let i=0; i<myinfo.data.roles.length; i++){
+				let po = myinfo.data.roles[i][1]
 				power[0] = power[0]<po[6]? po[6]:power[0]
 				power[1] = power[1]<po[1]? po[1]:power[0]
 				power[2] = power[2]<po[0]? po[0]:power[0]
 				power[3] = power[3]<po[9]? po[9]:power[0]
+			}
+			
+			if(power[0] === 2) {
+				for(let i=0; i<myinfo.data.roles.length; i++){
+					let po = myinfo.data.roles[i][1]
+					if(po[6] === 1){
+						power[0] = 3
+					}
+				}
+			}
+			if(power[1] === 2) {
+				for(let i=0; i<myinfo.data.roles.length; i++){
+					let po = myinfo.data.roles[i][1]
+					if(po[1] === 1){
+						power[1] = 3
+					}
+				}
+			}
+			if(power[2] === 2) {
+				for(let i=0; i<myinfo.data.roles.length; i++){
+					let po = myinfo.data.roles[i][1]
+					if(po[0] === 1){
+						power[2] = 3
+					}
+				}
+			}
+			if(power[3] === 2) {
+				for(let i=0; i<myinfo.data.roles.length; i++){
+					let po = myinfo.data.roles[i][1]
+					if(po[9] === 1){
+						power[3] = 3
+					}
+				}
 			}
 			uni.setStorageSync('power',power)
 		}
@@ -757,19 +790,26 @@ export default {
 		
 		//填入权限
 		this.judgePower()
-		var _this = this
-		var myinfo = uni.getStorageSync('user_info')
-		var power = uni.getStorageSync('power')
+		let _this = this
+		let myinfo = uni.getStorageSync('user_info')
+		let power = uni.getStorageSync('power')
 		//判断界面权限
-		if((power[2] === '0')&&(power[3] === '0')){
-			this.items = ['出库','请购']
-		} else {
-			this.items = ['出库','请购','销售','转库']
+		if(power[0] !== 0){
+			this.items[0] = '出库'
+		}
+		if(power[1] !== 0){
+			this.items[1] = '请购'
+		}
+		if(power[2] !== 0){
+			this.items[2] = '销售'
+		}
+		if(power[3] !== 0){
+			this.items[3] = '转库'
 		}
 		
 		
 		//TODO 主页加载时默认搜索出库单
-		// var outMes = {}
+		// let outMes = {}
 		// outMes.area_name = myinfo.data.user.area_name
 		// outMes.user_now_iden = myinfo.data.user.username
 		// outMes.power = power[0]
