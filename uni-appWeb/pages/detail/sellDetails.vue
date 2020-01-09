@@ -52,8 +52,8 @@ export default {
 		return {
 			//将data文件夹中的数据读入
 			order_iden: '',
-			// detailList: detailData.data,
-			detailList: [],
+			detailList: detailData.data,
+			// detailList: [],
 			detailFilterText: ''
 		}
 	},

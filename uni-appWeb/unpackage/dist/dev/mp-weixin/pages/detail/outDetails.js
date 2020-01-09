@@ -133,7 +133,7 @@ __webpack_require__.r(__webpack_exports__);
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-/* WEBPACK VAR INJECTION */(function(uni) {Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;
+Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;
 
 
 
@@ -159,28 +159,69 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-var _outDetails = _interopRequireDefault(__webpack_require__(/*! ../../data/outDetails.js */ 124));function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}var uniCard = function uniCard() {return __webpack_require__.e(/*! import() | components/uni-card/uni-card */ "components/uni-card/uni-card").then(__webpack_require__.bind(null, /*! ../../components/uni-card/uni-card.vue */ 225));};var _default =
+
+
+
+
+
+
+
+var _outDetails = _interopRequireDefault(__webpack_require__(/*! ../../data/outDetails.js */ 124));function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}var uniCard = function uniCard() {return __webpack_require__.e(/*! import() | components/uni-card/uni-card */ "components/uni-card/uni-card").then(__webpack_require__.bind(null, /*! ../../components/uni-card/uni-card.vue */ 225));};var uniNavBar = function uniNavBar() {return __webpack_require__.e(/*! import() | components/uni-nav-bar/uni-nav-bar */ "components/uni-nav-bar/uni-nav-bar").then(__webpack_require__.bind(null, /*! @/components/uni-nav-bar/uni-nav-bar.vue */ 253));};var uniIcons = function uniIcons() {return __webpack_require__.e(/*! import() | components/uni-icons/uni-icons */ "components/uni-icons/uni-icons").then(__webpack_require__.bind(null, /*! @/components/uni-icons/uni-icons.vue */ 232));};var _default =
+
+
 
 
 {
   components: {
-    uniCard: uniCard },
+    uniCard: uniCard,
+    uniNavBar: uniNavBar,
+    uniIcons: uniIcons },
 
   data: function data() {
     return {
       //将data文件夹中的数据读入
       order_iden: '',
-      detailList: _outDetails.default.data };
+      detailList: _outDetails.default.data,
+      detailFilterText: '' };
 
   },
-  methods: {},
+  computed: {
+    detailFilterList: function detailFilterList() {var _this = this;
+      var arr = [];
+      this.detailList.forEach(function (item) {return arr.push(item);});
+      if (this.detailFilterText) {
+        arr = this.detailList.filter(function (item) {return item.msod_name.includes(_this.detailFilterText) ||
+          item.msod_iden.includes(_this.detailFilterText) ||
+          item.msod_remarks.includes(_this.detailFilterText) ||
+          item.msod_specification.includes(_this.detailFilterText) ||
+          item.msod_model.includes(_this.detailFilterText);});
 
+      }
+      return arr;
+    } },
+
+  methods: {
+    clear: function clear() {
+      this.detailFilterText = '';
+    } },
 
   onLoad: function onLoad() {
-    var myinfo = uni.getStorageSync('viewout');
-    this.order_iden = myinfo;
+    // let _this = this
+    // let myinfo = uni.getStorageSync('user_info')
+    // let mso_info = uni.getStorageSync('order_info')
+    // uni.removeStorageSync('order_info')
+    // let msg = {}
+    // msg.mso_iden = mso_info.iden
+    // msg.orga_name = mso_info.orga
+    // msg.user_now_iden = myinfo.data.user.username
+    // this.$http.post('/out/msoNew', msg).then(([err,res]) => {
+    // 	if (res.data.signal === 1) {
+    // 		_this.detailList = res.data.prds
+    //     } else {
+
+    //     }
+    // })
   } };exports.default = _default;
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 1)["default"]))
 
 /***/ }),
 
