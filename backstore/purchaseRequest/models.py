@@ -1,4 +1,5 @@
 from django.db import models
+import django.utils.timezone as timezone
 
 
 # Create your models here.
@@ -21,8 +22,8 @@ class PurchaseRequest(models.Model):
     pr_type = models.CharField(max_length=20, verbose_name='需求类型')
     # material_type = models.ForeignKey('base.MaterialType', verbose_name='物料类别', on_delete=models.CASCADE)
     pr_department = models.CharField(max_length=20, verbose_name='请购部门')
-    pr_date = models.DateTimeField(auto_now_add=True, verbose_name='请购日期')
-    pr_remarks = models.TextField(max_length=400, verbose_name='请购备注',null=True)
+    pr_date = models.DateTimeField(default=timezone.now(), verbose_name='请购日期')
+    pr_remarks = models.TextField(max_length=400, verbose_name='请购备注', null=True)
     pr_status = models.IntegerField(choices=REQ_PUR_STATUS_CHOICES, verbose_name='请购状态')
     pr_creator = models.CharField(max_length=20, verbose_name='请购创建名字')
     pr_creator_iden = models.CharField(max_length=20, verbose_name="请购单创建者工号")
@@ -61,4 +62,3 @@ class PrDetail(models.Model):
 
     class Meta:
         verbose_name = "请购单物料明细"
-

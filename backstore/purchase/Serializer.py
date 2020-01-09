@@ -51,6 +51,7 @@ class POSerializer(serializers.ModelSerializer):
 
 class OrDSerializer(serializers.ModelSerializer):
     po_iden = serializers.CharField(source='purchase_order.po_iden')
+    po_date = serializers.DateField(source='purchase_order.po_date')
     od_iden = serializers.CharField(source='material.material_iden')
     od_name = serializers.CharField(source='material.material_name')
     od_specification = serializers.CharField(source='material.material_specification')
@@ -59,6 +60,24 @@ class OrDSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.OrDetail
-        fields = ('id', 'po_iden', 'od_iden', 'od_name', 'od_specification',
+        fields = ('id', 'po_iden', 'po_date', 'od_iden', 'od_name', 'od_specification',
                   'od_model', 'od_meterage', 'od_num', 'od_taxRate', 'od_tax_unitPrice', 'od_unitPrice',
                   'od_tax_sum', 'od_sum', 'od_tax_price', 'od_pr_iden', 'od_prd_remarks')
+
+
+class OrDToBisDSerializer(serializers.ModelSerializer):
+    po_iden = serializers.CharField(source='purchase_order.po_iden')
+    po_date = serializers.DateField(source='purchase_order.po_date')
+    pr_iden = serializers.CharField(source='od_pr_iden')
+    bd_iden = serializers.CharField(source='material.material_iden')
+    bd_name = serializers.CharField(source='material.material_name')
+    bd_specification = serializers.CharField(source='material.material_specification')
+    bd_model = serializers.CharField(source='material.material_model')
+    bd_meterage = serializers.CharField(source='material.meterage_name')
+    bd_unitPrice = serializers.DecimalField(max_digits=10, decimal_places=2, source='od_unitPrice')
+    bd_paper_num = serializers.IntegerField(source='od_num')
+
+    class Meta:
+        model = models.OrDetail
+        fields = ('id', 'po_iden', 'pr_iden', 'po_date', 'bd_iden', 'bd_name', 'bd_specification',
+                  'bd_model', 'bd_meterage', 'bd_paper_num', 'bd_unitPrice')
