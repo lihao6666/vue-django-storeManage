@@ -7,9 +7,6 @@
 				<uni-icons :color="'#999999'" v-if="FilterText!==''" class="icon-clear" type="clear" size="22" @click="clear1" />
 			</view>
 		</uni-nav-bar>
-		<!-- <view class="content-control">
-			<uni-segmented-control :current="current" :values="items" @clickItem="onClickItem" style-type="button" active-color="#20a0ff"></uni-segmented-control>
-		</view> -->
 		<view class="current-content">
 				<view v-for="(item,index) in EnglishList" :key="index" class="card-set">
 					<uni-card
@@ -57,11 +54,6 @@ export default {
 	},
 	data() {
 		return {	
-			//将data文件夹中的数据读入
-			// EnglishList: EnglishData.data,
-			// technologyList: technologyData.data,
-			// artList: artData.data,
-			// sportsList: sportsData.data,
 			FilterText: '',
 			area_name: '',
 		}
