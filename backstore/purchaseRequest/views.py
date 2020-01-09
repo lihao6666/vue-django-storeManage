@@ -237,6 +237,7 @@ class PrdSaveView(APIView):
                     self.message = "请购单详情保存失败"
                     self.signal = 1
             except:
+
                 self.message = "请购单详情保存失败"
                 self.signal = 1
         return Response({'message': self.message, 'signal': self.signal})
@@ -380,7 +381,7 @@ class PrDeleteView(APIView):
 class PrCloseView(APIView):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.message = "更新成功"
+        self.message = "关闭成功"
         self.signal = 0
         self.user_now_name = ""
         self.area_name = ""

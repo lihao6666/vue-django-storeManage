@@ -34,7 +34,7 @@ class CdPaySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.CdPayDetail
-        fields = ('id', 'pc_iden', 'pay_batch', 'pay_rate', 'pay_price', 'pay_planDate', 'pay_preay', 'pay_remarks')
+        fields = ('id', 'pc_iden', 'pay_batch', 'pay_rate', 'pay_price', 'pay_planDate', 'pay_prepay', 'pay_remarks')
 
 
 class POSerializer(serializers.ModelSerializer):

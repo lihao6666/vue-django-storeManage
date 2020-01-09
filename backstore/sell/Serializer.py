@@ -12,7 +12,7 @@ class SellOrderSerializer(serializers.ModelSerializer):
         model = models.SellOrder
         fields = (
             'id', 'so_iden', 'orga_name', 'area_name', 'so_type', 'customer_iden', 'customer_name',
-            'so_date', 'deliver_ware_house_iden', 'deliver_ware_house', 'so_remarks', 'so_status',
+            'so_date', 'deliver_ware_house', 'so_remarks', 'so_status',
             'so_creator', 'so_creator_iden', 'so_createDate'
         )
 
