@@ -67,30 +67,30 @@
 				
 				<view v-for="(item,index) in purchaseFilterList" :key="index" class="card-set">
 					<uni-card
-					    :title="item.rp_iden"
+					    :title="item.pr_iden"
 					    mode="basic" 
 					    :is-shadow="true" 
-						:extra="item.rp_date"
+						:extra="item.pr_date"
 					>
-					    <view @click="viewDetail(item.rp_iden,item.rp_orga)">
-							<view>库存组织：{{ item.rp_orga }}</view>
-							<view>需求类型：{{ item.rp_type }}</view>
-							<view>申请部门：{{ item.rp_req_department }}</view>
-							<view>备注：{{ item.rp_remarks }}</view>
-							<view>创建人：{{ item.rp_creator }}</view>
-							<view>创建日期：{{ item.rp_createDate }}</view>
+					    <view @click="viewDetail(item.pr_iden,item.orga_name)">
+							<view>库存组织：{{ item.orga_name }}</view>
+							<view>需求类型：{{ item.pr_type }}</view>
+							<view>申请部门：{{ item.pr_department }}</view>
+							<view>备注：{{ item.pr_remarks }}</view>
+							<view>创建人：{{ item.pr_creator }}</view>
+							<view>创建日期：{{ item.pr_createDate }}</view>
 						</view>
-						<view v-if="judgeStatus(item.rp_status) === 0" class="button-box">
-							<view class="delete" @click="deleteOrder(item.rp_iden)"><evan-icons type="remove" color="red" size="16"></evan-icons>删除</view>
-							<view class="edit" @click="editOrder(item.rp_iden)"><evan-icons type="edit" color="blue" size="13"></evan-icons>编辑</view>
-							<view class="commit" @click="commitOrder(item.rp_iden)"><evan-icons type="check" color="green" size="16"></evan-icons>提交</view>
+						<view v-if="judgeStatus(item.pr_status) === 0" class="button-box">
+							<view class="delete" @click="deleteOrder(item.pr_iden)"><evan-icons type="remove" color="red" size="16"></evan-icons>删除</view>
+							<view class="edit" @click="editOrder(item.pr_iden)"><evan-icons type="edit" color="blue" size="13"></evan-icons>编辑</view>
+							<view class="commit" @click="commitOrder(item.pr_iden)"><evan-icons type="check" color="green" size="16"></evan-icons>提交</view>
 						</view>
-						<view v-if="judgeStatus(item.rp_status) === 1" class="button-box">
-							<view class="detail" @click="viewDetail(item.rp_iden,item.rp_orga)"><evan-icons type="reorder" size="15"></evan-icons>详情</view>
-							<view class="delete" @click="closeOrder(item.rp_iden)"><evan-icons type="close" color="red" size="16"></evan-icons>关闭</view>
+						<view v-if="judgeStatus(item.pr_status) === 1" class="button-box">
+							<view class="detail" @click="viewDetail(item.pr_iden,item.orga_name)"><evan-icons type="reorder" size="15"></evan-icons>详情</view>
+							<view class="delete" @click="closeOrder(item.pr_iden)"><evan-icons type="close" color="red" size="16"></evan-icons>关闭</view>
 						</view>
-						<view v-if="judgeStatus(item.rp_status) === 2" class="button-box">
-							<view class="detail" @click="viewDetail(item.rp_iden,item.rp_orga)"><evan-icons type="reorder" size="15"></evan-icons>详情</view>
+						<view v-if="judgeStatus(item.pr_status) === 2" class="button-box">
+							<view class="detail" @click="viewDetail(item.pr_iden,item.orga_name)"><evan-icons type="reorder" size="15"></evan-icons>详情</view>
 						</view>
 					</uni-card>
 				</view>
@@ -218,11 +218,11 @@ export default {
 			current: 0,
 			//将data文件夹中的数据读入
 			outList: outData.data,
-			purchaseList: purchaseData.data,
+			// purchaseList: purchaseData.data,
 			sellList: sellData.data,
 			exchangeList: exchangeData.data,
 			// outList: [],
-			// purchaseList: [],
+			purchaseList: [],
 			// sellList: [],
 			// exchangeList: [],
 			outFilterText: '',
@@ -254,12 +254,12 @@ export default {
 			let arr = []
 			this.purchaseList.forEach((item) => arr.push(item))
 			if (this.purchaseFilterText) {
-				arr = this.purchaseList.filter(item => item.rp_orga.includes(this.purchaseFilterText)||
-					item.rp_iden.includes(this.purchaseFilterText)||
-					item.rp_remarks.includes(this.purchaseFilterText)||
-					item.rp_type.includes(this.purchaseFilterText)||
-					item.rp_req_department.includes(this.purchaseFilterText)||
-					item.rp_creator.includes(this.purchaseFilterText)
+				arr = this.purchaseList.filter(item => item.orga_name.includes(this.purchaseFilterText)||
+					item.pr_iden.includes(this.purchaseFilterText)||
+					item.pr_remarks.includes(this.purchaseFilterText)||
+					item.pr_type.includes(this.purchaseFilterText)||
+					item.pr_department.includes(this.purchaseFilterText)||
+					item.pr_creator.includes(this.purchaseFilterText)
 				)
 			}
 			return arr
@@ -297,6 +297,7 @@ export default {
 	methods: {
 		//切换tab  current: 下方卡片内容,  currentIndex: tab栏,  范围(0-3)
 		onClickItem(e) {
+			let _this = this
 			if (this.current !== e.currentIndex) {
 				this.current = e.currentIndex;
 			}
@@ -317,7 +318,7 @@ export default {
 			} else if(e.currentIndex === 1){
 				let mes = this.judgeMes(1)
 				this.$http.post('/purchaseRequest/prs', mes).then(([err,res]) => {
-					if (res.data.signal === '0') {
+					if (res.data.signal === 0) {
 						_this.purchaseList = res.data.prs
 				    } else {
 						uni.showToast({
@@ -367,13 +368,13 @@ export default {
 		},
 		//判断订单状态
 		judgeStatus(status) {
-			if (status === "草稿") {
+			if (status === 0) {
 				return 0;
 			}
-			else if(status === "已审批") {
+			else if(status === 1) {
 				return 1;
 			}
-			else if(status === "已关闭") {
+			else if(status === 2) {
 				return 2;
 			}
 		},
@@ -477,7 +478,7 @@ export default {
 							_this.$http.post('/purchaseRequest/prDelete', {pr_iden}).then(([err,res]) => {
 								//删除列表中该单据信息
 								if(res.data.signal === 0) {
-									_this.purchaseList = _this.purchaseList.filter(item => !(item.rp_iden.includes(pr_iden)))
+									_this.purchaseList = _this.purchaseList.filter(item => !(item.pr_iden.includes(pr_iden)))
 								}
 								uni.showToast({
 									icon: 'none',
@@ -552,7 +553,7 @@ export default {
 				        	// 	if(res.data.signal === 0) {
 				        	// 		for(let i=0; i<_this.outList.length; i++) {
 				        	// 			if(_this.outList[i].mso_iden === iden){
-				        	// 				_this.outList[i].mso_status = '已审批'
+				        	// 				_this.outList[i].mso_status = '1'
 				        	// 				break
 				        	// 			}
 				        	// 		}
@@ -579,8 +580,8 @@ export default {
 								//修改列表中该单据信息
 								if(res.data.signal === 0) {
 									for(let i=0; i<_this.purchaseList.length; i++) {
-										if(_this.purchaseList[i].rp_iden === iden){
-											_this.purchaseList[i].rp_status = '已审批'
+										if(_this.purchaseList[i].pr_iden === iden){
+											_this.purchaseList[i].pr_status = '1'
 											break
 										}
 									}
@@ -608,7 +609,7 @@ export default {
 				        		if(res.data.signal === 0) {
 				        			for(let i=0; i<_this.sellList.length; i++) {
 				        				if(_this.sellList[i].so_iden === iden){
-				        					_this.sellList[i].so_status = '已审批'
+				        					_this.sellList[i].so_status = '1'
 				        					break
 				        				}
 				        			}
@@ -636,7 +637,7 @@ export default {
 				        	// 	if(res.data.signal === 0) {
 				        	// 		for(let i=0; i<_this.exchangeList.length; i++) {
 				        	// 			if(_this.exchangeList[i].str_iden === iden){
-				        	// 				_this.exchangeList[i].str_status = '已审批'
+				        	// 				_this.exchangeList[i].str_status = '1'
 				        	// 				break
 				        	// 			}
 				        	// 		}
@@ -713,8 +714,8 @@ export default {
 							//修改列表中该单据信息
 							if(res.data.signal === 0) {
 								for(let i =0; i<_this.purchaseList.length; i++) {
-									if(_this.purchaseList[i].rp_iden === _this.closeIden){
-										_this.purchaseList[i].rp_status = '已关闭'
+									if(_this.purchaseList[i].pr_iden === _this.closeIden){
+										_this.purchaseList[i].pr_status = '2'
 										break
 									}
 								}
@@ -809,6 +810,7 @@ export default {
 		if(power[3] !== 0){
 			this.items[3] = '转库'
 		}
+		this.$forceUpdate()
 		
 		
 		//TODO 主页加载时默认搜索出库单
