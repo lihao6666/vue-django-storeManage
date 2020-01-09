@@ -1,14 +1,7 @@
 <template>
 	<view class="content">
-		<uni-nav-bar :fixed="true" background-color="#20a0ff" :border="false">
-			<view class="input-view">
-				<uni-icons type="search" size="22" color="#666666" />
-				<input v-model="detailFilterText" confirm-type="search" class="input" type="text" placeholder="输入出库单信息">
-				<uni-icons :color="'#999999'" v-if="detailFilterText!==''" type="clear" size="22" @click="clear" />
-			</view>
-		</uni-nav-bar>
 		<view class="content-content">
-			<view v-for="item in detailFilterList" :key="item.id" class="card-set">
+			<view v-for="item in detailList" :key="item.id" class="card-set">
 				<uni-card
 					:title="item.prd_name"
 					mode="basic" 
@@ -32,62 +25,25 @@
 <script>
 import uniCard from '../../components/uni-card/uni-card.vue'
 import detailData from '../../data/purchaseDetails.js'
-import uniNavBar from '@/components/uni-nav-bar/uni-nav-bar.vue'
-import uniIcons from '@/components/uni-icons/uni-icons.vue'
 
 
 export default {
 	components: {
-		uniCard,
-		uniNavBar,
-		uniIcons,
+		uniCard
 	},
 	data() {
 		return {
 			//将data文件夹中的数据读入
-			// detailList: detailData.data,
-			detailList: [],
-			detailFilterText: ''
-		}
-	},
-	computed: {
-		// 单据列表
-		detailFilterList () {
-			let arr = []
-			this.detailList.forEach((item) => arr.push(item))
-			if (this.detailFilterText) {
-				arr = this.detailList.filter(item => item.prd_name.includes(this.detailFilterText)||
-					item.prd_iden.includes(this.detailFilterText)||
-					item.prd_remarks.includes(this.detailFilterText)||
-					item.prd_specification.includes(this.detailFilterText)||
-					item.prd_model.includes(this.detailFilterText)
-				)
-			}
-			return arr
+			order_iden: '',
+			detailList: detailData.data
 		}
 	},
 	methods: {
-		clear() {
-			this.detailFilterText = ''
-		}
+		
 	},
 	onLoad: function() {
-		let _this = this
-		let myinfo = uni.getStorageSync('user_info')
-		let pr_info = uni.getStorageSync('order_info')
-		uni.removeStorageSync('order_info')
-		let msg = {}
-		msg.pr_iden = pr_info.iden
-	    msg.orga_name = pr_info.orga
-		msg.user_now_iden = myinfo.data.user.username
-		this.$http.post('/purchaseRequest/prNew', msg).then(([err,res]) => {
-			if (res.data.signal === 1) {
-				console.log(res.data)
-				_this.detailList = res.data.prds
-		    } else {
-				
-		    }
-		})
+		var myinfo = uni.getStorageSync('viewpurchase');
+		this.order_iden = myinfo;
 	}
 }
 </script>
@@ -113,25 +69,5 @@ export default {
 		justify-content: center;
 		align-items: center;
 		text-align: left;
-	}
-	.input-view {
-		align-items: center;
-		justify-content: center;
-		width: 100%;
-		display: flex;
-		background-color: #e7e7e7;
-		height: 30px;
-		border-radius: 15px;
-		padding: 0 4%;
-		flex-wrap: nowrap;
-		margin: 7px 10rpx;
-		line-height: 30px;
-		background: #f5f5f5;
-	}
-	.input-view .input {
-		height: 30px;
-		line-height: 30px;
-		width: 94%;
-		padding: 0 3%;
 	}
 </style>
