@@ -15,7 +15,7 @@
 		</view> 
 		 
 		<view class="address-item ">
-			<text class="address-item-title">需求类型</text>	
+			<text class="address-item-title">转入仓库</text>	
 			<text class="address-item-input" @tap="handleTap('picker2')">{{label2}}</text>
 			  <lb-picker ref="picker2"
 				v-model="label2"
@@ -28,7 +28,7 @@
 		</view> 
 
 		<view class="address-item ">
-			<text class="address-item-title">申请部门</text>	
+			<text class="address-item-title">转出仓库</text>	
 			<text class="address-item-input" @tap="handleTap('picker3')">{{label3}}</text>
 			  <lb-picker ref="picker3"
 				v-model="label3"
@@ -41,8 +41,21 @@
 		</view> 
 
 		<view class="address-item ">
-			<text class="address-item-title">申请时间</text>	
-			<text class="address-item-input" @tap="toggleTab('date')">{{label4}}</text>
+			<text class="address-item-title">申请部门</text>	
+			<text class="address-item-input" @tap="toggleTab('picker4')">{{label4}}</text>
+			 <lb-picker ref="picker4"
+			 	v-model="label4"
+			 	mode="selector"
+			 	:list="list4"
+			 	@change="handleChange"
+			 	@confirm="handelConfirmWithDepartment"
+			 	@cancle="handleCancle">
+			 </lb-picker>
+		</view> 
+		
+		<view class="address-item ">
+			<text class="address-item-title">申请日期</text>	
+			<text class="address-item-input" @tap="toggleTab('date')">{{label5}}</text>
 			 <w-picker
 				mode="date" 
 				startYear="2000" 
@@ -54,7 +67,12 @@
 				ref="date" 
 				themeColor="#f00"
 			  ></w-picker>
-		</view> 
+		</view>
+		
+		<view class="address-item ">
+			<text class="address-item-title">创建日期</text>	
+			<text class="address-item-input">{{label6}}</text>
+		</view>
 
 		<view class="remarks">
 			<text class="remarks_text" >备注</text>	
@@ -133,7 +151,9 @@
 				label1: '点击选择',
 				label2: '点击选择',
 				label3: '点击选择',
-				label4: formateDate(new Date(),"Y-M-D"),
+				label4: '点击选择',
+				label5: formateDate(new Date(),"Y-M-D"),
+				label6: formateDate(new Date(),"Y-M-D h:min:s"),
 				remarks: '',
 				list1: [
 					{
@@ -238,7 +258,7 @@
 	}
 	
 	.order {
-		height:50vh;
+		height:70vh;
 		box-sizing: border-box;
 		margin-bottom:10rpx ;
 		flex-direction: column;

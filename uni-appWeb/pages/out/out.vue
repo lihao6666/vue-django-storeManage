@@ -15,7 +15,7 @@
 		</view> 
 		 
 		<view class="address-item ">
-			<text class="address-item-title">需求类型</text>	
+			<text class="address-item-title">出库仓库</text>	
 			<text class="address-item-input" @tap="handleTap('picker2')">{{label2}}</text>
 			  <lb-picker ref="picker2"
 				v-model="label2"
@@ -26,23 +26,36 @@
 				@cancle="handleCancle">
 			</lb-picker>
 		</view> 
-
+		
 		<view class="address-item ">
-			<text class="address-item-title">申请部门</text>	
+			<text class="address-item-title">出库分类</text>	
 			<text class="address-item-input" @tap="handleTap('picker3')">{{label3}}</text>
 			  <lb-picker ref="picker3"
 				v-model="label3"
 				mode="selector"
 				:list="list3"
 				@change="handleChange"
-				@confirm="handelConfirmWithDepartment"
+				@confirm="handleConfirmWithType"
 				@cancle="handleCancle">
 			</lb-picker>
 		</view> 
 
 		<view class="address-item ">
-			<text class="address-item-title">申请时间</text>	
-			<text class="address-item-input" @tap="toggleTab('date')">{{label4}}</text>
+			<text class="address-item-title">申请部门</text>	
+			<text class="address-item-input" @tap="toggleTab('picker4')">{{label4}}</text>
+			 <lb-picker ref="picker4"
+			 	v-model="label4"
+			 	mode="selector"
+			 	:list="list4"
+			 	@change="handleChange"
+			 	@confirm="handelConfirmWithDepartment"
+			 	@cancle="handleCancle">
+			 </lb-picker>
+		</view> 
+		
+		<view class="address-item ">
+			<text class="address-item-title">出库日期</text>	
+			<text class="address-item-input" @tap="toggleTab('date')">{{label5}}</text>
 			 <w-picker
 				mode="date" 
 				startYear="2000" 
@@ -54,7 +67,12 @@
 				ref="date" 
 				themeColor="#f00"
 			  ></w-picker>
-		</view> 
+		</view>
+		
+		<view class="address-item ">
+			<text class="address-item-title">创建日期</text>	
+			<text class="address-item-input">{{label6}}</text>
+		</view>
 
 		<view class="remarks">
 			<text class="remarks_text" >备注</text>	
@@ -119,7 +137,7 @@
 			materialsDisplay (){
 				let arr = []
 				
-				arr = uni.getStorageSync('out_select')
+				arr = uni.getStorageSync('exchange_select')
 				
 				console.log(arr)
 				
@@ -133,7 +151,9 @@
 				label1: '点击选择',
 				label2: '点击选择',
 				label3: '点击选择',
-				label4: formateDate(new Date(),"Y-M-D"),
+				label4: '点击选择',
+				label5: formateDate(new Date(),"Y-M-D"),
+				label6: formateDate(new Date(),"Y-M-D h:min:s"),
 				remarks: '',
 				list1: [
 					{
@@ -149,33 +169,28 @@
 					}
 				],list2:[
 					{
-						label: '礼品',
+						label: '仓库一',
 						
 					},
 					{
-						label: '教学用品',
-						
-					},
-					{
-						label:'销售商品',
-						
-					},
-					{
-						label:'办公用品',
-						
-					},
-					{
-						label:'市场物资',
+						label: '仓库二',
 						
 					}
 				],list3:[
 					{
-						label: '学习中心',
+						label: '分类一',
 						
 					},
 					{
-						label: '其他部门',
+						label: '分类二',
 						
+					}
+				],list4:[
+					{
+						label: '学习中心',
+					},
+					{
+						label: '其他部门',
 					}
 				]
 			}
@@ -238,7 +253,7 @@
 	}
 	
 	.order {
-		height:50vh;
+		height:70vh;
 		box-sizing: border-box;
 		margin-bottom:10rpx ;
 		flex-direction: column;

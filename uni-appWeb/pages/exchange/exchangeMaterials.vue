@@ -114,7 +114,7 @@
 				var arr = []
 		
 				this.materialList.forEach((item) => {
-					var num = 0
+					var num = 1
 					var remarks = ''
 					var check = 0
 					var maxnum = parseInt(item.material_attr)
