@@ -1,6 +1,6 @@
 from django.db import models
 import django.utils.timezone as timezone
-
+from datetime import datetime
 
 # Create your models here.
 
@@ -21,7 +21,7 @@ class BuyInStore(models.Model):
                                        on_delete=models.CASCADE)
     supplier = models.ForeignKey('base.Supplier', verbose_name='供应商', related_name='supplier_bis',
                                  on_delete=models.CASCADE)
-    bis_date = models.DateTimeField(default=timezone.now, verbose_name='采购入库日期')
+    bis_date = models.DateTimeField(default=datetime.now, verbose_name='采购入库日期')
     bis_remarks = models.TextField(max_length=400, verbose_name='采购入库单备注')
     bis_status = models.IntegerField(choices=BIS_STATUS_CHOICES, default=0, verbose_name='采购入库单状态')
     bis_creator = models.CharField(max_length=20, verbose_name='采购入库单创建人名字')
