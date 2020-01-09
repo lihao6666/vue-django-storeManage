@@ -72,7 +72,7 @@ class SellOrderNewView(APIView):
             self.user_now_name = user_now.user_name
             self.area_name = user_now.area_name
         organizations = Organization.objects.filter(area_name=self.area_name).values_list("id", "orga_name")
-        customers = Customer.objects.filter(customer_status=1)values_list("id", "customer_name")
+        customers = Customer.objects.filter(customer_status=1).values_list("id", "customer_name")
         deliver_ware_houses = TotalWareHouse.objects.filter(organization__area_name=self.area_name,total_status=1). \
             values_list("id", "total_name", "organization__orga_name")
 
