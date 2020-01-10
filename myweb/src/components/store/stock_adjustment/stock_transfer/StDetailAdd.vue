@@ -15,9 +15,6 @@
         <el-select v-model="formadd.str_from" placeholder="请选择转出仓库" :disabled="ifhasfrom">
           <el-option v-for="item in form_td_from" v-bind:key="item" :label="item" :value="item"></el-option>
         </el-select>
-        <el-select v-model="formadd.str_to" placeholder="请选择转入仓库" :disabled="ifhasto">
-          <el-option v-for="item in form_td_to" v-bind:key="item" :label="item" :value="item"></el-option>
-        </el-select>
         <el-input
           placeholder="关键字搜索"
           prefix-icon="el-icon-search"
@@ -54,6 +51,12 @@
         <el-table-column prop="td_meterage" sortable label="单位" :filters="td_meterageSet"
                          :filter-method="filter" align="center"></el-table-column>
         <el-table-column prop="td_present_num" sortable label="现存量" align="center"></el-table-column>
+        <el-table-column prop="td_remarks" sortable label="备注" align="center">
+          <template slot-scope="props">
+            <el-input type="textarea" v-model="props.row.trd_remarks" rows="3" :disabled="!ifchange"
+                      placeholder="请输入200字以内的描述" maxlength="200" show-word-limit clearable @input="find"></el-input>
+          </template>
+        </el-table-column>
       </el-table>
       <!-- 分页 -->
       <div class="pagination">

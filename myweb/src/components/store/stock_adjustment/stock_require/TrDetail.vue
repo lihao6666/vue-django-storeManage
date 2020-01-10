@@ -66,12 +66,6 @@
         </template>
         </el-table-column>
         <el-table-column prop="trd_present_num" sortable label="现存数量" align="center"></el-table-column>
-        <el-table-column prop="trd_remarks" sortable label="备注" align="center">
-          <template slot-scope="props">
-            <el-input type="textarea" v-model="props.row.trd_remarks" rows="3" :disabled="!ifchange"
-                      placeholder="请输入200字以内的描述" maxlength="200" show-word-limit clearable @input="find"></el-input>
-          </template>
-        </el-table-column>
         <el-table-column label="操作" align="center" v-if="ifchange">
           <template slot-scope="scope">
             <el-button

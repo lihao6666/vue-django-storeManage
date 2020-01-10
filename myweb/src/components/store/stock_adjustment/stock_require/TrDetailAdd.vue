@@ -9,11 +9,11 @@
     </div>
     <div class="container">
       <div class="handle-box">
-        <el-select v-model="formadd.str_orga" placeholder="请选择库存组织" :disabled="ifhasorga"  @change="changeOrga">
+        <el-select v-model="formadd.str_orga" placeholder="请选择库存组织" :disabled="ifhasorga">
           <el-option v-for="item in orga_name" v-bind:key="item" :label="item" :value="item"></el-option>
         </el-select>
         <el-select v-model="formadd.str_from" placeholder="请选择转出仓库" :disabled="ifhasfrom" @change="changeFrom">
-          <el-option v-for="item in ware_name" v-bind:key="item" :label="item" :value="item"></el-option>
+          <el-option v-for="item in ware_name[formadd.str_orga]" v-bind:key="item" :label="item" :value="item"></el-option>
         </el-select>
         <el-input
           placeholder="关键字搜索"
@@ -218,12 +218,9 @@ export default {
       this.multipleSelection = []
       this.$refs.multipleTable.clearSelection()
     },
-    // 选择组织
-    changeOrga () {
-      // this.getData()
-    },
     // 选择转出仓库
     changeFrom () {
+      this.getData()
     }
   }
 }

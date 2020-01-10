@@ -34,7 +34,7 @@
                          :filter-method="filter" align="center"></el-table-column>
         <el-table-column prop="st_from" sortable label="转出仓库" :filters="st_fromSet"
                          :filter-method="filter" align="center"></el-table-column>
-        <el-table-column prop="st_req_date" sortable label="出库日期" align="center"></el-table-column>
+        <el-table-column prop="st_date" sortable label="出库日期" align="center"></el-table-column>
         <el-table-column prop="st_status" sortable label="状态" :filters="st_statusSet"
                          :filter-method="filter" align="center">
           <template slot-scope="scope">
