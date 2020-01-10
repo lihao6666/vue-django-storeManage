@@ -158,6 +158,7 @@ class PrUpdateView(APIView):
         pr_type = json_data['pr_type']
         pr_date = json_data['pr_date']
         pr_remarks = json_data['pr_remarks']
+        print(pr_date)
 
         try:
             pr_iden = json_data['pr_iden']
@@ -186,10 +187,11 @@ class PrUpdateView(APIView):
                     self.message = "新建请购单失败"
                     self.signal = 1
             except:
+                traceback.print_exc()
                 self.message = "新建请购单失败"
                 self.signal = 1
         else:
-            pr = models.PurchaseRequest.objects.get(pr_iden=pr_iden)
+            pr = models.PurchaseRequest.objects.filter(pr_iden=pr_iden)
             if pr:
                 if pr.update(organization=organization, pr_department=department_name, pr_type=pr_type, pr_date=pr_date,
                              pr_remarks=pr_remarks):
@@ -219,6 +221,7 @@ class PrdSaveView(APIView):
         prds = json_data['prds']
         models.PrDetail.objects.filter(purchase_request__pr_iden=pr_iden).delete()
         pr = models.PurchaseRequest.objects.get(pr_iden=pr_iden)
+        print('prds')
         for prd in prds:
             prd_iden = prd['prd_iden']  # 物料编码
             # id = prd['prd_id']  # 物料id
@@ -227,17 +230,18 @@ class PrdSaveView(APIView):
             prd_remarks = prd['prd_remarks']
             material = Material.objects.get(material_iden=prd_iden)
             try:
-                if models.PrDetail.objects.create(purchase_request=pr, prd_num=prd_num,
-                                                  material=material,
-                                                  prd_used=0,
-                                                  prd_present_num=prd_present_num,
-                                                  prd_remarks=prd_remarks):
-                    pass
-                else:
-                    self.message = "请购单详情保存失败"
-                    self.signal = 1
+                s = models.PrDetail.objects.create(purchase_request=pr, prd_num=prd_num,
+                                                   material = material,
+                                                   prd_used = 0,
+                                                   prd_present_num=prd_present_num,
+                                                   prd_remarks=prd_remarks)
+                print(s)
+                #     pass
+                # else:
+                #     self.message = "请购单详情保存失败"
+                #     self.signal = 1
             except:
-
+                traceback.print_exc()
                 self.message = "请购单详情保存失败"
                 self.signal = 1
         return Response({'message': self.message, 'signal': self.signal})
@@ -263,7 +267,6 @@ class PrdSubmitView(APIView):
                 self.message = "请购单提交保存失败"
                 self.signal = 1
         except:
-            traceback.print_exc()
             self.message = "请购单提交保存失败"
             self.signal = 1
         return Response({'message': self.message, 'signal': self.signal})
@@ -372,7 +375,6 @@ class PrDeleteView(APIView):
                 self.message = "删除请购单失败"
                 self.signal = 1
         except:
-            traceback.print_exc()
             self.message = "删除请购单失败"
             self.signal = 1
         return Response({'message': self.message, 'signal': self.signal})
@@ -381,7 +383,7 @@ class PrDeleteView(APIView):
 class PrCloseView(APIView):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.message = "关闭成功"
+        self.message = "更新成功"
         self.signal = 0
         self.user_now_name = ""
         self.area_name = ""
@@ -400,10 +402,11 @@ class PrCloseView(APIView):
 
         try:
             if models.PurchaseRequest.objects.filter(pr_iden=pr_iden).update(pr_status=2, pr_closer=self.user_now_name,
-                                                                             pr_closer_iden=user_now_iden,
+                                                                             pr_closer_iden = user_now_iden,
                                                                              pr_closeReason=pr_closerReason):
                 pass
             else:
+                traceback.print_exc()
                 self.message = "关闭请购单失败"
                 self.signal = 1
         except:

@@ -14,7 +14,7 @@ class PurchaseRequestSerializer(serializers.ModelSerializer):
 
 
 class PrDetailSerializer(serializers.ModelSerializer):
-    orga_name = serializers.CharField(source='purchase_request.organization.orga_name')
+    # orga_name = serializers.CharField(source='purchase_request.organization.orga_name')
     pr_iden = serializers.CharField(source='purchase_request.pr_iden')
     prd_iden = serializers.CharField(source='material.material_iden')
     prd_name = serializers.CharField(source='material.material_name')
@@ -24,7 +24,7 @@ class PrDetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.PrDetail
-        fields = ('id', 'prd_iden', 'orga_name' 'pr_iden', 'prd_name', 'prd_specification', 'prd_model', 'prd_meterage',
+        fields = ('id', 'prd_iden','pr_iden', 'prd_name', 'prd_specification', 'prd_model', 'prd_meterage',
                   'prd_num', 'prd_present_num', 'prd_remarks', 'prd_used')
 
 

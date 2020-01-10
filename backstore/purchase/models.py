@@ -56,6 +56,7 @@ class CdDetail(models.Model):
     cd_unitPrice = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='无税单价', null=True)
     cd_tax_sum = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='含税总额', null=True)
     cd_sum = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='无税总额', null=True)
+    cd_tax_price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='税额', null=True)
     cd_pr_iden = models.CharField(max_length=15, verbose_name='请购单编号')
     cd_prd_remarks = models.TextField(max_length=400, verbose_name='物料备注', null=True)
     cd_used = models.IntegerField(choices=CD_USE_STATUS_CHOICES, default=0, verbose_name='明细单是否使用')

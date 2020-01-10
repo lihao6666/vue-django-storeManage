@@ -23,6 +23,7 @@ urlpatterns = [
     path('storeManage/', include(('storeManage.urls', 'storeManage'), namespace='storeManage')),
     path('sell/', include(('sell.urls', 'sell'), namespace='sell')),
     path('purchase/', include(('purchase.urls', 'purchase'), namespace='purchase')),
-    path('storeIn/', include(('storeIn.urls', 'storeIn'), namespace='storeIn'))
+    path('storeIn/', include(('storeIn.urls', 'storeIn'), namespace='storeIn')),
+    path('storeAdjust/', include(('storeAdjust.urls', 'storeAdjust'), namespace='storeAdjust'))
 
 ]

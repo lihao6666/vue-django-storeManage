@@ -13,6 +13,8 @@ from base.Serializer import MaterialSerializer
 from storeManage.models import TotalStock
 import json
 from django.db.models import Q, Sum
+import traceback
+from datetime import datetime
 
 
 class PCsView(APIView):
@@ -134,6 +136,7 @@ class PcUpdateView(APIView):
                     self.message = "新建采购合同失败"
                     self.signal = 1
             except:
+                traceback.print_exc()
                 self.message = "新建采购合同失败"
                 self.signal = 1
         else:
@@ -181,7 +184,8 @@ class CdDetailSaveView(APIView):
                                                   cd_num=cd_num, cd_taxRate=cd_taxRate,
                                                   cd_tax_unitPrice=cd_tax_unitPrice,
                                                   cd_unitPrice=cd_unitPrice,
-                                                  cd_tax_sum=cd_tax_sum, cd_sum=cd_sum, cd_tax_price=cd_tax_price,
+                                                  cd_tax_sum=cd_tax_sum, cd_sum=cd_sum,
+                                                  cd_tax_price=cd_tax_price,
                                                   cd_pr_iden=cd_pr_iden,
                                                   cd_prd_remarks=cd_prd_remarks):
                     pass
@@ -190,8 +194,7 @@ class CdDetailSaveView(APIView):
                     self.signal = 1
 
             except:
-                print(pc_iden)
-                print(cd_iden)
+                traceback.print_exc()
                 self.message = "合同详情保存失败"
                 self.signal = 1
         models.CdPayDetail.objects.filter(purchase_contract__pc_iden=pc_iden).delete()
@@ -215,7 +218,6 @@ class CdDetailSaveView(APIView):
                 self.message = "合同详情保存失败"
                 self.signal = 1
         return Response({'message': self.message, 'signal': self.signal})
-
 
 class CdDetailSubmitView(APIView):
     def __init__(self, **kwargs):
@@ -247,7 +249,7 @@ class CdDetailSubmitView(APIView):
         for cd in cds:
             cd_iden = cd['cd_iden']
             cd_pr_iden = cd['cd_pr_iden']
-            PrDetail.objects.filter(purchase_request__pr_iden=cd_pr_iden, prd_iden=cd_iden).update(prd_uesd=1)
+            PrDetail.objects.filter(purchase_request__pr_iden=cd_pr_iden,material__material_iden=cd_iden).update(prd_used=1)
             prds = PrDetail.objects.filter(purchase_request__pr_iden=cd_pr_iden).all()
             pr = PurchaseRequest.objects.filter(pr_iden=cd_pr_iden)
             flag = 0
@@ -256,7 +258,7 @@ class CdDetailSubmitView(APIView):
                     flag = 1
             if flag == 0:
                 pr.update(pr_status=2, pr_closer=self.user_now_name, pr_closer_iden=user_now_iden,
-                          pr_closeDate=timezone.now, pr_closeReason="自动关闭")
+                          pr_closeDate=datetime.now(), pr_closeReason="自动关闭")
             # 更新请购单物料使用状态
 
         return Response({'message': self.message, 'signal': self.signal})
@@ -680,7 +682,7 @@ class POSubmitView(APIView):
                         flag = 1
                 if flag == 0:
                     pr.update(pr_status=2, pr_closer=self.user_now_name, pr_closer_iden=user_now_iden,
-                              pr_closeDate=timezone.now(), pr_closeReason="自动关闭")
+                              pr_closeDate=datetime.now(), pr_closeReason="自动关闭")
 
                 # 更新请购单物料使用状态
 
