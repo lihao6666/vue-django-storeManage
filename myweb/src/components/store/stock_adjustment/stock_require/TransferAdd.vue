@@ -16,7 +16,7 @@
         </el-form-item>
         <el-form-item label="转入仓库">
           <el-select v-model="formadd.str_to" placeholder="请选择" :disabled="!ifchange" @change="changeTo">
-            <el-option v-for="item in form_str_from" v-bind:key="item" :label="item" :value="item"></el-option>
+            <el-option v-for="item in form_str_from[formadd.orga_name]" v-bind:key="item" :label="item" :value="item"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="申请部门">
@@ -39,9 +39,9 @@
         <el-button type="primary" class="form-item-save" @click="saveTrdAdd" v-if="ifchange">保 存</el-button>
       </el-form>
     </div>
-    <Trdetail :formadd="formadd" @close="close" :ifchange="ifchange" :orga_name="form_orga_name" :trds="trds"
+    <Trdetail ref="Trdetail" :formadd="formadd" :ifchange="ifchange" :orga_name="form_orga_name" :trds="trds"
               :ware_name="form_str_from" @commit="this.$emit('commit')"
-              @save="this.$emit('save')" @saveall="saveReqPurAdd"></Trdetail>
+              @save="this.$emit('save')" @saveall="saveTrdAdd"></Trdetail>
   </div>
 </template>
 
@@ -133,6 +133,14 @@ export default {
       if (this.formadd.str_req_department === '' || this.formadd.orga_name === '' || this.formadd.str_to === '' ||
         this.formadd.str_from === '' || this.formadd.str_req_date === '') {
         this.$message.error(`请填写完主明细信息`)
+        if (typeof (callback) === 'function') {
+          let back = false
+          callback(back)
+        }
+        return
+      }
+      if (this.formadd.str_from === this.formadd.str_to) {
+        this.$message.error(`转入转出仓库不可相同`)
         if (typeof (callback) === 'function') {
           let back = false
           callback(back)

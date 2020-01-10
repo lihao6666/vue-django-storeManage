@@ -41,16 +41,6 @@
           v-if="ifchange"
           width="55">
         </el-table-column>
-        <el-table-column type="expand">
-          <template slot-scope="props">
-            <el-form label-position="left" inline class="demo-table-expand">
-              <el-form-item label="备注">
-                <el-input type="textarea" v-model="props.row.td_remarks" rows="3" :disabled="!ifchange"
-                          placeholder="请输入200字以内的描述" maxlength="200" show-word-limit clearable></el-input>
-              </el-form-item>
-            </el-form>
-          </template>
-        </el-table-column>
         <el-table-column prop="td_iden" sortable label="物料编码" align="center"></el-table-column>
         <el-table-column prop="td_name" sortable label="物料名称" :filters="td_nameSet"
                          :filter-method="filter" align="center"></el-table-column>
@@ -74,6 +64,12 @@
         </el-table-column>
         <el-table-column prop="td_present_num" sortable label="现存量" align="center"></el-table-column>
         <el-table-column prop="td_str_iden" sortable label="申请单号" v-if="!ifdirect" align="center"></el-table-column>
+        <el-table-column prop="td_remarks" sortable label="备注" align="center">
+          <template slot-scope="props">
+            <el-input type="textarea" v-model="props.row.trd_remarks" rows="3" :disabled="!ifchange"
+                      placeholder="请输入200字以内的描述" maxlength="200" show-word-limit clearable @input="find"></el-input>
+          </template>
+        </el-table-column>
         <el-table-column label="操作" align="center" v-if="ifchange">
           <template slot-scope="scope">
             <el-button

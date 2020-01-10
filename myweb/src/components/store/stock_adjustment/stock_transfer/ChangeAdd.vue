@@ -15,10 +15,24 @@
           </el-tag>
         </el-form-item>
         <el-form-item label="转入仓库">
-          <el-tag
+          <el-tag v-if="!ifdirect"
             :type="'success'"
           >{{formadd.st_to}}
           </el-tag>
+          <el-select v-model="formadd.st_to"  v-if="ifdirect" placeholder="请选择转入仓库" :disabled="ifhasto">
+            <el-option v-for="item in form_td_to" v-bind:key="item" :label="item" :value="item"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="出库日期">
+          <el-col :span="11">
+            <el-date-picker
+              v-model="formadd.st_date"
+              type="datetime"
+              placeholder="选择日期时间"
+              align="right"
+              :picker-options="pickerOptions" :disabled="!ifchange">
+            </el-date-picker>
+          </el-col>
         </el-form-item>
         <el-button type="primary" class="form-item-save" v-if="ifchange">保 存</el-button>
       </el-form>
