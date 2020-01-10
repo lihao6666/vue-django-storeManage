@@ -6,6 +6,8 @@ class BisSerializer(serializers.ModelSerializer):
     orga_name = serializers.CharField(source='organization.orga_name')
     area_name = serializers.CharField(source='organization.area_name')
 
+    total_name = serializers.CharField(source='total_ware_house.total_name')
+
     supply_name = serializers.CharField(source='supplier.supply_name')
     supply_iden = serializers.CharField(source='supplier.supply_iden')
 

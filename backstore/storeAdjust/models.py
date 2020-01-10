@@ -23,7 +23,7 @@ class TransferRequest(models.Model):
     str_from_house = models.CharField(max_length=20, verbose_name='转出仓库名字')
     str_date = models.DateTimeField(default=datetime.now, verbose_name='转库申请日期')
     str_department = models.CharField(max_length=20, verbose_name='转库申请部门')
-    str_status = models.IntegerField(choices=STR_STATUS_CHOICES, verbose_name='转库申请单状态')
+    str_status = models.IntegerField(choices=STR_STATUS_CHOICES, default=0, verbose_name='转库申请单状态')
     str_creator = models.CharField(max_length=20, verbose_name='转库出库单创建人名字')
     str_creator_iden = models.CharField(max_length=20, verbose_name='转库出库单创建人工号')
     str_createDate = models.DateTimeField(auto_now_add=True, verbose_name='销售出库单创建日期')
@@ -50,7 +50,7 @@ class TrDetail(models.Model):
                                  on_delete=models.CASCADE)
     trd_num = models.IntegerField(verbose_name='转库申请数量')
     trd_present_num = models.IntegerField(verbose_name='材料现存量')
-    trd_used = models.IntegerField(choices=USED_CHOICES,default=0,verbose_name='是否使用过')
+    trd_used = models.IntegerField(choices=USED_CHOICES, default=0, verbose_name='是否使用过')
     trd_remarks = models.TextField(max_length=400, verbose_name='转库单明细备注')
 
     class Meta:
@@ -75,7 +75,7 @@ class Transfer(models.Model):
     st_to_house = models.CharField(max_length=20, verbose_name='转入仓库名字')
     st_from_house = models.CharField(max_length=20, verbose_name='转出仓库名字')
     st_date = models.DateTimeField(default=datetime.now, verbose_name='转库日期')
-    st_status = models.IntegerField(choices=ST_STATUS_CHOICES, verbose_name='转库单状态')
+    st_status = models.IntegerField(choices=ST_STATUS_CHOICES, default=0, verbose_name='转库单状态')
     st_creator = models.CharField(max_length=20, verbose_name='转库单创建者名字')
     st_creator_iden = models.CharField(max_length=20, verbose_name='转库单创建者编号')
     st_createDate = models.DateTimeField(auto_now_add=True, verbose_name='转库单创建时间')

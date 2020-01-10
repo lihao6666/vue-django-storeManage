@@ -26,6 +26,20 @@ class TrDSerializer(serializers.ModelSerializer):
                   'trd_num', 'trd_present_num', 'trd_used', 'trd_remarks')
 
 
+class TrDToStDSerializer(serializers.ModelSerializer):
+    str_iden = serializers.CharField(source='transfer_request.str_iden')
+    td_iden = serializers.CharField(source='material.material_iden')
+    td_name = serializers.CharField(source='material.material_name')
+    td_specification = serializers.CharField(source='material.material_specification')
+    td_model = serializers.CharField(source='material.material_model')
+    td_meterage = serializers.CharField(source='material.meterage_name')
+    td_apply_num = serializers.CharField(source='trd_num')
+
+    class Meta:
+        model = models.TrDetail
+        fields = ('id', 'str_iden', 'td_iden', 'td_name', 'td_specification', 'td_model', 'td_meterage', 'td_apply_num')
+
+
 class TransferSerializer(serializers.ModelSerializer):
     orga_name = serializers.CharField(source='organization.orga_name')
 

@@ -18,13 +18,14 @@ class SellOrderSerializer(serializers.ModelSerializer):
 
 
 class SoDetailSerializer(serializers.ModelSerializer):
+    so_iden = serializers.CharField(source='sell_order.so_iden')
+    sod_iden = serializers.CharField(source='material.material_iden')
+    sod_name = serializers.CharField(source='material.material_name')
+    sod_specification = serializers.CharField(source='material.material_specification')
+    sod_model = serializers.CharField(source='material.material_model')
+    sod_meterage = serializers.CharField(source='material.meterage_name')
+
     class Meta:
-        so_iden = serializers.CharField(source='sell_order.so_iden')
-        sod_iden = serializers.CharField(source='material.material_iden')
-        sod_name = serializers.CharField(source='material.material_name')
-        sod_specification = serializers.CharField(source='material.material_specification')
-        sod_model = serializers.CharField(source='material.material_model')
-        sod_meterage = serializers.CharField(source='material.meterage_name')
         model = models.SoDetail
         fields = ('id', 'so_iden', 'sod_iden', 'sod_name', 'sod_specification',
                   'sod_model', 'sod_meterage', 'sod_num', 'sod_taxRate', 'sod_tax_unitPrice', 'sod_unitPrice',

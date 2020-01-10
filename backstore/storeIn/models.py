@@ -18,7 +18,7 @@ class BuyInStore(models.Model):
     bis_serial = models.CharField(max_length=4, verbose_name='入库单流水号')
     organization = models.ForeignKey('base.Organization', verbose_name='组织', related_name='orga_bis',
                                      on_delete=models.CASCADE)
-    totalwarehouse = models.ForeignKey('base.TotalWareHouse', verbose_name='总仓', related_name='total_ware_house_bis',
+    totalwarehouse = models.ForeignKey('base.TotalWareHouse', verbose_name='仓库', related_name='total_ware_house_bis',
                                        on_delete=models.CASCADE)
     supplier = models.ForeignKey('base.Supplier', verbose_name='供应商', related_name='supplier_bis',
                                  on_delete=models.CASCADE)

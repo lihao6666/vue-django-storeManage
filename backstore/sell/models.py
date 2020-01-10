@@ -42,7 +42,7 @@ class SoDetail(models.Model):
     销售订单明细
     """
     id = models.AutoField(primary_key=True)
-    sell_order = models.ForeignKey('SellOrder', verbose_name='销售订单', related_name='so_sod', on_delete=models.Model)
+    sell_order = models.ForeignKey('SellOrder', verbose_name='销售订单', related_name='so_sod', on_delete=models.CASCADE)
     material = models.ForeignKey('base.Material', verbose_name='物料', related_name='material_sod',
                                  on_delete=models.CASCADE)
     sod_num = models.IntegerField(verbose_name='销售数量')

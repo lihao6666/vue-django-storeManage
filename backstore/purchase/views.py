@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.db.models import Max
+from django.db.models import Max, QuerySet
 from rest_framework.views import APIView
 from .Serializer import PCSerializer, CdDSerializer, CdPaySerializer, POSerializer, OrDSerializer
 from rest_framework.response import Response
@@ -219,6 +219,7 @@ class CdDetailSaveView(APIView):
                 self.signal = 1
         return Response({'message': self.message, 'signal': self.signal})
 
+
 class CdDetailSubmitView(APIView):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -249,7 +250,8 @@ class CdDetailSubmitView(APIView):
         for cd in cds:
             cd_iden = cd['cd_iden']
             cd_pr_iden = cd['cd_pr_iden']
-            PrDetail.objects.filter(purchase_request__pr_iden=cd_pr_iden,material__material_iden=cd_iden).update(prd_used=1)
+            PrDetail.objects.filter(purchase_request__pr_iden=cd_pr_iden, material__material_iden=cd_iden).update(
+                prd_used=1)
             prds = PrDetail.objects.filter(purchase_request__pr_iden=cd_pr_iden).all()
             pr = PurchaseRequest.objects.filter(pr_iden=cd_pr_iden)
             flag = 0
@@ -420,9 +422,9 @@ class PONewView(APIView):
 
             return Response({"orga_names": orga_names, "supply_names": supply_names, "signal": 0})
         else:
-            ords = models.OrDetail.objects.filter(purchase_order__po_iden=po_iden).all()
-            ords_serializer = OrDSerializer(ords, many=True)
-            return Response({"supply_names": supply_names, "ords": ords_serializer.data, "signal": 1})
+            ods = models.OrDetail.objects.filter(purchase_order__po_iden=po_iden).all()
+            ods_serializer = OrDSerializer(ods, many=True)
+            return Response({"supply_names": supply_names, "ods": ods_serializer.data, "signal": 1})
 
 
 class PrChoiceView(APIView):
@@ -517,13 +519,16 @@ class PcChoiceView(APIView):
                                                               pc_status=1).all()
         finally:
             pcs_serializer = PCSerializer(self.pcs, many=True)
-            cds_list = []
+            cds_list = ""
             for pc in self.pcs:
                 pc_iden = pc.pc_iden
                 cds = models.CdDetail.objects.filter(purchase_contract__pc_iden=pc_iden).all()
-                cds_serializer = CdDSerializer(cds, many=True)
-                cds_list.append(cds_serializer.data)
-            return Response({"pcs": pcs_serializer.data, "cds": cds_list, "signal": 0})  # 合同和对应的合同明细
+                if cds_list == "":
+                    cds_list = cds
+                else:
+                    cds_list = cds_list | cds
+            cds_serializer = CdDSerializer(cds_list, many=True)
+            return Response({"pcs": pcs_serializer.data, "cds": cds_serializer.data, "signal": 0})  # 合同和对应的合同明细
 
 
 class POUpdateView(APIView):
@@ -545,11 +550,12 @@ class POUpdateView(APIView):
 
         orga_name = json_data['orga_name']
         organization = Organization.objects.get(area_name=self.area_name, orga_name=orga_name)
-        supply_id = json_data['supply_id']
-        supplier = Supplier.objects.get(id=supply_id)
+        supply_name = json_data['supply_name']
+        supplier = Supplier.objects.get(supply_name=supply_name)
         po_date = json_data['po_date']
         po_sum = json_data['po_sum']
         po_remarks = json_data['po_remarks']
+        pc_iden = json_data['pc_iden']
 
         try:
             po_iden = json_data['po_iden']
@@ -565,11 +571,11 @@ class POUpdateView(APIView):
             po_new_iden = pre_iden + po_serial
             self.po_new_iden = po_new_iden
             try:
-                if models.PurchaseContract.objects.create(po_iden=po_new_iden, po_serial=po_serial,
-                                                          organization=organization, supplier=supplier,
-                                                          po_date=po_date, po_sum=po_sum, po_remarks=po_remarks,
-                                                          po_status=0, po_creator=self.user_now_name,
-                                                          po_creator_iden=user_now_iden):
+                if models.PurchaseOrder.objects.create(po_iden=po_new_iden, pc_iden=pc_iden, po_serial=po_serial,
+                                                       organization=organization, supplier=supplier,
+                                                       po_date=po_date, po_sum=po_sum, po_remarks=po_remarks,
+                                                       po_status=0, po_creator=self.user_now_name,
+                                                       po_creator_iden=user_now_iden):
 
                     self.message = "新建采购订单成功"
                     self.signal = 0
@@ -577,10 +583,11 @@ class POUpdateView(APIView):
                     self.message = "新建采购订单失败"
                     self.signal = 1
             except:
+                traceback.print_exc()
                 self.message = "新建采购订单失败"
                 self.signal = 1
         else:
-            po = models.PurchaseContract.objects.filter(po_iden=po_iden)
+            po = models.PurchaseOrder.objects.filter(po_iden=po_iden)
             if po:
                 po.update(organization=organization, supplier=supplier, po_date=po_date,
                           po_sum=po_sum, po_remarks=po_remarks)
@@ -616,7 +623,7 @@ class POSaveView(APIView):
             od_sum = od['od_sum']
             od_tax_price = od['od_tax_price']
             od_pr_iden = od['od_pr_iden']
-            od_prd_remarks = od['od_remarks']
+            od_prd_remarks = od['od_prd_remarks']
             material = Material.objects.get(material_iden=od_iden)
             try:
                 if models.OrDetail.objects.create(purchase_order=po, material=material, od_num=od_num,
@@ -629,6 +636,7 @@ class POSaveView(APIView):
                     self.message = "采购订单详情保存失败"
                     self.signal = 1
             except:
+                traceback.print_exc()
                 self.message = "采购订单详情保存失败"
                 self.signal = 1
         return Response({'message': self.message, 'signal': self.signal})
@@ -673,7 +681,8 @@ class POSubmitView(APIView):
             for od in ods:
                 od_iden = od['od_iden']
                 od_pr_iden = od['od_pr_iden']
-                PrDetail.objects.filter(purchase_request__pr_iden=od_pr_iden, prd_iden=od_iden).update(prd_uesd=1)
+                PrDetail.objects.filter(purchase_request__pr_iden=od_pr_iden, material__material_iden=od_iden).update(
+                    prd_used=1)
                 prds = PrDetail.objects.filter(purchase_request__pr_iden=od_pr_iden).all()
                 pr = PurchaseRequest.objects.filter(pr_iden=od_pr_iden)
                 flag = 0
@@ -683,8 +692,8 @@ class POSubmitView(APIView):
                 if flag == 0:
                     pr.update(pr_status=2, pr_closer=self.user_now_name, pr_closer_iden=user_now_iden,
                               pr_closeDate=datetime.now(), pr_closeReason="自动关闭")
-
-                # 更新请购单物料使用状态
+        return Response({'message': self.message, 'signal': self.signal})
+        # 更新请购单物料使用状态
 
 
 class PODeleteView(APIView):

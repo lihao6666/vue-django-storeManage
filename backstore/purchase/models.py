@@ -145,6 +145,7 @@ class OrDetail(models.Model):
     od_tax_unitPrice = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='含税单价')
     od_unitPrice = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='无税单价')
     od_tax_sum = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='含税总额')
+    od_tax_price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='税额')
     od_sum = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='无税总额')
     od_pr_iden = models.CharField(max_length=15, verbose_name='请购单编号')
     od_prd_remarks = models.TextField(max_length=400, verbose_name='物料备注')

@@ -8,7 +8,7 @@ from rest_framework.response import Response
 from django.utils import timezone
 from django.shortcuts import render, redirect
 from storeIn import models
-from purchase.models import OrDetail, PurchaseOrder
+from purchase.models import PurchaseOrder, OrDetail
 from purchase.Serializer import POSerializer, OrDSerializer, OrDToBisDSerializer
 from base.models import Organization, Material, Department, UserNow, Supplier, TotalWareHouse
 from base.Serializer import MaterialSerializer
@@ -64,19 +64,24 @@ class BisNewView(APIView):
         if user_now:
             self.user_now_name = user_now.user_name
             self.area_name = user_now.area_name
-        orga_names = Organization.objects.filter(area_name=self.area_name).values_list("id", "orga_name")
+        orga_ware_houses = {}
+        organizations = Organization.objects.filter(area_name=self.area_name, orga_status=1)
+        for organization in organizations:
+            orga_name = organization.orga_name
+            deliver_ware_houses = TotalWareHouse.objects.filter(organization=organization, total_status=1). \
+                values_list("total_name", flat=True)
+            orga_ware_houses[orga_name] = deliver_ware_houses
+
         supply_names = Supplier.objects.filter(supply_status=1).values_list('id', 'supply_name')
-        in_ware_houses = TotalWareHouse.objects.filter(organization__area_name=self.area_name, total_status=1). \
-            values_list("id", "total_name", "organization__orga_name")
+
         try:
             bis_iden = json_data['bis_iden']
         except:
-            return Response({"supply_names": supply_names, "in_ware_houses": in_ware_houses,
-                             "orga_names": orga_names, "signal": 0})
+            return Response({"supply_names": supply_names, "orga_ware_houses": orga_ware_houses, "signal": 0})
         else:
             bds = models.BisDetail.objects.filter(buy_in_store__bis_iden=bis_iden).all()
             bds_serializer = BisDSerializer(bds, many=True)
-            return Response({"supply_names": supply_names, "in_ware_houses": in_ware_houses,
+            return Response({"supply_names": supply_names, "orga_ware_houses": orga_ware_houses,
                              "bds": bds_serializer.data, "signal": 1})
 
 
@@ -151,6 +156,7 @@ class POChoiceView(APIView):
         super().__init__(**kwargs)
         self.user_now_name = ""
         self.area_name = ""
+        self.pos = ""
 
     def post(self, request):
         json_data = json.loads(self.request.body.decode("utf-8"))
@@ -159,16 +165,26 @@ class POChoiceView(APIView):
         if user_now:
             self.user_now_name = user_now.user_name
             self.area_name = user_now.area_name
+
         try:
             orga_name = json_data['orga_name']
         except:
             return Response({"message": "不传了，气死我了"})
         else:
-            ods = OrDetail.objects.filter(purchase_order__organization__orga_name=orga_name,
-                                          purchase_order__organization__area_name=self.area_name,
-                                          purchase_order__po_status=1).all()
-            bds_serializer = OrDToBisDSerializer(ods, many=True)
-            return Response({"bds": bds_serializer.data, "signal": 1})
+            print(orga_name)
+            print(self.area_name)
+            self.pos = PurchaseOrder.objects.get(organization__area_name=self.area_name,
+                                                 organization__orga_name=orga_name,
+                                                 po_status=1)
+        finally:
+            pos_serializer = POSerializer(self.pos, many=True)
+            ords_list = []
+            for po in self.pos:
+                po_iden = po.po_iden
+                ords = OrDetail.objects.filter(purchase_order__po_iden=po_iden).all()
+                ords_serializer = OrDSerializer(ords, many=True)
+                ords_list.append(ords_serializer.data)
+            return Response({"pos": pos_serializer.data, "ords": ords_list, "signal": 0})  # 订单和对应的订单明细
 
 
 class BisDSaveView(APIView):
@@ -304,4 +320,3 @@ class BisDeleteView(APIView):
 """
 其它出库
 """
-

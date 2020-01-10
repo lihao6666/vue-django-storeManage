@@ -90,6 +90,7 @@ class SellOrderNewView(APIView):
                 {"orga_ware_houses": orga_ware_houses, "customers": customers, "signal": 0})
         else:
             sods = models.SoDetail.objects.filter(sell_order__so_iden=so_iden)
+            print("SSs")
             sods_serializers = SoDetailSerializer(sods, many=True)
             sods_present_num = []
             for sod in sods:
@@ -163,6 +164,7 @@ class SellOrderUpdateView(APIView):
                     self.message = "新建销售订单失败"
                     self.signal = 1
             except:
+
                 self.message = "新建销售订单失败"
                 self.signal = 1
 
@@ -273,8 +275,8 @@ class SoDetailNewView(APIView):
 
         total_ware_house = TotalWareHouse.objects.filter(organization__orga_name=orga_name,
                                                          organization__area_name=self.area_name,
-                                                         total_name=deliver_ware_house)
-
+                                                         total_name=deliver_ware_house).first()
+        print(total_ware_house)
         total_stocks = total_ware_house.total_ware_house_ts.all()
         if total_stocks:
 
