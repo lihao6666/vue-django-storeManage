@@ -135,7 +135,7 @@ class BisUpdateView(APIView):
                 self.message = "新建采购入库单失败"
                 self.signal = 1
         else:
-            bis = models.BuyInStore.objects.get(bis_iden=bis_iden)
+            bis = models.BuyInStore.objects.filter(bis_iden=bis_iden)
             if bis:
                 bis.update(organization=organization, totalwarehouse=in_ware_house, supplier=supplier,
                            bis_date=bis_date,

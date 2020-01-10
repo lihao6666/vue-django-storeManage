@@ -2,19 +2,19 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="31c6b82b-25ff-47ad-8cdf-2b6c63731413" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/dictionaries/lh.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dictionaries/lh.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/purchase/Serializer.py" beforeDir="false" afterPath="$PROJECT_DIR$/purchase/Serializer.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/purchase/migrations/0001_initial.py" beforeDir="false" afterPath="$PROJECT_DIR$/purchase/migrations/0001_initial.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/purchase/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/purchase/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/purchase/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/purchase/urls.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/purchase/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/purchase/views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/purchaseRequest/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/purchaseRequest/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/purchaseRequest/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/purchaseRequest/views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sell/Serializer.py" beforeDir="false" afterPath="$PROJECT_DIR$/sell/Serializer.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sell/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/sell/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/purchaseRequest/Serializer.py" beforeDir="false" afterPath="$PROJECT_DIR$/purchaseRequest/Serializer.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/sell/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/sell/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/storeAdjust/Serializer.py" beforeDir="false" afterPath="$PROJECT_DIR$/storeAdjust/Serializer.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/storeAdjust/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/storeAdjust/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/storeAdjust/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/storeAdjust/views.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/storeIn/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/storeIn/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/storeIn/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/storeIn/urls.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/storeIn/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/storeIn/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/storeManage/Serializer.py" beforeDir="false" afterPath="$PROJECT_DIR$/storeManage/Serializer.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -98,7 +98,7 @@
       <updated>1578392216249</updated>
       <workItem from="1578392218011" duration="15462000" />
       <workItem from="1578414307326" duration="22370000" />
-      <workItem from="1578483174689" duration="41626000" />
+      <workItem from="1578483174689" duration="54044000" />
     </task>
     <servers />
   </component>
@@ -106,10 +106,10 @@
     <option name="version" value="1" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="556" y="270" width="807" height="540" key="find.popup" timestamp="1578559824965">
+    <state x="556" y="270" width="807" height="540" key="find.popup" timestamp="1578626760766">
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
-    <state x="556" y="270" width="807" height="540" key="find.popup/1920.-49.1440.900/0.0.1920.1080@0.0.1920.1080" timestamp="1578559824965" />
+    <state x="556" y="270" width="807" height="540" key="find.popup/1920.-49.1440.900/0.0.1920.1080@0.0.1920.1080" timestamp="1578626760766" />
     <state x="625" y="241" width="670" height="676" key="search.everywhere.popup" timestamp="1578559788706">
       <screen x="0" y="0" width="1920" height="1080" />
     </state>

@@ -51,7 +51,7 @@ class POSerializer(serializers.ModelSerializer):
 
 class OrDSerializer(serializers.ModelSerializer):
     po_iden = serializers.CharField(source='purchase_order.po_iden')
-    po_date = serializers.DateField(source='purchase_order.po_date')
+    po_date = serializers.DateTimeField(source='purchase_order.po_date')
     od_iden = serializers.CharField(source='material.material_iden')
     od_name = serializers.CharField(source='material.material_name')
     od_specification = serializers.CharField(source='material.material_specification')
@@ -67,7 +67,7 @@ class OrDSerializer(serializers.ModelSerializer):
 
 class OrDToBisDSerializer(serializers.ModelSerializer):
     po_iden = serializers.CharField(source='purchase_order.po_iden')
-    po_date = serializers.DateField(source='purchase_order.po_date')
+    po_date = serializers.DateTimeField(source='purchase_order.po_date')
     pr_iden = serializers.CharField(source='od_pr_iden')
     bd_iden = serializers.CharField(source='material.material_iden')
     bd_name = serializers.CharField(source='material.material_name')

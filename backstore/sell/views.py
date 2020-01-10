@@ -168,7 +168,7 @@ class SellOrderUpdateView(APIView):
 
 
         else:
-            so = models.SellOrder.objects.get(so_iden=so_iden)
+            so = models.SellOrder.objects.filter(so_iden=so_iden)
             if so:
                 if so.update(organization=organization, so_type=so_type, customer=customer, so_date=so_date,
                              deliver_ware_house=deliver_ware_house, so_remarks=so_remarks):

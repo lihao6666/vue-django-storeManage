@@ -523,11 +523,12 @@ class CustomerAddView(APIView):
         customer_remarks = json_data['customer_remarks']
 
         if self.idCheck(customer_iden):
-            models.Customer.objects.create(customer_iden=customer_iden, customer_name=customer_name,
-                                           customer_type=customer_type,
-                                           customer_remarks=customer_remarks, customer_status=0,
-                                           customer_creator=self.user_now_name,
-                                           customer_creator_iden=user_now_iden)
+            if self.nameCheck(customer_name):
+                models.Customer.objects.create(customer_iden=customer_iden, customer_name=customer_name,
+                                               customer_type=customer_type,
+                                               customer_remarks=customer_remarks, customer_status=0,
+                                               customer_creator=self.user_now_name,
+                                               customer_creator_iden=user_now_iden)
         return Response({'message': self.message, 'signal': self.signal})
 
     def idCheck(self, customer_iden):
@@ -537,6 +538,15 @@ class CustomerAddView(APIView):
             return True
         else:
             self.message = "客户id已存在"
+            self.signal = 1
+            return False
+    def nameCheck(self, customer_name):
+        try:
+            user = models.Customer.objects.get(customer_name=customer_name)
+        except models.Customer.DoesNotExist:
+            return True
+        else:
+            self.message = "客户名已经存在"
             self.signal = 1
             return False
 
@@ -557,13 +567,14 @@ class CustomerUpdateView(APIView):
         # customer_status = json_data['customer_status']
         # customer_creator = json_data['customer_creator']
         if self.idCheck(customer_iden, id):
-            try:
-                models.Customer.objects.filter(id=id).update(customer_name=customer_name, customer_iden=customer_iden,
-                                                             customer_type=customer_type,
-                                                             customer_remarks=customer_remarks)
-            except:
-                self.message = "更新失败"
-                self.signal = 2
+            if self.nameCheck(customer_name, id):
+                try:
+                    models.Customer.objects.filter(id=id).update(customer_name=customer_name, customer_iden=customer_iden,
+                                                                 customer_type=customer_type,
+                                                                 customer_remarks=customer_remarks)
+                except:
+                    self.message = "更新失败"
+                    self.signal = 2
         return Response({'message': self.message, 'signal': self.signal})
 
     def idCheck(self, customer_iden, id):
@@ -573,6 +584,16 @@ class CustomerUpdateView(APIView):
             return True
         else:
             self.message = "客户id已存在"
+            self.signal = 1
+            return False
+
+    def nameCheck(self, customer_name, id):
+        try:
+            user = models.Customer.objects.get(~Q(id=id),customer_name=customer_name)
+        except models.Customer.DoesNotExist:
+            return True
+        else:
+            self.message = "客户名已经存在"
             self.signal = 1
             return False
 
@@ -639,12 +660,13 @@ class OrganizationAddView(APIView):
         orga_remarks = json_data['orga_remarks']
 
         if self.idCheck(orga_iden):
-            models.Organization.objects.create(orga_iden=orga_iden, orga_name=orga_name,
-                                               area_name=area_name,
-                                               orga_remarks=orga_remarks,
-                                               orga_status=0,
-                                               orga_creator=self.user_now_name,
-                                               orga_creator_iden=user_now_iden)
+            if self.nameCheck(orga_name):
+                models.Organization.objects.create(orga_iden=orga_iden, orga_name=orga_name,
+                                                   area_name=area_name,
+                                                   orga_remarks=orga_remarks,
+                                                   orga_status=0,
+                                                   orga_creator=self.user_now_name,
+                                                   orga_creator_iden=user_now_iden)
         return Response({'message': self.message, 'signal': self.signal})
 
     def idCheck(self, orga_iden):
@@ -654,6 +676,16 @@ class OrganizationAddView(APIView):
             return True
         else:
             self.message = "组织id已存在"
+            self.signal = 1
+            return False
+
+    def nameCheck(self, orga_name):
+        try:
+            user = models.Organization.objects.get(orga_name=orga_name)
+        except models.Organization.DoesNotExist:
+            return True
+        else:
+            self.message = "组织名已经存在"
             self.signal = 1
             return False
 
@@ -672,14 +704,15 @@ class OrganizationUpdateView(APIView):
         orga_remarks = json_data['orga_remarks']
         # orga_creator = json_data['orga_creator']
         if self.idCheck(orga_iden, id):
-            try:
-                models.Organization.objects.filter(id=id).update(
-                    orga_iden=orga_iden,
-                    orga_name=orga_name,
-                    orga_remarks=orga_remarks, )
-            except:
-                self.message = "更新失败"
-                self.signal = 2
+            if self.nameCheck(orga_name, id):
+                try:
+                    models.Organization.objects.filter(id=id).update(
+                        orga_iden=orga_iden,
+                        orga_name=orga_name,
+                        orga_remarks=orga_remarks, )
+                except:
+                    self.message = "更新失败"
+                    self.signal = 2
         return Response({'message': self.message, 'signal': self.signal})
 
     def idCheck(self, orga_iden, id):
@@ -689,6 +722,16 @@ class OrganizationUpdateView(APIView):
             return True
         else:
             self.message = "组织id已存在"
+            self.signal = 1
+            return False
+
+    def nameCheck(self, orga_name, id):
+        try:
+            user = models.Organization.objects.get(~Q(id=id), orga_name=orga_name)
+        except models.Organization.DoesNotExist:
+            return True
+        else:
+            self.message = "组织名已经存在"
             self.signal = 1
             return False
 

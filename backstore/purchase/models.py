@@ -1,6 +1,6 @@
 from django.db import models
 import django.utils.timezone as timezone
-
+from datetime import datetime
 
 # Create your models here.
 class PurchaseContract(models.Model):
@@ -21,7 +21,7 @@ class PurchaseContract(models.Model):
     pc_name = models.CharField(max_length=20, verbose_name='合同名称')
     supplier = models.ForeignKey('base.Supplier', verbose_name='供应商', related_name='supplier_pc',
                                  on_delete=models.CASCADE)
-    pc_date = models.DateTimeField(default=timezone.now, verbose_name='合同签订日期')
+    pc_date = models.DateTimeField(default=datetime.now, verbose_name='合同签订日期')
     pc_sum = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='合同总额')
     pc_remarks = models.TextField(max_length=400, verbose_name='合同备注', null=True)
     pc_status = models.IntegerField(choices=PC_STATUS_CHOICES, default=0, verbose_name='合同状态')
@@ -107,7 +107,7 @@ class PurchaseOrder(models.Model):
                                      on_delete=models.CASCADE)
     supplier = models.ForeignKey('base.Supplier', verbose_name='供应商', related_name='supplier_po',
                                  on_delete=models.CASCADE)
-    po_date = models.DateTimeField(default=timezone.now,verbose_name='采购订单生效日期')
+    po_date = models.DateTimeField(default=datetime.now,verbose_name='采购订单生效日期')
     po_sum = models.IntegerField(verbose_name='采购订单总额')
     po_remarks = models.TextField(max_length=400, verbose_name='采购订单备注')
     # purchase_contract = models.ForeignKey('PurchaseContract', verbose_name='采购合同', related_name='pc_po',

@@ -19,3 +19,17 @@ class TotalStockSerializer(serializers.ModelSerializer):
                   'material_iden', 'material_name', 'material_specification',
                   'material_model', 'material_meterage', 'ts_present_num', 'ts_present_price',
                   'ts_present_sum')
+
+
+class TotalStockToTrSerializer(serializers.ModelSerializer):
+    trd_iden = serializers.CharField(source='material.material_iden')
+    trd_name = serializers.CharField(source='material.material_name')
+    trd_specification = serializers.CharField(source='material.material_specification')
+    trd_model = serializers.CharField(source='material.material_model')
+    trd_meterage = serializers.CharField(source='material.meterage_name')
+    trd_present_num = serializers.IntegerField(source='ts_present_num')
+
+    class Meta:
+        model = models.TotalStock
+        fields = ('id', 'trd_iden', 'trd_name', 'trd_specification',
+                  'trd_model', 'trd_meterage', 'trd_present_num')

@@ -14,9 +14,9 @@ urlpatterns = [
     path('pcDelete', views.PcDeleteView.as_view(), name='pcDelete'),
 
     path('pOs', views.POsView.as_view(), name='pOs'),
-    path('pONewByPr', views.PONewByPrView.as_view(), name='pONewByPr'),
+    path('pONew', views.PONewView.as_view(), name='pONew'),
     path('prChoice', views.PrChoiceView.as_view(), name='prChoice'),
-    path('pONewByPc', views.PONewByPcView.as_view(), name='pONewByPc'),
+    # path('pONewByPc', views.PONewByPcView.as_view(), name='pONewByPc'),
     path('pcChoice', views.PcChoiceView.as_view(), name='pcChoice'),
     path('pOUpdate', views.POUpdateView.as_view(), name='pOUpdate'),
     path('pOSave', views.POSaveView.as_view(), name='pOSave'),
