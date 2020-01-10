@@ -2,6 +2,7 @@ from django.db import models
 import django.utils.timezone as timezone
 from datetime import datetime
 
+
 # Create your models here.
 
 class BuyInStore(models.Model):
@@ -55,7 +56,6 @@ class BisDetail(models.Model):
 
     class Meta:
         verbose_name = "采购入库单明细"
-
 
 # class OtherSi(models.Model):
 #     """

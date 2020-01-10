@@ -137,7 +137,7 @@ class PcUpdateView(APIView):
                 self.message = "新建采购合同失败"
                 self.signal = 1
         else:
-            pc = models.PurchaseContract.objects.get(pc_iden=pc_iden)
+            pc = models.PurchaseContract.objects.filter(pc_iden=pc_iden)
             if pc:
                 pc.update(organization=organization, pc_name=pc_name, supplier=supplier, pc_date=pc_date,
                           pc_sum=pc_sum, pc_remarks=pc_remarks)
@@ -578,7 +578,7 @@ class POUpdateView(APIView):
                 self.message = "新建采购订单失败"
                 self.signal = 1
         else:
-            po = models.PurchaseContract.objects.get(po_iden=po_iden)
+            po = models.PurchaseContract.objects.filter(po_iden=po_iden)
             if po:
                 po.update(organization=organization, supplier=supplier, po_date=po_date,
                           po_sum=po_sum, po_remarks=po_remarks)

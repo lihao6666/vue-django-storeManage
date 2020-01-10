@@ -30,7 +30,7 @@ class PrDetailSerializer(serializers.ModelSerializer):
 
 class PrDetail2Serializer(serializers.ModelSerializer):
     pr_iden = serializers.CharField(source='purchase_request.pr_iden')
-    pr_date = serializers.DateField(source='purchase_request.pr_type')
+    pr_date = serializers.DateTimeField(source='purchase_request.pr_type')
     pr_department = serializers.CharField(source='purchase_request.pr_department')
     pr_creator = serializers.CharField(source='purchase_request.pr_creator')
     pr_creator_iden = serializers.CharField(source='purchase_request.pr_creator_iden')
