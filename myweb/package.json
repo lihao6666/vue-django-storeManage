@@ -23,7 +23,7 @@
     ]
   },
   "dependencies": {
-    "axios": "^0.19.0",
+    "axios": "^0.21.1",
     "element-ui": "^2.13.0",
     "husky": "^3.1.0",
     "lint-staged": "^9.5.0",
